@@ -1,7 +1,7 @@
 <!--pages/mine/mine.wxml-->
 <view class="container">
   <view class="head">
-    <image src="{{bg}}" alt width="100%" mode="widthFix"/>
+   <van-image src="{{bg}}" alt fit="widthFix" width="100%"/>
     <view class="avatarContent">
       <view class="avatar">
         <!-- <van-image

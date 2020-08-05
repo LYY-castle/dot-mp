@@ -2,7 +2,7 @@
 <view class="container">
   <view class="head">
     <view class="title">撒点点</view>
-    <image src="{{bg}}" alt mode="widthFix"/>
+    <van-image src="{{bg}}" alt fit="widthFix" width="100%"/>
     <view class="codeContent">
       <!-- <van-image
           round

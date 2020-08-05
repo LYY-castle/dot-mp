@@ -19,7 +19,7 @@
           <van-image src="{{pwd}}" alt slot="left-icon" width="15px" height="15px" fit="contain" class="m-r-5"/>
         </van-field>
         <view class="m-t-20">
-          <button form-type="submit">登录</button>
+          <button form-type="submit" class="loginBtn">登录</button>
           <!-- <van-button block type="info" form-type="submit"
             color="linear-gradient(-90deg,rgba(255,178,1,1),rgba(255,191,1,1))">登录</van-button> -->
         </view>

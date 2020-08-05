@@ -40,9 +40,9 @@ Page({
   },
   onLoad: function () {
     // this.getProductList()
-    // wx.redirectTo({
-    //   url: '../mine/login/login'
-    // })
+    wx.redirectTo({
+      url: '../mine/login/login'
+    })
     console.log('onload')
   }
 })

@@ -2,6 +2,13 @@
   background: #fff;
   overflow-y: scroll;
 }
+.container .loginBtn {
+  color: #fff;
+  background: linear-gradient(-90deg, #ffb201, #ffbf01);
+}
+.container button::after {
+  border: none;
+}
 ::v-deep .van-cell {
   display: flex;
   align-items: center;
