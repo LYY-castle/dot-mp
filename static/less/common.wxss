@@ -1,0 +1,238 @@
+Page {
+  box-sizing: border-box;
+  height: 100%;
+  background: #eee;
+}
+.container {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  height: 100%;
+  overflow: hidden;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.container .originPrice {
+  color: #969799;
+  font-size: 10px;
+  text-decoration: line-through;
+}
+.container .minPrice {
+  color: #e81f1f;
+}
+.container .mainColor {
+  color: #f9ae08;
+}
+.container .text-color {
+  text-align: center;
+  color: #f9ae08;
+  font-size: 40px;
+}
+.container .text-color-ccc {
+  color: #878787;
+  font-size: 12px;
+}
+.container .dot {
+  display: inline-block;
+  background-color: #f9ae08;
+  height: 8px;
+  width: 8px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+.container .w-100 {
+  width: 40%;
+  min-width: 90px;
+}
+.container .flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container .flex-between-start {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.container .flex-between-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.container .flex-start-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.container .money-yellow {
+  background-color: rgba(249, 174, 8, 0.1);
+  color: #f9ae08;
+  padding: 0 5px;
+  margin: 5px 0;
+}
+.container .money-yellow .money {
+  color: #f9ae08;
+}
+.container .money-fail {
+  background-color: rgba(255, 76, 95, 0.1);
+  color: #ff4c5f;
+  padding: 0 5px;
+  margin: 5px 0;
+}
+.container .money-fail .money {
+  color: #ff4c5f;
+}
+.container .money-success {
+  background-color: rgba(55, 199, 128, 0.1);
+  color: #37c780;
+  padding: 0 5px;
+  margin: 5px 0;
+}
+.container .money-success .money {
+  color: #37c780;
+}
+.container .money-red {
+  background-color: rgba(232, 31, 31, 0.1);
+  color: #e81f1f;
+  padding: 0 5px;
+  margin: 5px 0;
+}
+.container .money-red .money {
+  color: #e81f1f;
+}
+.block {
+  display: block !important;
+}
+.money {
+  font-size: 14px !important;
+  color: #000;
+  font-weight: bold;
+}
+.money-normal {
+  font-size: 14px !important;
+  color: #ea4345;
+  font-weight: bold;
+}
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+.main {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.mainContent {
+  height: 100%;
+  padding-bottom: 50px;
+  padding-top: 46px;
+}
+.shareMainContent {
+  height: 100%;
+  padding-bottom: 50px;
+  padding-top: 46px;
+}
+.centerContent {
+  position: fixed;
+  width: 100%;
+  max-width: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.topContent {
+  position: fixed;
+  width: 100%;
+  max-width: 100%;
+  left: 50%;
+  top: 50px;
+  transform: translate(-50%);
+  z-index: 999;
+}
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+.flex-around {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-colum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mt {
+  margin-top: 5px;
+}
+.mb {
+  margin-bottom: 5px;
+}
+.ml {
+  margin-left: 5px;
+}
+.mr {
+  margin-right: 5px;
+}
+.font-size-12 {
+  font-size: 12px;
+}
+.font-size-20 {
+  font-size: 20;
+  font-weight: 800;
+  margin: 20px 0;
+}
+.van-collapse-item__title--disabled {
+  color: #000 !important;
+}
+.link {
+  color: #69bbf1;
+}
+.price {
+  display: inline-block;
+  color: #ee6565;
+}
+.price .font {
+  font-size: 20px;
+  font-weight: 800;
+}
+.text-color-999 {
+  color: #999;
+  font-size: 12px;
+}
+.text-color-white {
+  color: #fff;
+}
+.text-color-red {
+  color: #f9ae08;
+  font-size: 13px;
+}
+.border {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.description {
+  color: #888888 !important;
+}
+.produceDetail img {
+  display: block !important;
+}

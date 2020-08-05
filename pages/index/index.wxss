@@ -1,0 +1,71 @@
+.container {
+  overflow: scroll;
+}
+.container .text-align-center {
+  text-align: center;
+  font-size: 12px;
+  padding: 10px 0;
+  background: #eee;
+}
+.container .sort {
+  margin: 0 12px;
+  padding: 10px 0;
+  background: #fff;
+  border-radius: 7px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  text-align: center;
+  font-weight: 800;
+  font-size: 12px;
+}
+.container .sort .sortItem {
+  width: 20%;
+  margin: 5px 0;
+}
+.container .sort .sortItem .imgWidth {
+  width: 40px;
+  height: 40px;
+}
+.container .goodContent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 12px;
+}
+.container .goodContent .goodItem {
+  width: 49%;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.container .goodContent .goodItem .imgContent {
+  padding: 10px 0;
+  min-height: 190px;
+  text-align: center;
+  background: linear-gradient(to bottom, rgba(254, 254, 254, 0.6), rgba(243, 243, 243, 0.1));
+  font-size: 0;
+  display: flex;
+  align-items: center;
+}
+.container .goodContent .goodItem .textContent {
+  height: 100%;
+  font-size: 10px;
+  font-weight: 800;
+  background: #fff;
+  padding: 10px;
+  color: #333333;
+}
+::v-deep .van-list__finished-text {
+  width: 100%;
+}
+::v-deep .van-empty {
+  padding: 0;
+  width: 100px;
+  height: 100px;
+}
+::v-deep .van-empty__image img {
+  width: 100px;
+  height: 150px;
+}

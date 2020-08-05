@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/dots-money/dots-money",
+    "pages/mine/mine",
+    "pages/product/search/search",
+    "pages/product/product-list/product-list",
+    "pages/product/product-detail/product-detail",
+    "pages/mine/personal-info/personal-info",
+    "pages/scatter-dots/scatter-dots",
+    "pages/mine/order/order-list/order-list",
+    "pages/mine/order/order-detail/order-detail",
+    "pages/mine/modify-password/modify-password",
+    "pages/mine/forget-password/forget-password",
+    "pages/mine/bank-card/bank-card",
+    "pages/mine/address/add-address/add-address",
+    "pages/mine/address/address-list/address-list",
+    "pages/product/share-detail/share-detail",
+    "pages/product/share-list/share-list",
+    "pages/mine/login/login",
+    "pages/mine/register/register"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "金小点",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "rgb(153, 153, 153)",
+    "selectedColor": "rgb(153, 153, 153)",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/img/product-list.png",
+        "selectedIconPath": "static/img/product-list-active.png"
+      },
+      {
+        "pagePath": "pages/scatter-dots/scatter-dots",
+        "text": "撒点点",
+        "iconPath": "static/img/scatter-dots.png",
+        "selectedIconPath": "static/img/scatter-dots-active.png"
+      },
+      {
+        "pagePath": "pages/dots-money/dots-money",
+        "text": "点点财",
+        "iconPath": "static/img/dots-money.png",
+        "selectedIconPath": "static/img/dots-money-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/img/mine.png",
+        "selectedIconPath": "static/img/mine-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

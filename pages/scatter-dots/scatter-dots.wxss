@@ -1,0 +1,70 @@
+.codeContent {
+  position: absolute;
+  max-width: 100%;
+  left: 50%;
+  bottom: -130%;
+  transform: translate(-50%);
+  text-align: center;
+  width: 80%;
+}
+.codeContent .hidden {
+  display: none;
+}
+.codeContent .avatar {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%);
+  border: 1px solid #eee;
+  border-radius: 40px;
+}
+.codeContent .card {
+  background: #fff;
+  padding: 60px 0 30px 0;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+.codeContent .card .textColor {
+  width: 100%;
+  padding: 0 15px;
+  word-wrap: break-word;
+  color: #1989fa;
+}
+.codeContent .copyBtn {
+  margin-top: 10px;
+  width: 150px;
+  background-color: #f7bd4f;
+  color: #fff;
+  margin: 0 auto;
+  font-size: 12px;
+  line-height: 30px;
+  border-radius: 5px;
+}
+.codeContent .tip {
+  padding: 15px;
+  font-size: 12px;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.5);
+}
+.head {
+  position: relative;
+}
+.head .title {
+  color: #333333;
+  margin-top: 13px;
+  width: 100%;
+  position: absolute;
+  text-align: center;
+}
+#card {
+  position: relative;
+}
+#card img {
+  width: 200px !important;
+  height: 200px !important;
+}
+#qrcode {
+  display: inline-block;
+}

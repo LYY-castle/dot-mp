@@ -1,0 +1,64 @@
+$m-white: #ffffff;
+$m-black: #232526;
+$m-blue: #2196f3;
+$m-red: #f44336;
+$m-purple: #9c27b0;
+$m-deeppurple: #673ab7;
+$m-lightblue: #03a9f4;
+$m-cyan: #00bcd4;
+$m-teal: #009688;
+$m-green: #4caf50;
+$m-lightgreen: #8bc34a;
+$m-lime: #cddc39;
+
+$m-yellow: #ffeb3b;
+$m-amber: #ffc107;
+$m-orange: #ff9800;
+$m-deeporange: #ff5722;
+$m-gray: #9e9e9e;
+$m-bluegray: #607d8b;
+$m-darkgrey: #5d5b61;
+$m-indigo: #3f51b5;
+$m-pink: #e91e63;
+$m-brown: #795548;
+$m-light: #f5f5f5;
+$m-e8: #e8e8e8;
+$m-3: #333;
+$m-6: #666;
+$m-9: #999;
+
+@each $c-name, $color in (c-white, $m-white), (c-black, $m-black), (c-blue, $m-blue), (c-red, $m-red),
+  (c-purple, $m-purple), (c-deeppurple, $m-deeppurple), (c-lightblue, $m-lightblue), (c-cyan, $m-cyan),
+  (c-teal, $m-teal), (c-green, $m-green), (c-lightgreen, $m-lightgreen), (c-lime, $m-lime), (c-yellow, $m-yellow),
+  (c-amber, $m-amber), (c-orange, $m-orange), (c-deeporange, $m-deeporange), (c-gray, $m-gray),
+  (c-bluegray, $m-bluegray), (c-darkgrey, $m-darkgrey), (c-indigo, $m-indigo), (c-pink, $m-pink), (c-brown, $m-brown), (c-light, $m-light),
+  (c-e8, $m-e8), (c-g3, $m-3), (c-g6, $m-6), (c-g9, $m-9)
+{
+  .#{$c-name} {
+    color: $color;
+  }
+}
+
+@each $bg-name, $color in (bg-white, $m-white), (bg-black, $m-black), (bg-blue, $m-blue), (bg-red, $m-red),
+  (bg-purple, $m-purple), (bg-deeppurple, $m-deeppurple), (bg-lightblue, $m-lightblue), (bg-cyan, $m-cyan),
+  (bg-teal, $m-teal), (bg-green, $m-green), (bg-lightgreen, $m-lightgreen), (bg-lime, $m-lime), (bg-yellow, $m-yellow),
+  (bg-amber, $m-amber), (bg-orange, $m-orange), (bg-deeporange, $m-deeporange), (bg-gray, $m-gray),
+  (bg-bluegray, $m-bluegray), (bg-darkgrey, $m-darkgrey), (bg-indigo, $m-indigo), (bg-pink, $m-pink), (bg-brown, $m-brown), (bg-light, $m-light),
+  (bg-e8, $m-e8), (bg-g3, $m-3), (bg-g6, $m-6), (bg-g9, $m-9)
+{
+  .#{$bg-name} {
+    background-color: $color;
+  }
+}
+
+@each $bd-name, $color in (bd-white, $m-white), (bd-black, $m-black), (bd-blue, $m-blue), (bd-red, $m-red),
+  (bd-purple, $m-purple), (bd-deeppurple, $m-deeppurple), (bd-lightblue, $m-lightblue), (bd-cyan, $m-cyan),
+  (bd-teal, $m-teal), (bd-green, $m-green), (bd-lightgreen, $m-lightgreen), (bd-lime, $m-lime), (bd-yellow, $m-yellow),
+  (bd-amber, $m-amber), (bd-orange, $m-orange), (bd-deeporange, $m-deeporange), (bd-gray, $m-gray),
+  (bd-bluegray, $m-bluegray), (bd-darkgrey, $m-darkgrey), (bd-indigo, $m-indigo), (bd-pink, $m-pink), (bd-brown, $m-brown), (bd-light, $m-light),
+  (bd-e8, $m-e8), (bd-g3, $m-3), (bd-g6, $m-6), (bd-g9, $m-9)
+{
+  .#{$bd-name} {
+    border: 1px solid $color !important;
+  }
+}

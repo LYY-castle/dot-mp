@@ -1,0 +1,91 @@
+const moment = require('moment.min.js');
+const formatTime = date => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
+
+  return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+}
+const formatNumber = n => {
+  n = n.toString()
+  return n[1] ? n : '0' + n
+}
+// 获取一个时间的开始时间戳.
+function getStartTime(timeStr, type) {
+  const typeArray = ['halfHour', 'hour', 'day', 'week', 'month', 'year']
+  let startTime
+  if (type && typeArray.includes(type)) {
+    switch (type) {
+      case 'halfHour':
+        startTime = moment(timeStr, 'YYYY-MM-DD HH:mm')
+        break
+      case 'hour':
+        startTime = moment(timeStr, 'YYYY-MM-DD HH')
+        break
+      case 'day':
+        startTime = moment(timeStr, 'YYYY-MM-DD')
+        break
+      case 'week':
+        startTime = moment(timeStr, 'YYYY WW')
+        break
+      case 'month':
+        startTime = moment(timeStr, 'YYYY-MM')
+        break
+      case 'year':
+        startTime = moment(timeStr, 'YYYY')
+        break
+    }
+  } else {
+    return new Error(`type 只支持[${typeArray}]`)
+  }
+  return startTime.format('YYYY-MM-DD HH:mm:ss')
+}
+
+// 获取一个时间的结束时间戳.
+ function getEndTime(timeStr, type) {
+  const typeArray = ['halfHour', 'hour', 'day', 'week', 'month', 'year']
+  let endTime
+  if (type && typeArray.includes(type)) {
+    switch (type) {
+      case 'halfHour':
+        endTime = moment(timeStr, 'YYYY-MM-DD HH:mm')
+        break
+      case 'hour':
+        endTime = moment(timeStr, 'YYYY-MM-DD HH')
+          .add(1, 'hours')
+          .subtract(1, 'ms')
+        break
+      case 'day':
+        endTime = moment(timeStr, 'YYYY-MM-DD')
+          .add(1, 'days')
+          .subtract(1, 'ms')
+        break
+      case 'week':
+        endTime = moment(timeStr, 'YYYY WW')
+          .add(1, 'weeks')
+          .subtract(1, 'ms')
+        break
+      case 'month':
+        endTime = moment(timeStr, 'YYYY-MM')
+          .add(1, 'months')
+          .subtract(1, 'ms')
+        break
+      case 'year':
+        endTime = moment(timeStr, 'YYYY')
+          .add(1, 'years')
+          .subtract(1, 'ms')
+        break
+    }
+  } else {
+    return new Error(`type 只支持[${typeArray}]`)
+  }
+  return endTime.format('YYYY-MM-DD HH:mm:ss')
+}
+module.exports = {
+  formatTime: formatTime,
+  getStartTime:getStartTime,
+  getEndTime:getEndTime
+}

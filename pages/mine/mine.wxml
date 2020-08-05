@@ -1,0 +1,21 @@
+<!--pages/mine/mine.wxml-->
+<view class="container">
+  <view class="head">
+    <image src="{{bg}}" alt width="100%" mode="widthFix"/>
+    <view class="avatarContent">
+      <view class="avatar">
+        <!-- <van-image
+          round
+          :src="userInfo.avatar"
+          v-if="userInfo.avatar"
+          width="80px"
+          height="80px"
+          fit="cover"
+        /> -->
+        <van-image round src="{{avatar}}" alt width="80px" height="80px" round/>
+      </view>
+    </view>
+  </view>
+  <van-cell wx:for="{{list}}" title="{{item.title}}" icon="{{item.iconHref}}" is-link class="item"/>
+  <van-button type="default" class="logoutButton">退出登录</van-button>
+</view>

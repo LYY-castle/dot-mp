@@ -1,0 +1,27 @@
+<!--pages/scatter-dots/scatter-dots.wxml-->
+<view class="container">
+  <view class="head">
+    <view class="title">撒点点</view>
+    <image src="{{bg}}" alt mode="widthFix"/>
+    <view class="codeContent">
+      <!-- <van-image
+          round
+          :src="userInfo.avatar"
+          v-if="userInfo.avatar"
+          width="80px"
+          height="80px"
+          fit="cover"
+          class="avatar"
+        /> -->
+      <image src="{{avatar}}" alt class="avatar"/>
+      <view class="card">
+        <view>{{ name }}</view>
+        <view id="card">
+          <canvas id="qrcode"></canvas>
+        </view>
+        <view class="font-size-12">[ 截屏转发金小点身份码 - 发展团队 ]</view>
+        <view class="copyBtn">复制链接</view>
+      </view>
+    </view>
+  </view>
+</view>

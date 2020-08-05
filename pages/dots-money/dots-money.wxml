@@ -1,0 +1,9 @@
+<!--pages/dots-money/dots-money.wxml-->
+<view class="container">
+  点点财
+  <van-sticky>
+    <van-tabs>
+      <van-tab name="我的业绩"></van-tab>
+    </van-tabs>
+  </van-sticky>
+</view>
