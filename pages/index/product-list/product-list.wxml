@@ -1,0 +1,36 @@
+<!--pages/product/product-list/product-list.wxml-->
+<view class="container">
+	<van-sidebar active-key="{{ activeKey }}" wx:if="{{!share}}" class="user-sideBar">
+		<van-sidebar-item title="全部" bind:click="fistGetAllProductList" class="user-van-sidebar-item"/>
+    <van-sidebar-item title="视频" bind:click="fistGetAllProductList" class="user-van-sidebar-item"/>
+		<!-- <van-sidebar-item
+          v-for="(item, idx) in productTypes"
+          :key="idx"
+          :title="item.name"
+          @click="onChange(item.id)"
+        /> -->
+  </van-sidebar>
+  <view class="productsContent">
+    <van-overlay show="{{open}}" bind:click="open = false" />
+        <van-icon
+          size="10"
+          name="{{open ? 'arrow-up' : 'arrow-down'}}"
+          class="openContent"
+          color=" #878787"
+          bind:click="openContent"
+          wx:if="{{goodTypes.length > 1 && !share}}"
+        />
+        <view class="sortContent" wx:if="{{open}}">
+          <view class="fz-14">全部分类</view>
+          <view class="sort">
+            <van-tag
+              wx:for="goodTypes"
+              wx:key="idx"
+              bind:tap="goodChange(item.id)"
+              color="{{activeGood === item.id ? 'rgba(247, 189, 79, 0.15)' : 'rgba(247, 247, 247, 1)'}}"
+              text-color="{{activeGood === item.id ? 'rgba(249, 173, 7, 1)' : 'rgba(121, 121, 121, 1)'}}"
+            >{{ item.name }}</van-tag>
+          </view>
+        </view>
+  </view>
+</view>
