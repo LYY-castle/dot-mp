@@ -15,12 +15,14 @@
     border-radius: 10px;
     padding: 10px 0;
     position: relative;
+
     .closeButton {
       position: absolute;
       right: 10px;
       top: 10px;
     }
   }
+
   .copyButton {
     margin-top: 10px;
     width: 150px;
@@ -31,6 +33,7 @@
     line-height: 30px;
     border-radius: 5px;
   }
+
   .productsContent {
     width: 100%;
     height: 100%;
@@ -43,6 +46,7 @@
       padding-bottom: 50px;
       overflow-y: scroll;
     }
+
     .sortContent {
       background: #fff;
       width: 100%;
@@ -51,10 +55,12 @@
       left: 0;
       padding: 15px 10px;
       z-index: 998;
-      .sort {
+
+      view.sort {
         display: flex;
         flex-wrap: wrap;
-        ::v-deep .van-tag {
+
+        .tagItem {
           display: inline-block;
           width: 30%;
           margin-right: 5px;
@@ -66,16 +72,20 @@
       }
     }
   }
+
   .textColor {
     font-size: 13px;
     color: rgba(0, 0, 0, 0.6);
   }
+
   .hidden {
     display: none;
   }
+
   #qrcode {
     display: inline-block;
     text-align: center;
+
     img {
       width: 132px;
       height: 132px;
@@ -83,30 +93,38 @@
       padding: 6px; // 利用padding的特性，挤出白边
     }
   }
+
   .title {
     font-weight: 800;
   }
+
   .price {
     color: #e71f1f;
     font-size: 18px;
     font-weight: 800;
   }
+
   .buttonGroup {
     margin-top: 10px;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
+
     .buttonItem {
       width: 30%;
     }
   }
+
   .user-sideBar {
-    width: 60px!important;
+    width: 60px !important;
     background-color: #fff;
     border-right: 1px solid #eee;
+    z-index: 2;
   }
 }
-
+.van-sidebar-item__text {
+  font-size: 12px!important;
+}
 .van-cell {
   padding: 10px;
 }
@@ -115,58 +133,57 @@
 .van-cell {
   line-height: 22px;
 }
+
 .openContent {
   position: fixed;
   right: 10px;
-  top: 65px;
+  top: 15px;
   z-index: 999;
 }
 
+// 自定义样式覆盖
 .van-tabs {
   padding-top: 10px;
   padding-right: 30px;
   background-color: transparent;
-
-  .van-tab {
-    background-color: #fff;
-    border-radius: 3px;
-    margin-right: 5px;
-    color: rgba(121, 121, 121, 1);
-    font-size: 12px;
-    height: 25px;
-  }
-
-  .van-tab--active {
-    color: rgba(249, 173, 7, 1);
-    background: rgba(247, 189, 79, 0.15);
-  }
-  .van-tabs--line {
-    .van-tabs__wrap {
-      height: 30px !important;
-    }
-  }
-  .van-tabs__nav--line {
-    background-color: transparent;
-    padding-bottom: 0;
-    .van-tabs__wrap {
-      width: 100%;
-      height: 25px !important;
-      background-color: transparent;
-    }
-  }
-}
-.van-overlay {
-  position: absolute;
 }
 
+.van-tabs--line .van-tabs__wrap {
+  height: 30px !important;
+}
+
+.van-tab {
+  background-color: #fff;
+  border-radius: 3px;
+  margin-right: 5px;
+  color: rgba(121, 121, 121, 1);
+  font-size: 12px!important;
+  height: 25px;
+  line-height: 25px!important;
+}
+
+.van-tab--active {
+  color: rgba(249, 173, 7, 1)!important;
+  background: rgba(247, 189, 79, 0.15);
+}
+
+.van-tabs__nav--line {
+  background-color: transparent;
+  padding-bottom: 0;
+
+}
+
+.van-tabs__wrap {
+  width: 100%;
+  height: 25px !important;
+  background-color: transparent;
+}
+.van-tabs__scroll {
+  background-color: transparent!important;
+}
 .wp-70 {
   width: 70% !important;
 }
-.van-empty__image {
-  width: 160px;
-  height: auto;
-}
-.van-empty__image img {
-  width: 160px;
-  height: auto;
+.van-empty__description{
+  font-size: 12px!important;
 }

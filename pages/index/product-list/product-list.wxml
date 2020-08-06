@@ -1,36 +1,116 @@
 <!--pages/product/product-list/product-list.wxml-->
 <view class="container">
 	<van-sidebar active-key="{{ activeKey }}" wx:if="{{!share}}" class="user-sideBar">
-		<van-sidebar-item title="全部" bind:click="fistGetAllProductList" class="user-van-sidebar-item"/>
-    <van-sidebar-item title="视频" bind:click="fistGetAllProductList" class="user-van-sidebar-item"/>
-		<!-- <van-sidebar-item
-          v-for="(item, idx) in productTypes"
-          :key="idx"
-          :title="item.name"
-          @click="onChange(item.id)"
-        /> -->
-  </van-sidebar>
-  <view class="productsContent">
-    <van-overlay show="{{open}}" bind:click="open = false" />
-        <van-icon
-          size="10"
-          name="{{open ? 'arrow-up' : 'arrow-down'}}"
-          class="openContent"
-          color=" #878787"
-          bind:click="openContent"
-          wx:if="{{goodTypes.length > 1 && !share}}"
-        />
-        <view class="sortContent" wx:if="{{open}}">
-          <view class="fz-14">全部分类</view>
-          <view class="sort">
-            <van-tag
-              wx:for="goodTypes"
-              wx:key="idx"
-              bind:tap="goodChange(item.id)"
-              color="{{activeGood === item.id ? 'rgba(247, 189, 79, 0.15)' : 'rgba(247, 247, 247, 1)'}}"
-              text-color="{{activeGood === item.id ? 'rgba(249, 173, 7, 1)' : 'rgba(121, 121, 121, 1)'}}"
-            >{{ item.name }}</van-tag>
-          </view>
-        </view>
-  </view>
+		<van-sidebar-item title="全部" bind:click="fistGetAllProductList" class="user-van-sidebar-item" />
+		<van-sidebar-item title="视频" bind:click="fistGetAllProductList" class="user-van-sidebar-item" />
+		<van-sidebar-item wx:for="{{productTypes}}" wx:key="id" title="{{item.name}}" catchtap="onChange(item.id)" />
+	</van-sidebar>
+	<view class="productsContent">
+		<van-overlay show="{{open}}" bind:click="open = false" />
+		<van-icon size="10" name="{{open ? 'arrow-up' : 'arrow-down'}}" class="openContent" color=" #878787" bind:click="openContent" wx:if="{{goodTypes.length > 1 && !share}}" />
+		<view class="sortContent" wx:if="{{open}}">
+			<view class="fz-12">全部分类</view>
+			<view class="sort">
+				<van-tag wx:for="{{goodTypes}}" bindtap="goodChange" data-id="{{item.id}}" color="{{activeGood === item.id ? 'rgba(247, 189, 79, 0.15)' : 'rgba(247, 247, 247, 1)'}}" text-color="{{activeGood === item.id ? 'rgba(249, 173, 7, 1)' : 'rgba(121, 121, 121, 1)'}}" class="tagItem">
+					{{ item.name }}
+				</van-tag>
+			</view>
+		</view>
+		<van-tabs active="{{activeGood}}" line-width="0" bind:click="goodChange" swipe-threshold="3" wx:if="{{goodTypes.length > 1 && !share}}" border="{{false}}">
+			<van-tab wx:for="{{goodTypes}}" wx:key="index"  data-id="{{item.id}}" title="{{item.name}}" name="{{item.id}}"></van-tab>
+    </van-tabs>
+    <view class="listContent" wx:if="{{productList.length>0}}">
+      <!-- <van-cell
+            wx:for="(item, idx) in productList"
+            :key="idx"
+            class="pointer m-b-10"
+            :class="idx === 0 && goodTypes.length <= 1 ? 'm-t-10' : ''"
+          >
+            <div slot="title">
+              <div class="flex-between-start">
+                <van-image
+                  :src="item.image"
+                  alt
+                  v-if="!constantCfg.productCode.qsebao.includes(item.code) && item.image"
+                  width="25%"
+                  class="m-r-5"
+                  fit="cover"
+                ></van-image>
+                <div :class="constantCfg.productCode.qsebao.includes(item.code) ? '' : 'wp-70'">
+                  <div
+                    class="flex-wrap m-b-5"
+                    v-if="constantCfg.productCode.qsebao.includes(item.code)"
+                  >
+                    <span class="fz-12 m-r-10">{{ item.company.name }}</span>
+                    <van-tag
+                      v-if="constantCfg.productCode.qsebao.includes(item.code)"
+                      type="danger"
+                    >{{ item.insurance_type }}</van-tag>
+                  </div>
+                  <div class="title">{{ item.name }}</div>
+                  <div
+                    class="flex-wrap m-b-10"
+                    v-if="constantCfg.productCode.qsebao.includes(item.code) && item.tags.length > 0"
+                  >
+                    <span
+                      v-for="(tag, idx1) in item.tags"
+                      :key="idx1"
+                      plain
+                      type="primary"
+                      class="text-color-ccc"
+                    >
+                      <span class="dot"></span>
+                      <span class="m-r-15 fz-12">{{ tag }}</span>
+                    </span>
+                  </div>
+                  <div
+                    class="text-color-ccc"
+                    v-if="!constantCfg.productCode.qsebao.includes(item.code)"
+                  >{{ item.description }}</div>
+                  <div v-if="item.minPrice">
+                    <span class="price">￥{{ item.minPrice }}</span>
+                    <span class="text-color-ccc">/{{ item.unit }}起</span>
+                  </div>
+                </div>
+              </div>
+              <div :class="share ? 'flex-between-end m-t-10' : 'buttonGroup'">
+                <van-button
+                  type="primary"
+                  size="small"
+                  @click="lookDetail(item)"
+                  class="buttonItem"
+                  color="#F7BD4F"
+                  v-if="share"
+                >查看详情</van-button>
+                <van-button
+                  plain
+                  color="#F9AD07"
+                  size="small"
+                  @click="buyBySelf(item)"
+                  v-if="!share"
+                  class="buttonItem"
+                >自己买</van-button>
+                <van-button
+                  plain
+                  color="#F9AD07"
+                  size="small"
+                  @click="renderQRCode(item)"
+                  v-if="!share"
+                  class="buttonItem"
+                >客户买</van-button>
+                <van-button
+                  color="#F7BD4F"
+                  type="info"
+                  size="small"
+                  @click="shareProduct(item)"
+                  v-if="!share"
+                  class="buttonItem"
+                >分享案例</van-button>
+              </div>
+            </div>
+          </van-cell> -->
+    </view>
+
+    <van-empty image="{{empty}}" description="正在为您寻找更多商品" class="fz-12"></van-empty>
+	</view>
 </view>
