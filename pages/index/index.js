@@ -7,9 +7,9 @@ Page({
   data: {
     loading: false,
     finished: false,
-    empty:'/static/img/empty.png',
+    empty: '/static/img/empty.png',
     ProductAll: '/static/img/product-all.png',
-    productList:[],
+    productList: [],
     api: {
       getProductTypes: {
         url: '/product-categories',
@@ -18,15 +18,16 @@ Page({
     }
   },
   // 搜索栏聚焦事件
-  focus: function () {
+  focus() {
     const that = this
     console.log('聚焦')
     wx.navigateTo({
-      url: '../product/share-list/share-list'
+      url: './search/search'
     })
+
   },
   // 获取特惠产品的列表
-  getProductList: function () {
+  getProductList() {
     let params = {
       isHot: 0,
       pageNo: 1,
@@ -38,11 +39,18 @@ Page({
       params
     })
   },
-  onLoad: function () {
-    // this.getProductList()
-    wx.redirectTo({
-      url: '../mine/login/login'
+  gotoProductList() {
+    console.log('跳转到商品列表页')
+    wx.navigateTo({
+      url: './product-list/product-list?share=0&activeProduct=all'
     })
+  },
+  onLoad() {
+    // this.getProductList()
+    // wx.redirectTo({
+    //   url: '../mine/login/login'
+    // })
     console.log('onload')
   }
+
 })

@@ -7,7 +7,7 @@
       <van-image src="{{item.icon}}" alt width="40px" height="40px"/>
       <view>{{ item.name }}</view>
     </view> -->
-    <view class="sortItem">
+    <view class="sortItem" bind:tap="gotoProductList">
       <van-image src="{{ProductAll}}" alt width="40px" height="40px" />
       <view>全部</view>
     </view>

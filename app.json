@@ -1,24 +1,24 @@
 {
   "pages": [
+    "pages/mine/login/login",
+    "pages/mine/register/register",
     "pages/index/index",
+    "pages/index/product-list/product-list",
+    "pages/index/search/search",
+    "pages/index/product-detail/product-detail",
+    "pages/index/share-detail/share-detail",
+    "pages/index/share-list/share-list",
     "pages/dots-money/dots-money",
-    "pages/mine/mine",
-    "pages/product/search/search",
-    "pages/product/product-list/product-list",
-    "pages/product/product-detail/product-detail",
-    "pages/mine/personal-info/personal-info",
     "pages/scatter-dots/scatter-dots",
+    "pages/mine/mine",
     "pages/mine/order/order-list/order-list",
     "pages/mine/order/order-detail/order-detail",
+    "pages/mine/personal-info/personal-info",
     "pages/mine/modify-password/modify-password",
     "pages/mine/forget-password/forget-password",
     "pages/mine/bank-card/bank-card",
     "pages/mine/address/add-address/add-address",
-    "pages/mine/address/address-list/address-list",
-    "pages/product/share-detail/share-detail",
-    "pages/product/share-list/share-list",
-    "pages/mine/login/login",
-    "pages/mine/register/register"
+    "pages/mine/address/address-list/address-list"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -28,7 +28,7 @@
   },
   "tabBar": {
     "color": "rgb(153, 153, 153)",
-    "selectedColor": "rgb(153, 153, 153)",
+    "selectedColor": "#f9ae08",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [
