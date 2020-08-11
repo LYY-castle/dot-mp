@@ -2,13 +2,18 @@ import env from '../config/env.config'
 /**
  * 请求头
  */
-let header = {
-  'content-type': 'application/x-www-form-urlencoded',
-  'Authorization': "Bearer " + wx.getStorageSync("token"),
-  'os': 'android',
-  'version': '1.0.0',
-  'device_token': 'ebc9f523e570ef14',
+
+let  header = {}
+if(wx.getStorageSync('authorization')){
+    header = {
+    'authorization': wx.getStorageSync('authorization')
+  }
+}else{
+   header = {
+      'content-type': 'application/json' // 默认值
+  }
 }
+
 /**
  * function: 封装网络请求
  * @url URL地址
@@ -17,45 +22,67 @@ let header = {
  * @onSuccess 成功回调
  * @onFailed  失败回调
  */
-function request({
+function wxRequest({
   url,
   method = 'get',
   params = {},
-  urlReplacements = [],
-  header,
+  urlReplacements = []
 }) {
+  wx.showToast({
+    title: '请稍后...',
+    icon: 'loading'
+  })
   let reqUrl = env.env.VUE_APP_BASE_URL + url
   urlReplacements.forEach(replacement => {
     reqUrl = reqUrl.replace(replacement.substr, replacement.replacement)
   })
-  if (['post', 'patch', 'put'].includes(method)) {
-    return wx.request({
-      url: reqUrl,
-      data: params,
-      method,
-      success: function (res) {
-        console.log('请求成功', res)
-      },
-      fail: function (res) {
-        console.log('请求失败', res)
+  return new Promise((resolve, reject) => {
+    if (['post', 'patch', 'put'].includes(method)) {
+      wx.request({
+        url: reqUrl,
+        data: params,
+        method,
+        header,
+        success: function (res) {
+          wx.hideToast()
+          if(res.statusCode===401){
+            wx.navigateTo({
+              url: '../mine/login/login'
+            })
+          }else{
+            if (res.header['Authorization']) {
+              wx.setStorageSync('authorization', res.header.Authorization)
+            }
+          }
+          resolve(res.data)
+        },
+      })
+    } else if (['get', 'delete'].includes(method)) {
+      const req = {
+        url: reqUrl,
+        data:params,
+        method,
+        header
       }
-    })
-  } else if (['get', 'delete'].includes(method)) {
-    return wx.request({
-      url: reqUrl,
-      params,
-      method,
-      success: function (res) {
-        console.log('请求成功', res)
-      },
-      fail: function (res) {
-        console.log('请求失败', res)
-      }
-    })
-  }
-}
+      wx.request({
+        ...req,
+        success: function (res) {
+          wx.hideToast()
+          if(res.statusCode===401){
+            wx.navigateTo({
+              url: '../mine/login/login'
+            })
+          }else{
+            if (res.header['Authorization']) {
+              wx.setStorageSync('authorization', res.header.Authorization)
+            }
+          }
+          resolve(res.data)
+        }
+      })
+    }
+  })
 
-// 1.通过module.exports方式提供给外部调用
-module.exports = {
-  request: request
 }
+// // 1.通过module.exports方式提供给外部调用
+module.exports.wxRequest = wxRequest

@@ -17,5 +17,6 @@
     </view>
   </view>
   <van-cell wx:for="{{list}}" title="{{item.title}}" icon="{{item.iconHref}}" is-link class="item"/>
-  <van-button type="default" class="logoutButton">退出登录</van-button>
+  <van-button type="default" class="logoutButton" bindtap="logout">退出登录</van-button>
+  <van-dialog id="van-dialog" />
 </view>

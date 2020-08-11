@@ -85,7 +85,7 @@ function getStartTime(timeStr, type) {
   return endTime.format('YYYY-MM-DD HH:mm:ss')
 }
 module.exports = {
-  formatTime: formatTime,
-  getStartTime:getStartTime,
-  getEndTime:getEndTime
+  formatTime,
+  getStartTime,
+  getEndTime
 }

@@ -5,17 +5,18 @@
     <view style="width:100%;box-sizing:border-box" class="p-20">
       <form bindsubmit="submit" >
         <van-field model:value="{{phone}}" name="phone" label="手机号" type="tel" maxlength="11"
-          placeholder="请输入手机号码">
+          placeholder="请输入手机号码"
+          required>
           <van-image src="{{iconPhone}}" alt slot="left-icon" width="15px" height="15px" fit="contain" class="m-r-5"/>
         </van-field>
         <van-field wx:if="{{loginByCode}}" model:value="{{validateCode}}" name="validateCode" label="验证码"
-          type="digit" placeholder="短信验证码" maxlength="6">
+          type="digit" placeholder="短信验证码" maxlength="6" required>
           <van-image src="{{iconCode}}" alt slot="left-icon" width="15px" height="15px" fit="contain" class="m-r-5"/>
           <van-button style="height:auto" slot="button" size="small" border="{{false}}" bind:click="getCode()"
             disabled="{{send}}">{{ msg }}</van-button>
         </van-field>
         <van-field wx:if="{{!loginByCode}}" model:value="{{password}}" name="password" label="密码"
-          placeholder="请输入密码" type="password">
+          placeholder="请输入密码" type="password" required>
           <van-image src="{{pwd}}" alt slot="left-icon" width="15px" height="15px" fit="contain" class="m-r-5"/>
         </van-field>
         <view class="m-t-20">
@@ -24,8 +25,8 @@
             color="linear-gradient(-90deg,rgba(255,178,1,1),rgba(255,191,1,1))">登录</van-button> -->
         </view>
         <view class="flex-between fz-12 m-t-20">
-          <text bind:click="clickButtonText(1)" wx:if="{{!loginByCode}}">手机验证码登录</text>
-          <text bind:click="clickButtonText(2)" wx:if="{{loginByCode}}">密码登录</text>
+          <text bindtap="clickButtonText" wx:if="{{!loginByCode}}">手机验证码登录</text>
+          <text bindtap="clickButtonText" wx:if="{{loginByCode}}">密码登录</text>
           <!-- <text bind:click="clickButtonText(3)" wx:if="{{!loginByCode}}">忘记密码</text> -->
         </view>
       </form>

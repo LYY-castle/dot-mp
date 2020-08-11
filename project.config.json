@@ -14,7 +14,7 @@
 		"coverView": true,
 		"nodeModules": false,
 		"autoAudits": false,
-		"showShadowRootInWxmlPanel": true,
+		"showShadowRootInWxmlPanel": false,
 		"scopeDataCheck": false,
 		"uglifyFileName": false,
 		"checkInvalidKey": true,
@@ -27,7 +27,7 @@
 			"outputPath": ""
 		},
 		"useIsolateContext": true,
-		"useCompilerModule": false,
+		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": false,
 		"useMultiFrameRuntime": false,
 		"packNpmManually": false,
@@ -65,8 +65,8 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/index/index",
-					"pathName": "pages/index/index",
+					"name": "pages/scatter-dots/scatter-dots",
+					"pathName": "pages/scatter-dots/scatter-dots",
 					"query": "",
 					"scene": null
 				}

@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    empty:'/static/img/empty.png',
+    empty: '/static/img/empty.png',
     activeKey: 0,
     share: 0,
     allProduct: false,
@@ -55,7 +55,86 @@ Page({
     popProductName: '',
     showProducts: false,
     renderQRCodeUrl: null,
-    productList: [],
+    productList: [{
+        id: 2,
+        productCategoryId: 6,
+        productCategoryNamePath: "/旅游/旅游卡/",
+        category: null,
+        category: null,
+        code: "tourist_card",
+        commissionRules: null,
+        createAt: null,
+        createBy: null,
+        description: "免费畅游多个著名景点",
+        detail: null,
+        effectiveTime: null,
+        englishName: null,
+        id: 2,
+        image: "http://image.hkjindian.com/static/dot/img/p2.png",
+        isDelete: 0,
+        isHot: 1,
+        isNew: 0,
+        isPresell: 0,
+        isWeekendDelivery: 0,
+        label: null,
+        maxPrice: 158,
+        minPrice: 138,
+        multiAddresses: 1,
+        name: "中青文旅畅游卡",
+        originalPrice: 198,
+        presellDeliveryTime: null,
+        price: null,
+        priceScript: null,
+        pricingMethod: 1,
+        pricingRules: null,
+        productCategoryId: 6,
+        productCategoryNamePath: "/旅游/旅游卡/",
+        properties: null,
+        sortNo: 3,
+        status: 0,
+        totalNum: 9999999,
+        unit: "张",
+        updateAt: "2020-07-17 13:38:44",
+        updateBy: 8
+      },
+      {
+        category: null,
+        code: null,
+        commissionRules: null,
+        createAt: "2020-07-21 17:13:35",
+        createBy: 8,
+        description: "😂😊🤣🤣❤😍🤦‍♀️🤦‍♂️🤷‍♀️💖🐱‍👤🤳",
+        detail: null,
+        effectiveTime: null,
+        englishName: null,
+        id: 26,
+        image: "http://dot-dev.hkjindian.com:19000/static/dot/2020/07/22/1a058f8d1fb94a5493110fb53a1d6eb6.jpg",
+        isDelete: 0,
+        isHot: 0,
+        isNew: 0,
+        isPresell: 0,
+        isWeekendDelivery: 0,
+        label: null,
+        maxPrice: 12,
+        minPrice: 11,
+        multiAddresses: 0,
+        name: "测试产品",
+        originalPrice: 33.33,
+        presellDeliveryTime: null,
+        price: null,
+        priceScript: null,
+        pricingMethod: 1,
+        pricingRules: null,
+        productCategoryId: 44,
+        productCategoryNamePath: "/百货/塔罗牌/",
+        properties: null,
+        sortNo: 0,
+        status: 0,
+        totalNum: 0,
+        unit: "个",
+        updateAt: "2020-0"
+      }
+    ],
     productTypes: [],
     productTypeVals: [],
     status: ['primary', 'success', 'danger', 'warning'],
@@ -147,18 +226,26 @@ Page({
   goodChange(event) {
     const _this = this
     let id
-    if(event.type==='click'){
+    if (event.type === 'click') {
       id = event.detail.name
-    }else if(event.type==='tap'){
+    } else if (event.type === 'tap') {
       id = event.currentTarget.dataset.id
     }
+    _this.open = false
     _this.setData({
       activeGood: id,
       open: false,
       pageNo: 1,
-      productList:[]
+      // productList: []
     })
     // _this.getProductsList()
+  },
+  closeOverlay(){
+    const _this = this
+    _this.open = false
+    this.setData({
+      open:false
+    })
   },
   // 获取产品列表 0 一级,其他是二级
   // getProductTypes(val) {
@@ -275,64 +362,66 @@ Page({
   //   }
   // },
   // 自己买
-  // buyBySelf(product) {
-  //   const key = this.activeKey
-  //   if (constantCfg.productCode.qsebao.includes(product.code)) {
-  //     this.renderQRCodeUrl =
-  //       product.link +
-  //       '&cparams1=' +
-  //       new Crypto().encrypt({
-  //         plainStr: this.code,
-  //       }) +
-  //       '&share=0' +
-  //       '&activeKey=' +
-  //       key +
-  //       '&activeGood=' +
-  //       this.activeGood +
-  //       '&_=' +
-  //       new Date().getTime()
-  //     window.location.href = this.renderQRCodeUrl
-  //   } else {
-  //     let encryptParam = {
-  //       userId: this.userId,
-  //       parentId: this.parentId,
-  //       productId: product.id,
-  //     }
-  //     let query = {}
-  //     if (this.allProduct) {
-  //       query = {
-  //         params: new Crypto().encrypt({
-  //           plainStr: JSON.stringify(encryptParam),
-  //         }),
-  //         share: this.$route.query.share,
-  //         activeProduct: 'all',
-  //         _: new Date().getTime(),
-  //       }
-  //     } else {
-  //       query = {
-  //         params: new Crypto().encrypt({
-  //           plainStr: JSON.stringify(encryptParam),
-  //         }),
-  //         share: this.$route.query.share,
-  //         activeKey: key,
-  //         activeGood: this.activeGood,
-  //         _: new Date().getTime(),
-  //       }
-  //     }
-  //     console.log(query)
-  //     if (constantCfg.productCode.iccooCard === product.code) {
-  //       this.switchRouter({
-  //         path: '/card-detail',
-  //         query,
-  //       })
-  //     } else {
-  //       this.switchRouter({
-  //         path: '/product-detail',
-  //         query,
-  //       })
-  //     }
-  //   }
-  // },
+  buyBySelf(event) {
+    const key = this.activeKey
+    const target = event
+    console.log(event)
+    // if (constantCfg.productCode.qsebao.includes(product.code)) {
+    //   this.renderQRCodeUrl =
+    //     product.link +
+    //     '&cparams1=' +
+    //     new Crypto().encrypt({
+    //       plainStr: this.code,
+    //     }) +
+    //     '&share=0' +
+    //     '&activeKey=' +
+    //     key +
+    //     '&activeGood=' +
+    //     this.activeGood +
+    //     '&_=' +
+    //     new Date().getTime()
+    //   window.location.href = this.renderQRCodeUrl
+    // } else {
+    //   let encryptParam = {
+    //     userId: this.userId,
+    //     parentId: this.parentId,
+    //     productId: product.id,
+    //   }
+    //   let query = {}
+    //   if (this.allProduct) {
+    //     query = {
+    //       params: new Crypto().encrypt({
+    //         plainStr: JSON.stringify(encryptParam),
+    //       }),
+    //       share: this.$route.query.share,
+    //       activeProduct: 'all',
+    //       _: new Date().getTime(),
+    //     }
+    //   } else {
+    //     query = {
+    //       params: new Crypto().encrypt({
+    //         plainStr: JSON.stringify(encryptParam),
+    //       }),
+    //       share: this.$route.query.share,
+    //       activeKey: key,
+    //       activeGood: this.activeGood,
+    //       _: new Date().getTime(),
+    //     }
+    //   }
+    //   console.log(query)
+    //   if (constantCfg.productCode.iccooCard === product.code) {
+    //     this.switchRouter({
+    //       path: '/card-detail',
+    //       query,
+    //     })
+    //   } else {
+    //     this.switchRouter({
+    //       path: '/product-detail',
+    //       query,
+    //     })
+    //   }
+    // }
+  },
   // 进入分享列表页面
   // shareProduct(product) {
   //   const key = this.activeKey
@@ -370,82 +459,83 @@ Page({
   //   })
   // },
   // 客户买
-  // renderQRCode(product) {
-  //   const key = this.activeKey
-  //   this.popProductName = product.name
-  //   if (constantCfg.productCode.qsebao.includes(product.code)) {
-  //     this.renderQRCodeUrl =
-  //       product.link +
-  //       '&cparams1=' +
-  //       new Crypto().encrypt({
-  //         plainStr: this.code,
-  //       }) +
-  //       '&share=1' +
-  //       '&activeKey=' +
-  //       key +
-  //       '&activeGood=' +
-  //       this.activeGood +
-  //       '&_=' +
-  //       new Date().getTime()
-  //     if (this.allProduct) {
-  //       this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
-  //     }
-  //   } else {
-  //     let encryptParam = {
-  //       userId: this.userId,
-  //       parentId: this.parentId,
-  //       productId: product.id,
-  //     }
-  //     if (constantCfg.productCode.iccooCard === product.code) {
-  //       this.renderQRCodeUrl =
-  //         window.location.origin +
-  //         '/card-detail' +
-  //         '?params=' +
-  //         new Crypto().encrypt({
-  //           plainStr: JSON.stringify(encryptParam),
-  //         }) +
-  //         '&share=1' +
-  //         '&_=' +
-  //         new Date().getTime()
-  //     } else {
-  //       this.renderQRCodeUrl =
-  //         window.location.origin +
-  //         '/product-detail' +
-  //         '?params=' +
-  //         new Crypto().encrypt({
-  //           plainStr: JSON.stringify(encryptParam),
-  //         }) +
-  //         '&share=1' +
-  //         '&_=' +
-  //         new Date().getTime()
-  //     }
-  //     if (this.allProduct) {
-  //       this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
-  //     } else {
-  //       this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeKey=' + key + '&activeGood=' + this.activeGood
-  //     }
-  //   }
-  //   this.$refs.qrContent.style.display = 'block'
-  //   this.$nextTick(() => {
-  //     this.qrcode(this.renderQRCodeUrl)
-  //   })
-  // },
-  // removeQrcode() {
-  //   this.$refs.qrContent.style.display = 'none'
-  //   var f = document.getElementById('qrcode')
-  //   var child1 = document.getElementsByTagName('img')
-  //   var child2 = document.getElementsByTagName('canvas')
-  //   f.removeChild(child1[0])
-  //   f.removeChild(child2[0])
-  // },
-  // qrcode(url) {
-  //   new QRCode('qrcode', {
-  //     width: 200, // 设置宽度，单位像素
-  //     height: 200, // 设置高度，单位像素
-  //     text: url, // 设置二维码内容或跳转地址
-  //     correctLevel: 3,
-  //   })
-  // },
+  renderQRCode(event) {
+    const target  = event.currentTarget.dataset.item
+    const key = this.activeKey
+    this.popProductName = target.name
+    if (constantCfg.productCode.qsebao.includes(target.code)) {
+      this.renderQRCodeUrl =
+      target.link +
+        '&cparams1=' +
+        new Crypto().encrypt({
+          plainStr: this.code,
+        }) +
+        '&share=1' +
+        '&activeKey=' +
+        key +
+        '&activeGood=' +
+        this.activeGood +
+        '&_=' +
+        new Date().getTime()
+      if (this.allProduct) {
+        this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
+      }
+    } else {
+      let encryptParam = {
+        userId: this.userId,
+        parentId: this.parentId,
+        productId: target.id,
+      }
+      if (constantCfg.productCode.iccooCard === target.code) {
+        this.renderQRCodeUrl =
+          window.location.origin +
+          '/card-detail' +
+          '?params=' +
+          new Crypto().encrypt({
+            plainStr: JSON.stringify(encryptParam),
+          }) +
+          '&share=1' +
+          '&_=' +
+          new Date().getTime()
+      } else {
+        this.renderQRCodeUrl =
+          window.location.origin +
+          '/product-detail' +
+          '?params=' +
+          new Crypto().encrypt({
+            plainStr: JSON.stringify(encryptParam),
+          }) +
+          '&share=1' +
+          '&_=' +
+          new Date().getTime()
+      }
+      if (this.allProduct) {
+        this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
+      } else {
+        this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeKey=' + key + '&activeGood=' + this.activeGood
+      }
+    }
+    this.$refs.qrContent.style.display = 'block'
+    this.$nextTick(() => {
+      this.qrcode(this.renderQRCodeUrl)
+    })
+  },
+  removeQrcode() {
+    this.$refs.qrContent.style.display = 'none'
+    var f = document.getElementById('qrcode')
+    var child1 = document.getElementsByTagName('img')
+    var child2 = document.getElementsByTagName('canvas')
+    f.removeChild(child1[0])
+    f.removeChild(child2[0])
+  },
+  qrcode(url) {
+    new QRCode('qrcode', {
+      width: 200, // 设置宽度，单位像素
+      height: 200, // 设置高度，单位像素
+      text: url, // 设置二维码内容或跳转地址
+      correctLevel: 3,
+    })
+  },
   // copy() {
   //   let copyBtn = new Clipboard('.copyButton')
   //   copyBtn.on('success', (e) => {

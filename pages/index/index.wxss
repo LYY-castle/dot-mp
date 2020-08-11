@@ -35,19 +35,22 @@
   margin: 0 12px;
 }
 .container .goodContent .goodItem {
+  display: block;
   width: 49%;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 10px;
 }
 .container .goodContent .goodItem .imgContent {
-  padding: 10px 0;
-  min-height: 190px;
+  max-height: 150px;
   text-align: center;
   background: linear-gradient(to bottom, rgba(254, 254, 254, 0.6), rgba(243, 243, 243, 0.1));
-  font-size: 0;
   display: flex;
   align-items: center;
+  font-size: 0;
+}
+.container .goodContent .goodItem .imgContent van-image {
+  width: 100%;
 }
 .container .goodContent .goodItem .textContent {
   height: 100%;
@@ -56,6 +59,9 @@
   background: #fff;
   padding: 10px;
   color: #333333;
+}
+.container .scroll-view_H {
+  white-space: nowrap;
 }
 ::v-deep .van-list__finished-text {
   width: 100%;

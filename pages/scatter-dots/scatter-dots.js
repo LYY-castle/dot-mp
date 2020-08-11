@@ -1,14 +1,29 @@
 // pages/scatter-dots/scatter-dots.js
+import http from '../../utils/request.js' //相对路径
+import tool from '../../utils/mixin.js'
+import constantCfg from '../../config/constant'
+import env from '../../config/env.config'
+import Crypto from '../../utils/crypto'
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
-    fetched:false,
-    avatar:'/static/img/avatar.png',
-    bg:'/static/img/bg.png',
-    name:'123'
+    bg: '/static/img/bg.png',
+    allUrl: '',
+    name: '',
+    avatar: '/static/img/avatar.png',
+    headImage: null,
+    api: {
+      getUserInfo: {
+        url: '/users/{id}',
+        method: 'get'
+      },
+      getAccessToken:{
+        url:'https://api.weixin.qq.com/cgi-bin/token',
+        method:'get'
+      }
+    }
   },
 
   /**
@@ -29,7 +44,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    Promise.resolve()
+      .then(() => tool.checkToken())
+      .then(() => this.getUserInfo())
   },
 
   /**
@@ -65,5 +82,57 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  // 获取用户的头像信息
+  getUserInfo() {
+    return new Promise(resolve => {
+      const id = wx.getStorageSync('userId')
+      http.wxRequest({
+          ...this.data.api.getUserInfo,
+          urlReplacements: [{
+            substr: '{id}',
+            replacement: id
+          }]
+        })
+        .then(res => {
+          if (res.success) {
+            const registerPages = 'pages/mine/register/register'
+            const query = Crypto.encrypt({
+              plainStr: `promoCode=${wx.getStorageSync('code')}`
+            })
+            this.setData({
+                name: res.data.name,
+                headImage: res.data.headImage,
+                allUrl:env.env.productionHost+registerPages+'?param='+query
+            })
+          }
+        })
+        .then(() => {
+          if (this.data.headImage) {
+            const params = {
+              bucketName: constantCfg.minio.bucketName,
+              fileName: this.data.headImage
+            }
+            tool.review(params).then(result => {
+              if (result.success) {
+                this.setData({
+                    avatar: result.data
+                })
+              }
+            })
+          }
+        })
+        .then(()=>this.getAccessToken())
+      resolve()
+    })
+  },
+  getAccessToken(){
+    const params = {
+      secret:env.env.appSecret,
+      appid:env.env.appid
+    }
+    http.wxRequest({...this.data.api.getAccessToken,params}).then(res=>{
+      console.log(res)
+    })
   }
 })

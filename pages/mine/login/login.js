@@ -1,6 +1,7 @@
 // pages/mine/login/login.js
+import http from '../../../utils/request.js'
+import Crypto from '../../../utils/crypto'
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -36,7 +37,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    // console.log(Crypto.encrypt())
   },
 
   /**
@@ -87,9 +88,33 @@ Page({
   onShareAppMessage: function () {
 
   },
+  clickButtonText() {
+    console.log(this.data.loginByCode)
+    this.setData({
+      loginByCode:!this.data.loginByCode
+    })
+  },
   submit(e) {
-    wx.switchTab({
-      url: '../../index/index'
+    const plainStr = e.detail.value.password
+    e.detail.value.password = Crypto.encrypt({
+      plainStr
+    })
+    const params = {
+      ...e.detail.value,
+      loginType:this.data.loginByCode?1:0
+    }
+    http.wxRequest({
+      ...this.data.api.login,
+      params
+    }).then(res=>{
+      if(res.success){
+        wx.setStorageSync('userId',res.data.id)
+        wx.setStorageSync('parentId',res.data.parentId)
+        wx.setStorageSync('code',res.data.code)
+        wx.reLaunch({
+          url: '../../index/index'
+        })
+      }
     })
   }
 })

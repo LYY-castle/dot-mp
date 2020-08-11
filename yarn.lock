@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@vant/weapp/-/weapp-1.4.1.tgz#3cd7c88a0564313b76129c2884c09e7dc6ba06f4"
   integrity sha512-8CWPFFkOj1HwPk0ZGU/ctQIZIMFjNyUaODrGN07ICE3I862rYa95a8SK17G8jFzf9NUJHKj00AWi7Lk5KhjEzQ==
 
+crypto-js@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.0.0.tgz#2904ab2677a9d042856a2ea2ef80de92e4a36dcc"
+  integrity sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==
+
 errno@^0.1.1:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.7.tgz#4684d71779ad39af177e3f007996f7c67c852618"
@@ -23,6 +28,11 @@ image-size@~0.5.0:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
+
+js-md5@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/js-md5/-/js-md5-0.7.3.tgz#b4f2fbb0b327455f598d6727e38ec272cd09c3f2"
+  integrity sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==
 
 less@^3.12.2:
   version "3.12.2"

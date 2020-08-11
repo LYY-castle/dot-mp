@@ -1,12 +1,25 @@
 // pages/mine/mine.js
+import http from '../../utils/request.js' //相对路径
+import tool from '../../utils/mixin.js'
+import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog'
+import constantCfg from '../../config/constant'
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
     bg:'/static/img/bg.png',
     avatar:'/static/img/avatar.png',
+    api: {
+      getUserInfo: {
+        url: '/users/{id}',
+        method: 'get'
+      },
+      logout: {
+        url: '/users/logout',
+        method: 'get'
+      }
+    },
     list: [{
       title: '个人资料',
       iconHref: '/static/img/mine-info.png'
@@ -43,14 +56,13 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    Promise.resolve().then(()=>tool.checkToken()).then(()=>this.getUserInfo())
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
   },
 
   /**
@@ -78,7 +90,60 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+  },
+  // 获取用户的头像信息
+  getUserInfo(){
+    return new Promise(resolve=>{
+      const id = wx.getStorageSync('userId')
+      http.wxRequest({ ...this.data.api.getUserInfo, urlReplacements: [{ substr: '{id}', replacement: id}] })
+        .then(res => {
+          if (res.success) {
+            console.log(res.data)
+            this.setData({
+              userInfo:res.data
+            })
+          }
+        })
+        .then(() => {
+          if (this.data.userInfo.headImage) {
+            const params = {
+              bucketName: constantCfg.minio.bucketName,
+              fileName: this.data.userInfo.headImage
+            }
+            tool.review(params).then(result => {
+              if (result.success) {
+                this.setData({
+                  avatar:result.data
+                })
+              }
+            })
+          }
+        })
+        resolve()
+    })
+  },
+  // 退出登录
+  logout() {
+    Dialog.confirm({
+      title: '确定退出？'
+    })
+      .then(() => {
+        let params = {
+          id: wx.getStorageSync('userId')
+        }
+        console.log()
+        http.wxRequest({ ...this.data.api.logout, params }).then(res => {
+          if (res.success) {
+            wx.clearStorageSync()
+            wx.navigateTo({
+              url: './login/login'
+            })
+          }
+        })
+      })
+      .catch(() => {
+        // on cancel
+      })
   },
   MyAchievementByTime(val) {
     this.buttonIndex = val
