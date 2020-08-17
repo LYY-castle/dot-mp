@@ -40,13 +40,17 @@
     padding: 0 5px;
     overflow: hidden;
     position: relative;
-
+    overflow-y: scroll;
+    .openContent {
+      position: absolute;
+      right: 10px;
+      top: 13px;
+      z-index: 999;
+    }
     .listContent {
       height: 100%;
       padding-bottom: 50px;
-      overflow-y: scroll;
     }
-
     .sortContent {
       background: #fff;
       width: 100%;
@@ -55,17 +59,17 @@
       left: 0;
       padding: 15px 10px;
       z-index: 998;
-
-      view.sort {
+      .van-tag{
+        display: block;
+      }
+      .sort {
         display: flex;
         flex-wrap: wrap;
-
         .tagItem {
-          display: inline-block;
           width: 30%;
           margin-right: 5px;
           margin-top: 5px;
-          line-height: 25px;
+          line-height: 35px;
           text-align: center;
           padding: 0;
         }
@@ -132,13 +136,7 @@
   font-size: 12px!important;
 }
 
-.openContent {
-  position: fixed;
-  padding:15px;
-  right: 0px;
-  top: 3px;
-  z-index: 999;
-}
+
 
 // 自定义样式覆盖
 .van-tabs {

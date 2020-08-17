@@ -1,14 +1,16 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/mine/login/login",
     "pages/mine/register/register",
-    "pages/index/index",
-    "pages/index/product-list/product-list",
-    "pages/index/search/search",
-    "pages/index/product-detail/product-detail",
-    "pages/index/share-detail/share-detail",
-    "pages/index/share-list/share-list",
+    "pages/product/index",
+    "pages/product/product-list/product-list",
+    "pages/product/search/search",
+    "pages/product/product-detail/product-detail",
+    "pages/product/share-detail/share-detail",
+    "pages/product/share-list/share-list",
     "pages/dots-money/dots-money",
+    "pages/dots-money/detail-page/detail-page",
     "pages/scatter-dots/scatter-dots",
     "pages/mine/mine",
     "pages/mine/order/order-list/order-list",
@@ -33,7 +35,7 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/product/index",
         "text": "首页",
         "iconPath": "static/img/product-list.png",
         "selectedIconPath": "static/img/product-list-active.png"

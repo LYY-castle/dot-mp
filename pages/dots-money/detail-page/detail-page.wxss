@@ -1,0 +1,14 @@
+.container {
+  background: #eee;
+  padding-bottom: 0;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+::v-deep .van-empty__image {
+  width: 160px;
+  height: auto;
+}
+::v-deep .van-empty__image img {
+  width: 160px;
+  height: auto;
+}

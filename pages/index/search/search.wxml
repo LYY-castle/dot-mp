@@ -1,9 +1,0 @@
-<!--pages/product/search/search.wxml-->
-<view class="container">
-	<van-sticky>
-		<van-search use-action-slot shape="round" placeholder="搜索商品" bind:search="search" bind:focus="focus" background="#fff" clearable="{{false}}">
-			<view slot="action" bind:tap="search" class="searchColor" wx:if="{{!historyListShow}}">搜索</view>
-		</van-search>
-	</van-sticky>
-	<view wx:if="{{historyListShow}}">数据列表</view>
-</view>

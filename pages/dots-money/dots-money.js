@@ -1,8 +1,9 @@
 // pages/dots-money/dots-money.js
-import {
-  getEndTime,
-  getStartTime
-} from '../../utils/util'
+import http from '../../utils/request.js' //相对路径
+import tool from '../../utils/mixin.js'
+import qseBaoUtil from '../../utils/qsebao.js' //相对路径
+import constantCfg from '../../config/constant'
+import { getEndTime,getStartTime } from '../../utils/util'
 const moment = require('../../utils/moment.min.js')
 Page({
 
@@ -15,14 +16,13 @@ Page({
     empty: '/static/img/empty.png',
     iconSuccess: '/static/img/icon-success.png',
     iconFail: '/static/img/icon-fail.png',
+    empty: '/static/img/empty.png',
     // 排序
     timeShow: false,
-    minDate: new Date(1970, 0, 1),
-    maxDate: new Date(),
+    minDate: new Date(1970, 0, 1).getTime(),
+    maxDate: new Date().getTime(),
     value1: 0,
-    buttonIndex: 0,
-    activeStatus: 0, // 0待支付1已支付
-    activeItem: null, // 当前活跃的点击对象
+    activeButtonIndex: 0,
     option1: [{
         text: '订单数量由高到低',
         value: 0
@@ -48,6 +48,13 @@ Page({
         value: 5
       }
     ],
+    buttonGroup: [{
+      text: '当天'
+    }, {
+      text: '本周'
+    }, {
+      text: '本月'
+    }],
     selectMap: [{
         direction: 'desc',
         field: 'orderNum'
@@ -73,44 +80,20 @@ Page({
         field: 'totalNum'
       }
     ],
-    defaultParam: {
-      direction: 'desc',
+
+    direction: 'desc',
       field: 'orderNum',
       createAt: '自定义',
-      defaultDate: [new Date(), new Date()],
-      createAtStart: getStartTime(moment(new Date()).format(), 'day'),
-      createAtEnd: getEndTime(moment(new Date()).format(), 'day'),
-      pageNo: 1,
+      defaultDate: [new Date().getTime(), new Date().getTime()],
       pageSize: 10,
-      // type: constantCfg.productType.defaultProductType
-    },
+      type: constantCfg.productType.defaultProductType,
+    createAtStart: getStartTime(moment(new Date()).format(), 'day'),
+    createAtEnd: getEndTime(moment(new Date()).format(), 'day'),
     pageNo: 1,
-    pageList: [],
-    dotList: [],
-    dotListById: [],
-    offsetTop: 46,
-    pageTitle: '点点财',
-    active: 'mine', // 当前活跃tab
-    // activeProductType: constantCfg.productType.defaultProductType, // 当前默认商品
-    activeName: '',
-    activeUserId: null,
-    myDataList: [], // 我的业绩
-    myDotsDataList: [], // 小点点业绩
-    myChannelsDataList: [], // 渠道业绩
-    childList: [], // 每个投保对象下的保单/购卡人下面的卡详情
-    myPoliciesLoading: false,
-    myPoliciesFinished: true,
-    policiesPageSize: 5,
-    policiesPageNo: 1,
-    loading: false,
-    finished: false,
-    loadingShow: false,
-    customerName: '',
-    linkStatus: 'true',
+    active: 'mine', // 当前活跃业绩类型 tab
+    activeProductType: constantCfg.productType.defaultProductType, // 当前默认商品类型
+    myDataList: [],
     productTypes: [],
-    shareParams: {
-      
-    },
     api: {
       // 获取我的业绩
       getMyDataList: {
@@ -154,11 +137,6 @@ Page({
         url: '/usergroup-users/usergroups',
         method: 'get'
       },
-      // 获取产品类型
-      getProductTypes: {
-        url: '/system/dicts/{dictCode}/items/enable',
-        method: 'get'
-      },
       // 获取我的团队
       getMyTeam: {
         url: '/users',
@@ -174,16 +152,10 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    const pages = getCurrentPages()
-    this.setData({
-      shareParams:{
-        title: '',
-        desc: '',
-        imgUrl: '',
-        link: pages[pages.length - 1].route
-      }
-    })
+  onLoad: function () {
+    Promise.resolve()
+    .then(()=>this.getProductSorts())
+    .then(()=>this.getMyAchievement())
   },
 
   /**
@@ -224,14 +196,279 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
-
-  },
+  onReachBottom: function () {},
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
 
+  },
+  // 获取产品分类
+  getProductSorts() {
+    const params = {
+      parentId: 0,
+      pageSize: 100
+    }
+    tool.getProductSorts(params).then(res => {
+      this.setData({
+        productTypes: res.data
+      })
+    })
+  },
+  // 获取业绩
+  getMyAchievement() {
+    const params = {
+      pageNo: this.data.pageNo,
+      pageSize: 10,
+      type: this.data.activeProductType,
+      startTime: this.data.createAtStart,
+      endTime: this.data.createAtEnd,
+      createBy: wx.getStorageSync('userId')
+    }
+    if (this.data.active === 'mine') {
+        // 我的业绩
+      // 非保险类型
+      const requestData1 = (param) => {
+        return new Promise((resolve) => {
+          http.wxRequest({
+            ...this.data.api.getMyDataList,
+            params: param
+          }).then(res => {
+            if (res.success) {
+              if (param.status===0) {
+                this.setData({
+                  myDataList: res.data
+                })
+              }
+              if(param.status===1){
+                this.setData({
+                  myDataList: this.data.myDataList.concat(res.data)
+                })
+              }
+              resolve()
+            }
+          })
+        })
+      }
+      // 保险类型
+      const requestData2 = () => {
+        return new Promise((resolve) => {
+          http.wxRequest({
+            ...this.data.api.getMyDataList,
+            params
+          }).then(res => {
+            if (res.success) {
+              this.linkStatus = true
+              if (params.pageNo === 1) {
+                this.setData({
+                  myDataList: res.data
+                })
+              } else {
+                this.setData({
+                  myDataList: this.data.myDataList.concat(res.data)
+                })
+              }
+              resolve()
+            }
+          })
+        })
+      }
+      if (!constantCfg.productType.qsebao.includes(this.data.activeProductType)) {
+        const params1 = {
+          ...params,
+          status: 0
+        }
+        const params2 = {
+          ...params,
+          status: 1
+        }
+        this.setData({
+          myDataList:[]
+        })
+        Promise.resolve()
+          .then(() => requestData1(params1))
+          .then(() => requestData1(params2))
+      } else {
+        requestData2()
+      }
+    } else if (this.data.active === 'dots') {
+      const dotsParams = {
+        ...params,
+        field: this.data.field,
+        direction: this.data.direction,
+      }
+      // 小点点业绩
+      http.wxRequest({ ...this.data.api.getMyChildDataList, params:dotsParams }).then((res) => {
+        if (res.success) {
+          res.data.forEach((item) => {
+            item.userPhone = item.userPhone.replace(item.userPhone.substring(3, 6), '***')
+          })
+          if (dotsParams.pageNo === 1) {
+            this.setData({
+              myDataList:res.data
+            })
+          } else {
+            this.setData({
+              myDataList:this.data.myDataList.concat(res.data)
+            })
+          }
+        }
+      })
+    } else if (this.data.active === 'channel') {
+      // 渠道业绩
+      const channelParams = {
+        ...params,
+        field: this.data.field,
+        direction: this.data.direction,
+      }
+      http.wxRequest({ ...this.data.api.getUserGroupList, params:channelParams }).then((res) => {
+        if (res.success) {
+          if (channelParams.pageNo === 1) {
+            this.setData({
+              myDataList:res.data
+            })
+          } else {
+            this.setData({
+              myDataList:this.data.myDataList.concat(res.data)
+            })
+          }
+        }
+      })
+    } else if (this.data.active === 'team') {
+      this.getMyTeam()
+    }
+  },
+  // typeChange
+  typeChange(event){
+    this.setData({
+      myDataList:[],
+      active:event.detail.name,
+      activeProductType:constantCfg.productType.defaultProductType
+    })
+    this.getMyAchievement()
+  },
+  // goodChange
+  goodChange(event){
+    this.setData({
+      myDataList:[],
+      activeProductType:event.detail.name
+    })
+    this.getMyAchievement()
+  },
+  onTimeClose(){
+    this.setData({
+      timeShow:false
+    })
+  },
+  onTimeConfirm(date) {
+    const start = date.detail[0]
+    const end = date.detail[1]
+    this.setData({
+      timeShow:false,
+      createAtStart:getStartTime(moment(start).format(), 'day'),
+      createAtEnd:getStartTime(moment(end).format(), 'day'),
+      createAt:`${this.formatDate(start)} - ${this.formatDate(end)}`,
+      defaultDate:[moment(start).toDate().getTime(), moment(end).toDate().getTime()]
+    })
+    this.getMyAchievement()
+  },
+  formatDate(date) {
+    return `${date.getMonth() + 1}/${date.getDate()}`
+  },
+  selectChange(event){
+    console.log(event)
+    const index = event.detail
+    this.setData({
+      field:this.data.selectMap[index].field,
+      direction:this.data.selectMap[index].direction
+    })
+    this.getMyAchievement()
+  },
+  getMyTeam() {
+    const params = {
+      parentId: wx.getStorageSync('userId'),
+      pageNo: this.data.pageNo,
+      pageSize: 20
+    }
+    return new Promise(resolve => {
+      http.wxRequest({
+        ...this.data.api.getMyTeam,
+        params
+      }).then(res => {
+        if (res.success) {
+          if (params.pageNo === 1) {
+            this.setData({
+              myDataList:res.data
+            })
+          } else {
+            this.setData({
+              myDataList:this.data.myDataList.concat(res.data)
+            })
+          }
+          resolve()
+        }
+      })
+    })
+  },
+  MyAchievementByTime(e) {
+    const index = e.currentTarget.dataset.index
+    if (index === 0) {
+      this.setData({
+        myDataList:[],
+        activeButtonIndex:index,
+        createAtStart: getStartTime(moment().format(), 'day'),
+        createAtEnd: getEndTime(moment().format(), 'day'),
+        createAt: '自定义',
+        defaultDate: [new Date().getTime(), new Date().getTime()]
+      })
+      this.getMyAchievement()
+    } else if(index===1){
+      this.setData({
+        myDataList:[],
+        activeButtonIndex:index,
+        createAtStart: getStartTime(moment().startOf('week').format(), 'day'),
+        createAtEnd: getEndTime(moment().endOf('week').format(), 'day'),
+        createAt: '自定义',
+        defaultDate: [new Date().getTime(), new Date().getTime()]
+      })
+      this.getMyAchievement()
+    }else if(index===2){
+      this.setData({
+        myDataList:[],
+        activeButtonIndex:index,
+        createAtStart: getStartTime(moment().startOf('month').format(), 'day'),
+        createAtEnd: getEndTime(moment().endOf('month').format(), 'day'),
+        createAt: '自定义',
+        defaultDate: [new Date().getTime(), new Date().getTime()]
+      })
+      this.getMyAchievement()
+    }else if(index===3){
+      this.setData({
+        myDataList:[],
+        activeButtonIndex:index,
+        timeShow: true
+      })
+    }
+  },
+  goToNextPage(e){
+    console.log(e)
+    const event = e.currentTarget.dataset.option
+    const option = {
+      ...event,
+      direction:this.data.direction,
+      field:this.data.field,
+      createAtStart:this.data.createAtStart,
+      createAtEnd:this.data.createAtEnd,
+      active:this.data.active
+    }
+    console.log('option',option)
+    wx.navigateTo({
+      url: './detail-page/detail-page',
+      success: function(res) {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
+      }
+    })
   }
 })

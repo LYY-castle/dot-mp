@@ -1,38 +1,14 @@
+<!--index.wxml-->
 <view class="container">
-  <van-sticky>
-    <van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
-  </van-sticky>
-  <view class="sort">
-    <!-- <view wx:for="{{5}}" wx:key="{{index}}" class="sortItem">
-      <van-image src="{{item.icon}}" alt width="40px" height="40px"/>
-      <view>{{ item.name }}</view>
-    </view> -->
-    <view class="sortItem" bind:tap="gotoProductList">
-      <van-image src="{{ProductAll}}" alt width="40px" height="40px" />
-      <view>全部</view>
-    </view>
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+    <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"> 获取手机号 </button>
   </view>
-  <view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
-  <view class="goodContent" wx:if="{{productList.length>0}}">
-    <view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bind:click="gotoDetail(item)">
-      <view class="imgContent">
-        <van-image src="{{item.image}}" alt width="100%" height="150px" fit="cover" wx:if="{{item.image !== ''}}" />
-        <van-image  alt width="100%" height="150px" fit="contain" wx:else use-loading-slot />
-      </view>
-      <view class="textContent">
-        <view class="m-b-5">{{ item.name }}</view>
-        <view class="m-b-5" wx:if="{{item.pricingMethod}}">
-          <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10 m-r-5">多买优惠
-          </van-tag>
-          <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10">多单有礼</van-tag>
-        </view>
-        <view>
-          <text class="minPrice fz-16">￥{{ item.pricingMethod === 1 ? item.minPrice : item.price }}</text>
-          <text class="m-r-10 minPrice fz-10">起</text>
-          <text class="originPrice">￥{{ item.pricingMethod === 1 ? item.maxPrice : item.originalPrice }}</text>
-        </view>
-      </view>
-    </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
   </view>
-  <van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
 </view>

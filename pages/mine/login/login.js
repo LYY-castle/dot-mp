@@ -95,6 +95,7 @@ Page({
     })
   },
   submit(e) {
+
     const plainStr = e.detail.value.password
     e.detail.value.password = Crypto.encrypt({
       plainStr
@@ -112,7 +113,7 @@ Page({
         wx.setStorageSync('parentId',res.data.parentId)
         wx.setStorageSync('code',res.data.code)
         wx.reLaunch({
-          url: '../../index/index'
+          url: '../../product/index'
         })
       }
     })

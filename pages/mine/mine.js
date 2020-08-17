@@ -135,7 +135,7 @@ Page({
         http.wxRequest({ ...this.data.api.logout, params }).then(res => {
           if (res.success) {
             wx.clearStorageSync()
-            wx.navigateTo({
+            wx.reLaunch({
               url: './login/login'
             })
           }

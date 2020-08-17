@@ -1,0 +1,102 @@
+<!--pages/product/product-detail/product-detail.wxml-->
+<view class="container">
+    <view wx:if="{{showContent}}">
+      <view class="cardContent">
+        <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
+        autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" wx:if="{{product.image && product.image.length > 0}}">
+        <block wx:for="{{product.image}}" wx:for-item="image" wx:key="imgIndex">
+          <swiper-item>
+            <van-image src="{{image}}" width="100%" height="100%" fit="contain"></van-image>
+          </swiper-item>
+        </block>
+      </swiper>
+        <view class="cardDetail bg-white">
+          <view class="allprice">
+            <view class="title fz-14">{{ product.name }}</view>
+            <view class="description fz-12">{{ product.description }}</view>
+            <!-- pricingMethod = 0 表示使用固定单价规则. -->
+            <view wx:if="{{product.pricingMethod === 0}}" class="m-t-15">
+              <view>
+                <view class="title">市场价：</view>
+                <view class="money">￥{{ product.originalPrice }}</view>
+                <view>/ {{ product.unit }}</view>
+              </view>
+              <view>
+                <view class="title">平台优惠价：</view>
+                <view class="money">￥{{ product.price }}</view>
+                <view>/ {{ product.unit }}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <!-- pricingMethod = 0 表示使用自定义单价规则. -->
+        <template wx:if="{{product.pricingMethod === 1}}">
+          <!-- <van-divider dashed>产品价格</van-divider> -->
+
+          <view class="price-container m-t-10 bg-white">
+            <view class="price-title">活动</view>
+            <view class="m-l-15">
+              <view class="block" v-if="!!product.originalPrice">
+                <view class="title-normal">市场价：</view>
+                <view class="money-normal">￥{{ product.originalPrice }}</view>
+                <view class="title-normal">/ {{ product.unit }}</view>
+              </view>
+
+              <view wx:for="{{pricingRule.pricingRuleDetails}}" wx:key="idx" class="m-b-5">
+                <!-- 只有最大值, 并且最大值为 1 时显示为会员优惠价 -->
+
+                <view class="title-normal" wx:if="{{item.maxNum === 1}}">会员优惠价：</view>
+                <view wx:else class="money-red m-r-10 fz-12 bold">多买优惠</view>
+
+                <!-- 最小值、最大值都 > 1 -->
+                <view
+                  class="title-normal"
+                  wx:if="{{item.maxNum > 1}}"
+                >会员团购 {{ item.minNum }} ~ {{ item.maxNum }} {{ product.unit }}</view>
+
+                <!-- 只有最小值, 并且最小值大于 1 时显示为团购几张及以上 -->
+                <view
+                  class="title-normal"
+                  wx:if="{{item.minNum > 0 && !item.maxNum}}"
+                >会员团购 {{ item.minNum }} {{ product.unit }}及以上</view>
+
+                <view class="money-normal">￥{{ item.price }}</view>
+                <view class="title-normal">/ {{ product.unit }}</view>
+              </view>
+
+              <!-- 健康/红酒类产品显示促销文案 -->
+              <view
+                wx:if="{{product.category.code === constantCfg.productType.healthRedWineProductType}}"
+              >
+                <view class="money-red m-r-10 fz-12 bold">多单有礼</view>
+                <view class="title-normal">购买满 5 瓶发货时赠送 1 瓶</view>
+              </view>
+            </view>
+          </view>
+        </template>
+
+        <view class="product">
+          <view wx:if="{{product.properties && product.properties.length > 0}}">
+            <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
+            <view wx:for="{{product.properties}}" wx:for-item="content" wx:key="index">
+              <view>
+                <text
+                  class="title"
+                >{{ content.propertyTemplate ? content.propertyTemplate.label : '参数' + index }}：</text>
+                <text class="description">{{ content.val }}</text>
+              </view>
+            </view>
+          </view>
+
+          <view wx:if="{{product.detail}}">
+            <van-divider dashed="{{true}}" contentPosition="center">产品详情</van-divider>
+            <rich-text nodes="{{product.detail}}" class="produceDetail"></rich-text>
+          </view>
+        </view>
+      </view>
+      <van-goods-action safe-area-inset-bottom>
+        <van-button block="{{true}}" round="{{true}}" bind:click="buyCard" color="#f9ae08">立即购买</van-button>
+      </van-goods-action>
+    </view>
+    <van-empty description="暂无描述信息" wx:else />
+  </view>

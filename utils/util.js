@@ -84,8 +84,14 @@ function getStartTime(timeStr, type) {
   }
   return endTime.format('YYYY-MM-DD HH:mm:ss')
 }
+// 获取当前页面参数
+function getCurrentPageUrl(){
+  var pages = getCurrentPages();
+  return pages[pages.length - 1];
+}
 module.exports = {
   formatTime,
   getStartTime,
-  getEndTime
+  getEndTime,
+  getCurrentPageUrl
 }

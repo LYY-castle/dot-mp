@@ -233,6 +233,3 @@ Page {
 .description {
   color: #888888 !important;
 }
-.produceDetail img {
-  display: block !important;
-}

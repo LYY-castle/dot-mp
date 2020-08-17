@@ -1,0 +1,68 @@
+.container {
+  background: #f9f9f9;
+  overflow-y: scroll;
+}
+.cardContent .bg-white {
+  background: #fff;
+}
+.cardContent .cardDetail {
+  padding: 20px 20px 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.price-container {
+  padding: 20px;
+  font-size: 13px;
+  display: flex;
+}
+.price-container .price-title {
+  font-size: 15px;
+  font-weight: 800;
+}
+.p_img {
+  width: 80%;
+}
+.product {
+  background: #fff;
+  padding: 10px 20px 50px;
+  margin-top: 10px;
+}
+.product .title {
+  font-size: 12px;
+}
+.product .description {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+}
+.allprice {
+  text-align: left;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+}
+.left {
+  width: 100%;
+}
+.left .top {
+  margin-bottom: 5px;
+}
+.time-limit {
+  color: #d65454;
+}
+swiper {
+  height: 200px!important;
+}
+van-button {
+  width: 100%;
+}
+::v-deep .van-nav-bar--fixed {
+  background: none;
+}
+::v-deep .van-empty__image {
+  width: 160px;
+  height: auto;
+}
+::v-deep .van-empty__image img {
+  width: 160px;
+  height: auto;
+}

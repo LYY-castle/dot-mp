@@ -17,7 +17,8 @@
       <view class="card">
         <view>{{ name }}</view>
         <view id="card">
-          <canvas id="qrcode"></canvas>
+        <canvas type="2d" id="myCanvas"></canvas>
+          <!-- <canvas id="qrcode"></canvas> -->
         </view>
         <view class="font-size-12">[ 截屏转发金小点身份码 - 发展团队 ]</view>
         <view class="copyBtn">复制链接</view>

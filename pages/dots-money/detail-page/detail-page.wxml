@@ -1,0 +1,127 @@
+<view class="container">
+  <van-cell wx:if="{{dataList.length>0}}" wx:for="{{dataList}}" wx:key="index" is-link="{{pageParams.active === 'channel'}}" class="m-b-5"
+    bind:click="freshPage" data-option="{{item}}">
+    <view slot="title">
+      <view wx:if="{{pageParams.active === 'mine'}}">
+        <view wx:if="{{ !constantCfg.productType.qsebao.includes(item.type) && item.orderExtends && item.orderExtends.length > 0}}">
+          <view class="flex-between">
+            <view class="bold">{{ item.orderExtends[0].productName | ellipsis(11) }}</view>
+            <view>
+              金额：
+              <view class="money">￥{{ item.amount }}</view>
+            </view>
+          </view>
+          <view class="flex-between">
+            <view class="c-gray">下单时间：{{ item.createAt }}</view>
+            <view>
+              <view class="c-gray">数量：</view>
+              <view class="bold">{{ item.totalNum }}</view>
+            </view>
+            <van-tag round color="{{statusMap[item.status]['color']}}">{{ statusMap[item.status]['text'] }}</van-tag>
+          </view>
+        </view>
+        <view wx:else>
+          <view class="flex-between">
+            <view>{{ item.insuranceName }}</view>
+            <view>
+              金额：
+              <view class="money">￥{{ item.permium }}</view>
+            </view>
+          </view>
+          <view class="flex-between">
+            <view class="c-gray">时间：{{ item.orderUpdateAt }}</view>
+            <van-tag round color="{{insureStatusMap[item.orderStatus]['color']}}">
+              {{ insureStatusMap[item.orderStatus]['text']}}
+            </van-tag>
+          </view>
+        </view>
+      </view>
+      <view wx:else>
+        <view wx:if="{{pageParams.active !== 'team'}}">
+          <view class="flex-start-start">
+            <view style="min-width:50px;">
+              <view class="title fz-16" align="top">{{ item.userName || item.channelName }}</view>
+            </view>
+            <view class="m-l-20" style="width: 100%;">
+              <view wx:if="{{pageParams.active !== 'channel'}}">{{ item.applicantMobile }}</view>
+              <view class="fz-12" wx:if="{{constantCfg.productType.qsebao.includes(item.type)}}">
+                <view class="flex-between">
+                  <view class="flex-start">
+                    <van-image src="{{waitPay}}" alt width="20px" width="20px" class="m-r-3" />
+                    <view class="c-gray">待支付:</view>
+                    <view class="money">{{ item.noPayNum }}</view>
+                  </view>
+                  <view class="flex-start">
+                    <van-image src="{{pay}}" alt width="20px" width="20px" class="m-r-3" />
+                    <span class="c-gray">待生效:</span>
+                    <span class="money">{{ item.toBeEffectiveNum }}</span>
+                  </view>
+                </view>
+                <view class="flex-between">
+                  <view class="flex-start money-fail">
+                    <van-image src="{{iconFail}}" alt width="10px" width="10px" class="m-r-3" />
+                    <view>投保失败:</view>
+                    <view class="money">{{ item.policyFail }}</view>
+                  </view>
+                  <view class="flex-start money-success">
+                    <van-image src="{{iconSuccess}}" alt width="10px" width="10px" class="m-r-3" />
+                    <view>投保成功:</view>
+                    <view class="money">{{ item.policySuccess }}</view>
+                  </view>
+                </view>
+              </view>
+              <view wx:if="{{!constantCfg.productType.qsebao.includes(item.type)}}">
+                <view wx:if="{{pageParams.active !== 'channel' && pageParams.active !== 'mine'}}">
+                  手机号：{{ item.userPhone }}
+                </view>
+                <view class="flex-between fz-12" wx:if="{{pageParams.active !== 'mine'}}">
+                  <view class="flex-start">
+                    <van-image src="{{waitPay}}" alt width="20px" width="20px" class="m-r-3" />
+                    <view class="c-gray">待支付:</view>
+                    <view class="money">{{ item.toBeEffectiveNum }}</view>
+                  </view>
+                  <view class="flex-start">
+                    <van-image src="{{pay}}" alt width="20px" width="20px" class="m-r-3" />
+                    <view class="c-gray">已支付:</view>
+                    <view class="money">{{ item.orderSuccessNum }}</view>
+                  </view>
+                </view>
+              </view>
+              <view class="flex-between fz-12" wx:if="{{pageParams.active === 'channel'}}">
+                <view class="money-yellow">
+                  <text>所有下级:</text>
+                  <text class="money">{{ item.allChildrenDotNum }}</text>
+                </view>
+                <view class="money-yellow">
+                  <text>直属下级:</text>
+                  <text class="money">{{ item.childrenDotNum }}</text>
+                </view>
+              </view>
+              <view class="flex-between fz-12">
+                <view>
+                  <view class="c-gray">订单数量:</view>
+                  <view class="money">{{ item.orderNum }}</view>
+                </view>
+                <view>
+                  <view class="c-gray">产品数量:</view>
+                  <view class="money">{{ item.totalNum }}</view>
+                </view>
+                <view>
+                  <view class="c-gray">订单金额:</view>
+                  <view class="money">{{ item.totalAmount }}</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view wx:else>
+          <view class="flex-between">
+            <view class="title fz-16">{{ item.name }}</view>
+            <view>手机号：{{ item.phone }}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </van-cell>
+  <van-empty wx:if="{{dataList.length===0}}" image="{{empty}}" description="暂无数据" />
+</view>

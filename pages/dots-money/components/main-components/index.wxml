@@ -1,0 +1,97 @@
+<!--pages/dots-money/components/main-components/index.wxml-->
+<van-cell wx:for="{{myDataList}}" wx:for-item="list" wx:key="dataIndex" bindTap="onTap" data-option="{{list}}">
+		<view slot="title" class="flex-start">
+			<van-image src="{{list.orderStatus === 0 ? waitPay : pay}}" width="50px" height="50px"/>
+			<view wx:if="{{active !== 'team'}}" style="width:100%">
+				<view class="flex-start">
+					<view class="m-l-10">
+						<view class="title fz-15 fw-500" wx:if="{{list.orderStatus === 0 || list.orderStatus === 1}}">
+							{{
+						list.orderStatus === 0 ? '待支付' : '已支付'
+						}}
+						</view>
+					</view>
+				</view>
+				<view class="flex-start-start">
+					<view wx:if="{{constantCfg.productType.qsebao.includes(list.type)}}" style="min-width:50px;"
+						class="title fz-16" align="top">{{ list.applicantName || list.channelName }}</view>
+					<view wx:if="{{!constantCfg.productType.qsebao.includes(list.type) && active !== 'mine'}}" class="title fz-16"
+						style="min-width:50px;" align="top">{{ list.userName || list.channelName }}</view>
+					<view class="m-l-10" style="width: 100%;">
+						<view wx:if="{{active !== 'channel'}}">{{ list.applicantMobile }}</view>
+						<view class="fz-12" wx:if="{{constantCfg.productType.qsebao.includes(list.type)}}">
+							<view class="flex-between">
+								<view class="flex-start">
+									<van-image src="{{waitPay}}" alt width="20px" height="20px" class="m-r-3" />
+									<text class="c-gray">待支付:</text>
+									<text class="money">{{ list.noPayNum }}</text>
+								</view>
+								<view class="flex-start">
+									<van-image src="{{pay}}" alt width="20px" height="20px" class="m-r-3" />
+									<text class="c-gray">待生效:</text>
+									<text class="money">{{ list.toBeEffectiveNum }}</text>
+								</view>
+							</view>
+							<view class="flex-between">
+								<view class="flex-start money-fail">
+									<van-image src="{{iconFail}}" alt width="10px" height="10px" class="m-r-3" />
+									<text>投保失败:</text>
+									<text class="money">{{ list.policyFail }}</text>
+								</view>
+								<view class="flex-start money-success">
+									<van-image src="{{iconSuccess}}" alt width="10px" height="10px" class="m-r-3" />
+									<text>投保成功:</text>
+									<text class="money">{{ list.policySuccess }}</text>
+								</view>
+							</view>
+						</view>
+						<view wx:if="{{!constantCfg.productType.qsebao.includes(list.type)}}">
+							<view wx:if="{{active !== 'channel' && active !== 'mine'}}">手机号：{{ list.userPhone }}</view>
+							<view class="flex-between fz-12" wx:if="{{active !== 'mine'}}">
+								<view class="flex-start">
+									<van-image src="{{waitPay}}" alt width="20px" height="20px" class="m-r-3" />
+									<text class="c-gray">待支付:</text>
+									<text class="money">{{ list.toBeEffectiveNum }}</text>
+								</view>
+								<view class="flex-start">
+									<van-image src="{{pay}}" alt width="20px" height="20px" class="m-r-3" />
+									<text class="c-gray">已支付:</text>
+									<text class="money">{{ list.orderSuccessNum }}</text>
+								</view>
+							</view>
+						</view>
+						<view class="flex-between fz-12" wx:if="{{active === 'channel'}}">
+							<view class="money-yellow">
+								<text>所有下级:</text>
+								<text class="money">{{ list.allChildrenDotNum }}</text>
+							</view>
+							<view class="money-yellow">
+								<text>直属下级:</text>
+								<text class="money">{{ list.childrenDotNum }}</text>
+							</view>
+						</view>
+						<view class="flex-between fz-12">
+							<view>
+								<view class="c-gray">订单数量:</view>
+								<view class="money">{{ list.orderNum }}</view>
+							</view>
+							<view>
+								<view class="c-gray">产品数量:</view>
+								<view class="money">{{ list.totalNum }}</view>
+							</view>
+							<view>
+								<view class="c-gray">订单金额:</view>
+								<view class="money">{{ list.totalAmount }}</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view wx:else style="width:100%">
+				<view class="flex-between">
+					<view class="title fz-16">{{ list.name }}</view>
+					<view>手机号：{{ list.phone }}</view>
+				</view>
+			</view>
+		</view>
+	</van-cell>

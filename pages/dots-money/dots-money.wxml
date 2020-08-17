@@ -1,9 +1,32 @@
 <!--pages/dots-money/dots-money.wxml-->
 <view class="container">
-  点点财
-  <van-sticky>
-    <van-tabs>
-      <van-tab name="我的业绩"></van-tab>
-    </van-tabs>
-  </van-sticky>
+	<van-tabs active="{{active}}" sticky border="{{false}}" line-height="0" bind:change="typeChange"
+		custom-class="achievementSort" color="#333333" background="#f9ae08">
+		<van-tab title="我的业绩" name="mine"></van-tab>
+		<van-tab title="小点点业绩" name="dots"></van-tab>
+		<van-tab title="渠道业绩" name="channel"></van-tab>
+		<van-tab title="我的团队" name="team"></van-tab>
+	</van-tabs>
+	<van-tabs active="{{activeProductType}}" sticky bind:change="goodChange" wx:if="{{active !== 'team'}}">
+		<van-tab wx:for="{{productTypes}}" wx:key="productIndex" title="{{item.name}}" name="{{item.code}}"></van-tab>
+	</van-tabs>
+	<view class="selectButtons" wx:if="{{active !== 'team'}}">
+		<van-button wx:for="{{buttonGroup}}" wx:for-item="button" wx:key="index" round="{{true}}" size="mini"
+			color="{{activeButtonIndex === index ? 'rgba(247, 189, 79, 1)' : ''}}" bind:click="MyAchievementByTime"
+			data-index="{{index}}" class="m-r-5">{{button.text}}</van-button>
+		<van-button size="mini" color="{{activeButtonIndex === 3 ? 'rgba(247, 189, 79, 1)' : ''}}"
+			bind:click="MyAchievementByTime" data-index="{{3}}" class="m-r-5">{{createAt}}</van-button>
+		<van-dropdown-menu>
+			<van-dropdown-item class="fz-13" value="{{value1}}" options="{{option1}}"
+				wx:if="{{active !== 'mine' && activeProductType !== constantCfg.productType.healthProductType}}"
+				bind:change="selectChange" />
+		</van-dropdown-menu>
+	</view>
+	<view wx:if="{{myDataList.length>0}}">
+		<main-components bindmyevent="goToNextPage" myDataList="{{myDataList}}" active="{{active}}"></main-components>
+	</view>
+	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{myDataList.length===0}}" />
+	<van-calendar show="{{ timeShow }}" type="range" bind:close="onTimeClose" bind:confirm="onTimeConfirm"
+		min-date="{{ minDate }}" max-date="{{ maxDate }}" show-confirm="{{ false }}" default-date="{{defaultDate}}" />
+
 </view>

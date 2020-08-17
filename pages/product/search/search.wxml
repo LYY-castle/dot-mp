@@ -1,0 +1,56 @@
+<!--pages/product/search/search.wxml-->
+<view class="container">
+	<van-sticky>
+		<van-search value="{{ searchValue }}" use-action-slot bind:change="change"
+		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search" background="#fff" clearable="{{false}}" >
+			<view slot="action" bind:tap="search" class="searchColor" wx:if="{{historyListShow}}">搜索</view>
+		</van-search>
+	</van-sticky>
+	<view wx:if="{{!historyListShow}}">
+		<view wx:if="{{productList.length>0}}" class="goodContent">
+			<view wx:for="{{productList}}" wx:for-item="list" wx:key="listIndex" class="goodItem" bindtap="gotoDetail" data-option="{{list}}">
+        <view class="imgContent">
+					<van-image src="{{list.image}}" alt width="100%" height="150px" fit="fill" wx:if="{{list.image !== ''}}" />
+					<van-image  alt width="100%" height="150px" fit="fill" wx:else use-loading-slot />
+        </view>
+        <view class="textContent">
+          <view class="m-b-5">{{ list.name }}</view>
+          <view class="m-b-5" vx:if="{{list.pricingMethod}}">
+            <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10 m-r-5"
+              >多买优惠</van-tag
+            >
+            <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10"
+              >多单有礼</van-tag
+            >
+          </view>
+          <view>
+            <view class="minPrice fz-16">￥{{ list.pricingMethod === 1 ? list.minPrice : list.price }}</view>
+            <view class="m-r-10 minPrice fz-10">起</view>
+            <view class="originPrice">￥{{ list.pricingMethod === 1 ? list.maxPrice : list.originalPrice }}</view>
+          </view>
+        </view>
+			</view>
+		</view>
+		<van-empty wx:else src="{{empty}}" description="暂无符合条件的商品"></van-empty>
+	</view>
+	<view class="searchContent" wx:else>
+		<view class="searchItem">
+			<view>历史记录</view>
+			<van-icon name="delete" bindtap="clearHistoryList" wx:if="{{historyList.length > 0}}" />
+		</view>
+		<view class="searchItemContent" wx:if="{{historyList.length > 0}}">
+			<van-tag
+				round
+				wx:for="{{historyList}}"
+				wx:for-item="list"
+				wx:key="listIndex"
+				class="m-r-5 m-t-5"
+				data-item="{{list}}"
+				bindtap="selectList"
+				>{{ list }}</van-tag
+			>
+		</view>
+		<van-empty description="暂无搜索记录" v-else></van-empty>
+	</view>
+
+</view>

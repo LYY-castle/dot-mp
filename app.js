@@ -1,4 +1,5 @@
 //app.js
+import http from './utils/request'
 App({
   onLaunch: function () {
     // 展示本地存储能力
@@ -9,6 +10,17 @@ App({
     // 登录
     wx.login({
       success: res => {
+        console.log('登录后获取的参数',res)
+        const loginParams = {
+          url: '/users/login',
+          method: 'post'
+        }
+        const params = {
+          code:res.code
+        }
+        http.wxRequest({...loginParams,params}).then(result=>{
+          console.log(result)
+        })
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })

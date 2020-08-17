@@ -38,11 +38,17 @@
   padding: 0 5px;
   overflow: hidden;
   position: relative;
+  overflow-y: scroll;
+}
+.container .productsContent .openContent {
+  position: absolute;
+  right: 10px;
+  top: 13px;
+  z-index: 999;
 }
 .container .productsContent .listContent {
   height: 100%;
   padding-bottom: 50px;
-  overflow-y: scroll;
 }
 .container .productsContent .sortContent {
   background: #fff;
@@ -53,16 +59,18 @@
   padding: 15px 10px;
   z-index: 998;
 }
-.container .productsContent .sortContent view.sort {
+.container .productsContent .sortContent .van-tag {
+  display: block;
+}
+.container .productsContent .sortContent .sort {
   display: flex;
   flex-wrap: wrap;
 }
-.container .productsContent .sortContent view.sort .tagItem {
-  display: inline-block;
+.container .productsContent .sortContent .sort .tagItem {
   width: 30%;
   margin-right: 5px;
   margin-top: 5px;
-  line-height: 25px;
+  line-height: 35px;
   text-align: center;
   padding: 0;
 }
@@ -114,13 +122,6 @@
 }
 .van-sidebar-item__text {
   font-size: 12px!important;
-}
-.openContent {
-  position: fixed;
-  padding: 15px;
-  right: 0px;
-  top: 3px;
-  z-index: 999;
 }
 .van-tabs {
   padding-top: 10px;
