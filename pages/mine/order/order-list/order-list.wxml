@@ -1,2 +1,46 @@
 <!--pages/mine/order/order-list/order-list.wxml-->
-<text>pages/mine/order/order-list/order-list.wxml</text>
+<div style="width:100%;height:100%">
+  <view class="container">
+    <van-tabs bind:change="getOrderListProductType" active="{{activeProductType}}"
+      title-active-color="rgba(249, 173, 8, 1)" color="rgba(249, 173, 8, 1)">
+      <van-tab wx:for="{{productTypes}}" wx:for-item="type" wx:key="idx" title="{{type.name}}" name="{{type.code}}">
+      </van-tab>
+    </van-tabs>
+    <view class="selectButtons">
+      <van-button wx:for="{{buttonGroup}}" wx:for-item="button" wx:key="index" round="{{true}}" size="mini"
+        color="{{activeButtonIndex === index ? 'rgba(247, 189, 79, 1)' : ''}}" bind:click="MyAchievementByTime"
+        data-index="{{index}}" class="m-r-5">{{button.text}}</van-button>
+      <van-button size="mini" round="{{true}}" color="{{activeButtonIndex === 3 ? 'rgba(247, 189, 79, 1)' : ''}}"
+        bind:click="MyAchievementByTime" data-index="{{3}}" class="m-r-5">{{createAt}}</van-button>
+    </view>
+    <van-cell wx:if="{{orderList.length > 0}}" wx:for="{{orderList}}" wx:for-item="order" wx:key="index"
+      bind:click="orderDetail" data-option="{{order}}" class="m-b-5">
+      <view slot="title">
+        <text class="fz-13 description">订单号：{{ order.orderNo }}</text>
+        <view class="container-title m-t-10">
+          <van-image src="{{order.orderExtends[0].product.image}}" alt width="100px" fit="widthFix" />
+          <text class="c-darkgrey weight">
+            {{constantCfg.productType.qsebao.includes(order.type)?order.policy.insuranceName:order.orderExtends[0].productName }}
+            <text class="m-l-10 c-gray">*{{ order.totalNum }}</text>
+          </text>
+          <text align="right">总价：￥{{ order.amount }}</text>
+        </view>
+        <view slot="label" class="container-title flex-right">
+          <text class="fz-13 description">下单时间：{{ order.createAt }}</text>
+          <van-tag
+          plain
+          size="medium"
+          color="{{!constantCfg.productType.qsebao.includes(order.type)? statusMap[order.status]['color']:insureStatusMap[order.status]['color']}}"
+          >
+            {{constantCfg.productType.qsebao.includes(order.type)?insureStatusMap[order.status]['text']:statusMap[order.status]['text']}}
+          </van-tag>
+        </view>
+      </view>
+    </van-cell>
+    <van-empty image="{{empty}}" description="暂无订单" wx:if="{{orderList.length === 0}}"/>
+  </view>
+  <van-calendar safe-area-inset-bottom show="{{timeShow}}" type="range" show-confirm="{{false}}"
+    bind:confirm="onConfirmTime" min-date="{{minDate}}" max-date="{{maxDate}}" default-date="{{defaultDate}}">
+    <view slot="footer" class="m-t-50"></view>
+  </van-calendar>
+</div>

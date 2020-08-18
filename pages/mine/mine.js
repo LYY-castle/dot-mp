@@ -22,19 +22,24 @@ Page({
     },
     list: [{
       title: '个人资料',
-      iconHref: '/static/img/mine-info.png'
+      iconHref: '/static/img/mine-info.png',
+      path:'./personal-info/personal-info'
     }, {
       title: '银行卡',
-      iconHref: '/static/img/bank-card.png'
+      iconHref: '/static/img/bank-card.png',
+      path:'./bank-card/bank-card'
     }, {
       title: '修改密码',
-      iconHref: '/static/img/modify-password.png'
+      iconHref: '/static/img/modify-password.png',
+      path:'./modify-password/modify-password'
     }, {
       title: '我的订单',
-      iconHref: '/static/img/order.png'
+      iconHref: '/static/img/order.png',
+      path:'./order/order-list/order-list'
     }, {
       title: '我的地址',
-      iconHref: '/static/img/address.png'
+      iconHref: '/static/img/address.png',
+      path:'./address/address-list/address-list'
     }]
   },
 

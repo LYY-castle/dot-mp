@@ -24,6 +24,10 @@ Page({
         url: '/product-categories',
         method: 'get'
       },
+      upload: {
+          url: 'https://dot-dev.hkjindian.com:18700/system/minio/dot',
+          method: 'post'
+      }
     }
   },
   // 搜索栏聚焦事件
@@ -130,7 +134,22 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-
+  uploadAvatar(){
+    const _this = this.data
+    wx.chooseImage({
+      success(res){
+        const params = res.tempFilePaths[0]
+        http.wxRequest({
+          ..._this.api.upload,
+          params
+        }).then(res=>{
+          if(res.success){
+            console.log(res)
+          }
+        })
+      }
+    })
+  },
   onReachBottom: function () {
     console.log('上拉')
   },

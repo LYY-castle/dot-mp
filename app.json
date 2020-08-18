@@ -1,8 +1,6 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/mine/login/login",
-    "pages/mine/register/register",
     "pages/product/index",
     "pages/product/product-list/product-list",
     "pages/product/search/search",
@@ -16,11 +14,14 @@
     "pages/mine/order/order-list/order-list",
     "pages/mine/order/order-detail/order-detail",
     "pages/mine/personal-info/personal-info",
+    "pages/mine/personal-info/upload/upload",
     "pages/mine/modify-password/modify-password",
     "pages/mine/forget-password/forget-password",
     "pages/mine/bank-card/bank-card",
     "pages/mine/address/add-address/add-address",
-    "pages/mine/address/address-list/address-list"
+    "pages/mine/address/address-list/address-list",
+    "pages/mine/login/login",
+    "pages/mine/register/register"
   ],
   "window": {
     "backgroundTextStyle": "light",

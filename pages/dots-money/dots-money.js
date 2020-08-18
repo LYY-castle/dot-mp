@@ -283,9 +283,6 @@ Page({
           ...params,
           status: 1
         }
-        this.setData({
-          myDataList:[]
-        })
         Promise.resolve()
           .then(() => requestData1(params1))
           .then(() => requestData1(params2))
@@ -415,7 +412,6 @@ Page({
     const index = e.currentTarget.dataset.index
     if (index === 0) {
       this.setData({
-        myDataList:[],
         activeButtonIndex:index,
         createAtStart: getStartTime(moment().format(), 'day'),
         createAtEnd: getEndTime(moment().format(), 'day'),
@@ -425,7 +421,6 @@ Page({
       this.getMyAchievement()
     } else if(index===1){
       this.setData({
-        myDataList:[],
         activeButtonIndex:index,
         createAtStart: getStartTime(moment().startOf('week').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('week').format(), 'day'),
@@ -435,7 +430,6 @@ Page({
       this.getMyAchievement()
     }else if(index===2){
       this.setData({
-        myDataList:[],
         activeButtonIndex:index,
         createAtStart: getStartTime(moment().startOf('month').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('month').format(), 'day'),
@@ -445,7 +439,6 @@ Page({
       this.getMyAchievement()
     }else if(index===3){
       this.setData({
-        myDataList:[],
         activeButtonIndex:index,
         timeShow: true
       })

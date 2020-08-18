@@ -16,7 +16,7 @@ import env from '../config/env.config'
 function getSuccess(res) {
   if (res.statusCode === 401) {
     wx.reLaunch({
-      url: '../mine/login/login'
+      url: '/pages/mine/login/login'
     })
     wx.clearStorageSync()
     wx.showToast({
@@ -45,8 +45,10 @@ function wxRequest({
       'authorization': wx.getStorageSync('authorization')
     }
   } else {
-    header = {
-      'content-type': 'application/json' // 默认值
+    if(method==='get'){
+      header = {
+        'content-type': 'application/json' // 默认值
+      }
     }
   }
   let reqUrl = env.env.VUE_APP_BASE_URL + url
@@ -82,7 +84,9 @@ function wxRequest({
           resolve(res.data)
         },
         fail: function (res) {
-          console.log(url, params, method)
+          console.log(hearder)
+          console.log(url)
+          console.log(params)
           reject(res)
         }
       })

@@ -1,2 +1,71 @@
 <!--pages/mine/order/order-detail/order-detail.wxml-->
-<text>pages/mine/order/order-detail/order-detail.wxml</text>
+<view class="container">
+      <van-cell title="订单信息">
+        <view slot="label">
+          <view>
+            <text>订单号：</text>
+            <text class="order-no">{{ orderInfo.orderNo }}</text>
+            <text class="fz-12 m-l-20 copyBtn" bind:click="copy" data-clipboard-text="{{orderInfo.orderNo}}">复制</text>
+          </view>
+          <text>下单时间：</text>
+          <text class="order-no">{{ orderInfo.createAt }}</text>
+        </view>
+      </van-cell>
+      <van-cell class="m-t-10">
+        <view slot="title">
+          <view wx:if="{{!constantCfg.productType.qsebao.includes(orderInfo.type)}}">
+            <view class="container-title">
+              <van-image src="{{orderInfo.orderExtends[0].product.image}}" alt width="30%" fit="cover"></van-image>
+              <view>
+                <text class="order-no">{{ orderInfo.orderExtends[0].product.name | ellipsis(10) }}</text>
+                <text class="c-gray m-l-30">*&nbsp;{{ orderInfo.totalNum }}</text>
+                <view align="right" class="m-t-20">总价：￥{{ orderInfo.amount }}</view>
+              </view>
+            </view>
+          </view>
+            <view class="flex-between" wx:else>
+              <text class="order-no">{{ orderInfo.policy.insuranceName }}</text>
+              <text class="c-gray m-l-30">*&nbsp;{{ orderInfo.totalNum }}</text>
+              <text align="right">总价：￥{{ orderInfo.amount }}</text>
+            </view>
+        </view>
+        <view slot="label">
+          <view align="right" class="m-t-10">
+            <van-tag
+              plain
+            >
+            </van-tag>
+          </view>
+        </view>
+      </van-cell>
+      <van-cell
+        title="收货信息"
+        class="m-t-10"
+      >
+        <view wx:for="{{orderInfo.orderExtends}}" wx:for-item="order" wx:key="index" slot="label">
+          <view class="logistics-user-container">
+            <text class="c-black">{{ order.addresseeName }}</text>
+            <text class="c-black">{{ order.addresseePhone }}</text>
+            <text>
+              <text class="c-black">数量: {{ order.productNum }}</text>
+            </text>
+            <text wx:if="{{!constantCfg.productType.qsebao.includes(orderInfo.type) && orderInfo.status === 1}}">
+              <van-tag round color="{{logisticsMap[order.logisticsStatus]['color']}}">
+                {{ logisticsMap[order.logisticsStatus]['text'] }}
+              </van-tag>
+            </text>
+          </view>
+          <view wx:if="{{order.logisticsStatus === 1}}">
+            <view>
+              <text class="c-black">物流公司：</text>
+              <text>{{ order.courierCompany }}</text>
+            </view>
+            <view class="m-l-20">
+              <text class="c-black">运单号：</text>
+              <text>{{ order.trackingNo }}</text>
+            </view>
+          </view>
+          <view class="m-b-10">{{ order.addresseeAddress }}</view>
+        </view>
+      </van-cell>
+  </view>

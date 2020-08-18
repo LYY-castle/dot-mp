@@ -1,1 +1,35 @@
-/* pages/mine/order/order-list/order-list.wxss */
+.container {
+  padding-bottom: 0;
+}
+.textCenter {
+  color: pink;
+  position: fixed;
+  font-size: 20px;
+  font-weight: 800;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.selectButtons {
+  margin-top: 10px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.container-title {
+  width: 100%;
+  display: flex;
+  border-top: 1px solid #e5e5e5;
+  padding: 10px 0;
+  justify-content: space-between;
+  align-items: center;
+}
+.container-title .imgList {
+  width: 30%;
+  overflow: hidden;
+  overflow-x: scroll;
+}
+.flex-right {
+  justify-content: space-between;
+}

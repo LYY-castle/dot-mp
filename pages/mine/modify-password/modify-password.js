@@ -1,11 +1,21 @@
 // pages/mine/modify-password/modify-password.js
+import http from '../../../utils/request.js'
+import Crypto from '../../../utils/crypto'
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    newPassword: '',
+    password: '',
+    oriPassword: '',
+    api: {
+      modifyPsd: {
+        url: '/users',
+        method: 'patch',
+      },
+    }
   },
 
   /**
@@ -62,5 +72,26 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+  modifyPsd() {
+    let oldPsd = Crypto.encrypt({
+      plainStr: this.oriPassword,
+    })
+    let newPsd = Crypto.encrypt({
+      plainStr: this.password,
+    })
+    let params = {
+      id: wx.getStorageSync('userId'),
+      oriPassword: oldPsd,
+      password: newPsd,
+    }
+    http.wxRequest({ ...this.data.api.modifyPsd, params }).then((res) => {
+      if (res.success) {
+        wx.showToast({
+          title: '密码修改成功',
+          duration: 1000
+        })
+      }
+    })
+  },
 })

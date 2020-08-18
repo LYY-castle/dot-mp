@@ -95,7 +95,6 @@ Page({
     })
   },
   submit(e) {
-
     const plainStr = e.detail.value.password
     e.detail.value.password = Crypto.encrypt({
       plainStr

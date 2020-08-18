@@ -63,15 +63,3 @@
 .container .scroll-view_H {
   white-space: nowrap;
 }
-::v-deep .van-list__finished-text {
-  width: 100%;
-}
-::v-deep .van-empty {
-  padding: 0;
-  width: 100px;
-  height: 100px;
-}
-::v-deep .van-empty__image img {
-  width: 100px;
-  height: 150px;
-}

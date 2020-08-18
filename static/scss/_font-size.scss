@@ -1,9 +1,0 @@
-$fz-size: 12;
-@while $fz-size <= 34 {
-  .fz-#{$fz-size} {
-    font-size: 1px * $fz-size !important;
-  }
-
-  $fz-size: $fz-size + 1;
-
-}

@@ -9,16 +9,3 @@
 .container button::after {
   border: none;
 }
-::v-deep .van-cell {
-  display: flex;
-  align-items: center;
-}
-::v-deep .van-cell .van-field__left-icon {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-::v-deep .van-button--default {
-  border: none;
-  color: #f9ae08;
-}

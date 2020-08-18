@@ -50,9 +50,3 @@
   justify-content: flex-start;
   flex-wrap: wrap;
 }
-::v-deep .van-search__action {
-  color: #f8be50;
-}
-::v-deep .van-list__finished-text {
-  width: 100%;
-}

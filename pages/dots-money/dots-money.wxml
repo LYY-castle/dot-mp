@@ -7,7 +7,7 @@
 		<van-tab title="渠道业绩" name="channel"></van-tab>
 		<van-tab title="我的团队" name="team"></van-tab>
 	</van-tabs>
-	<van-tabs active="{{activeProductType}}" sticky bind:change="goodChange" wx:if="{{active !== 'team'}}">
+	<van-tabs active="{{activeProductType}}" sticky bind:click="goodChange" wx:if="{{active !== 'team'}}">
 		<van-tab wx:for="{{productTypes}}" wx:key="productIndex" title="{{item.name}}" name="{{item.code}}"></van-tab>
 	</van-tabs>
 	<view class="selectButtons" wx:if="{{active !== 'team'}}">

@@ -1,14 +1,49 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
+    <view>123{{userInfo.nickName}}{{userInfoShow}}{{phoneShow}}{{app.globalData.phone}}</view>
+    <van-popup show="{{ userInfoShow }}" bind:close="onClose" position="bottom" round="{{true}}" overlay="{{false}}">
+    <view>微信授权</view>
+    <view>123</view>
+    <view>123</view>
+    <view>123</view>
+    <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" lang="zh_CN"> 获取头像昵称 </button>
+  </van-popup>
+  <van-popup show="{{ phoneShow }}" bind:close="onClose" position="bottom" round="{{true}}" overlay="{{false}}">
+    <view>微信授权</view>
+    <view>123</view>
+    <view>123</view>
+    <view>123</view>
+    <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" lang="zh_CN"> 获取手机号 </button>
+  </van-popup>
+  <!-- <view class="userinfo">
+    <button open-type="getUserInfo" bindgetuserinfo="onGetUserInfo" lang="zh_CN"> 获取头像昵称 </button>
+    <block>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
-    <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"> 获取手机号 </button>
-  </view>
-  <view class="usermotto">
+    <button open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber"> 获取手机号 </button>
+  </view> -->
+  <!-- <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
-  </view>
+  </view> -->
+  <!-- <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" lang="zh_CN"></button> -->
+  <!-- <van-action-sheet
+  show="{{ show }}"
+  overlay="{{false}}"
+  cancel-text="取消"
+  actions="{{ actions }}"
+  lang="zh_CN"
+  bind:getuserinfo="onGetUserInfo"
+  >
+  </van-action-sheet> -->
+  <!-- <van-action-sheet
+  show="{{ show }}"
+  lang="zh_CN"
+  actions="{{ actions }}"
+  bind:getphonenumber	="onGetPhoneNumber"
+  >
+  </van-action-sheet> -->
+
+
+
 </view>
