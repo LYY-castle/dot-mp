@@ -336,6 +336,7 @@ Page({
     })).then(function (res) {
       console.log(res);
       var payParams = {
+        openid: wx.getStorageSync('openId'),
         outTradeNo: res.data.orderNo,
         totalFee: res.data.amount * 100,
         // 微信支付单位为分.
@@ -345,16 +346,18 @@ Page({
 
       _request["default"].wxRequest(_objectSpread({}, _this3.data.api.payment, {
         params: payParams
-      })).then(function (res) {
-        console.log(res);
+      })).then(function (result) {
+        console.log(result.data);
         var wechatParams = {
-          appId: result.appId,
-          timeStamp: result.timeStamp,
-          nonceStr: result.nonceStr,
-          "package": result.packageValue,
-          paySign: result.paySign,
-          signType: result.signType
+          appId: result.data.appId,
+          timeStamp: result.data.timeStamp,
+          nonceStr: result.data.nonceStr,
+          "package": result.data.packageValue,
+          paySign: result.data.paySign,
+          signType: result.data.signType
         };
+        console.log('拉起微信支付');
+        console.log(wechatParams);
         wx.requestPayment(_objectSpread({}, wechatParams, {
           success: function success(res) {
             console.log(res);

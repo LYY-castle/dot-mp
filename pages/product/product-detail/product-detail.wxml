@@ -6,7 +6,7 @@
         autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" wx:if="{{product.image && product.image.length > 0}}">
         <block wx:for="{{product.image}}" wx:for-item="image" wx:key="imgIndex">
           <swiper-item>
-            <van-image src="{{image}}" width="100%" height="100%" fit="contain"></van-image>
+            <van-image src="{{image}}" width="100%" height="100%" fit="cover"></van-image>
           </swiper-item>
         </block>
       </swiper>
@@ -17,14 +17,14 @@
             <!-- pricingMethod = 0 表示使用固定单价规则. -->
             <view wx:if="{{product.pricingMethod === 0}}" class="m-t-15">
               <view>
-                <view class="title">市场价：</view>
-                <view class="money">￥{{ product.originalPrice }}</view>
-                <view>/ {{ product.unit }}</view>
+                <text class="title">市场价：</text>
+                <text class="money">￥{{ product.originalPrice }}</text>
+                <text>/ {{ product.unit }}</text>
               </view>
               <view>
-                <view class="title">平台优惠价：</view>
-                <view class="money">￥{{ product.price }}</view>
-                <view>/ {{ product.unit }}</view>
+                <text class="title">平台优惠价：</text>
+                <text class="money">￥{{ product.price }}</text>
+                <text>/ {{ product.unit }}</text>
               </view>
             </view>
           </view>
