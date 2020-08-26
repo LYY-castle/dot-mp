@@ -45,8 +45,7 @@
 }
 
 .product .richImg {
-  width: 100%;
-  height: auto;
+  display: block;
 }
 
 .allprice {
@@ -74,7 +73,3 @@ swiper {
 van-button {
   width: 100%;
 }
-
-/* .produceDetail image{
-  display:block;
-} */

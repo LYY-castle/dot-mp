@@ -58,18 +58,19 @@ Page({
 
     var eventChannel = this.getOpenerEventChannel();
     eventChannel.on('acceptDataFromOpenerPage', function (res) {
-      console.log(res);
+      console.log('跳转传递参数', res);
 
       _this.setData({
         pathParams: res.data,
         productId: res.data.productId
       });
+
+      console.log(_this.data.productId);
+
+      _this.getProductDetail();
+
+      _this.getProductEnablePricingRule();
     });
-    console.log(_this.data.productId);
-
-    _this.getProductDetail();
-
-    _this.getProductEnablePricingRule();
   },
 
   /**
@@ -123,7 +124,9 @@ Page({
             res.data.image = [];
           }
 
-          res.data.detail = res.data.detail.replace(/\<img/gi, '<img class="richImg"');
+          if (res.data.detail) {
+            res.data.detail = res.data.detail.replace(/\<img/gi, '<img class="richImg"');
+          }
 
           _this2.setData({
             showContent: true,
