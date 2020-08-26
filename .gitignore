@@ -1,3 +1,7 @@
+.DS_Store
+node_modules
+miniprogram_npm
+
 # Windows
 [Dd]esktop.ini
 Thumbs.db
@@ -9,6 +13,7 @@ $RECYCLE.BIN/
 .Spotlight-V100
 .TemporaryItems
 .Trashes
+
 
 # Node.js
 node_modules/

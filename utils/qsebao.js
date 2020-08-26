@@ -13,16 +13,13 @@ function getProducts() {
     method,
     action
   } = constantCfg.qsebao.api.getProducts
-
   const params = {
     agentID: env.env.qsebao.agentID,
     action
   }
-
   const sign = getSign({
     params
   })
-
   return new Promise(resolve=>{
     http.wxRequest({
       url: `${env.env.qsebao.baseURL}${url}?sign=${sign}`,

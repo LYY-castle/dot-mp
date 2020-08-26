@@ -9,8 +9,5 @@
     "van-sticky": "@vant/weapp/sticky/index",
     "van-dropdown-menu": "@vant/weapp/dropdown-menu/index",
     "van-dropdown-item": "@vant/weapp/dropdown-item/index"
-  },
-  "window": {
-    "navigationBarTitleText": "123"
   }
 }

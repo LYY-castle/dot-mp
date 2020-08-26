@@ -1,1 +1,21 @@
 /* pages/mine/bank-card/bank-card.wxss */
+.container {
+  overflow: hidden;
+  overflow-y: scroll;
+  background: #fff;
+}
+
+.uploader {
+  margin: 10px;
+  text-align: center;
+  border: 1px solid #eee;
+  padding: 30px;
+}
+
+.container .van-image {
+  width: 100%;
+}
+
+.imagContent {
+  text-align: center;
+}

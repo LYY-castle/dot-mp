@@ -158,7 +158,8 @@ Page({
   getProductSorts() {
     const params = {
       parentId: 0,
-      pageSize: 100
+      pageSize: 100,
+      isEnable:1,
     }
     tool.getProductSorts(params).then(res => {
       console.log(res)
@@ -168,14 +169,15 @@ Page({
           code:item.code
         }
       })
-      console.log(mapOPtion)
       this.setData({
         productTypes: mapOPtion
       })
     })
   },
-  getOrderListProductType(name) {
-    this.data.type = name
+  getOrderListProductType(event) {
+    this.setData({
+      type:event.detail.name
+    })
     Promise.resolve()
       .then(() => this.resteParams())
       .then(() => this.getOrderList())
@@ -262,35 +264,37 @@ Page({
       }
       http.wxRequest({ ...this.data.api.getOrderList, params }).then(res => {
         if (res.success) {
-          if (params.pageNo === 1) {
-            this.setData({
-              orderList:res.data
-            })
-          } else {
-            this.setData({
-              orderList:this.data.orderList.concat(res.data)
-            })
-          }
-          this.data.orderList.forEach(item => {
-            if (item.orderExtends.length > 0) {
-              item.orderExtends.forEach(extend => {
-                if (extend.product.image) {
-                  if (extend.product.image !== null && extend.product.image.indexOf(';') !== -1) {
-                    extend.product.image = extend.product.image.split(';')[0]
+          if(res.data.length>0){
+            res.data.orderList.forEach(item => {
+              if (item.orderExtends.length > 0) {
+                item.orderExtends.forEach(extend => {
+                  if (extend.product.image) {
+                    if (extend.product.image !== null && extend.product.image.indexOf(';') !== -1) {
+                      extend.product.image = extend.product.image.split(';')[0]
+                    }
                   }
-                }
+                })
+              }
+              if (constantCfg.productType.qsebao.includes(item.type)) {
+                http.wxRequest({ ...this.data.api.getOrderById, urlReplacements: [{ substr: '{id}', replacement: item.id }] }).then(
+                  result => {
+                    if (result.success) {
+                      item.policy = result.data.policy
+                    }
+                  }
+                )
+              }
+            })
+            if (params.pageNo === 1) {
+              this.setData({
+                orderList:res.data
+              })
+            } else {
+              this.setData({
+                orderList:this.data.orderList.concat(res.data)
               })
             }
-            if (constantCfg.productType.qsebao.includes(item.type)) {
-              http.wxRequest({ ...this.data.api.getOrderById, urlReplacements: [{ substr: '{id}', replacement: item.id }] }).then(
-                result => {
-                  if (result.success) {
-                    item.policy = result.data.policy
-                  }
-                }
-              )
-            }
-          })
+          }
           resolve()
         }
       })

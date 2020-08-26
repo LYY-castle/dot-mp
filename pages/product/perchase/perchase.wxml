@@ -1,0 +1,86 @@
+<!--pages/product/perchase/perchase.wxml-->
+<view class="container">
+    <view class="bigBox">
+      <view class="border m-t-10">
+        <!-- 地址部分 -->
+        <view wx:if="{{order.length>0}}">
+          <view wx:for="{{order}}" wx:key="index" class="p-10 ">
+            <view class="flex-between m-b-5">
+              <view>
+                <view class="flex-between-start">
+                  <text>{{ item.name }}</text>
+                  <text class="text-color-999 m-l-10">{{ item.phone }}</text>
+                </view>
+                <view class="text-color-999 font-size-10">
+                  <text>{{ item.province }} {{ item.city }} {{ item.county }} {{ item.addressDetail }}</text>
+                </view>
+              </view>
+              <van-icon class="m-l-10" name="arrow" color="#969799"/>
+            </view>
+            <view
+              class="flex-between m-b-10"
+              wx:if="{{item.addresseeName !== ''}}"
+            >
+              <view class="flex-start">
+                <text class="c-gray fz-12">该地址邮寄数量</text>
+                <van-stepper min="1" value="{{item.productNum}}" async-change bind:change="productNumChange" data-item="{{item}}" class="m-l-10" />
+              </view>
+              <van-button
+                size="mini"
+                round
+                plain
+                hairline
+                type="danger"
+                class="m-r-10"
+                bind:click="deleteOrder"
+                wx:if="{{multiAddresses && order.length > 0}}"
+              >删除</van-button>
+            </view>
+        </view>
+        </view>
+        <!-- 添加收货地址 -->
+        <van-cell
+          wx:if="{{multiAddresses || (!multiAddresses && order.length === 0)}}"
+          border
+          is-link
+          bindtap="addAddress"
+        >
+          <view slot="title">
+            <van-icon name="plus" color="#f9ae08" />
+            <text class="m-l-10 mainColor">添加收货地址</text>
+          </view>
+        </van-cell>
+      </view>
+      <view class="m-t-10 border p-10">
+        <view class="flex-start">
+          <van-image src="{{product.image}}" alt width="100px" height="50px" fit="contain" class="productImg"></van-image>
+          <view class="m-l-10">
+            <text class="fz-14">{{ product.name }}</text>
+            <view class="c-gray fz-12">{{ product.description }}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <van-submit-bar
+      price="{{totalPrice * 100}}"
+      color="#f9ae08"
+      button-text="提交"
+      bind:submit="onSubmit"
+      safe-area-inset-bottom
+    >
+      <view slot="default" class="text-color-ccc">
+        共
+        <text style="color:#000;font-size:16px">{{ totalCount }}</text>
+        {{ product.unit }}
+      </view>
+    </van-submit-bar>
+    <van-dialog
+      show="{{dialogShow}}"
+      title="请确认支付"
+      show-cancel-button
+      bind:confirm="confirm"
+      bind:cancel="cancle"
+    >
+      <view class="flex-center mt font-size-20">￥{{ totalPrice }}</view>
+    </van-dialog>
+  </view>

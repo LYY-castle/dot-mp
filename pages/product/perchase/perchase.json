@@ -1,0 +1,13 @@
+{
+  "usingComponents": {
+    "van-row": "@vant/weapp/row/index",
+    "van-col": "@vant/weapp/col/index",
+    "van-cell": "@vant/weapp/cell/index",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-button": "@vant/weapp/button/index",
+    "van-image": "@vant/weapp/image/index",
+    "van-submit-bar": "@vant/weapp/submit-bar/index",
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-stepper": "@vant/weapp/stepper/index"
+  }
+}

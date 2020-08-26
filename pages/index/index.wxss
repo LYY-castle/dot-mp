@@ -1,4 +1,17 @@
 /**index.wxss**/
-.container{
-  height:100%;
+.container {
+  height: 100%;
+}
+
+.userAvatar {
+  width: 60px;
+  height: 60px;
+  margin: 30% auto;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.userInfoButton {
+  width: 60%;
+  margin: 0 auto;
 }

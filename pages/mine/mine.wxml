@@ -4,19 +4,19 @@
    <van-image src="{{bg}}" alt fit="widthFix" width="100%"/>
     <view class="avatarContent">
       <view class="avatar">
-        <!-- <van-image
-          round
-          :src="userInfo.avatar"
-          v-if="userInfo.avatar"
-          width="80px"
-          height="80px"
-          fit="cover"
-        /> -->
         <van-image round src="{{avatar}}" alt width="80px" height="80px" round/>
       </view>
     </view>
   </view>
-  <van-cell wx:for="{{list}}" wx:key="index" title="{{item.title}}" icon="{{item.iconHref}}" is-link class="item" url="{{item.path}}" />
-  <van-button type="default" class="logoutButton" bindtap="logout">退出登录</van-button>
-  <van-dialog id="van-dialog" />
+  <view class="m-t-30">
+    <van-cell
+    wx:for="{{list}}"
+    wx:key="index"
+    title="{{item.title}}"
+    icon="{{item.iconHref}}"
+    is-link class="item"
+    bind:click="gotoPage"
+    data-option="{{item}}"
+  />
+  </view>
 </view>

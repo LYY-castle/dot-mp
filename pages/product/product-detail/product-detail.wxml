@@ -30,50 +30,50 @@
           </view>
         </view>
         <!-- pricingMethod = 0 表示使用自定义单价规则. -->
-        <template wx:if="{{product.pricingMethod === 1}}">
+        <view wx:if="{{product.pricingMethod === 1}}">
           <!-- <van-divider dashed>产品价格</van-divider> -->
 
           <view class="price-container m-t-10 bg-white">
             <view class="price-title">活动</view>
             <view class="m-l-15">
               <view class="block" v-if="!!product.originalPrice">
-                <view class="title-normal">市场价：</view>
-                <view class="money-normal">￥{{ product.originalPrice }}</view>
-                <view class="title-normal">/ {{ product.unit }}</view>
+                <text class="title-normal">市场价：</text>
+                <text class="money-normal">￥{{ product.originalPrice }}</text>
+                <text class="title-normal">/ {{ product.unit }}</text>
               </view>
 
               <view wx:for="{{pricingRule.pricingRuleDetails}}" wx:key="idx" class="m-b-5">
                 <!-- 只有最大值, 并且最大值为 1 时显示为会员优惠价 -->
 
-                <view class="title-normal" wx:if="{{item.maxNum === 1}}">会员优惠价：</view>
-                <view wx:else class="money-red m-r-10 fz-12 bold">多买优惠</view>
+                <text class="title-normal" wx:if="{{item.maxNum === 1}}">会员优惠价：</text>
+                <text wx:else class="money-red m-r-10 fz-12 bold">多买优惠</text>
 
                 <!-- 最小值、最大值都 > 1 -->
-                <view
+                <text
                   class="title-normal"
                   wx:if="{{item.maxNum > 1}}"
-                >会员团购 {{ item.minNum }} ~ {{ item.maxNum }} {{ product.unit }}</view>
+                >会员团购 {{ item.minNum }} ~ {{ item.maxNum }} {{ product.unit }}</text>
 
                 <!-- 只有最小值, 并且最小值大于 1 时显示为团购几张及以上 -->
-                <view
+                <text
                   class="title-normal"
                   wx:if="{{item.minNum > 0 && !item.maxNum}}"
-                >会员团购 {{ item.minNum }} {{ product.unit }}及以上</view>
+                >会员团购 {{ item.minNum }} {{ product.unit }}及以上</text>
 
-                <view class="money-normal">￥{{ item.price }}</view>
-                <view class="title-normal">/ {{ product.unit }}</view>
+                <text class="money-normal">￥{{ item.price }}</text>
+                <text class="title-normal">/ {{ product.unit }}</text>
               </view>
 
               <!-- 健康/红酒类产品显示促销文案 -->
               <view
                 wx:if="{{product.category.code === constantCfg.productType.healthRedWineProductType}}"
               >
-                <view class="money-red m-r-10 fz-12 bold">多单有礼</view>
-                <view class="title-normal">购买满 5 瓶发货时赠送 1 瓶</view>
+                <text class="money-red m-r-10 fz-12 bold">多单有礼</text>
+                <text class="title-normal">购买满 5 瓶发货时赠送 1 瓶</text>
               </view>
             </view>
           </view>
-        </template>
+        </view>
 
         <view class="product">
           <view wx:if="{{product.properties && product.properties.length > 0}}">
@@ -94,7 +94,7 @@
           </view>
         </view>
       </view>
-      <van-goods-action safe-area-inset-bottom>
+      <van-goods-action>
         <van-button block="{{true}}" round="{{true}}" bind:click="buyCard" color="#f9ae08">立即购买</van-button>
       </van-goods-action>
     </view>

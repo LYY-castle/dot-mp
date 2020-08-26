@@ -90,7 +90,8 @@ Page({
     return new Promise(resolve=>{
       const params = {
         parentId: 0,
-        pageSize: 100
+        pageSize: 100,
+        isEnable:1,
       }
       tool.getProductSorts(params).then(res=>{
        if(res.success){
@@ -112,9 +113,7 @@ Page({
     console.log(e)
     const option = e.currentTarget.dataset.option
     const pathParams = {
-      userId: wx.getStorageSync('userId'),
-      parentId: wx.getStorageSync('parentId'),
-      productId: option.id,
+      productId: option.id
     }
     wx.navigateTo({
       url: './product-detail/product-detail',
@@ -156,5 +155,17 @@ Page({
   onPageScroll: function() {
     // 页面滚动时执行
     console.log('滚动')
-  }
+  },
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    return {
+      title:'转发特惠商品',
+      query:'code=FQAC'
+    }
+    wx.updateShareMenu({
+      withShareTicket: true
+    })
+  },
 })

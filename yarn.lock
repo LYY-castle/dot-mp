@@ -7,6 +7,13 @@
   resolved "https://registry.yarnpkg.com/@vant/weapp/-/weapp-1.4.4.tgz#c1da04faabef40cd0fbe6f5164d4a8270d4561b3"
   integrity sha512-dWwo5y6GZc4XhHfQtgtbA9HFoo9kXJp3whxcNXNfrKnEc+lf1JE/8Tyw/DN7XlgSO5IUeKjg0ak+uFdMG0U3kQ==
 
+address-parse@^1.2.0, address-parse@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/address-parse/-/address-parse-1.2.3.tgz#d0cfc4f8389dd5378b335ef3a2c080d454be0d63"
+  integrity sha512-BosPJzjhmWbiXoXSknyQxsL7FMS4UALaXNofxEVc+BqVv2Jjnt48t8I1K7TqkWZ745kJsyLGHFvKHC8aKosa2g==
+  dependencies:
+    address-parse "^1.2.3"
+
 ansi-escapes@^1.1.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-1.4.0.tgz#d3a8a83b319aa67793662b13e761c7911422306e"

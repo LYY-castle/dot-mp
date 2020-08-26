@@ -1,9 +1,8 @@
 <!--pages/product/product-list/product-list.wxml-->
 <view class="container">
-	<view>{{activeKey}}</view>
 	<van-sidebar active-key="{{ activeKey }}" wx:if="{{!share}}" class="user-sideBar" bind:change="onChange">
 		<van-sidebar-item title="全部" class="user-van-sidebar-item" />
-		<van-sidebar-item wx:for="{{productTypes}}" wx:key="id" title="{{item.name}}" />
+		<van-sidebar-item wx:for="{{productTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
 	</van-sidebar>
 	<view class="productsContent">
 		<van-overlay show="{{open}}" bind:click="closeOverlay" />
@@ -11,13 +10,13 @@
 		<view class="sortContent" wx:if="{{open}}">
 			<view class="fz-12">全部分类</view>
 			<view class="sort">
-				<van-tag wx:for="{{goodTypes}}" wx:key="tagIndex" bindtap="goodChange" data-id="{{item.id}}" color="{{activeGood === item.id ? 'rgba(247, 189, 79, 0.15)' : 'rgba(247, 247, 247, 1)'}}" text-color="{{activeGood === item.id ? 'rgba(249, 173, 7, 1)' : 'rgba(121, 121, 121, 1)'}}" class="tagItem">
-					{{ item.name }}
+				<van-tag wx:for="{{goodTypes}}" wx:for-item="good" wx:key="tagIndex" bindtap="goodChange" data-id="{{good.id}}" color="{{activeGood === good.id ? 'rgba(247, 189, 79, 0.15)' : 'rgba(247, 247, 247, 1)'}}" text-color="{{activeGood === good.id ? 'rgba(249, 173, 7, 1)' : 'rgba(121, 121, 121, 1)'}}" class="tagItem">
+					{{ good.name }}
 				</van-tag>
 			</view>
 		</view>
 		<van-tabs active="{{activeGood}}" line-width="0" bind:click="goodChange" swipe-threshold="3" wx:if="{{goodTypes.length > 1 && !share}}" border="{{false}}">
-			<van-tab wx:for="{{goodTypes}}" wx:key="index" data-id="{{item.id}}" title="{{item.name}}" name="{{item.id}}"></van-tab>
+			<van-tab wx:for="{{goodTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" title="{{goodtype.name}}" name="{{goodtype.id}}"></van-tab>
 		</van-tabs>
 		<view class="listContent" wx:if="{{productList.length>0}}">
 			<view wx:for="{{productList}}" wx:for-item="item" wx:key="idx" class="goodItem">
@@ -26,7 +25,7 @@
 					<view class="{{constantCfg.productCode.qsebao.includes(item.code) ? '' : 'wp-70'}}">
 						<view class="flex-wrap m-b-5" wx:if="{{constantCfg.productCode.qsebao.includes(item.code)}}">
 							<text class="fz-12 m-r-10">{{ item.company.name }}</text>
-							<van-tag wx:if="{{constantCfg.productCode.qsebao.includes(item.code)}}" type="danger">{{ item.insurance_type }}</van-tag>
+							<van-tag type="danger">{{ item.insurance_type }}</van-tag>
 						</view>
 						<view class="title">{{ item.name }}</view>
 						<view class="flex-wrap m-b-10" wx:if="{{constantCfg.productCode.qsebao.includes(item.code) && item.tags.length > 0}}">

@@ -16,16 +16,25 @@ import env from '../config/env.config'
 function getSuccess(res) {
   if (res.statusCode === 401) {
     wx.reLaunch({
-      url: '/pages/mine/login/login'
+      url: '/pages/index/index'
     })
     wx.clearStorageSync()
     wx.showToast({
-      title: res.data.message
+      title: res.data.message,
+      icon:'none'
     })
   } else {
     if (res.header['Authorization']) {
       wx.setStorageSync('authorization', res.header.Authorization)
     }
+    if(res.data.success){
+      wx.hideLoading()
+    }else{
+      wx.showToast({
+        title: res.data.message
+      })
+    }
+
   }
 }
 
@@ -35,21 +44,18 @@ function wxRequest({
   params = {},
   urlReplacements = []
 }) {
-  wx.showToast({
-    title: '请稍后...',
-    icon: 'loading'
-  })
   let header = {}
+  wx.showLoading({
+    title: '请稍后',
+  })
   if (wx.getStorageSync('authorization')) {
     header = {
       'authorization': wx.getStorageSync('authorization')
     }
   } else {
-    if(method==='get'){
       header = {
         'content-type': 'application/json' // 默认值
       }
-    }
   }
   let reqUrl = env.env.VUE_APP_BASE_URL + url
   urlReplacements.forEach(replacement => {
@@ -63,12 +69,15 @@ function wxRequest({
         method,
         header,
         success: function (res) {
-          wx.hideToast()
           getSuccess(res)
           resolve(res.data)
         },
         fail: function (res) {
-          console.log(url, params, method)
+          const httpParams = {
+            url,
+            params
+          }
+          console.log(httpParams)
           reject(res)
         }
       })
@@ -79,12 +88,11 @@ function wxRequest({
         method,
         header,
         success: function (res) {
-          wx.hideToast()
           getSuccess(res)
           resolve(res.data)
         },
         fail: function (res) {
-          console.log(hearder)
+          console.log(header)
           console.log(url)
           console.log(params)
           reject(res)

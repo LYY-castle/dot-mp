@@ -42,7 +42,7 @@ Page({
       getProductTypes: {
         url: '/product-categories',
         method: 'get',
-      },
+      }
     }
   },
 
@@ -53,7 +53,6 @@ Page({
     Promise.resolve()
       .then(() => this.getProductTypes(0))
       .then(() => this.routerParams())
-
   },
 
   /**
@@ -144,9 +143,12 @@ Page({
 
   // 获取产品列表 0 一级,其他是二级
   getProductTypes(val) {
-    const params = {
+    let params = {
       parentId: val,
       pageSize: 100,
+    }
+    if(val===0){
+      params.isEnable=1
     }
     return new Promise((resolve) => {
       tool.getProductSorts(params).then((res) => {
@@ -202,33 +204,34 @@ Page({
     const option = e.currentTarget.dataset.option
     const event = e.currentTarget.dataset.event
     const pathParams = {
-      userId: wx.getStorageSync('userId'),
-      parentId: wx.getStorageSync('parentId'),
       productId: option.id,
     }
-    switch (event) {
-      case 'self':
-        console.log('self')
-        wx.navigateTo({
-          url: '../product-detail/product-detail',
-          success: function(res) {
-            // 通过eventChannel向被打开页面传送数据
-            res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
-          }
-        })
-        break;
-      case 'other':
-        console.log('other')
-        break;
-      case 'look':
-        console.log('look')
-        break;
-      case 'share':
-        console.log('share')
-        break;
-      default:
-        break;
+    if(event==='self'){
+      wx.navigateTo({
+        url: '../product-detail/product-detail',
+        success: function(res) {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
+        }
+      })
     }
+    // switch (event) {
+    //   case 'self':
+    //     console.log('self')
+
+    //     break;
+    //   case 'other':
+    //     console.log('other')
+    //     break;
+    //   case 'look':
+    //     console.log('look')
+    //     break;
+    //   case 'share':
+    //     console.log('share')
+    //     break;
+    //   default:
+    //     break;
+    // }
   },
   // 查看详情
   // lookDetail(product) {
@@ -492,29 +495,31 @@ Page({
   },
   //  获取产品列表
   getProductsList(params) {
-    let productDetailObj = {}
+  let productDetailObj= {}
     return new Promise((resolve) => {
-      tool.getProductList(params).then((res) => {
+      tool.getProductList(params).then(async (res) => {
         let products = []
         if (res.success) {
-          if (res.data.length > 0) {
-            res.data.forEach((item) => {
-              if (constantCfg.productCode.qsebao.includes(item.code)) {
-                qseBaoUtil.getProductDetail({
-                  insuranceCode: item.code
-                }).then((productDetailRes) => {
-                  productDetailObj = productDetailRes.data.productDetail
-                  // 因为轻松保接口中 type 与原有商品类型 type 冲突.
-                  productDetailObj.insurance_type = productDetailObj.type
-                  delete productDetailObj.type
-                  products.push(Object.assign({}, item, productDetailRes.data.productDetail))
-                })
-              } else {
-                products.push(item)
-              }
-            })
+          let productDetailRes,item
+          const dealQseProduct = async (item) => {
+            if (constantCfg.productCode.qsebao.includes(item.code)) {
+              productDetailRes = await tool.insuranceProduct()
+              productDetailObj = productDetailRes.data.productDetail
+                // 因为轻松保接口中 type 与原有商品类型 type 冲突.
+                productDetailObj.insurance_type = productDetailObj.type
+                delete productDetailObj.type
+                products.push(Object.assign({}, item, productDetailRes.data.productDetail))
+            } else {
+              products.push(item)
+            }
           }
+          for (let i = 0; i < res.data.length; i++) {
+            item = res.data[i]
+            await dealQseProduct(item)
+          }
+          console.log(products.length)
           if (params.pageNo === 1) {
+            console.log(1)
             this.data.productList = products
           } else {
             this.data.productList = this.data.productList.concat(products)

@@ -162,3 +162,7 @@
 .van-empty__description {
   font-size: 12px!important;
 }
+.van-sidebar-item--selected{
+  color:#F7BD4F!important;
+  border-color:#F7BD4F!important;
+}

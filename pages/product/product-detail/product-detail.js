@@ -43,12 +43,15 @@ Page({
     const _this = this
     const eventChannel = this.getOpenerEventChannel()
     eventChannel.on('acceptDataFromOpenerPage', function(res) {
+      console.log(res)
       _this.setData({
+        pathParams:res.data,
         productId:res.data.productId
       })
     })
-    _this.getProductDetail(_this.data.productId)
-    _this.getProductEnablePricingRule(_this.data.productId)
+    console.log(_this.data.productId)
+    _this.getProductDetail()
+    _this.getProductEnablePricingRule()
   },
 
   /**
@@ -100,11 +103,11 @@ Page({
 
   },
 
-  getProductDetail(id){
+  getProductDetail(){
     return new Promise((resolve)=>{
       http.wxRequest({
         ...this.data.api.getProductById,
-        urlReplacements: [{ substr: '{id}', replacement: id }]
+        urlReplacements: [{ substr: '{id}', replacement: this.data.productId }]
       }).then(res=>{
         if(res.success){
           if (res.data.image) {
@@ -112,8 +115,7 @@ Page({
           } else {
             res.data.image = []
           }
-          // res.data.detail = res.data.detail.replace(/<img([\s\w"-=\/\.:;]+)/ig,'<img$1 class="p_img"')
-          // res.data.detail = res.data.detail.replace(/<p>/ig,'<p class="p_class">')
+          res.data.detail = res.data.detail.replace(/\<img/gi, '<img class="richImg"')
           this.setData({
             showContent:true,
             product:res.data
@@ -123,11 +125,11 @@ Page({
       })
     })
   },
-  getProductEnablePricingRule(id) {
+  getProductEnablePricingRule() {
     return new Promise((resolve)=>{
       http.wxRequest({
         ...this.data.api.getProductEnablePricingRuleById,
-        urlReplacements: [{ substr: '{productId}', replacement: id }],
+        urlReplacements: [{ substr: '{productId}', replacement: this.data.productId }],
       }).then((res) => {
         if (res.success) {
           this.setData({
@@ -137,5 +139,16 @@ Page({
         }
       })
     })
-  }
+  },
+  buyCard(){
+    const option = this.data.pathParams
+    console.log(option)
+    wx.navigateTo({
+      url: '../perchase/perchase',
+      success: function(res) {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
+      }
+    })
+  },
 })

@@ -208,7 +208,8 @@ Page({
   getProductSorts() {
     const params = {
       parentId: 0,
-      pageSize: 100
+      pageSize: 100,
+      isEnable:1,
     }
     tool.getProductSorts(params).then(res => {
       this.setData({

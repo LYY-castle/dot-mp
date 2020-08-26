@@ -9,6 +9,7 @@ Page {
   overflow: hidden;
   max-width: 500px;
   margin: 0 auto;
+  padding-botton:50px;
 }
 .container .originPrice {
   color: #969799;

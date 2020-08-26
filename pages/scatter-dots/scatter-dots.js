@@ -122,17 +122,19 @@ Page({
         })
         .then(() => {
           if (this.data.headImage) {
-            const params = {
-              bucketName: constantCfg.minio.bucketName,
-              fileName: this.data.headImage
-            }
-            tool.review(params).then(result => {
-              if (result.success) {
-                this.setData({
-                    avatar: result.data
-                })
+            if(this.data.headImage.indexOf('https')===-1){
+              const params = {
+                bucketName: constantCfg.minio.bucketName,
+                fileName: this.data.headImage
               }
-            })
+              tool.review(params).then(result => {
+                if (result.success) {
+                  this.setData({
+                      avatar: result.data
+                  })
+                }
+              })
+            }
           }
         })
 

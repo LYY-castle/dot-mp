@@ -13,7 +13,7 @@ Page({
     api: {
       modifyPsd: {
         url: '/users',
-        method: 'patch',
+        method: 'put',
       },
     }
   },

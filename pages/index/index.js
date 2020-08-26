@@ -1,4 +1,6 @@
 //index.js
+import env from '../../config/env.config'
+import http from '../../utils/request'
 //获取应用实例
 const app = getApp()
 
@@ -7,83 +9,128 @@ Page({
     userInfo: {},
     userInfoShow:true,
     phoneShow:false,
+    codeShow:false,
     phone:null,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     canIusePhone:wx.canIUse('button.open-type.getPhoneNumber'),
+    api:{
+      login:{
+        url:'/users/wx-ma/login',
+        method:'post'
+      }
+    },
   },
-  getUserInfo() {
+  bindGetUserInfo(e) {
     const _this = this
-    wx.authorize({
-      scope: 'scope.userInfo',
-      success () {
-        // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+    console.log(e)
+    if(e.detail.userInfo){
+      app.globalData.userInfo = e.detail
+      _this.setData({
+        userInfoShow:false,
+        phoneShow:true
+      })
+    }
+      // wx.authorize({
+      //   scope: 'scope.userInfo',
+      //   success () {
+      //     wx.getUserInfo({
+      //       lang:'zh_CN',
+      //       success:res=>{
+      //         console.log('授权成功,获取用户基本信息',res)
+      //         app.globalData.userInfo = res
+      //         _this.setData({
+      //           userInfoShow:false,
+      //           phoneShow:true
+      //         })
+      //       }
+      //     })
+      //   }
+      // })
+  },
+  bindGetPhoneNumber (e) {
+      app.globalData.phone = e.detail
+        this.setData({
+          phoneShow:false,
+        })
+        this.login()
+  },
+  loginByCode(e){
+    const _this = this
+    app.globalData.promoCode = 'FQAC'
+    wx.login({
+      success: res => {
+        app.globalData.wechatCode = res.code
         wx.getUserInfo({
           lang:'zh_CN',
           success:res=>{
-            console.log('授权成功,获取用户基本信息',res)
-            app.globalData.userInfo = res.userInfo
-            _this.setData({
-              userInfo: res.userInfo,
-              userInfoShow:false,
-              phoneShow:true
-            })
+            app.globalData.userInfo = res
+            this.login()
           }
         })
       }
     })
+
   },
-  getPhoneNumber (e) {
-    app.globalData.phone = e.detail
-    console.log('获取手机号码',e)
-    this.setData({
-      phoneShow:false
-    })
-    // wx.switchTab({
-    //   url: '../product/index'
-    // })
-  },
-  onLoad: function () {
-    const that = this
-    if (app.globalData.userInfo) {
-      console.log(1)
-      that.setData({
-        userInfo: app.globalData.userInfo,
-        userInfoShow:false
-      })
-    } else if (this.data.canIUse){
-      console.log(2)
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        console.log('res',res)
-        that.setData({
-          userInfo: app.globalData.userInfo,
-          userInfoShow:false
+  login(){
+    const params = {
+      phoneEncryptedData:app.globalData.phone.encryptedData,
+      phoneIv:app.globalData.phone.iv,
+      promoCode:app.globalData.promoCode,
+      userInfoEncryptedData:app.globalData.userInfo.encryptedData,
+      userInfoIv:app.globalData.userInfo.iv,
+      wechatAppId:env.env.appid,
+      wechatCode:app.globalData.wechatCode,
+    }
+    http.wxRequest({...this.data.api.login,params}).then(res=>{
+      if(res.success){
+        wx.setStorageSync('userId',res.data.id)
+        wx.setStorageSync('parentId',res.data.parentId)
+        wx.setStorageSync('code',res.data.code)
+        wx.setStorageSync('openId',res.data.openId)
+        wx.switchTab({
+          url: '../product/index'
         })
-      }
-      if(this.data.canIusePhone){
-        console.log(3)
-        app.userInfoReadyCallback = res => {
-          that.setData({
-            phone: app.globalData.phone,
-            phoneShow:false
+      }else{
+        console.log(res.code)
+        if(res.code===403){
+          this.setData({
+            codeShow:true
           })
         }
       }
-    } else {
-      console.log(4)
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        lang:'zh_CN',
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          that.setData({
-            userInfo: app.globalData.userInfo,
-            userInfoShow:false
-          })
+    })
+  },
+  onLoad: function () {
+    const _this = this
+    const code = wx.getStorageSync('code')
+    if(code){
+      wx.switchTab({
+        url: '../product/index'
+      })
+    }else{
+      wx.getSetting({
+        success (res) {
+          console.log('get',res.authSetting['scope.userInfo'])
+          if(res.authSetting['scope.userInfo']){
+            _this.setData({
+              userInfoShow:false,
+              phoneShow:true
+            })
+            wx.getUserInfo({
+              lang:'zh_CN',
+              success:res=>{
+                console.log('用户信息',res)
+                app.globalData.userInfo = res
+              }
+            })
+          }else{
+            _this.setData({
+              userInfoShow:true,
+              phoneShow:false
+            })
+          }
         }
       })
     }
-    console.log('app',app)
   },
 })

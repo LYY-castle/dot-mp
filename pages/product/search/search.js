@@ -149,9 +149,7 @@ Page({
     console.log(e)
     const option = e.currentTarget.dataset.option
     const pathParams = {
-      userId: wx.getStorageSync('userId'),
-      parentId: wx.getStorageSync('parentId'),
-      productId: option.id,
+      productId: option.id
     }
     wx.navigateTo({
       url: '../product-detail/product-detail',

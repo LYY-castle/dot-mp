@@ -1,6 +1,5 @@
 {
   "usingComponents": {
-    "van-action-sheet": "@vant/weapp/action-sheet/index",
-    "van-popup": "@vant/weapp/popup/index"
+    "van-popup": "/miniprogram_npm/@vant/weapp/popup/index"
   }
 }
