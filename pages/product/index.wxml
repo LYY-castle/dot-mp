@@ -3,12 +3,12 @@
     <van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
   </van-sticky>
   <view class="sort">
-    <view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index"  class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
-      <van-image src="{{sort.icon}}" alt width="40px" height="40px"/>
+    <view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" bindtap="gotoProductList" data-item="{{sort}}">
+      <van-image src="{{sort.icon}}" alt width="30px" height="30px"/>
       <view>{{sort.name}}</view>
     </view>
-    <view class="sortItem" bind:tap="gotoProductList">
-      <van-image src="{{ProductAll}}" alt width="40px" height="40px" />
+    <view bind:tap="gotoProductList">
+      <van-image src="{{ProductAll}}" alt width="30px" height="30px" />
       <view>全部</view>
     </view>
   </view>

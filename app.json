@@ -2,27 +2,84 @@
   "pages": [
     "pages/index/index",
     "pages/product/index",
-    "pages/product/product-list/product-list",
-    "pages/product/search/search",
-    "pages/product/product-detail/product-detail",
-    "pages/product/share-detail/share-detail",
-    "pages/product/share-list/share-list",
+
     "pages/dots-money/dots-money",
-    "pages/dots-money/detail-page/detail-page",
     "pages/scatter-dots/scatter-dots",
-    "pages/mine/mine",
-    "pages/mine/order/order-list/order-list",
-    "pages/mine/order/order-detail/order-detail",
-    "pages/mine/personal-info/personal-info",
-    "pages/mine/personal-info/cropper/cropper",
-    "pages/mine/modify-password/modify-password",
-    "pages/mine/forget-password/forget-password",
-    "pages/mine/bank-card/bank-card",
-    "pages/mine/address/add-address/add-address",
-    "pages/mine/address/address-list/address-list",
-    "pages/mine/login/login",
-    "pages/mine/register/register",
-    "pages/product/perchase/perchase"
+
+    "pages/mine/mine"
+  ],
+  "subpackages": [
+    {
+      "root": "pages/index/index",
+      "pages": [
+        "pages/product/index"
+      ]
+    },
+    {
+      "root": "pages/product/index",
+      "pages": [
+        "pages/product/search/search",
+        "pages/product/product-list/product-list",
+        "pages/product/product-detail/product-detail",
+        "pages/product/share-detail/share-detail",
+        "pages/product/share-list/share-list"
+      ]
+    },
+    {
+      "root": "pages/product/product-list/product-list",
+      "pages": [
+        "pages/product/product-detail/product-detail",
+        "pages/product/share-detail/share-detail",
+        "pages/product/share-list/share-list"
+      ]
+    },
+    {
+      "root": "pages/product/search/search",
+      "pages": [
+        "pages/product/product-detail/product-detail",
+        "pages/product/index"
+      ]
+    },
+    {
+      "root": "pages/product/product-detail/product-detail",
+      "pages": [
+        "pages/product/perchase/perchase"
+      ]
+    },
+    {
+      "root": "pages/mine/address/address-list/address-list",
+      "pages": [
+        "pages/product/perchase/perchase",
+        "pages/mine/address/add-address/add-address"
+      ]
+    },
+    {
+      "root": "pages/dots-money/dots-money",
+      "pages": [
+        "pages/dots-money/detail-page/detail-page"
+      ]
+    },
+    {
+      "root": "pages/mine/mine",
+      "pages": [
+        "pages/mine/order/order-list/order-list",
+        "pages/mine/personal-info/personal-info",
+        "pages/mine/bank-card/bank-card",
+        "pages/mine/address/address-list/address-list"
+      ]
+    },
+    {
+      "root": "pages/mine/order/order-list/order-list",
+      "pages": [
+        "pages/mine/order/order-detail/order-detail"
+      ]
+    },
+    {
+      "root": "pages/mine/personal-info/personal-info",
+      "pages": [
+        "pages/mine/personal-info/cropper/cropper"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",

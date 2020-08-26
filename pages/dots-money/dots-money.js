@@ -5,6 +5,7 @@ import qseBaoUtil from '../../utils/qsebao.js' //相对路径
 import constantCfg from '../../config/constant'
 import { getEndTime,getStartTime } from '../../utils/util'
 const moment = require('../../utils/moment.min.js')
+
 Page({
 
   /**
@@ -82,11 +83,11 @@ Page({
     ],
 
     direction: 'desc',
-      field: 'orderNum',
-      createAt: '自定义',
-      defaultDate: [new Date().getTime(), new Date().getTime()],
-      pageSize: 10,
-      type: constantCfg.productType.defaultProductType,
+    field: 'orderNum',
+    createAt: '自定义',
+    defaultDate: [new Date().getTime(), new Date().getTime()],
+    pageSize: 10,
+    type: constantCfg.productType.defaultProductType,
     createAtStart: getStartTime(moment(new Date()).format(), 'day'),
     createAtEnd: getEndTime(moment(new Date()).format(), 'day'),
     pageNo: 1,
@@ -209,7 +210,7 @@ Page({
     const params = {
       parentId: 0,
       pageSize: 100,
-      isEnable:1,
+      isEnable: 1,
     }
     tool.getProductSorts(params).then(res => {
       this.setData({
