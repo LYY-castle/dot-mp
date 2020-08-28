@@ -2,6 +2,7 @@
 node_modules
 miniprogram_npm
 **/*.dev.js
+**/*.log
 
 # Windows
 [Dd]esktop.ini
@@ -14,7 +15,6 @@ $RECYCLE.BIN/
 .Spotlight-V100
 .TemporaryItems
 .Trashes
-
 
 # Node.js
 node_modules/
