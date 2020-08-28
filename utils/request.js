@@ -42,7 +42,7 @@ function wxRequest({
   url,
   method = 'get',
   params = {},
-  urlReplacements = []
+  urlReplacements = [],
 }) {
   let header = {}
   wx.showLoading({

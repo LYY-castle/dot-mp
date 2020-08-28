@@ -123,8 +123,6 @@ Page {
 }
 .mainContent {
   height: 100%;
-  padding-bottom: 50px;
-  padding-top: 46px;
 }
 .shareMainContent {
   height: 100%;

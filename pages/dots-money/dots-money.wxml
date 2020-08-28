@@ -22,11 +22,35 @@
 				bind:change="selectChange" />
 		</van-dropdown-menu>
 	</view>
+	<view wx:if="{{timeShow}}" class="selectTime">
+		<picker mode="date" bindchange="startTimeSelect" value="{{createAtStart}}">
+			<view class="picker" >
+				开始时间
+				<van-field
+    			value="{{createAtStart}}"
+    			placeholder="请输入用户名"
+					border="{{ false }}"
+					readonly="{{true}}"
+    			bind:change="onChange"
+  			/>
+			</view>
+		</picker>
+		<picker mode="date" bindchange="endTimeSelect" value="{{createAtEnd}}">
+			<view class="picker">
+				结束时间
+				<van-field
+    			value="{{createAtEnd}}"
+    			placeholder="请输入用户名"
+					border="{{ false }}"
+					readonly="{{true}}"
+    			bind:change="onChange"
+  			/>
+			</view>
+		</picker>
+		<van-button size="mini" bind:click="searchByDiyTIme" color="#f9ae08">搜索</van-button>
+	</view>
 	<view wx:if="{{myDataList.length>0}}">
 		<main-components bindmyevent="goToNextPage" myDataList="{{myDataList}}" active="{{active}}"></main-components>
 	</view>
 	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{myDataList.length===0}}" />
-	<van-calendar show="{{ timeShow }}" type="range" bind:close="onTimeClose" bind:confirm="onTimeConfirm"
-		min-date="{{ minDate }}" max-date="{{ maxDate }}" show-confirm="{{ false }}" default-date="{{defaultDate}}" />
-
 </view>

@@ -89,9 +89,19 @@ function getCurrentPageUrl(){
   var pages = getCurrentPages();
   return pages[pages.length - 1];
 }
+function ellipsis(value, vlength = 25){
+  if (!value) {
+    return ''
+  }
+  if (value.length > vlength) {
+    return value.slice(0, vlength) + '...'
+  }
+  return value
+}
 module.exports = {
   formatTime,
   getStartTime,
   getEndTime,
-  getCurrentPageUrl
+  getCurrentPageUrl,
+  ellipsis
 }

@@ -4,6 +4,7 @@ import tool from '../../utils/mixin.js'
 import constantCfg from '../../config/constant'
 import env from '../../config/env.config'
 import Crypto from '../../utils/crypto'
+// const QR = require("../../utils/qrcode.min.js")
 Page({
   /**
    * 页面的初始数据
@@ -11,9 +12,11 @@ Page({
   data: {
     bg: '/static/img/bg.png',
     allUrl: '',
+    codeUrl:'',
     name: '',
     avatar: '/static/img/avatar.png',
     headImage: null,
+    imagePath:'',
     api: {
       getUserInfo: {
         url: '/users/{id}',
@@ -21,6 +24,10 @@ Page({
       },
       getAccessToken:{
         url:'https://api.weixin.qq.com/cgi-bin/token',
+        method:'get'
+      },
+      getQRcode:{
+        url:'/wx-ma/generate/ma-code',
         method:'get'
       }
     }
@@ -30,33 +37,51 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    console.log('options',options)
+    // that.createQrCode(goods_url, "mycanvas", size.w, size.h)
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    const query = wx.createSelectorQuery()
-    query.select('#myCanvas')
-      .fields({ node: true, size: true })
-      .exec((res) => {
-        const canvas = res[0].node
-        const ctx = canvas.getContext('2d')
-
-        const dpr = wx.getSystemInfoSync().pixelRatio
-        canvas.width = res[0].width * dpr
-        canvas.height = res[0].height * dpr
-        ctx.scale(dpr, dpr)
-
-        ctx.fillRect(0, 0, 100, 100)
-      })
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function () {
+    const params = {
+      params:'https://dot-dev.com',
+      wechatAppId:env.env.appid
+    }
+    const header = {
+      'authorization':wx.getStorageSync('authorization')
+    }
+    wx.request({
+      url:env.env.VUE_APP_BASE_URL+this.data.api.getQRcode.url,
+      header,
+      responseType:'arrayBuffer',
+      data:params,
+      success:res=>{
+        console.log(res)
+        let url ='data:image/png;base64,'+wx.arrayBufferToBase64(res.data)
+        this.setData({
+          codeUrl:url
+        })
+      }
+    })
+    // http.wxRequest({
+    //   ...this.data.api.getQRcode,
+    //   params,
+    //   responseType:'arrayBuffer'
+    // }).then(res=>{
+    //   console.log(res)
+    //   const base64 = wx.arrayBufferToBase64(res.data)
+    //   console.log(base64)
+
+    //   // let url ='data:image/png;base64,'+wx.arrayBufferToBase64(res)
+    //   // console.log(url,wx.arrayBufferToBase64(res))
+    //   // this.setData({
+    //   //   codeUrl:url
+    //   // })
+    // })
     Promise.resolve()
       .then(() => tool.checkToken())
       .then(() => this.getUserInfo())

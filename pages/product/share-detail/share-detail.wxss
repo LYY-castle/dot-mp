@@ -1,1 +1,48 @@
 /* pages/product/share-detail/share-detail.wxss */
+.mainContent {
+  overflow: hidden;
+  overflow-y: scroll;
+  padding-bottom: 44px;
+  background: #fff;
+}
+
+.shareContent {
+  padding: 10px 12px;
+}
+
+.shareContent .shareDoc {
+  min-height: 100px;
+}
+
+.textContent {
+  padding: 20px;
+}
+
+.textContent .text-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shareImg {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.imgItem {
+  width: 31%;
+  height: 100px;
+  box-shadow: 0 0 2px 2px #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.imgItem:nth-child(3n + 1) {
+  margin-left: 0;
+}
