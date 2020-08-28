@@ -1,2 +1,49 @@
 <!--pages/product/share-detail/share-detail.wxml-->
-<text>pages/product/share-detail/share-detail.wxml</text>
+<view class="mainContent">
+    <view class="shareContent">
+      <view class="m-t-10 shareDoc">{{ shareInfo.shareDoc }}</view>
+      <view class="shareImg" wx:if="{{shareInfo.shareImg.length>0}}">
+        <van-image
+          src="{{item}}"
+          wx:for="{{shareInfo.shareImg}}"
+          wx:key="index"
+          width="100%"
+          height="100px"
+          fit="cover"
+          class="imgItem"
+          bindtap="preview"
+          data-option="{{item}}"
+          use-loading-slot
+        >
+        <van-loading slot="loading" type="spinner" size="20" vertical />
+        </van-image>
+      </view>
+    </view>
+    <view>
+      <van-goods-action>
+        <van-button block="{{true}}" round="{{true}}" bind:click="copyAndDownload" color="#f9ae08" style="display:block">复制文案</van-button>
+      </van-goods-action>
+    </view>
+    <van-popup show="{{popShow}}" round position="bottom" closeable>
+      <view class="textContent">
+        <view class="text-center">
+          <van-icon name="passed" />
+          <text>文案复制成功</text>
+        </view>
+        <view class="text-center">
+          <text>分享到</text>
+          <van-icon name="wechat" color="#44b549" />
+          <text>朋友圈步骤如下：</text>
+        </view>
+        <view>
+          <van-icon name="star-o" color="#f9ae08" />&nbsp;打开微信发送朋友圈
+        </view>
+        <view wx:if="{{shareInfo.shareImg.length>0}}">
+          <van-icon name="star-o" color="#f9ae08" />&nbsp;添加已保存的图片
+        </view>
+        <view>
+          <van-icon name="star-o" color="#f9ae08" />&nbsp;粘贴已复制的文案
+        </view>
+      </view>
+    </van-popup>
+  </view>

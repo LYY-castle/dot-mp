@@ -4,8 +4,6 @@ var _request = _interopRequireDefault(require("../../utils/request.js"));
 
 var _mixin = _interopRequireDefault(require("../../utils/mixin.js"));
 
-var _qsebao = _interopRequireDefault(require("../../utils/qsebao.js"));
-
 var _constant = _interopRequireDefault(require("../../config/constant"));
 
 var _util = require("../../utils/util");
@@ -32,7 +30,7 @@ Page({
     empty: '/static/img/empty.png',
     iconSuccess: '/static/img/icon-success.png',
     iconFail: '/static/img/icon-fail.png'
-  }, _defineProperty(_data, "empty", '/static/img/empty.png'), _defineProperty(_data, "timeShow", false), _defineProperty(_data, "minDate", new Date(1970, 0, 1).getTime()), _defineProperty(_data, "maxDate", new Date().getTime()), _defineProperty(_data, "value1", 0), _defineProperty(_data, "activeButtonIndex", 0), _defineProperty(_data, "option1", [{
+  }, _defineProperty(_data, "empty", '/static/img/empty.png'), _defineProperty(_data, "timeShow", false), _defineProperty(_data, "canSearch", true), _defineProperty(_data, "value1", 0), _defineProperty(_data, "startDate", '2020-08-27'), _defineProperty(_data, "endDate", '2020-08-28'), _defineProperty(_data, "activeButtonIndex", 0), _defineProperty(_data, "option1", [{
     text: '订单数量由高到低',
     value: 0
   }, {
@@ -339,23 +337,6 @@ Page({
     });
     this.getMyAchievement();
   },
-  onTimeClose: function onTimeClose() {
-    this.setData({
-      timeShow: false
-    });
-  },
-  onTimeConfirm: function onTimeConfirm(date) {
-    var start = date.detail[0];
-    var end = date.detail[1];
-    this.setData({
-      timeShow: false,
-      createAtStart: (0, _util.getStartTime)(moment(start).format(), 'day'),
-      createAtEnd: (0, _util.getStartTime)(moment(end).format(), 'day'),
-      createAt: "".concat(this.formatDate(start), " - ").concat(this.formatDate(end)),
-      defaultDate: [moment(start).toDate().getTime(), moment(end).toDate().getTime()]
-    });
-    this.getMyAchievement();
-  },
   formatDate: function formatDate(date) {
     return "".concat(date.getMonth() + 1, "/").concat(date.getDate());
   },
@@ -398,38 +379,74 @@ Page({
   },
   MyAchievementByTime: function MyAchievementByTime(e) {
     var index = e.currentTarget.dataset.index;
+    this.setData({
+      activeButtonIndex: index
+    });
 
     if (index === 0) {
       this.setData({
-        activeButtonIndex: index,
+        timeShow: false,
         createAtStart: (0, _util.getStartTime)(moment().format(), 'day'),
         createAtEnd: (0, _util.getEndTime)(moment().format(), 'day'),
-        createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
+        createAt: '自定义'
       });
       this.getMyAchievement();
-    } else if (index === 1) {
+    }
+
+    if (index === 1) {
       this.setData({
-        activeButtonIndex: index,
+        timeShow: false,
         createAtStart: (0, _util.getStartTime)(moment().startOf('week').format(), 'day'),
         createAtEnd: (0, _util.getEndTime)(moment().endOf('week').format(), 'day'),
-        createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
+        createAt: '自定义'
       });
       this.getMyAchievement();
-    } else if (index === 2) {
+    }
+
+    if (index === 2) {
       this.setData({
-        activeButtonIndex: index,
+        timeShow: false,
         createAtStart: (0, _util.getStartTime)(moment().startOf('month').format(), 'day'),
         createAtEnd: (0, _util.getEndTime)(moment().endOf('month').format(), 'day'),
-        createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
+        createAt: '自定义'
       });
       this.getMyAchievement();
-    } else if (index === 3) {
+    }
+
+    if (index === 3) {
       this.setData({
-        activeButtonIndex: index,
         timeShow: true
+      });
+    }
+  },
+  startTimeSelect: function startTimeSelect(e) {
+    console.log('start', e);
+    var option = (0, _util.getStartTime)(moment(e.detail.value).format(), 'day');
+    this.setData({
+      createAtStart: option
+    });
+  },
+  endTimeSelect: function endTimeSelect(e) {
+    var option = (0, _util.getEndTime)(moment(e.detail.value).format(), 'day');
+
+    if (new Date(option).getTime() > new Date(this.data.createAtStart).getTime()) {
+      this.setData({
+        createAtEnd: option
+      });
+    } else {
+      wx.showToast({
+        title: '结束时间不能小于开始时间',
+        icon: 'none'
+      });
+    }
+  },
+  searchByDiyTIme: function searchByDiyTIme() {
+    if (new Date(this.data.createAtEnd).getTime() > new Date(this.data.createAtStart).getTime()) {
+      this.getMyAchievement();
+    } else {
+      wx.showToast({
+        title: '结束时间不能小于开始时间',
+        icon: 'none'
       });
     }
   },

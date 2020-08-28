@@ -4,24 +4,11 @@
     <view class="title">撒点点</view>
     <van-image src="{{bg}}" alt fit="widthFix" width="100%"/>
     <view class="codeContent">
-      <!-- <van-image
-          round
-          :src="userInfo.avatar"
-          v-if="userInfo.avatar"
-          width="80px"
-          height="80px"
-          fit="cover"
-          class="avatar"
-        /> -->
       <image src="{{avatar}}" alt class="avatar"/>
       <view class="card">
-        <view>{{ name }}</view>
-        <view id="card">
-        <canvas type="2d" id="myCanvas"></canvas>
-          <!-- <canvas id="qrcode"></canvas> -->
-        </view>
-        <view class="font-size-12">[ 截屏转发金小点身份码 - 发展团队 ]</view>
-        <view class="copyBtn">复制链接</view>
+        <view class="m-b-20">{{ name }}</view>
+        <van-image src="{{codeUrl}}" width="150px" height="150px"></van-image>
+        <view class="font-size-12 m-t-20">[ 截屏转发金小点身份码 - 发展团队 ]</view>
       </view>
     </view>
   </view>

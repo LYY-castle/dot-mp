@@ -19,8 +19,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var app = getApp();
 Page({
   data: {
-    loading: false,
-    finished: false,
+    multiIndex: [0, 0, 0],
     empty: '/static/img/empty.png',
     ProductAll: '/static/img/product-all.png',
     productList: [],

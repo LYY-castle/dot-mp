@@ -237,6 +237,18 @@ Page({
           });
         }
       });
+    }
+
+    if (event === 'share') {
+      wx.navigateTo({
+        url: '../share-list/share-list',
+        success: function success(res) {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit('acceptDataFromOpenerPage', {
+            data: pathParams
+          });
+        }
+      });
     } // switch (event) {
     //   case 'self':
     //     console.log('self')

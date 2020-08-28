@@ -1,13 +1,11 @@
 // pages/dots-money/dots-money.js
 import http from '../../utils/request.js' //相对路径
 import tool from '../../utils/mixin.js'
-import qseBaoUtil from '../../utils/qsebao.js' //相对路径
 import constantCfg from '../../config/constant'
 import { getEndTime,getStartTime } from '../../utils/util'
 const moment = require('../../utils/moment.min.js')
 
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -20,9 +18,10 @@ Page({
     empty: '/static/img/empty.png',
     // 排序
     timeShow: false,
-    minDate: new Date(1970, 0, 1).getTime(),
-    maxDate: new Date().getTime(),
+    canSearch:true,
     value1: 0,
+    startDate: '2020-08-27',
+    endDate: '2020-08-28',
     activeButtonIndex: 0,
     option1: [{
         text: '订单数量由高到低',
@@ -81,7 +80,6 @@ Page({
         field: 'totalNum'
       }
     ],
-
     direction: 'desc',
     field: 'orderNum',
     createAt: '自定义',
@@ -355,23 +353,6 @@ Page({
     })
     this.getMyAchievement()
   },
-  onTimeClose(){
-    this.setData({
-      timeShow:false
-    })
-  },
-  onTimeConfirm(date) {
-    const start = date.detail[0]
-    const end = date.detail[1]
-    this.setData({
-      timeShow:false,
-      createAtStart:getStartTime(moment(start).format(), 'day'),
-      createAtEnd:getStartTime(moment(end).format(), 'day'),
-      createAt:`${this.formatDate(start)} - ${this.formatDate(end)}`,
-      defaultDate:[moment(start).toDate().getTime(), moment(end).toDate().getTime()]
-    })
-    this.getMyAchievement()
-  },
   formatDate(date) {
     return `${date.getMonth() + 1}/${date.getDate()}`
   },
@@ -412,39 +393,72 @@ Page({
   },
   MyAchievementByTime(e) {
     const index = e.currentTarget.dataset.index
+    this.setData({
+      activeButtonIndex:index,
+    })
     if (index === 0) {
       this.setData({
-        activeButtonIndex:index,
+        timeShow: false,
         createAtStart: getStartTime(moment().format(), 'day'),
         createAtEnd: getEndTime(moment().format(), 'day'),
         createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
       })
       this.getMyAchievement()
-    } else if(index===1){
+    }
+    if(index===1){
       this.setData({
-        activeButtonIndex:index,
+        timeShow: false,
         createAtStart: getStartTime(moment().startOf('week').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('week').format(), 'day'),
         createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
       })
       this.getMyAchievement()
-    }else if(index===2){
+    }
+    if(index===2){
       this.setData({
-        activeButtonIndex:index,
+        timeShow: false,
         createAtStart: getStartTime(moment().startOf('month').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('month').format(), 'day'),
         createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
       })
       this.getMyAchievement()
-    }else if(index===3){
+    }
+    if(index===3){
       this.setData({
-        activeButtonIndex:index,
         timeShow: true
       })
     }
+  },
+  startTimeSelect(e){
+    console.log('start',e)
+    const option = getStartTime(moment(e.detail.value).format(), 'day')
+    this.setData({
+      createAtStart:option
+    })
+  },
+  endTimeSelect(e){
+    const option = getEndTime(moment(e.detail.value).format(), 'day')
+    if(new Date(option).getTime()>new Date(this.data.createAtStart).getTime()){
+      this.setData({
+        createAtEnd:option
+      })
+    }else{
+      wx.showToast({
+        title:'结束时间不能小于开始时间',
+        icon:'none'
+      })
+    }
+  },
+  searchByDiyTIme(){
+    if(new Date(this.data.createAtEnd).getTime()>new Date(this.data.createAtStart).getTime()){
+      this.getMyAchievement()
+    }else{
+      wx.showToast({
+        title:'结束时间不能小于开始时间',
+        icon:'none'
+      })
+    }
+
   },
   goToNextPage(e){
     console.log(e)

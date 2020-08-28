@@ -5,9 +5,11 @@
   overflow: hidden;
   overflow-y: scroll;
 }
+
 .achievementSort {
   background-color: #f9ae08;
 }
+
 .selectButtons {
   background: #fff;
   padding: 0 5px;
@@ -16,9 +18,26 @@
   justify-content: flex-start;
   align-items: center;
 }
+
 .listStyle {
   height: 100%;
   background: #fff;
   overflow: hidden;
   overflow-y: scroll;
+}
+
+.selectTime {
+  color: rgba(0, 0, 0, .8);
+  font-size: 12px;
+  background: #fff;
+  margin: 5px 0;
+  padding: 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selectTime .van-cell {
+  padding: 0 !important;
+  width: 85px;
 }
