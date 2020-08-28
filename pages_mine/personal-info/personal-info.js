@@ -89,8 +89,8 @@ Page({
    */
   onUnload: function () {
     console.log('返回')
-    wx.reLaunch({
-      url: '../mine'
+    wx.switchTab({
+      url: '../../pages/mine/mine'
     })
   },
 
@@ -250,7 +250,7 @@ Page({
                     success(){
                       setTimeout(function() {
                         wx.switchTab({
-                          url:'../../pages/mine',
+                          url:'../../pages/mine/mine',
                         })
                       }, 1000);
                     }

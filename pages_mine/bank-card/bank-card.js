@@ -186,7 +186,7 @@ Page({
                                 success(){
                                   setTimeout(function() {
                                     wx.switchTab({
-                                      url:'../../pages/mine',
+                                      url:'../../pages/mine/mine',
                                     })
                                   }, 1000);
                                 }

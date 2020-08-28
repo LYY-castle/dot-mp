@@ -158,7 +158,7 @@ Page({
           if (res.success) {
             wx.clearStorageSync()
             wx.reLaunch({
-              url: './login/login'
+              url: '../../pages_mine/login/login'
             })
           }
         })

@@ -1,9 +1,4 @@
 import env from '../config/env.config'
-/**
- * 请求头
- */
-
-
 
 /**
  * function: 封装网络请求

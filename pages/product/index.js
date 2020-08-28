@@ -110,7 +110,7 @@ Page({
   gotoProductList(event) {
     const sortId = event.currentTarget.dataset.item?event.currentTarget.dataset.item.id:'all'
     wx.navigateTo({
-      url: './product-list/product-list?sortId='+sortId
+      url: '../../pages_product/product-list/product-list?sortId='+sortId
     })
   },
   gotoDetail(e){
@@ -120,7 +120,7 @@ Page({
       productId: option.id
     }
     wx.navigateTo({
-      url: './product-detail/product-detail',
+      url: '../../pages_product/product-detail/product-detail',
       success: function(res) {
         // 通过eventChannel向被打开页面传送数据
         res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })

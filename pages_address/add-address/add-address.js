@@ -1,8 +1,7 @@
-// pages/mine/address/add-address/add-address.js
-import http from 'utils/request.js'
-import areaList from '/utils/area.js'
-import AddressParse from '/miniprogram_npm/address-parse/index'
-import {isMobile} from '/utils/validate'
+import http from '../../utils/request.js'
+import areaList from '../../utils/area.js'
+import AddressParse from '../../miniprogram_npm/address-parse/index'
+import {isMobile} from '../../utils/validate'
 
 Page({
   /**

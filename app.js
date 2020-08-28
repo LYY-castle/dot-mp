@@ -1,9 +1,6 @@
-//app.js
-import http from './utils/request'
 App({
   onLaunch: function () {
-
-      // 登录
+    // 登录
     wx.login({
       success: res => {
         console.log('login赋值')

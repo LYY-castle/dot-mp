@@ -1,4 +1,3 @@
-<!--pages/mine/mine.wxml-->
 <view class="container">
   <view class="head">
    <van-image src="{{bg}}" alt fit="widthFix" width="100%"/>
