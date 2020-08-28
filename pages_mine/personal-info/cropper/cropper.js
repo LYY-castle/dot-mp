@@ -4,12 +4,13 @@ Page({
   data: {
     src:'',
     width: 250,//宽度
-    height: 300,//高度
+    height: 250,//高度
     max_width: 400,
     max_height: 400,
+    quality:0.5,
     disable_rotate:true,//是否禁用旋转
-    disable_ratio: false,//锁定比例
-    limit_move: true,//是否限制移动
+    disable_ratio: true,//锁定比例
+    limit_move: false,//是否限制移动
   },
   onLoad: function (options) {
     this.cropper = this.selectComponent("#image-cropper");
@@ -17,6 +18,9 @@ Page({
         this.setData({
           src: options.src
         })
+  },
+  onUnload: function () {
+
   },
   cropperload(e) {
     console.log('cropper加载完成');

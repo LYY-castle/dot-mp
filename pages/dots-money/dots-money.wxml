@@ -1,6 +1,6 @@
 <!--pages/dots-money/dots-money.wxml-->
 <view class="container">
-	<van-tabs active="{{active}}" sticky border="{{false}}" line-height="0" bind:change="typeChange"
+	<van-tabs type="line" active="{{active}}" sticky border="{{false}}" line-height="0" bind:change="typeChange"
 		custom-class="achievementSort" color="#333333" background="#f9ae08">
 		<van-tab title="我的业绩" name="mine"></van-tab>
 		<van-tab title="小点点业绩" name="dots"></van-tab>
@@ -14,7 +14,7 @@
 		<van-button wx:for="{{buttonGroup}}" wx:for-item="button" wx:key="index" round="{{true}}" size="mini"
 			color="{{activeButtonIndex === index ? 'rgba(247, 189, 79, 1)' : ''}}" bind:click="MyAchievementByTime"
 			data-index="{{index}}" class="m-r-5">{{button.text}}</van-button>
-		<van-button size="mini" color="{{activeButtonIndex === 3 ? 'rgba(247, 189, 79, 1)' : ''}}"
+		<van-button round="{{true}}" size="mini" color="{{activeButtonIndex === 3 ? 'rgba(247, 189, 79, 1)' : ''}}"
 			bind:click="MyAchievementByTime" data-index="{{3}}" class="m-r-5">{{createAt}}</van-button>
 		<van-dropdown-menu>
 			<van-dropdown-item class="fz-13" value="{{value1}}" options="{{option1}}"
@@ -47,7 +47,7 @@
   			/>
 			</view>
 		</picker>
-		<van-button size="mini" bind:click="searchByDiyTIme" color="#f9ae08">搜索</van-button>
+		<van-button size="mini" bind:click="searchByDiyTime" color="#f9ae08">搜索</van-button>
 	</view>
 	<view wx:if="{{myDataList.length>0}}">
 		<main-components bindmyevent="goToNextPage" myDataList="{{myDataList}}" active="{{active}}"></main-components>

@@ -7,7 +7,7 @@
   padding-bottom: 0;
 }
 .container .qrContent {
-  display: none;
+  text-align:center;
   background: #fff;
   width: 80%;
   margin: 0 auto;
@@ -21,16 +21,6 @@
   position: absolute;
   right: 10px;
   top: 10px;
-}
-.container .copyButton {
-  margin-top: 10px;
-  width: 150px;
-  background-color: #f7bd4f;
-  color: #fff;
-  margin: 0 auto;
-  font-size: 12px;
-  line-height: 30px;
-  border-radius: 5px;
 }
 .container .productsContent {
   width: 100%;

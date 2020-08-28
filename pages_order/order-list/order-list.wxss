@@ -33,3 +33,17 @@
 .flex-right {
   justify-content: space-between;
 }
+.selectTime {
+  color: rgba(0, 0, 0, .8);
+  font-size: 12px;
+  background: #fff;
+  margin: 5px 0;
+  padding: 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selectTime .van-cell {
+  padding: 0 !important;
+}

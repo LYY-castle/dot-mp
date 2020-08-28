@@ -35,17 +35,24 @@ Page({
    */
   onLoad: function (options) {
     const _this = this
-    const eventChannel = this.getOpenerEventChannel()
-    eventChannel.on('acceptDataFromOpenerPage', function(res) {
-      console.log('跳转传递参数',res)
+    if(options.productId){
+      this.setData({
+        productId:options.productId
+      })
+      _this.getProductDetail()
+      _this.getProductEnablePricingRule()
+
+    }else{
+      const eventChannel = this.getOpenerEventChannel()
+      eventChannel.on('acceptDataFromOpenerPage', function(res) {
       _this.setData({
         pathParams:res.data,
         productId:res.data.productId
       })
-      console.log(_this.data.productId)
       _this.getProductDetail()
       _this.getProductEnablePricingRule()
     })
+    }
 
   },
 

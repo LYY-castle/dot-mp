@@ -4,6 +4,14 @@
 		<van-sidebar-item title="全部" class="user-van-sidebar-item" />
 		<van-sidebar-item wx:for="{{productTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
 	</van-sidebar>
+	<view class="topContent" wx:if="{{qrcodeContent}}">
+		<view class="qrContent">
+			<view class="p-10">{{ popProductName }}</view>
+			<van-icon name="cross" class="closeButton" bind:click="removeQrcode" />
+			<van-image src="{{codeUrl}}" width="150px" height="150px"></van-image>
+			<view class="font-size-12">[ 截屏转发金小点商品码 ]</view>
+		</view>
+	</view>
 	<view class="productsContent">
 		<van-overlay show="{{open}}" bind:click="closeOverlay" />
 		<van-icon size="18" name="{{open ? 'arrow-up' : 'arrow-down'}}" class="openContent" color=" #878787" bind:click="openContent" wx:if="{{goodTypes.length > 1 && !share}}" />

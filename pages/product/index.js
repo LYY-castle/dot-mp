@@ -7,7 +7,7 @@ import constantCfg from '../../config/constant'
 const app = getApp()
 Page({
   data: {
-    multiIndex: [0, 0, 0],
+    bottomLineShow:false,
     empty: '/static/img/empty.png',
     ProductAll: '/static/img/product-all.png',
     productList: [],
@@ -72,6 +72,11 @@ Page({
         } else {
           that.productList = that.productList.concat(products)
         }
+        if(that.pageNo=res.page.totalPage){
+          this.setData({
+            bottomLineShow:true
+          })
+        }
         that.productList.forEach(item => {
           if (item.image !== null && item.image.indexOf(';') !== -1) {
             item.image = item.image.split(';')[0]
@@ -129,9 +134,6 @@ Page({
       .then(() => this.getProductSorts())
       .then(() => this.getProductList())
   },
-  /**
-   * 页面上拉触底事件的处理函数
-   */
   uploadAvatar(){
     const _this = this.data
     wx.chooseImage({
@@ -148,12 +150,24 @@ Page({
       }
     })
   },
+  /**
+   * 页面上拉触底事件的处理函数
+   */
   onReachBottom: function () {
-    console.log('上拉')
+    if(!this.data.bottomLineShow){
+      const pageNo = this.data.pageNo+1
+      this.setData({
+        pageNo
+      })
+      this.getProductList()
+    }
   },
-  onPageScroll: function() {
-    // 页面滚动时执行
-    console.log('滚动')
+  // 下拉刷新
+  onPullDownRefresh(){
+      this.setData({
+        pageNo:1
+      })
+      this.getProductList()
   },
   /**
    * 用户点击右上角分享
