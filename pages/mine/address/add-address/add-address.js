@@ -105,7 +105,7 @@ Page({
                               res.eventChannel.emit('acceptDataFromOpenerPage', { data: _this.data.pathParams })
                             }
                           })
-                        }, 1000);
+                        }, 1000)
                       }
                     })
                   }
@@ -124,7 +124,7 @@ Page({
                               res.eventChannel.emit('acceptDataFromOpenerPage', { data: _this.data.pathParams })
                             }
                           })
-                        }, 1000);
+                        }, 1000)
                       }
                     })
                   }
