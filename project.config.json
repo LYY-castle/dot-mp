@@ -84,9 +84,9 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/product/index",
-					"pathName": "pages/product/index",
-					"query": "",
+					"name": "pages/index/index",
+					"pathName": "pages/index/index",
+					"query": "productId=30",
 					"scene": null
 				}
 			]

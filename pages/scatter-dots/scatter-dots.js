@@ -67,21 +67,6 @@ Page({
         })
       }
     })
-    // http.wxRequest({
-    //   ...this.data.api.getQRcode,
-    //   params,
-    //   responseType:'arrayBuffer'
-    // }).then(res=>{
-    //   console.log(res)
-    //   const base64 = wx.arrayBufferToBase64(res.data)
-    //   console.log(base64)
-
-    //   // let url ='data:image/png;base64,'+wx.arrayBufferToBase64(res)
-    //   // console.log(url,wx.arrayBufferToBase64(res))
-    //   // this.setData({
-    //   //   codeUrl:url
-    //   // })
-    // })
     Promise.resolve()
       .then(() => tool.checkToken())
       .then(() => this.getUserInfo())

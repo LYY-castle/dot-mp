@@ -13,6 +13,33 @@
       <van-button size="mini" round="{{true}}" color="{{activeButtonIndex === 3 ? 'rgba(247, 189, 79, 1)' : ''}}"
         bind:click="MyAchievementByTime" data-index="{{3}}" class="m-r-5">{{createAt}}</van-button>
     </view>
+    <view wx:if="{{timeShow}}" class="selectTime">
+		<picker mode="date" bindchange="startTimeSelect" value="{{createAtStart}}">
+			<view class="picker" >
+				开始时间
+				<van-field
+    			value="{{createAtStart}}"
+    			placeholder="请输入用户名"
+					border="{{ false }}"
+					readonly="{{true}}"
+    			bind:change="onChange"
+  			/>
+			</view>
+		</picker>
+		<picker mode="date" bindchange="endTimeSelect" value="{{createAtEnd}}">
+			<view class="picker">
+				结束时间
+				<van-field
+    			value="{{createAtEnd}}"
+    			placeholder="请输入用户名"
+					border="{{ false }}"
+					readonly="{{true}}"
+    			bind:change="onChange"
+  			/>
+			</view>
+		</picker>
+		<van-button size="mini" bind:click="searchByDiyTime" color="#f9ae08">搜索</van-button>
+	</view>
     <van-cell wx:if="{{orderList.length > 0}}" wx:for="{{orderList}}" wx:for-item="order" wx:key="index"
       bind:click="orderDetail" data-option="{{order}}" class="m-b-5">
       <view slot="title">
@@ -39,8 +66,5 @@
     </van-cell>
     <van-empty image="{{empty}}" description="暂无订单" wx:if="{{orderList.length === 0}}"/>
   </view>
-  <van-calendar safe-area-inset-bottom show="{{timeShow}}" type="range" show-confirm="{{false}}"
-    bind:confirm="onConfirmTime" min-date="{{minDate}}" max-date="{{maxDate}}" default-date="{{defaultDate}}">
-    <view slot="footer" class="m-t-50"></view>
-  </van-calendar>
+
 </div>

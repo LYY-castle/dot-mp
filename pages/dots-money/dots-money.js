@@ -339,6 +339,8 @@ Page({
   // typeChange
   typeChange(event){
     this.setData({
+      activeButtonIndex:0,
+      timeShow: false,
       myDataList:[],
       active:event.detail.name,
       activeProductType:constantCfg.productType.defaultProductType
@@ -348,13 +350,12 @@ Page({
   // goodChange
   goodChange(event){
     this.setData({
+      activeButtonIndex:0,
+      timeShow: false,
       myDataList:[],
       activeProductType:event.detail.name
     })
     this.getMyAchievement()
-  },
-  formatDate(date) {
-    return `${date.getMonth() + 1}/${date.getDate()}`
   },
   selectChange(event){
     console.log(event)
@@ -401,7 +402,6 @@ Page({
         timeShow: false,
         createAtStart: getStartTime(moment().format(), 'day'),
         createAtEnd: getEndTime(moment().format(), 'day'),
-        createAt: '自定义',
       })
       this.getMyAchievement()
     }
@@ -410,7 +410,6 @@ Page({
         timeShow: false,
         createAtStart: getStartTime(moment().startOf('week').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('week').format(), 'day'),
-        createAt: '自定义',
       })
       this.getMyAchievement()
     }
@@ -419,7 +418,6 @@ Page({
         timeShow: false,
         createAtStart: getStartTime(moment().startOf('month').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('month').format(), 'day'),
-        createAt: '自定义',
       })
       this.getMyAchievement()
     }
@@ -438,19 +436,23 @@ Page({
   },
   endTimeSelect(e){
     const option = getEndTime(moment(e.detail.value).format(), 'day')
-    if(new Date(option).getTime()>new Date(this.data.createAtStart).getTime()){
+    const endTime = new Date(option.replace(/\-/g, "/")).getTime()
+    const startTime = new Date(this.data.createAtStart.replace(/\-/g, "/")).getTime()
+    if(endTime>startTime){
       this.setData({
         createAtEnd:option
       })
     }else{
       wx.showToast({
-        title:'结束时间不能小于开始时间',
-        icon:'none'
-      })
+            title:'结束时间不能小于开始时间',
+            icon:'none'
+          })
     }
   },
-  searchByDiyTIme(){
-    if(new Date(this.data.createAtEnd).getTime()>new Date(this.data.createAtStart).getTime()){
+  searchByDiyTime(){
+    const endTime = new Date(this.data.createAtEnd.replace(/\-/g, "/")).getTime()
+    const startTime = new Date(this.data.createAtStart.replace(/\-/g, "/")).getTime()
+    if(endTime>startTime){
       this.getMyAchievement()
     }else{
       wx.showToast({
@@ -471,7 +473,6 @@ Page({
       createAtEnd:this.data.createAtEnd,
       active:this.data.active
     }
-    console.log('option',option)
     wx.navigateTo({
       url: './detail-page/detail-page',
       success: function(res) {

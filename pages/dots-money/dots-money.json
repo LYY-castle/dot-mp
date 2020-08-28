@@ -5,11 +5,9 @@
     "van-button": "@vant/weapp/button/index",
     "van-cell": "@vant/weapp/cell/index",
     "van-empty": "@vant/weapp/empty/index",
-    "van-sticky": "@vant/weapp/sticky/index",
     "van-dropdown-menu": "@vant/weapp/dropdown-menu/index",
     "van-dropdown-item": "@vant/weapp/dropdown-item/index",
     "van-image": "@vant/weapp/image/index",
-    "van-popup": "@vant/weapp/popup/index",
     "van-field": "@vant/weapp/field/index",
     "main-components": "./components/main-components/index"
   }

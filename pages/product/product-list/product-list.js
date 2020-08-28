@@ -2,9 +2,8 @@
 import http from '../../../utils/request.js' //相对路径
 import tool from '../../../utils/mixin.js'
 import util from '../../../utils/util.js'
-import qseBaoUtil from '../../../utils/qsebao.js' //相对路径
 import constantCfg from '../../../config/constant'
-import Crypto from '../../../utils/crypto'
+import env from '../../../config/env.config'
 Page({
   /**
    * 页面的初始数据
@@ -14,9 +13,9 @@ Page({
     activeKey: 0,
     share: 0,
     allProduct: false,
+    qrcodeContent:false,
+    codeUrl:null,
     open: false,
-    loading: false,
-    finished: true,
     pageNo: 1,
     pageSize: 10,
     activeProduct: 4,
@@ -25,7 +24,6 @@ Page({
     pageTitle: '产品列表',
     popProductName: '',
     showProducts: false,
-    renderQRCodeUrl: null,
     productList: [],
     productTypes: [],
     productTypeVals: [],
@@ -42,6 +40,10 @@ Page({
       getProductTypes: {
         url: '/product-categories',
         method: 'get',
+      },
+      getQRcode:{
+        url:'/wx-ma/generate/ma-code',
+        method:'get'
       }
     }
   },
@@ -54,35 +56,6 @@ Page({
       .then(() => this.getProductTypes(0))
       .then(() => this.routerParams())
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
@@ -104,7 +77,6 @@ Page({
 
   },
 
-
   // 产品种类切换
   onChange(event) {
     const activeKey = event.detail
@@ -120,17 +92,10 @@ Page({
     } else {
       this.getAllProductList()
     }
-    // this.allProduct = false
-    // this.open = false
-    // this.pageNo = 1
-    // this.goodTypes = []
-    // this.productList = []
-    // Promise.resolve()
-    //   .then(() => this.getProductTypes(id))
-    //   .then(() => this.getProductsList())
   },
   // 商品种类切换
   goodChange(event) {
+    // 全部和其他产品类型点击事件区分
     let id = event.type === 'click' ? event.detail.name : event.currentTarget.dataset.id
     this.setData({
       activeGood: id,
@@ -140,7 +105,6 @@ Page({
     })
     this.getProductsListById()
   },
-
   // 获取产品列表 0 一级,其他是二级
   getProductTypes(val) {
     let params = {
@@ -198,7 +162,6 @@ Page({
       resolve()
     })
   },
-
   // 四个按钮点击事件 self自己买  other客户买 look查看详情 share分享案例
   buttonClickEvent(e){
     const option = e.currentTarget.dataset.option
@@ -215,6 +178,30 @@ Page({
         }
       })
     }
+    if(event==='other'){
+      const params = {
+        params:env.env.VUE_APP_BASE_URL+'/product/product-detail/product-detail?productId='+option.id,
+        wechatAppId:env.env.appid
+      }
+      console.log(params)
+      const header = {
+        'authorization':wx.getStorageSync('authorization')
+      }
+      wx.request({
+        url:env.env.VUE_APP_BASE_URL+this.data.api.getQRcode.url,
+        header,
+        responseType:'arrayBuffer',
+        data:params,
+        success:res=>{
+          let url ='data:image/png;base64,'+wx.arrayBufferToBase64(res.data)
+          this.setData({
+            qrcodeContent:true,
+            codeUrl:url,
+            popProductName:option.name
+          })
+        }
+      })
+    }
     if(event==='share'){
       wx.navigateTo({
         url: '../share-list/share-list',
@@ -224,261 +211,12 @@ Page({
         }
       })
     }
-    // switch (event) {
-    //   case 'self':
-    //     console.log('self')
-
-    //     break;
-    //   case 'other':
-    //     console.log('other')
-    //     break;
-    //   case 'look':
-    //     console.log('look')
-    //     break;
-    //   case 'share':
-    //     console.log('share')
-    //     break;
-    //   default:
-    //     break;
-    // }
-  },
-  // 查看详情
-  // lookDetail(product) {
-  //   const params = JSON.parse(new Crypto().decrypt({ enctyptedStr: this.$route.query.params }))
-  //   if (constantCfg.productCode.qsebao.includes(product.code)) {
-  //     this.renderQRCodeUrl =
-  //       product.link +
-  //       '&cparams1=' +
-  //       new Crypto().encrypt({
-  //         plainStr: this.code,
-  //       }) +
-  //       '&share=' +
-  //       this.$route.query.share +
-  //       '&_=' +
-  //       new Date().getTime()
-  //     if (this.allProduct) {
-  //       this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
-  //     }
-  //     window.location.href = this.renderQRCodeUrl
-  //   } else {
-  //     let encryptParam = {
-  //       userId: params.userId,
-  //       parentId: params.parentId,
-  //       productId: product.id,
-  //     }
-  //     let query = {
-  //       params: new Crypto().encrypt({
-  //         plainStr: JSON.stringify(encryptParam),
-  //       }),
-  //       share: this.$route.query.share,
-  //       _: new Date().getTime(),
-  //     }
-  //     if (this.allProduct) {
-  //       query.activeProduct = 'all'
-  //     } else {
-  //       query.activeKey = this.$route.query.activeKey
-  //       query.activeGood = this.$route.query.activeGood
-  //     }
-  //     if (constantCfg.productCode.iccooCard === product.code) {
-  //       this.switchRouter({
-  //         path: '/card-detail',
-  //         query,
-  //       })
-  //     } else {
-  //       this.switchRouter({
-  //         path: '/product-detail',
-  //         query,
-  //       })
-  //     }
-  //   }
-  // },
-  // 自己买
-  buyBySelf(event) {
-    const key = this.activeKey
-    const target = event
-    console.log(event)
-    // if (constantCfg.productCode.qsebao.includes(product.code)) {
-    //   this.renderQRCodeUrl =
-    //     product.link +
-    //     '&cparams1=' +
-    //     new Crypto().encrypt({
-    //       plainStr: this.code,
-    //     }) +
-    //     '&share=0' +
-    //     '&activeKey=' +
-    //     key +
-    //     '&activeGood=' +
-    //     this.activeGood +
-    //     '&_=' +
-    //     new Date().getTime()
-    //   window.location.href = this.renderQRCodeUrl
-    // } else {
-    //   let encryptParam = {
-    //     userId: this.userId,
-    //     parentId: this.parentId,
-    //     productId: product.id,
-    //   }
-    //   let query = {}
-    //   if (this.allProduct) {
-    //     query = {
-    //       params: new Crypto().encrypt({
-    //         plainStr: JSON.stringify(encryptParam),
-    //       }),
-    //       share: this.$route.query.share,
-    //       activeProduct: 'all',
-    //       _: new Date().getTime(),
-    //     }
-    //   } else {
-    //     query = {
-    //       params: new Crypto().encrypt({
-    //         plainStr: JSON.stringify(encryptParam),
-    //       }),
-    //       share: this.$route.query.share,
-    //       activeKey: key,
-    //       activeGood: this.activeGood,
-    //       _: new Date().getTime(),
-    //     }
-    //   }
-    //   console.log(query)
-    //   if (constantCfg.productCode.iccooCard === product.code) {
-    //     this.switchRouter({
-    //       path: '/card-detail',
-    //       query,
-    //     })
-    //   } else {
-    //     this.switchRouter({
-    //       path: '/product-detail',
-    //       query,
-    //     })
-    //   }
-    // }
-  },
-  // 进入分享列表页面
-  // shareProduct(product) {
-  //   const key = this.activeKey
-  //   let query = {}
-  //   let encryptParam = {
-  //     userId: this.userId,
-  //     parentId: this.parentId,
-  //     productId: product.id,
-  //   }
-  //   if (this.allProduct) {
-  //     query = {
-  //       params: new Crypto().encrypt({
-  //         plainStr: JSON.stringify(encryptParam),
-  //       }),
-  //       share: this.$route.query.share,
-  //       activeProduct: 'all',
-  //       productId: product.id,
-  //       _: new Date().getTime(),
-  //     }
-  //   } else {
-  //     query = {
-  //       params: new Crypto().encrypt({
-  //         plainStr: JSON.stringify(encryptParam),
-  //       }),
-  //       share: this.$route.query.share,
-  //       activeKey: key,
-  //       activeGood: this.activeGood,
-  //       productId: product.id,
-  //       _: new Date().getTime(),
-  //     }
-  //   }
-  //   this.switchRouter({
-  //     path: '/share-list',
-  //     query,
-  //   })
-  // },
-  // 客户买
-  renderQRCode(event) {
-    const target = event.currentTarget.dataset.item
-    const key = this.activeKey
-    this.popProductName = target.name
-    if (constantCfg.productCode.qsebao.includes(target.code)) {
-      this.renderQRCodeUrl =
-        target.link +
-        '&cparams1=' +
-        new Crypto().encrypt({
-          plainStr: this.code,
-        }) +
-        '&share=1' +
-        '&activeKey=' +
-        key +
-        '&activeGood=' +
-        this.activeGood +
-        '&_=' +
-        new Date().getTime()
-      if (this.allProduct) {
-        this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
-      }
-    } else {
-      let encryptParam = {
-        userId: this.userId,
-        parentId: this.parentId,
-        productId: target.id,
-      }
-      if (constantCfg.productCode.iccooCard === target.code) {
-        this.renderQRCodeUrl =
-          window.location.origin +
-          '/card-detail' +
-          '?params=' +
-          new Crypto().encrypt({
-            plainStr: JSON.stringify(encryptParam),
-          }) +
-          '&share=1' +
-          '&_=' +
-          new Date().getTime()
-      } else {
-        this.renderQRCodeUrl =
-          window.location.origin +
-          '/product-detail' +
-          '?params=' +
-          new Crypto().encrypt({
-            plainStr: JSON.stringify(encryptParam),
-          }) +
-          '&share=1' +
-          '&_=' +
-          new Date().getTime()
-      }
-      if (this.allProduct) {
-        this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeProduct=all'
-      } else {
-        this.renderQRCodeUrl = this.renderQRCodeUrl + '&activeKey=' + key + '&activeGood=' + this.activeGood
-      }
-    }
-    this.$refs.qrContent.style.display = 'block'
-    this.$nextTick(() => {
-      this.qrcode(this.renderQRCodeUrl)
-    })
   },
   removeQrcode() {
-    this.$refs.qrContent.style.display = 'none'
-    var f = document.getElementById('qrcode')
-    var child1 = document.getElementsByTagName('img')
-    var child2 = document.getElementsByTagName('canvas')
-    f.removeChild(child1[0])
-    f.removeChild(child2[0])
-  },
-  qrcode(url) {
-    new QRCode('qrcode', {
-      width: 200, // 设置宽度，单位像素
-      height: 200, // 设置高度，单位像素
-      text: url, // 设置二维码内容或跳转地址
-      correctLevel: 3,
+    this.setData({
+      qrcodeContent:false
     })
   },
-  // copy() {
-  //   let copyBtn = new Clipboard('.copyButton')
-  //   copyBtn.on('success', (e) => {
-  //     Toast('复制成功')
-  //     e.clearSelection()
-  //   })
-  //   copyBtn.on('error', (e) => {
-  //     Toast('复制失败')
-  //     e.clearSelection()
-  //   })
-  // },
-
   getAllProductList() {
     return new Promise(resolve => {
       const params = {
@@ -546,15 +284,6 @@ Page({
       })
     })
   },
-  // onLoad() {
-  //   this.pageNo++
-  //   if (this.allProduct) {
-  //     this.getAllProductList()
-  //   } else {
-  //     this.getProductsList()
-  //   }
-  // },
-
   openContent() {
     this.setData({
       open: !this.data.open

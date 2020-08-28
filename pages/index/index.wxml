@@ -9,7 +9,6 @@
   <button class="userInfoButton" wx:if="{{canIusePhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindGetPhoneNumber" lang="zh_CN">手机号授权</button>
   <view wx:else>请升级微信版本</view>
 </view>
-
     <van-popup show="{{ codeShow }}" bind:close="onClose" position="bottom" round="{{true}}" overlay="{{false}}">
       <view>请填写邀请码</view>
       <view>123</view>

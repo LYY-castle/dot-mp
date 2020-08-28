@@ -19,14 +19,10 @@ Page({
     activeColor:'',
     activeButtonIndex:0,
     orderNum: [],
-    minDate: new Date(1970, 0, 1).getTime(),
-    maxDate: new Date().getTime(),
       productTypes: [],
       activeProductType: constantCfg.productType.defaultProductType,
       timeShow: false,
-      buttonIndex: 0,
         createAt: '自定义',
-        defaultDate: [new Date(), new Date()],
         pageSize: 10,
         pageNo: 1,
         type: constantCfg.productType.defaultProductType,
@@ -176,6 +172,7 @@ Page({
   },
   getOrderListProductType(event) {
     this.setData({
+      timeShow: false,
       type:event.detail.name
     })
     Promise.resolve()
@@ -185,8 +182,7 @@ Page({
   resteParams() {
     return new Promise(resolve => {
       this.setData({
-        buttonIndex: 0,
-        createAt:'自定义',
+        activeButtonIndex:0,
         defaultDate:[new Date(), new Date()],
         pageSize:10,
         pageNo:1,
@@ -198,59 +194,73 @@ Page({
   },
   MyAchievementByTime(e) {
     const index = e.currentTarget.dataset.index
+    this.setData({
+      activeButtonIndex:index,
+    })
     if (index === 0) {
       this.setData({
-        activeButtonIndex:index,
         createAtStart: getStartTime(moment().format(), 'day'),
         createAtEnd: getEndTime(moment().format(), 'day'),
-        createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
+        timeShow: false
       })
       this.getOrderList()
     } else if(index===1){
       this.setData({
-        activeButtonIndex:index,
         createAtStart: getStartTime(moment().startOf('week').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('week').format(), 'day'),
-        createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
+        timeShow: false
       })
       this.getOrderList()
     }else if(index===2){
       this.setData({
-        activeButtonIndex:index,
         createAtStart: getStartTime(moment().startOf('month').format(), 'day'),
         createAtEnd: getEndTime(moment().endOf('month').format(), 'day'),
-        createAt: '自定义',
-        defaultDate: [new Date().getTime(), new Date().getTime()]
+        timeShow: false
       })
       this.getOrderList()
     }else if(index===3){
       this.setData({
-        activeButtonIndex:index,
         timeShow: true
       })
     }
   },
-  onTimeClose(){
+  startTimeSelect(e){
+    console.log('start',e)
+    const option = getStartTime(moment(e.detail.value).format(), 'day')
     this.setData({
-      timeShow:false
+      createAtStart:option
     })
   },
-  onConfirmTime(date){
-    const start = date.detail[0]
-    const end = date.detail[1]
-    this.setData({
-      timeShow:false,
-      createAtStart:getStartTime(moment(start).format(), 'day'),
-      createAtEnd:getStartTime(moment(end).format(), 'day'),
-      createAt:`${this.formatDate(start)} - ${this.formatDate(end)}`,
-      defaultDate:[moment(start).toDate().getTime(), moment(end).toDate().getTime()]
-    })
-    this.getOrderList()
+  endTimeSelect(e){
+    const option = getEndTime(moment(e.detail.value).format(), 'day')
+    const endTime = new Date(option.replace(/\-/g, "/")).getTime()
+    const startTime = new Date(this.data.createAtStart.replace(/\-/g, "/")).getTime()
+    console.log(option)
+    console.log(endTime)
+    console.log(startTime)
+    if(endTime>startTime){
+      this.setData({
+        createAtEnd:option
+      })
+    }else{
+      wx.showToast({
+        title:'结束时间不能小于开始时间',
+        icon:'none'
+      })
+    }
   },
-  formatDate(date) {
-    return `${date.getMonth() + 1}/${date.getDate()}`
+  searchByDiyTime(){
+    const endTime = new Date(this.data.createAtEnd.replace(/\-/g, "/")).getTime()
+    const startTime = new Date(this.data.createAtStart.replace(/\-/g, "/")).getTime()
+    if(endTime>startTime){
+      this.getOrderList()
+    }else{
+      wx.showToast({
+        title:'结束时间不能小于开始时间',
+        icon:'none'
+      })
+    }
+
   },
   getOrderList() {
     return new Promise(resolve => {

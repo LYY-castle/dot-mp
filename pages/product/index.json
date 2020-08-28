@@ -6,7 +6,8 @@
     "van-sticky": "../../miniprogram_npm/@vant/weapp/sticky/index",
     "van-empty": "../../miniprogram_npm/@vant/weapp/empty/index",
     "van-tag": "../../miniprogram_npm/@vant/weapp/tag/index",
-    "van-row": "../../miniprogram_npm/@vant/weapp/row/index",
-    "van-col": "../../miniprogram_npm/@vant/weapp/col/index"
-  }
+    "van-divider": "@vant/weapp/divider/index"
+  },
+  "onReachBottomDistance": 50,
+  "enablePullDownRefresh": true
 }

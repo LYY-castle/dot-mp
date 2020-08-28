@@ -92,16 +92,17 @@ Page({
         _this.setData({
           pathParams:res.data,
         })
+        if(_this.data.pathParams.fromPath==='perchase-add'){
+          _this.orderAddressList()
+        }else if(_this.data.pathParams.fromPath==='perchase-edit'){
+          _this.orderAddressList()
+        }else{
+          _this.getAddressInfo()
+        }
+        _this.getProduct()
+        _this.calcTotalAmount()
       })
-      if(_this.data.pathParams.fromPath==='perchase-add'){
-        _this.orderAddressList()
-      }else if(_this.data.pathParams.fromPath==='perchase-edit'){
-        _this.orderAddressList()
-      }else{
-        _this.getAddressInfo()
-      }
-      _this.getProduct()
-      _this.calcTotalAmount()
+
 
 
 
