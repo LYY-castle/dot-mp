@@ -53,6 +53,7 @@ if (__wxConfig.envVersion === 'release') {
 		productionHost: 'http://dot.hkjindian.com'
 	}
 }
+
 module.exports = {
 	env
 }

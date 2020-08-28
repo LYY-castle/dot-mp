@@ -10,74 +10,47 @@
   ],
   "subpackages": [
     {
-      "root": "pages/index/index",
+      "name": "pages_dots_money",
+      "root": "pages_dots_money",
       "pages": [
-        "pages/product/index"
+        "detail-page/detail-page"
       ]
     },
     {
-      "root": "pages/product/index",
+      "name": "pages_product",
+      "root": "pages_product",
       "pages": [
-        "pages/product/search/search",
-        "pages/product/product-list/product-list",
-        "pages/product/product-detail/product-detail",
-        "pages/product/share-detail/share-detail",
-        "pages/product/share-list/share-list"
+        "search/search",
+        "product-list/product-list",
+        "product-detail/product-detail",
+        "share-detail/share-detail",
+        "share-list/share-list"
       ]
     },
     {
-      "root": "pages/product/product-list/product-list",
+      "name": "pages_mine",
+      "root": "pages_mine",
       "pages": [
-        "pages/product/product-detail/product-detail",
-        "pages/product/share-detail/share-detail",
-        "pages/product/share-list/share-list"
+        "bank-card/bank-card",
+        "components/save-button",
+        "personal-info/personal-info",
+        "personal-info/cropper/cropper"
       ]
     },
     {
-      "root": "pages/product/search/search",
+      "name": "pages_address",
+      "root": "pages_address",
       "pages": [
-        "pages/product/product-detail/product-detail",
-        "pages/product/index"
+        "address-list/address-list",
+        "add-address/add-address"
       ]
     },
     {
-      "root": "pages/product/product-detail/product-detail",
+      "name": "pages_order",
+      "root": "pages_order",
       "pages": [
-        "pages/product/perchase/perchase"
-      ]
-    },
-    {
-      "root": "pages/mine/address/address-list/address-list",
-      "pages": [
-        "pages/product/perchase/perchase",
-        "pages/mine/address/add-address/add-address"
-      ]
-    },
-    {
-      "root": "pages/dots-money/dots-money",
-      "pages": [
-        "pages/dots-money/detail-page/detail-page"
-      ]
-    },
-    {
-      "root": "pages/mine/mine",
-      "pages": [
-        "pages/mine/order/order-list/order-list",
-        "pages/mine/personal-info/personal-info",
-        "pages/mine/bank-card/bank-card",
-        "pages/mine/address/address-list/address-list"
-      ]
-    },
-    {
-      "root": "pages/mine/order/order-list/order-list",
-      "pages": [
-        "pages/mine/order/order-detail/order-detail"
-      ]
-    },
-    {
-      "root": "pages/mine/personal-info/personal-info",
-      "pages": [
-        "pages/mine/personal-info/cropper/cropper"
+        "order-list/order-list",
+        "order-detail/order-detail"
       ]
     }
   ],

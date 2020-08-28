@@ -1,5 +1,5 @@
 // pages/scatter-dots/scatter-dots.js
-import http from '../../utils/request.js' //相对路径
+import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
 import constantCfg from '../../config/constant'
 import env from '../../config/env.config'
@@ -23,11 +23,11 @@ Page({
         method: 'get'
       },
       getAccessToken:{
-        url:'https://api.weixin.qq.com/cgi-bin/token',
+        url: 'https://api.weixin.qq.com/cgi-bin/token',
         method:'get'
       },
       getQRcode:{
-        url:'/wx-ma/generate/ma-code',
+        url: '/wx-ma/generate/ma-code',
         method:'get'
       }
     }

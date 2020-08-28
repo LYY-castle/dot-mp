@@ -1,15 +1,16 @@
-// pages/mine/mine.js
-import http from '../../utils/request.js' //相对路径
+import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
 import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog'
 import constantCfg from '../../config/constant'
+
 Page({
   /**
    * 页面的初始数据
    */
   data: {
-    bg:'/static/img/bg.png',
-    avatar:'/static/img/avatar.png',
+    bg: '../../static/img/bg.png',
+    avatar: '../../static/img/avatar.png',
+
     api: {
       getUserInfo: {
         url: '/users/{id}',
@@ -22,26 +23,26 @@ Page({
     },
     list: [{
       title: '个人资料',
-      iconHref: '/static/img/mine-info.png',
-      path:'./personal-info/personal-info'
+      iconHref: '../../static/img/mine-info.png',
+      path:'../../pages_mine/personal-info/personal-info'
     }, {
       title: '银行卡',
-      iconHref: '/static/img/bank-card.png',
-      path:'./bank-card/bank-card'
+      iconHref: '../../static/img/bank-card.png',
+      path:'../../pages_mine/bank-card/bank-card'
     },
     // {
     //   title: '修改密码',
-    //   iconHref: '/static/img/modify-password.png',
-    //   path:'./modify-password/modify-password'
+    //   iconHref: '../../static/img/modify-password.png',
+    //   path:'../../pages_mine/modify-password/modify-password'
     // },
     {
       title: '我的订单',
-      iconHref: '/static/img/order.png',
-      path:'./order/order-list/order-list'
+      iconHref: '../../static/img/order.png',
+      path:'../../pages_order/order-list/order-list'
     }, {
       title: '我的地址',
-      iconHref: '/static/img/address.png',
-      path:'./address/address-list/address-list'
+      iconHref: '../../static/img/address.png',
+      path:'../../pages_address/address-list/address-list'
     }]
   },
 
@@ -132,13 +133,12 @@ Page({
   },
   gotoPage(event){
     const option = event.currentTarget.dataset.option
-    console.log(option)
     wx.navigateTo({
-      url:option.path,
+      url: option.path,
       success(res){
-        if(option.title==='我的地址'){
+        if(option.title === '我的地址'){
           const pathParams = {
-            fromPath:'mine'
+            fromPath: 'mine'
           }
           res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
         }

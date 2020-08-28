@@ -1,5 +1,5 @@
 // pages/dots-money/dots-money.js
-import http from '../../utils/request.js' //相对路径
+import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
 import constantCfg from '../../config/constant'
 import { getEndTime,getStartTime } from '../../utils/util'
@@ -471,9 +471,8 @@ Page({
       createAtEnd:this.data.createAtEnd,
       active:this.data.active
     }
-    console.log('option',option)
     wx.navigateTo({
-      url: './detail-page/detail-page',
+      url: '/pages_dots_money/detail-page/detail-page',
       success: function(res) {
         // 通过eventChannel向被打开页面传送数据
         res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })

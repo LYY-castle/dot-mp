@@ -1,8 +1,8 @@
 //index.js
 //获取应用实例
-import http from '../../utils/request.js' //相对路径
+import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
-import qseBaoUtil from '../../utils/qsebao.js' //相对路径
+import qseBaoUtil from '../../utils/qsebao.js'
 import constantCfg from '../../config/constant'
 const app = getApp()
 Page({
@@ -24,8 +24,8 @@ Page({
         method: 'get'
       },
       upload: {
-          url: 'https://dot-dev.hkjindian.com:18700/system/minio/dot',
-          method: 'post'
+        url: 'https://dot-dev.hkjindian.com:18700/system/minio/dot',
+        method: 'post'
       }
     }
   },
