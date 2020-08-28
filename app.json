@@ -54,6 +54,20 @@
       ]
     }
   ],
+  "preloadRule": {
+    "pages/product/index": {
+      "network": "all",
+      "packages": ["pages_product"]
+    },
+    "pages/mine/mine": {
+      "network": "all",
+      "packages": ["pages_order"]
+    },
+    "pages/dots-money/dots-money": {
+      "network": "all",
+      "packages": ["pages_dots_money"]
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

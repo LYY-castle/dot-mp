@@ -8,8 +8,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    bg: '../../static/img/bg.png',
-    avatar: '../../static/img/avatar.png',
+    bg: '/static/img/bg.png',
+    avatar: '/static/img/avatar.png',
 
     api: {
       getUserInfo: {
@@ -23,25 +23,25 @@ Page({
     },
     list: [{
       title: '个人资料',
-      iconHref: '../../static/img/mine-info.png',
+      iconHref: '/static/img/mine-info.png',
       path:'../../pages_mine/personal-info/personal-info'
     }, {
       title: '银行卡',
-      iconHref: '../../static/img/bank-card.png',
+      iconHref: '/static/img/bank-card.png',
       path:'../../pages_mine/bank-card/bank-card'
     },
     // {
     //   title: '修改密码',
-    //   iconHref: '../../static/img/modify-password.png',
+    //   iconHref: '/static/img/modify-password.png',
     //   path:'../../pages_mine/modify-password/modify-password'
     // },
     {
       title: '我的订单',
-      iconHref: '../../static/img/order.png',
+      iconHref: '/static/img/order.png',
       path:'../../pages_order/order-list/order-list'
     }, {
       title: '我的地址',
-      iconHref: '../../static/img/address.png',
+      iconHref: '/static/img/address.png',
       path:'../../pages_address/address-list/address-list'
     }]
   },
