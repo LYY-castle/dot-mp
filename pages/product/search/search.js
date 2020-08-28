@@ -2,7 +2,6 @@
 import http from '../../../utils/request.js' //相对路径
 import qseBaoUtil from '../../../utils/qsebao.js' //相对路径
 import constantCfg from '../../../config/constant'
-// import deepClone from 'lodash.clonedeep'
 Page({
 
   /**
