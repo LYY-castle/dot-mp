@@ -58,6 +58,10 @@ Page({
       wx.switchTab({
         url:'/pages/mine/mine'
       })
+    }else{
+      wx.navigateTo({
+        url:'/pages_product/perchase/perchase'
+      })
     }
   },
 
@@ -113,15 +117,8 @@ Page({
   },
   onEdit(event){
     const option = event.currentTarget.dataset.option
-    const pathParams = {
-      addressId:option.id
-    }
     wx.navigateTo({
-      url: '../add-address/add-address',
-      success: function(res) {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
-      }
+      url: '../add-address/add-address?src='+option
     })
   },
   onAdd(){
@@ -143,7 +140,7 @@ Page({
       perchaseAddressList.push(option)
       perchaseAddressList = Array.from(new Set(perchaseAddressList))
       wx.setStorageSync('perchaseAddressList',perchaseAddressList)
-      wx.navigateTo({
+      wx.redirectTo({
         url:'../../pages_product/perchase/perchase',
       })
     }

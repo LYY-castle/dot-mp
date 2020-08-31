@@ -4,16 +4,16 @@
       title="{{nbTitle}}"
     />
   </page-meta>
-<view class="container">
-      <view wx:for="{{list}}" wx:key="index" class="addressItem" bindtap="selectAddress" data-option="{{item}}">
+<view class="container" >
+      <view wx:for="{{list}}" wx:key="index" class="addressItem" hover-stop-propagation="{{true}}">
         <view class="roundName">{{ item.bigName }}</view>
-        <view class="m-l-10 addressDetail">
+        <view class="m-l-10 m-r-20 addressDetail" bindtap="selectAddress" data-option="{{item}}">
           <text class="fz-16">{{ item.name }}</text>
           <text class="m-l-10">{{ item.phone }}</text>
           <van-tag wx:if="{{item.isDefault}}" round type="danger" class="fz-12 m-l-15">默认</van-tag>
           <view class="fz-12 m-t-5">{{ item.address }}</view>
         </view>
-        <van-icon name="edit" bind:click="onEdit" data-option="{{item}}"></van-icon>
+        <van-icon name="edit" bind:click="onEdit" data-option="{{item.id}}"></van-icon>
       </view>
     <van-goods-action>
       <van-button block="{{true}}" round="{{true}}" bindtap="onAdd" color="#f9ae08">新增地址</van-button>

@@ -165,22 +165,15 @@ Page({
          this.setData({
            order:this.data.order,
          })
-         this.calcTotalAmount(optionValue)
-          const arr = []
-          // if (this.data.order.length > 0) {
-          //   this.data.order.forEach((element) => {
-          //     arr.push(element.productNum)
-          //   })
-          //   sumCount = arr.reduce((sum, number) => {
-          //     return sum + number
-          //   })
-          // }
-          // console.log(sumCount)
-          console.log(this.data.order)
-          // sumCount++
-          // this.setData({
-          //   totalNum:this.data.totalNum
-          // })
+          let arr = []
+          let sumCount = 0
+          this.data.order.forEach((element) => {
+            arr.push(element.productNum)
+          })
+          sumCount = arr.reduce((sum, number) => {
+            return sum + number
+          })
+          this.calcTotalAmount(sumCount)
         },
         getProduct() {
           const productId = wx.getStorageSync('activeProductId')

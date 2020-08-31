@@ -65,7 +65,6 @@ Page({
     })
   },
   formSubmit(e){
-    console.log(e)
     const option = e.detail.value
     if(option.name){
       if(option.phone){
@@ -94,11 +93,8 @@ Page({
                       title:'编辑成功',
                       success(){
                         setTimeout(function() {
-                          wx.navigateTo({
+                          wx.redirectTo({
                             url:'../address-list/address-list',
-                            success(res){
-                              res.eventChannel.emit('acceptDataFromOpenerPage', { data: _this.data.pathParams })
-                            }
                           })
                         }, 1000)
                       }
@@ -113,11 +109,8 @@ Page({
                       title:'新增成功',
                       success(){
                         setTimeout(function() {
-                          wx.navigateTo({
+                          wx.redirectTo({
                             url:'../address-list/address-list',
-                            success(res){
-                              res.eventChannel.emit('acceptDataFromOpenerPage', { data: _this.data.pathParams })
-                            }
                           })
                         }, 1000)
                       }
@@ -203,11 +196,8 @@ Page({
                 title:'删除成功',
                 success(){
                   setTimeout(function() {
-                    wx.navigateTo({
+                    wx.redirectTo({
                       url:'../address-list/address-list',
-                      success(res){
-                        res.eventChannel.emit('acceptDataFromOpenerPage', { data: _this.data.pathParams })
-                      }
                     })
                   }, 1000);
                 }
@@ -240,21 +230,19 @@ Page({
    */
   onLoad: function (options) {
     const _this = this
-    const eventChannel = this.getOpenerEventChannel()
-    eventChannel.on('acceptDataFromOpenerPage', function(res) {
-      if(res){
-        _this.setData({
-          addressId:res.data.addressId,
-          nbTitle:'编辑收货地址',
-          deleteButtonShow:true
-        })
-        _this.getAddressDetail()
-      }else{
-        _this.setData({
-              nbTitle:'新增收货地址',
-            })
-      }
-    })
+    if(options.src){
+      console.log(options)
+      _this.setData({
+        addressId:options.src,
+        nbTitle:'编辑收货地址',
+        deleteButtonShow:true
+      })
+      _this.getAddressDetail()
+    }else{
+      _this.setData({
+        nbTitle:'新增收货地址',
+      })
+    }
   },
 
   /**
