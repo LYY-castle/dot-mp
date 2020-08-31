@@ -1,11 +1,10 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/product/index",
 
+    "pages/product/index",
     "pages/dots-money/dots-money",
     "pages/scatter-dots/scatter-dots",
-
     "pages/mine/mine"
   ],
   "subpackages": [
@@ -24,7 +23,8 @@
         "product-list/product-list",
         "product-detail/product-detail",
         "share-detail/share-detail",
-        "share-list/share-list"
+        "share-list/share-list",
+        "perchase/perchase"
       ]
     },
     {
