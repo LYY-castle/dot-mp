@@ -64,7 +64,7 @@
                 <text class="title-normal">/ {{ product.unit }}</text>
               </view>
 
-              <!-- 健康/红酒类产品显示促销文案 -->
+              <!-- 食品/红酒类产品显示促销文案 -->
               <view
                 wx:if="{{product.category.code === constantCfg.productType.foodRedWineProductType}}"
               >
