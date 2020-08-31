@@ -1,6 +1,7 @@
 .container {
   overflow-y: scroll;
   background: #fff;
+  -webkit-overflow-scrolling: touch;
 }
 .head {
   position: relative;
