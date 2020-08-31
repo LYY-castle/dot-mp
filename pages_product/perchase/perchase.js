@@ -80,21 +80,26 @@ Page({
      */
     onLoad: function (options) {
       const _this = this
-      const eventChannel = this.getOpenerEventChannel()
-      eventChannel.on('acceptDataFromOpenerPage', function(res) {
-        _this.setData({
-          pathParams:res.data,
-        })
-        if(_this.data.pathParams.fromPath==='perchase-add'){
-          _this.orderAddressList()
-        }else if(_this.data.pathParams.fromPath==='perchase-edit'){
-          _this.orderAddressList()
-        }else{
-          _this.getAddressInfo()
-        }
-        _this.getProduct()
-        _this.calcTotalAmount()
-      })
+      // const eventChannel = this.getOpenerEventChannel()
+      // eventChannel.on('acceptDataFromOpenerPage', function(res) {
+      //   _this.setData({
+      //     pathParams:res.data,
+      //   })
+      //   if(_this.data.pathParams.fromPath==='perchase-add'){
+      //     _this.orderAddressList()
+      //   }else if(_this.data.pathParams.fromPath==='perchase-edit'){
+      //     _this.orderAddressList()
+      //   }else{
+
+      //   }
+
+      // })
+      _this.getAddressInfo()
+      _this.getProduct()
+      _this.calcTotalAmount()
+
+
+
     },
         // 地址处理
         getAddressInfo() {
@@ -148,7 +153,6 @@ Page({
                 item.isDefault=item.isDefault===1
                 item.productNum = 1
               })
-
               _this.setData({
                 order
               })
@@ -176,16 +180,19 @@ Page({
           console.log(option)
         },
         getProduct() {
+          const productId = wx.getStorageSync('activeProductId')
           return new Promise((resolve) => {
               http.wxRequest({
                 ...this.data.api.getProductById,
-                urlReplacements: [{ substr: '{id}', replacement: this.data.pathParams.productId }],
+                urlReplacements: [{ substr: '{id}', replacement: productId }],
               }).then((res) => {
                 if (res.success) {
                   if (res.data.image !== null && res.data.image.indexOf(';') !== -1) {
                     res.data.image = res.data.image.split(';')[0]
                   }
-                  console.log(res.data)
+                  if(res.multiAddresses){
+                    wx.setStorageSync('isMultiAddresses',true)
+                  }
                   this.setData({
                     product:res.data
                   })
@@ -195,12 +202,13 @@ Page({
           })
         },
         calcTotalAmount(productNum = 1) {
+          const productId = wx.getStorageSync('activeProductId')
           const _this = this
           return new Promise(resolve=>{
             http.wxRequest({
               ..._this.data.api.calcTotalAmount,
               params: {
-                productId: _this.data.pathParams.productId,
+                productId,
                 productNum,
               },
             }).then((res) => {
@@ -215,8 +223,7 @@ Page({
         },
         editAddress(){
           const pathParams = {
-            productId:this.data.pathParams.productId,
-            fromPath: 'perchase-edit'
+            productId:this.data.pathParams.productId
           }
           // 编辑订单地址
           wx.navigateTo({
@@ -227,16 +234,9 @@ Page({
           })
         },
         addAddress(){
-          const pathParams = {
-            productId:this.data.pathParams.productId,
-            fromPath:'perchase-add'
-          }
           // 新增订单地址
           wx.navigateTo({
             url: '../../pages_address/address-list/address-list',
-            success(res){
-              res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
-            }
           })
         },
         onSubmit(){

@@ -63,7 +63,9 @@
 					<van-button color="#F7BD4F" type="info" size="small" bind:click="buttonClickEvent" data-option="{{item}}" data-event="share" wx:if="{{!share}}" class="buttonItem">分享案例</van-button>
 				</view>
 			</view>
+			<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 		</view>
 		<van-empty image="{{empty}}" description="正在为您寻找更多商品" class="fz-12" wx:else></van-empty>
 	</view>
+
 </view>

@@ -57,22 +57,30 @@
   "preloadRule": {
     "pages/product/index": {
       "network": "all",
-      "packages": ["pages_product"]
+      "packages": [
+        "pages_product"
+      ]
     },
     "pages/mine/mine": {
       "network": "all",
-      "packages": ["pages_order"]
+      "packages": [
+        "pages_order"
+      ]
     },
     "pages/dots-money/dots-money": {
       "network": "all",
-      "packages": ["pages_dots_money"]
+      "packages": [
+        "pages_dots_money"
+      ]
     }
   },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "金小点",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "onReachBottomDistance": 50,
+    "enablePullDownRefresh": true
   },
   "tabBar": {
     "color": "#B2AEB2",
