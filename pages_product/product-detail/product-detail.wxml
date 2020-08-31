@@ -66,7 +66,7 @@
 
               <!-- 健康/红酒类产品显示促销文案 -->
               <view
-                wx:if="{{product.category.code === constantCfg.productType.healthRedWineProductType}}"
+                wx:if="{{product.category.code === constantCfg.productType.foodRedWineProductType}}"
               >
                 <text class="money-red m-r-10 fz-12 bold">多单有礼</text>
                 <text class="title-normal">购买满 5 瓶发货时赠送 1 瓶</text>

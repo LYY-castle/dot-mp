@@ -37,8 +37,8 @@ module.exports =  {
     iccooCard: '2', // 中青文旅卡.
     defaultProductTypeIdx: 3, // 默认产品类型, vant-sidebar 中使用下标作为值.
     defaultProductType: '2', // 默认选中旅游类型.
-    healthProductType: '1', // 健康类型.
-    healthRedWineProductType: '4-1' // 健康/红酒类型.
+    insureProductType: '1', // 保险类型.
+    foodRedWineProductType: '4-7' // 食品/红酒类型.
   },
   productCode: {
     qsebao: ['easy_guardian'],

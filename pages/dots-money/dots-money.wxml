@@ -18,7 +18,7 @@
 			bind:click="MyAchievementByTime" data-index="{{3}}" class="m-r-5">{{createAt}}</van-button>
 		<van-dropdown-menu>
 			<van-dropdown-item class="fz-13" value="{{value1}}" options="{{option1}}"
-				wx:if="{{active !== 'mine' && activeProductType !== constantCfg.productType.healthProductType}}"
+				wx:if="{{active !== 'mine' && activeProductType !== constantCfg.productType.insureProductType}}"
 				bind:change="selectChange" />
 		</van-dropdown-menu>
 	</view>
