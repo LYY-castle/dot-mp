@@ -1,6 +1,5 @@
 .container {
   overflow: scroll;
-  -webkit-overflow-scrolling: touch;
 }
 .container .text-align-center {
   text-align: center;

@@ -10,6 +10,9 @@
     "van-tabs": "@vant/weapp/tabs/index",
     "van-image": "@vant/weapp/image/index",
     "van-empty": "@vant/weapp/empty/index",
-    "van-cell": "@vant/weapp/cell/index"
-  }
+    "van-cell": "@vant/weapp/cell/index",
+    "van-divider": "@vant/weapp/divider/index"
+  },
+  "onReachBottomDistance": 0,
+  "enablePullDownRefresh": true
 }

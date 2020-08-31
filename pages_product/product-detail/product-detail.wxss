@@ -1,6 +1,5 @@
 .container {
   background: #f9f9f9;
-  overflow-y: scroll;
 }
 
 .cardContent .bg-white {
@@ -67,7 +66,7 @@
 }
 
 swiper {
-  height: 200px !important;
+  height: 300px !important;
 }
 
 van-button {

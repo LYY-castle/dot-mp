@@ -147,12 +147,13 @@ Page({
   buyCard(){
     const option = this.data.pathParams
     console.log(option)
+    wx.setStorageSync('activeProductId',this.data.productId)
     wx.navigateTo({
       url: '../perchase/perchase',
-      success: function(res) {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
-      }
+      // success: function(res) {
+      //   // 通过eventChannel向被打开页面传送数据
+      //   res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
+      // }
     })
   },
 })

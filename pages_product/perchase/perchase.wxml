@@ -33,14 +33,14 @@
                 type="danger"
                 class="m-r-10"
                 bind:click="deleteOrder"
-                wx:if="{{multiAddresses && order.length > 0}}"
+                wx:if="{{product.multiAddresses && order.length > 0}}"
               >删除</van-button>
             </view>
         </view>
         </view>
         <!-- 添加收货地址 -->
         <van-cell
-          wx:if="{{multiAddresses || (!multiAddresses && order.length === 0)}}"
+          wx:if="{{product.multiAddresses || (!product.multiAddresses && order.length === 0)}}"
           border
           is-link
           bindtap="addAddress"

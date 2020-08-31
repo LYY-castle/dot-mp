@@ -10,6 +10,7 @@ Page({
   data: {
     empty: '/static/img/empty.png',
     activeKey: 0,
+    bottomLineShow:false,
     share: 0,
     allProduct: false,
     qrcodeContent:false,
@@ -59,7 +60,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    console.log(456)
   },
 
   /**
@@ -67,6 +68,13 @@ Page({
    */
   onReachBottom: function () {
 
+    if(!this.data.bottomLineShow){
+      const pageNo = this.data.pageNo+1
+      this.setData({
+        pageNo
+      })
+      this.routerParams()
+    }
   },
 
   /**
@@ -246,6 +254,11 @@ Page({
       tool.getProductList(params).then(async (res) => {
         let products = []
         if (res.success) {
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
+            })
+          }
           let productDetailRes,item
           const dealQseProduct = async (item) => {
             if (constantCfg.productCode.qsebao.includes(item.code)) {
@@ -263,18 +276,18 @@ Page({
             item = res.data[i]
             await dealQseProduct(item)
           }
-          console.log(products.length)
           if (params.pageNo === 1) {
-            console.log(1)
             this.data.productList = products
           } else {
             this.data.productList = this.data.productList.concat(products)
           }
+
           this.data.productList.forEach((item) => {
             if (item.image !== null && item.image.indexOf(';') !== -1) {
               item.image = item.image.split(';')[0]
             }
           })
+
           this.setData({
             productList: this.data.productList
           })

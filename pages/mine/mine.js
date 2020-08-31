@@ -137,10 +137,7 @@ Page({
       url: option.path,
       success(res){
         if(option.title === '我的地址'){
-          const pathParams = {
-            fromPath: 'mine'
-          }
-          res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
+          wx.setStorageSync('fromPath','mine')
         }
       }
     })

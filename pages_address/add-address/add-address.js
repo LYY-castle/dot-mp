@@ -244,18 +244,19 @@ Page({
       _this.setData({
         pathParams:res.data
       })
-      if(res.data.fromPath==='perchase-add'||res.data.fromPath==='mine'){
-        _this.setData({
-          nbTitle:'新增收货地址',
-        })
-      }else if(res.data.fromPath==='perchase-edit'||res.data.fromPath==='mine'){
-        _this.setData({
-          addressId:res.data.addressId,
-          nbTitle:'编辑收货地址',
-          deleteButtonShow:true,
-        })
-        _this.getAddressDetail()
-      }
+
+      // if(res.data.fromPath==='perchase-add'||res.data.fromPath==='mine'){
+      //   _this.setData({
+      //     nbTitle:'新增收货地址',
+      //   })
+      // }else if(res.data.fromPath==='perchase-edit'||res.data.fromPath==='mine'){
+      //   _this.setData({
+      //     addressId:res.data.addressId,
+      //     nbTitle:'编辑收货地址',
+      //     deleteButtonShow:true,
+      //   })
+      //   _this.getAddressDetail()
+      // }
     })
   },
 
@@ -284,9 +285,9 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    wx.reLaunch({
-      url: '../address-list/address-list'
-    })
+    // wx.reLaunch({
+    //   url: '../address-list/address-list'
+    // })
   },
 
   /**

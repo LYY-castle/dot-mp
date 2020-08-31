@@ -59,7 +59,13 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    const fromPath = wx.getStorageSync('fromPath')
+    if(fromPath==='mine'){
+      wx.removeStorageSync('fromPath')
+      wx.switchTab({
+        url:'/pages/mine/mine'
+      })
+    }
   },
 
   /**
@@ -115,7 +121,6 @@ Page({
   onEdit(event){
     const option = event.currentTarget.dataset.option
     const pathParams = {
-      ...this.data.pathParams,
       addressId:option.id
     }
     wx.navigateTo({
@@ -130,18 +135,24 @@ Page({
     const pathParams = this.data.pathParams
     wx.navigateTo({
       url: '../add-address/add-address',
-      success: function(res) {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
-      }
+      // success: function(res) {
+      //   // 通过eventChannel向被打开页面传送数据
+      //   res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
+      // }
     })
   },
   selectAddress(e){
-    console.log(this.data.pathParams)
     const pathParams = this.data.pathParams
-    if(this.data.pathParams.fromPath==='perchase-add'||this.data.pathParams.fromPath==='perchase-edit'){
-      let perchaseAddressList = wx.getStorageSync('perchaseAddressList')
-      const option = e.currentTarget.dataset.option.id
+    const fromPath = wx.getStorageSync('fromPath')
+    const option = e.currentTarget.dataset.option.id
+    if(fromPath==='mine'){
+      console.log('mine')
+    }else{
+      const isMultiAddresses = wx.getStorageSync('isMultiAddresses')
+      let perchaseAddressList = []
+      if(isMultiAddresses){
+        perchaseAddressList = wx.getStorageSync('perchaseAddressList')
+      }
       perchaseAddressList.push(option)
       perchaseAddressList = Array.from(new Set(perchaseAddressList))
       wx.setStorageSync('perchaseAddressList',perchaseAddressList)
@@ -151,12 +162,6 @@ Page({
           res.eventChannel.emit('acceptDataFromOpenerPage', { data:  pathParams})
         }
       })
-    }
-    if(this.data.pathParams.fromPath==='mine'){
-      console.log('mine')
-    }
-    if(this.data.pathParams.fromPath==='address'){
-      console.log('address')
     }
   }
 })
