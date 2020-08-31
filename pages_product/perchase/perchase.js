@@ -159,7 +159,6 @@ Page({
                 item.isDefault=item.isDefault===1
                 item.productNum = 1
               })
-
               _this.setData({
                 order
               })
@@ -209,12 +208,13 @@ Page({
           })
         },
         calcTotalAmount(productNum = 1) {
+          const productId = wx.getStorageSync('activeProductId')
           const _this = this
           return new Promise(resolve=>{
             http.wxRequest({
               ..._this.data.api.calcTotalAmount,
               params: {
-                productId: _this.data.pathParams.productId,
+                productId,
                 productNum,
               },
             }).then((res) => {
