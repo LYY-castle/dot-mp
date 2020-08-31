@@ -7,7 +7,6 @@ App({
         this.globalData.wechatCode = res.code
       }
     })
-
   },
   getLaunchOptionsSync:function(option){
     console.log(option)

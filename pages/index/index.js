@@ -110,7 +110,6 @@ Page({
     }else{
       wx.getSetting({
         success (res) {
-          console.log('get',res.authSetting['scope.userInfo'])
           if(res.authSetting['scope.userInfo']){
             _this.setData({
               userInfoShow:false,
