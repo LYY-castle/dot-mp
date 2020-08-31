@@ -1,13 +1,7 @@
 import http from '../../utils/request.js'
-import tool from '../../utils/mixin.js'
-import util from '../../utils/util.js'
-import qseBaoUtil from '../../utils/qsebao.js'
-import constantCfg from '../../config/constant'
-import Crypto from '../../utils/crypto'
 import areaList from '../../utils/area.js'
-// const computedBehavior = require("miniprogram-computed");
+
 Page({
-  // computedBehavior:[computedBehavior],
   /**
    * 页面的初始数据
    */

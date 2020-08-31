@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+
     "pages/product/index",
     "pages/dots-money/dots-money",
     "pages/scatter-dots/scatter-dots",
@@ -22,7 +23,8 @@
         "product-list/product-list",
         "product-detail/product-detail",
         "share-detail/share-detail",
-        "share-list/share-list"
+        "share-list/share-list",
+        "perchase/perchase"
       ]
     },
     {
