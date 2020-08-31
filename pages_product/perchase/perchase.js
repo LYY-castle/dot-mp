@@ -251,25 +251,23 @@ Page({
           })
         },
         confirm(){
-          const address = {areaCode:"140105",addressDetail:"sbachsabc",city:"太原市",county:"小店区",province:"山西省"}
+          const address = JSON.parse(this.data.order[0].address)
+
+          console.log(address)
           const params = {
-            amount: 278,
-            createBy: 9,
+            amount: this.data.totalPrice,
+            createBy: wx.getStorageSync('userId'),
             orderExtends: [{
-              address: JSON.stringify(address),
-              addresseeAddress: "山西省太原市小店区sbachsabc",
-              addresseeName: "123",
-              addresseePhone: "13366908908",
-              id: 41,
+              addresseeAddress: address.province+address.city+address.county+address.addressDetail,
+              addresseeName: this.data.order[0].name,
+              addresseePhone: this.data.order[0].phone,
+              id: this.data.order[0].id,
               isDefault: 1,
-              name: "123",
-              phone: "13366908908",
-              productId: 5,
+              productId: this.data.product.id,
               productNum: 1,
-              userId: 9,
-              zipCode: null}],
-              parentUserId: 1,
-              type: "4"
+              }],
+              parentUserId: wx.setStorageSync('parentId'),
+              type: this.data.product.category.parentId
           }
           http.wxRequest({...this.data.api.addOrder,params}).then(res=>{
             console.log(res)

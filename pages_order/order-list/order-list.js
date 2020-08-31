@@ -9,6 +9,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    bottomLineShow:false,
     pay: '/static/img/pay.png',
     waitPay: '/static/img/wait-pay.png',
     empty: '/static/img/empty.png',
@@ -88,7 +89,8 @@ Page({
           text: '已关闭',
           color: '#f5222d'
         }
-      }
+      },
+
   },
 
   /**
@@ -140,7 +142,13 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    if(!this.data.bottomLineShow){
+      const pageNo = this.data.pageNo+1
+      this.setData({
+        pageNo
+      })
+      this.getOrderList()
+    }
   },
 
   /**
@@ -157,7 +165,6 @@ Page({
       isEnable:1,
     }
     tool.getProductSorts(params).then(res => {
-      console.log(res)
       const mapOPtion = res.data.map(item=>{
         return {
           name:item.name,
@@ -274,7 +281,7 @@ Page({
       http.wxRequest({ ...this.data.api.getOrderList, params }).then(res => {
         if (res.success) {
           if(res.data.length>0){
-            res.data.orderList.forEach(item => {
+            res.data.forEach(item => {
               if (item.orderExtends.length > 0) {
                 item.orderExtends.forEach(extend => {
                   if (extend.product.image) {
@@ -294,15 +301,25 @@ Page({
                 )
               }
             })
-            if (params.pageNo === 1) {
-              this.setData({
-                orderList:res.data
-              })
-            } else {
-              this.setData({
-                orderList:this.data.orderList.concat(res.data)
-              })
-            }
+          }
+          if (params.pageNo === 1) {
+            this.setData({
+              orderList:res.data
+            })
+          } else {
+            this.setData({
+              orderList:this.data.orderList.concat(res.data)
+            })
+          }
+          console.log(params.pageNo,res.page.totalPage)
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
+            })
+          }else{
+            this.setData({
+              bottomLineShow:false
+            })
           }
           resolve()
         }

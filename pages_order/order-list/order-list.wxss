@@ -11,7 +11,7 @@
   transform: translate(-50%, -50%);
 }
 .selectButtons {
-  margin-top: 10px;
+  margin: 10px 0;
   padding: 0 10px;
   display: flex;
   justify-content: flex-start;

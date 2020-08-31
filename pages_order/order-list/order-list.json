@@ -9,6 +9,9 @@
     "van-dropdown-item": "@vant/weapp/dropdown-item/index",
     "van-image": "@vant/weapp/image/index",
     "van-field": "@vant/weapp/field/index",
-    "van-tag": "@vant/weapp/tag/index"
-  }
+    "van-tag": "@vant/weapp/tag/index",
+    "van-divider": "@vant/weapp/divider/index"
+  },
+  "onReachBottomDistance": 0,
+  "enablePullDownRefresh": true
 }

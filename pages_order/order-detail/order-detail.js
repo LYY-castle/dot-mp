@@ -1,4 +1,5 @@
 import http from '../../utils/request.js'
+import utils from '../../utils/util.js'
 
 Page({
   /**
@@ -70,26 +71,11 @@ Page({
     const eventChannel = this.getOpenerEventChannel()
     eventChannel.on('acceptDataFromOpenerPage', function(res) {
       _this.setData({
-        orderId:res.data.orderId
+        orderId:res.data
       })
+      _this.getOrderDetail()
     })
-    http.wxRequest({
-      ...this.data.api.getOrderById,
-      urlReplacements: [{ substr: '{id}', replacement: this.data.orderId }]
-    }).then(res => {
-      if (res.success) {
-        res.data.orderExtends.forEach(extend => {
-          if (extend.product.image) {
-            if (extend.product.image !== null && extend.product.image.indexOf(';') !== -1) {
-              extend.product.image = extend.product.image.split(';')[0]
-            }
-          }
-        })
-        this.setData({
-          orderInfo:res.data
-        })
-      }
-    })
+
   },
 
   /**
@@ -117,29 +103,35 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    wx.reLaunch({
-      url: '../order-list/order-list'
+  },
+  getOrderDetail(){
+    http.wxRequest({
+      ...this.data.api.getOrderById,
+      urlReplacements: [{ substr: '{id}', replacement: this.data.orderId }]
+    }).then(res => {
+      if (res.success) {
+        res.data.orderExtends.forEach(extend => {
+          extend.product.name = utils.ellipsis(extend.product.name,10)
+          if (extend.product.image) {
+            if (extend.product.image !== null && extend.product.image.indexOf(';') !== -1) {
+              extend.product.image = extend.product.image.split(';')[0]
+            }
+          }
+        })
+        this.setData({
+          orderInfo:res.data
+        })
+      }
     })
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  copy(){
+    wx.setClipboardData({
+      data:this.data.orderInfo.orderNo,
+      success(res){
+        wx.showToast({
+          title: '复制成功'
+        })
+      }
+    })
   }
 })
