@@ -35,9 +35,10 @@ Page({
    */
   onLoad: function (options) {
     const _this = this
-    if(options.productId){
+    console.log(options)
+    if(options.src){
       this.setData({
-        productId:options.productId
+        productId:options.src
       })
       _this.getProductDetail()
       _this.getProductEnablePricingRule()
@@ -120,6 +121,8 @@ Page({
           if(res.data.detail){
             res.data.detail = res.data.detail.replace(/\<img/gi, '<img class="richImg"')
           }
+          const isMultiAddresses = res.data.multiAddresses
+          wx.setStorageSync('isMultiAddresses',isMultiAddresses)
           this.setData({
             showContent:true,
             product:res.data
@@ -145,15 +148,9 @@ Page({
     })
   },
   buyCard(){
-    const option = this.data.pathParams
-    console.log(option)
     wx.setStorageSync('activeProductId',this.data.productId)
     wx.navigateTo({
       url: '../perchase/perchase',
-      // success: function(res) {
-      //   // 通过eventChannel向被打开页面传送数据
-      //   res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
-      // }
     })
   },
 })

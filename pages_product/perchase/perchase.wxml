@@ -15,7 +15,7 @@
                   <text>{{ item.province }} {{ item.city }} {{ item.county }} {{ item.addressDetail }}</text>
                 </view>
               </view>
-              <van-icon class="m-l-10" name="arrow" color="#969799"/>
+              <van-icon class="m-l-10" name="arrow" color="#969799" bindtap="editAddress" data-option="{{item.id}}"/>
             </view>
             <view
               class="flex-between m-b-10"
@@ -23,7 +23,7 @@
             >
               <view class="flex-start">
                 <text class="c-gray fz-12">该地址邮寄数量</text>
-                <van-stepper min="1" value="{{item.productNum}}" async-change bind:change="productNumChange" data-item="{{item}}" class="m-l-10" />
+                <van-stepper min="1" value="{{item.productNum}}" async-change bind:change="productNumChange" data-item="{{index}}" class="m-l-10" />
               </view>
               <van-button
                 size="mini"
@@ -33,6 +33,7 @@
                 type="danger"
                 class="m-r-10"
                 bind:click="deleteOrder"
+                data-index="{{index}}"
                 wx:if="{{product.multiAddresses && order.length > 0}}"
               >删除</van-button>
             </view>
@@ -67,6 +68,7 @@
       button-text="提交"
       bind:submit="onSubmit"
       safe-area-inset-bottom
+
     >
       <view slot="default" class="text-color-ccc">
         共
@@ -77,10 +79,12 @@
     <van-dialog
       show="{{dialogShow}}"
       title="请确认支付"
+      use-slot="{{true}}"
       show-cancel-button
       bind:confirm="confirm"
       bind:cancel="cancle"
     >
       <view class="flex-center mt font-size-20">￥{{ totalPrice }}</view>
     </van-dialog>
+    <van-dialog id="van-dialog" />
   </view>

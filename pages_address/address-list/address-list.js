@@ -24,13 +24,6 @@ Page({
    */
   onLoad: function (options) {
     const _this = this
-    const eventChannel = this.getOpenerEventChannel()
-    eventChannel.on('acceptDataFromOpenerPage', function(res) {
-      console.log(res)
-      _this.setData({
-        pathParams:res.data,
-      })
-    })
     this.getMyAddressList()
   },
 
@@ -132,17 +125,11 @@ Page({
     })
   },
   onAdd(){
-    const pathParams = this.data.pathParams
     wx.navigateTo({
       url: '../add-address/add-address',
-      // success: function(res) {
-      //   // 通过eventChannel向被打开页面传送数据
-      //   res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
-      // }
     })
   },
   selectAddress(e){
-    const pathParams = this.data.pathParams
     const fromPath = wx.getStorageSync('fromPath')
     const option = e.currentTarget.dataset.option.id
     if(fromPath==='mine'){
@@ -150,7 +137,7 @@ Page({
     }else{
       const isMultiAddresses = wx.getStorageSync('isMultiAddresses')
       let perchaseAddressList = []
-      if(isMultiAddresses){
+      if(isMultiAddresses===1){
         perchaseAddressList = wx.getStorageSync('perchaseAddressList')
       }
       perchaseAddressList.push(option)
@@ -158,9 +145,6 @@ Page({
       wx.setStorageSync('perchaseAddressList',perchaseAddressList)
       wx.navigateTo({
         url:'../../pages_product/perchase/perchase',
-        success(res){
-          res.eventChannel.emit('acceptDataFromOpenerPage', { data:  pathParams})
-        }
       })
     }
   }

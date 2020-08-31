@@ -169,6 +169,7 @@ Page({
         province:address[0].name,
         city:address[1].name,
         county:address[2].name
+
       }
     })
     let addressStr=''
@@ -241,22 +242,18 @@ Page({
     const _this = this
     const eventChannel = this.getOpenerEventChannel()
     eventChannel.on('acceptDataFromOpenerPage', function(res) {
-      _this.setData({
-        pathParams:res.data
-      })
-
-      // if(res.data.fromPath==='perchase-add'||res.data.fromPath==='mine'){
-      //   _this.setData({
-      //     nbTitle:'新增收货地址',
-      //   })
-      // }else if(res.data.fromPath==='perchase-edit'||res.data.fromPath==='mine'){
-      //   _this.setData({
-      //     addressId:res.data.addressId,
-      //     nbTitle:'编辑收货地址',
-      //     deleteButtonShow:true,
-      //   })
-      //   _this.getAddressDetail()
-      // }
+      if(res){
+        _this.setData({
+          addressId:res.data.addressId,
+          nbTitle:'编辑收货地址',
+          deleteButtonShow:true
+        })
+        _this.getAddressDetail()
+      }else{
+        _this.setData({
+              nbTitle:'新增收货地址',
+            })
+      }
     })
   },
 

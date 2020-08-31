@@ -1,6 +1,6 @@
 import http from '../../utils/request.js'
 import areaList from '../../utils/area.js'
-
+import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog'
 Page({
   /**
    * 页面的初始数据
@@ -94,65 +94,64 @@ Page({
       //   }
 
       // })
-      _this.getAddressInfo()
+      _this.orderAddressList()
       _this.getProduct()
       _this.calcTotalAmount()
-
-
-
     },
-        // 地址处理
-        getAddressInfo() {
-          const _this = this
-          http.wxRequest({ ..._this.data.api.getAddressList, params: { userId: wx.getStorageSync('userId') } }).then(res => {
-            if (res.success) {
-              let addressListIds = []
-              let addressList = []
-              if(res.data.length>0){
-                addressListIds.push(res.data[0].id)
-                addressList.push(res.data[0])
-              }
-              addressList.forEach(item=>{
-                const address = JSON.parse(item.address)
-                item.province=address.province
-                item.city=address.city
-                item.county=address.county
-                item.addressDetail=address.addressDetail
-                item.isDefault=item.isDefault===1
-                item.productNum = 1
-              })
-              _this.setData({
-                order:addressList
-              })
-              wx.setStorageSync('perchaseAddressList',addressListIds)
-            }
+    /**
+   * 生命周期函数--监听页面卸载
+   */
+        onUnload: function () {
+          wx.removeStorageSync('perchaseAddressList')
+          wx.removeStorageSync('activeAddressId')
+          wx.navigateTo({
+            url:'../product-detail/product-detail?src='+wx.getStorageSync('activeProductId')
           })
         },
+        // 地址处理
         orderAddressList(){
           const _this = this
-          const perchaseAddressList = wx.getStorageSync('perchaseAddressList')
           const order = []
           http.wxRequest({ ..._this.data.api.getAddressList, params: { userId: wx.getStorageSync('userId') } }).then(res => {
             if (res.success) {
               if(res.data.length>0){
-                for(let i=0;i<perchaseAddressList.length;i++){
-                  for(let j=0;j<res.data.length;j++){
-                    if(perchaseAddressList[i]===res.data[j].id){
-                      order.push(res.data[j])
+                const perchaseAddressList = wx.getStorageSync('perchaseAddressList')
+                if(perchaseAddressList&&perchaseAddressList.length>0){
+                  for(let i=0;i<perchaseAddressList.length;i++){
+                    for(let j=0;j<res.data.length;j++){
+                      if(perchaseAddressList[i]===res.data[j].id){
+                        order.push(res.data[j])
+                      }
                     }
                   }
+                }else{
+                  const arr = []
+                  arr.push(res.data[0].id)
+                  wx.setStorageSync('perchaseAddressList',arr)
+                  order.push(res.data[0])
                 }
+                order.forEach(item=>{
+                  const address = JSON.parse(item.address)
+                  item.province=address.province
+                  item.city=address.city
+                  item.county=address.county
+                  item.addressDetail=address.addressDetail
+                  item.isDefault=item.isDefault===1
+                  item.productNum = 1
+                })
+
               }
-              const arrNum = []
-              order.forEach(item=>{
-                const address = JSON.parse(item.address)
-                item.province=address.province
-                item.city=address.city
-                item.county=address.county
-                item.addressDetail=address.addressDetail
-                item.isDefault=item.isDefault===1
-                item.productNum = 1
-              })
+              if(order.length>1){
+                let arr = []
+                let sumCount = 0
+                order.forEach((element) => {
+                  arr.push(element.productNum)
+                })
+                sumCount = arr.reduce((sum, number) => {
+                  return sum + number
+                })
+                this.calcTotalAmount(sumCount)
+              }
               _this.setData({
                 order
               })
@@ -160,7 +159,13 @@ Page({
           })
         },
         productNumChange(event){
-          // const sumCount = []
+         const option = event.currentTarget.dataset.item
+         const optionValue = event.detail
+         this.data.order[option].productNum = optionValue
+         this.setData({
+           order:this.data.order,
+         })
+         this.calcTotalAmount(optionValue)
           const arr = []
           // if (this.data.order.length > 0) {
           //   this.data.order.forEach((element) => {
@@ -172,12 +177,10 @@ Page({
           // }
           // console.log(sumCount)
           console.log(this.data.order)
-          const option = event.currentTarget.dataset.item
           // sumCount++
           // this.setData({
           //   totalNum:this.data.totalNum
           // })
-          console.log(option)
         },
         getProduct() {
           const productId = wx.getStorageSync('activeProductId')
@@ -221,16 +224,13 @@ Page({
             })
           })
         },
-        editAddress(){
-          const pathParams = {
-            productId:this.data.pathParams.productId
-          }
+        editAddress(e){
+          console.log(e)
+          const addressId = e.currentTarget.dataset.option
+          wx.setStorageSync('activeAddressId',addressId)
           // 编辑订单地址
           wx.navigateTo({
             url: '../../pages_address/address-list/address-list',
-            success(res){
-              res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
-            }
           })
         },
         addAddress(){
@@ -239,40 +239,91 @@ Page({
             url: '../../pages_address/address-list/address-list',
           })
         },
-        onSubmit(){
-          this.setData({
-            dialogShow:true
+        // 删除订单地址
+        deleteOrder(e) {
+          console.log(e)
+          const index = e.currentTarget.dataset.index
+          Dialog.confirm({
+            title: '确定删除',
           })
+            .then(() => {
+              const addAddressId = wx.getStorageSync('perchaseAddressList')
+              addAddressId.splice(index,1)
+              wx.setStorageSync('perchaseAddressList',addAddressId)
+              this.data.order.splice(index,1)
+              this.setData({
+                order:this.data.order
+              })
+              console.log(this.data.order)
+            })
         },
-        confirm(){
-          const address = JSON.parse(this.data.order[0].address)
-
-          console.log(address)
+        onSubmit(){
+          console.log(this.data.order)
+          const orderExtends = []
+          this.data.order.forEach(item=>{
+            const address = JSON.parse(item.address)
+            const option = {
+              addresseeAddress: address.province+address.city+address.county+address.addressDetail,
+              addresseeName: item.name,
+              addresseePhone: item.phone,
+              id: item.id,
+              isDefault: item.isDefault?1:0,
+              productId: this.data.product.id,
+              productNum: item.productNum,
+            }
+            orderExtends.push(option)
+          })
           const params = {
             amount: this.data.totalPrice,
             createBy: wx.getStorageSync('userId'),
-            orderExtends: [{
-              addresseeAddress: address.province+address.city+address.county+address.addressDetail,
-              addresseeName: this.data.order[0].name,
-              addresseePhone: this.data.order[0].phone,
-              id: this.data.order[0].id,
-              isDefault: 1,
-              productId: this.data.product.id,
-              productNum: 1,
-              }],
-              parentUserId: wx.setStorageSync('parentId'),
-              type: this.data.product.category.parentId
+            orderExtends,
+            parentUserId: wx.setStorageSync('parentId'),
+            type: this.data.product.category.parentId
           }
           http.wxRequest({...this.data.api.addOrder,params}).then(res=>{
-            console.log(res)
-            const payParams = {
-              openid: wx.getStorageSync('openId'),
-              outTradeNo:res.data.orderNo,
-              totalFee:res.data.amount * 100,// 微信支付单位为分.
-              body: this.data.product.name,
-              tradeType:'JSAPI'
+            if(res.success){
+              const payParams = {
+                openid: wx.getStorageSync('openId'),
+                outTradeNo:res.data.orderNo,
+                totalFee:res.data.amount * 100,// 微信支付单位为分.
+                body: this.data.product.name,
+                tradeType:'JSAPI'
+              }
+              this.setData({
+                payment:payParams
+              })
+              this.setData({
+                dialogShow:true
+              })
+
             }
-            http.wxRequest({...this.data.api.payment,params:payParams}).then(result=>{
+          })
+        },
+        // 取消支付
+        cancle() {
+          Dialog.confirm({
+            title: '取消订单？'
+          })
+            .then(() => {
+              let outTradeNo = this.data.payment.outTradeNo
+              http.wxRequest({
+                    ...this.data.api.closeOrder,
+                    urlReplacements: [{ substr: '{outTradeNo}', replacement: outTradeNo }],
+                  }).then((res) => {
+                    if (res.success) {
+                      wx.showToast({
+                        title:'订单取消成功',
+                        icon:'none'
+                      })
+                      this.setData({
+                        dialogShow:false
+                      })
+                    }
+                  })
+            })
+        },
+        confirm(){
+            http.wxRequest({...this.data.api.payment,params:this.data.payment}).then(result=>{
               console.log(result.data)
               const wechatParams = {
                 appId: result.data.appId,
@@ -291,8 +342,5 @@ Page({
                 }
               })
             })
-          })
-        }
-  // }
-
+          }
 })
