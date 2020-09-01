@@ -1,9 +1,10 @@
 /* pages/mine/address/address-list/address-list.wxss */
-.container {
+page {
   background: #fff;
-  overflow-y: scroll;
 }
-
+.container{
+  padding-bottom:50px;
+}
 .addressItem {
   display: flex;
   justify-content: space-between;

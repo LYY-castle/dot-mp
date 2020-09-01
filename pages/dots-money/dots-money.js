@@ -12,7 +12,6 @@ Page({
   data: {
     pay: '/static/img/pay.png',
     waitPay: '/static/img/wait-pay.png',
-    empty: '/static/img/empty.png',
     iconSuccess: '/static/img/icon-success.png',
     iconFail: '/static/img/icon-fail.png',
     empty: '/static/img/empty.png',

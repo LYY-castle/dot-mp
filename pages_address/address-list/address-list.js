@@ -6,19 +6,32 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		nbTitle: '收货地址',
+    nbTitle: '收货地址',
+    empty: '/static/img/empty.png',
 		list: [],
 		pageNo: 1,
 		disabledList: [],
 		pathParams: null,
-		editAddressId: null,
+    editAddressId: null,
+    bottomLineShow:false,
 		api: {
 			getAddressList: {
 				url: '/user-addressees',
 				method: 'get'
 			}
 		}
-	},
+  },
+    /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    const _this = this
+    this.setData({
+      pageNo:1
+    })
+    this.getMyAddressList()
+  },
+
 	/**
 	 * 生命周期函数--监听页面卸载
 	 */
@@ -37,15 +50,16 @@ Page({
 	},
 
 	/**
-	 * 页面相关事件处理函数--监听用户下拉动作
-	 */
-	onPullDownRefresh: function () {},
-
-	/**
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		console.log('到底了')
+    console.log('到底了')
+    if(!this.data.bottomLineShow){
+      this.setData({
+        pageNo:this.data.pageNo+1
+      })
+      this.getMyAddressList()
+    }
 	},
 
 	/**
@@ -82,7 +96,12 @@ Page({
 						this.setData({
 							list: this.data.list.concat(res.data)
 						})
-					}
+          }
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
+            })
+          }
 				}
 			}
 		})

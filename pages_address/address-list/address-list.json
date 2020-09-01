@@ -3,6 +3,8 @@
     "van-tag": "@vant/weapp/tag/index",
     "van-icon": "@vant/weapp/icon/index",
     "van-button": "@vant/weapp/button/index",
-    "van-goods-action": "@vant/weapp/goods-action/index"
+    "van-goods-action": "@vant/weapp/goods-action/index",
+    "van-empty": "@vant/weapp/empty/index",
+    "van-divider": "@vant/weapp/divider/index"
   }
 }
