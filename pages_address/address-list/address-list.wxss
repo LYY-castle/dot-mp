@@ -17,7 +17,6 @@ page {
 .addressDetail {
   flex: 60%;
 }
-
 .roundName {
   width: 35px;
   height: 35px;

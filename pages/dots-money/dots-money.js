@@ -202,6 +202,10 @@ Page({
           }).then(res => {
             if (res.success) {
               if (param.status===0) {
+                // 防止重复点击数据渲染重复
+                this.setData({
+                  myDataList:[]
+                })
                 this.setData({
                   myDataList: res.data
                 })
@@ -240,6 +244,7 @@ Page({
         })
       }
       if (!constantCfg.productType.qsebao.includes(this.data.activeProductType)) {
+
         const params1 = {
           ...params,
           status: 0
