@@ -202,10 +202,20 @@ Page({
             url: '../../pages_address/address-list/address-list',
           })
         },
+        // 选择添加地址
         addAddress(){
-          // 新增订单地址
-          wx.navigateTo({
-            url: '../../pages_address/address-list/address-list',
+          const _this = this
+          wx.chooseAddress({
+            success(res){
+              const option = {
+                addresseeAddress:res.provinceName+res.cityName+res.countyName+res.detailInfo,
+                addresseeName: res.userName,
+                addresseePhone: res.telNumber
+              }
+              _this.setData({
+                order:option
+              })
+            }
           })
         },
         // 删除订单地址

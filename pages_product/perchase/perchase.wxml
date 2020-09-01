@@ -1,21 +1,19 @@
 <!--pages/product/perchase/perchase.wxml-->
 <view class="container">
     <view class="bigBox">
-      <view class="border m-t-10">
+      <view class="border m-t-10 p-10">
         <!-- 地址部分 -->
-        <view wx:if="{{order.length>0}}">
-          <view wx:for="{{order}}" wx:key="index" class="p-10 ">
-            <view class="flex-between m-b-5">
+            <view class="flex-between m-b-5 ">
               <view>
                 <view class="flex-between-start">
-                  <text>{{ item.name }}</text>
-                  <text class="text-color-999 m-l-10">{{ item.phone }}</text>
+                  <text>{{ order.addresseeName }}</text>
+                  <text class="text-color-999 m-l-10">{{ order.addresseePhone }}</text>
                 </view>
                 <view class="text-color-999 font-size-10">
-                  <text>{{ item.province }} {{ item.city }} {{ item.county }} {{ item.addressDetail }}</text>
+                  <text>{{order.addresseeAddress}}</text>
                 </view>
               </view>
-              <van-icon class="m-l-10" name="arrow" color="#969799" bindtap="editAddress" data-option="{{item}}"/>
+              <van-icon class="m-l-10" name="arrow" color="#969799" bindtap="addAddress"/>
             </view>
             <view
               class="flex-between m-b-10"
@@ -25,32 +23,7 @@
                 <text class="c-gray fz-12">该地址邮寄数量</text>
                 <van-stepper min="1" value="{{item.productNum}}" async-change bind:change="productNumChange" data-item="{{index}}" class="m-l-10" />
               </view>
-              <van-button
-                size="mini"
-                round
-                plain
-                hairline
-                type="danger"
-                class="m-r-10"
-                bind:click="deleteOrder"
-                data-index="{{index}}"
-                wx:if="{{product.multiAddresses && order.length > 0}}"
-              >删除</van-button>
             </view>
-        </view>
-        </view>
-        <!-- 添加收货地址 -->
-        <van-cell
-          wx:if="{{product.multiAddresses || (!product.multiAddresses && order.length === 0)}}"
-          border
-          is-link
-          bindtap="addAddress"
-        >
-          <view slot="title">
-            <van-icon name="plus" color="#f9ae08" />
-            <text class="m-l-10 mainColor">添加收货地址</text>
-          </view>
-        </van-cell>
       </view>
       <view class="m-t-10 border p-10">
         <view class="flex-start">
