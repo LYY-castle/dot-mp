@@ -11,12 +11,12 @@ import env from '../config/env.config'
 function getSuccess(res) {
 	if (res.statusCode === 401) {
 		wx.reLaunch({
-			url: '/pages/index/index',
+			url: '/pages/index/index'
 		})
 		wx.clearStorageSync()
 		wx.showToast({
 			title: res.data.message,
-			icon: 'none',
+			icon: 'none'
 		})
 	} else {
 		if (res.header['Authorization']) {
@@ -26,7 +26,7 @@ function getSuccess(res) {
 			wx.hideLoading()
 		} else {
 			wx.showToast({
-				title: res.data.message,
+				title: res.data.message
 			})
 		}
 	}
@@ -35,15 +35,15 @@ function getSuccess(res) {
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 	let header = {}
 	wx.showLoading({
-		title: '请稍后',
+		title: '请稍后'
 	})
 	if (wx.getStorageSync('authorization')) {
 		header = {
-			authorization: wx.getStorageSync('authorization'),
+			authorization: wx.getStorageSync('authorization')
 		}
 	} else {
 		header = {
-			'content-type': 'application/json', // 默认值
+			'content-type': 'application/json' // 默认值
 		}
 	}
 	let reqUrl = env.env.VUE_APP_BASE_URL + url
@@ -64,11 +64,11 @@ function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 				fail: function (res) {
 					const httpParams = {
 						url,
-						params,
+						params
 					}
 					console.log(httpParams)
 					reject(res)
-				},
+				}
 			})
 		} else if (['get', 'delete'].includes(method)) {
 			wx.request({
@@ -85,7 +85,7 @@ function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 					console.log(url)
 					console.log(params)
 					reject(res)
-				},
+				}
 			})
 		}
 	})
