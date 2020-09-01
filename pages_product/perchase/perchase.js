@@ -244,7 +244,7 @@ Page({
               id: item.id,
               isDefault: item.isDefault?1:0,
               productId: this.data.product.id,
-              productNum: item.productNum,
+              productNum: item.productNum||1,
             }
             orderExtends.push(option)
           })

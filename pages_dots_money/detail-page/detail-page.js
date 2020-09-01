@@ -15,11 +15,11 @@ Page({
   data: {
     pay: '/static/img/pay.png',
     waitPay: '/static/img/wait-pay.png',
-    empty: '/static/img/empty.png',
     iconSuccess: '/static/img/icon-success.png',
     iconFail: '/static/img/icon-fail.png',
     empty: '/static/img/empty.png',
     constantCfg,
+    bottomLineShow:false,
     pageTitle: '',
     dataList: [],
     pageParams: {},
@@ -96,12 +96,12 @@ Page({
     const _this = this
     const eventChannel = this.getOpenerEventChannel()
     eventChannel.on('acceptDataFromOpenerPage', function (res) {
-      console.log('res.data', res.data)
       _this.setData({
         pageParams: res.data
       })
+      _this.getDetail()
     })
-    _this.getDetail()
+
   },
 
   /**
@@ -127,11 +127,15 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    console.log('触底函数')
+    if(!this.data.bottomLineShow){
+      this.setData({
+        pageNo:this.data.pageNo+1
+      })
+      this.getDetail()
+    }
   },
-
-  getDetail(val) {
-    console.log(val)
+  getDetail() {
     let params = {
       pageSize: 10,
       pageNo: this.data.pageNo,
@@ -140,7 +144,6 @@ Page({
     let reqUrl = ''
 
     if (active !== 'team') {
-
       if (active === 'mine') {
         params.createBy = wx.getStorageSync('userId')
         if (constantCfg.productType.qsebao.includes(this.data.pageParams.type)) {
@@ -170,15 +173,13 @@ Page({
       }
     } else {
       reqUrl = this.data.api.getMyTeam
-      params.parentId = val ? val.id : this.data.pageParams.parentId
+      params.parentId = this.data.pageParams.id
     }
-
     http.wxRequest({
       ...reqUrl,
       params
     }).then(res => {
       if (res.success) {
-
         if (params.pageNo === 1) {
           this.setData({
             dataList: res.data
@@ -188,16 +189,21 @@ Page({
             dataList: this.data.dataList.concat(res.data)
           })
         }
+        if(params.pageNo===res.page.totalPage){
+          this.setData({
+            bottomLineShow:true
+          })
+        }
       }
     })
   },
 
   freshPage(e) {
     console.log('freshPage',e)
-    const option = e.currentTarget.dataset.item
+    const option = e.currentTarget.dataset.option
     let params = {
       pageSize: 10,
-      pageNo: 1
+      pageNo: this.data.pageNo
     }
     const active = this.data.pageParams.active
     if (active === 'channel') {
@@ -207,7 +213,7 @@ Page({
       params.startTime = this.data.pageParams.createAtStart
       params.endTime = this.data.pageParams.createAtEnd
       params.createBy = option ? option.userId : this.data.pageParams.createBy
-      http.wxrequest({
+      http.wxRequest({
         ...this.data.api.getMyChannelDataList,
         params
       }).then(res => {
@@ -223,6 +229,9 @@ Page({
           }
         }
       })
+    }else{
+      console.log('不处理')
+      return
     }
   }
 })

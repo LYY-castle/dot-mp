@@ -29,9 +29,9 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    onTap(){
-      console.log('跳转到下一个页面')
-      this.triggerEvent('myevent', myEventDetail, myEventOption)
+    onTap(e){
+      const detail = e.currentTarget.dataset.option
+      this.triggerEvent('myevent', detail)
     },
     hasData(){
       console.log(this.data)

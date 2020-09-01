@@ -161,7 +161,7 @@ Page({
    */
   onReachBottom: function () {
     console.log('触底函数')
-    if(!this.data.bottomLineShow&&this.data.active==='team'){
+    if(!this.data.bottomLineShow){
       this.setData({
         pageNo:this.data.pageNo+1
       })
@@ -440,22 +440,30 @@ Page({
 
   },
   goToNextPage(e){
-    console.log(e)
-    const event = e.currentTarget.dataset.option
-    const option = {
-      ...event,
-      direction:this.data.direction,
-      field:this.data.field,
-      createAtStart:this.data.createAtStart,
-      createAtEnd:this.data.createAtEnd,
-      active:this.data.active
-    }
-    wx.navigateTo({
-      url: '/pages_dots_money/detail-page/detail-page',
-      success: function(res) {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
+    console.log('触发主函数',e)
+    const event = e.detail
+    console.log(this.data.active==='mine'&&event.totalAmount===0)
+    if(this.data.active==='mine'&&event.totalAmount===0){
+      wx.showToast({
+        title:'暂无数据',
+        icon:'none'
+      })
+    }else{
+      const option = {
+        ...event,
+        direction:this.data.direction,
+        field:this.data.field,
+        createAtStart:this.data.createAtStart,
+        createAtEnd:this.data.createAtEnd,
+        active:this.data.active
       }
-    })
+      wx.navigateTo({
+        url: '/pages_dots_money/detail-page/detail-page',
+        success: function(res) {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit('acceptDataFromOpenerPage', { data: option })
+        }
+      })
+    }
   }
 })

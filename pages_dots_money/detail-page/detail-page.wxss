@@ -1,6 +1,2 @@
 .container {
-  background: #eee;
-  padding-bottom: 0;
-  overflow: hidden;
-  overflow-y: scroll;
 }

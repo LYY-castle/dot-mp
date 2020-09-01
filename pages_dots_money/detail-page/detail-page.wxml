@@ -124,4 +124,5 @@
     </view>
   </van-cell>
   <van-empty wx:if="{{dataList.length===0}}" image="{{empty}}" description="暂无数据" />
+  <van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 </view>
