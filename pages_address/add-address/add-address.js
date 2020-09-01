@@ -96,7 +96,7 @@ Page({
 												success() {
 													setTimeout(function () {
 														wx.navigateBack({
-															dalta: 1
+															delta: 1
 														})
 													}, 1000)
 												}
@@ -114,7 +114,7 @@ Page({
 												success() {
 													setTimeout(function () {
 														wx.navigateBack({
-															dalta: 1
+															delta: 1
 														})
 													}, 1000)
 												}
@@ -206,7 +206,7 @@ Page({
 									success() {
 										setTimeout(function () {
 											wx.navigateBack({
-												dalta: 1
+												delta: 1
 											})
 										}, 1000)
 									}
