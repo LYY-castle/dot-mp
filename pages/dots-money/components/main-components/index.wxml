@@ -1,7 +1,7 @@
 <!--pages/dots-money/components/main-components/index.wxml-->
 <van-cell wx:for="{{myDataList}}" wx:for-item="list" wx:key="dataIndex" bindTap="onTap" data-option="{{list}}">
 		<view slot="title" class="flex-start">
-			<van-image src="{{list.orderStatus === 0 ? waitPay : pay}}" width="50px" height="50px"/>
+			<van-image src="{{list.orderStatus === 0 ? waitPay : pay}}" width="50px" height="50px" wx:if="{{list.orderStatus===0||list.orderStatus===1}}"/>
 			<view wx:if="{{active !== 'team'}}" style="width:100%">
 				<view class="flex-start">
 					<view class="m-l-10">

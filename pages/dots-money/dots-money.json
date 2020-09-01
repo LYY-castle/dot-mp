@@ -9,6 +9,8 @@
     "van-dropdown-item": "@vant/weapp/dropdown-item/index",
     "van-image": "@vant/weapp/image/index",
     "van-field": "@vant/weapp/field/index",
+    "van-sticky": "@vant/weapp/sticky/index",
+    "van-divider": "@vant/weapp/divider/index",
     "main-components": "./components/main-components/index"
   }
 }

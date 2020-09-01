@@ -30,11 +30,6 @@ Page({
       iconHref: '/static/img/bank-card.png',
       path:'../../pages_mine/bank-card/bank-card'
     },
-    // {
-    //   title: '修改密码',
-    //   iconHref: '/static/img/modify-password.png',
-    //   path:'../../pages_mine/modify-password/modify-password'
-    // },
     {
       title: '我的订单',
       iconHref: '/static/img/order.png',
@@ -52,52 +47,11 @@ Page({
   onLoad: function (options) {
 
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
     Promise.resolve().then(()=>tool.checkToken()).then(()=>this.getUserInfo())
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
   },
   // 获取用户的头像信息
   getUserInfo(){

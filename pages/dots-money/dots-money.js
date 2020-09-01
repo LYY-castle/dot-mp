@@ -17,6 +17,7 @@ Page({
     iconFail: '/static/img/icon-fail.png',
     empty: '/static/img/empty.png',
     // 排序
+    bottomLineShow:false,
     timeShow: false,
     canSearch:true,
     value1: 0,
@@ -156,52 +157,17 @@ Page({
     .then(()=>this.getProductSorts())
     .then(()=>this.getMyAchievement())
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {},
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  onReachBottom: function () {
+    console.log('触底函数')
+    if(!this.data.bottomLineShow&&this.data.active==='team'){
+      this.setData({
+        pageNo:this.data.pageNo+1
+      })
+      this.getMyTeam()
+    }
   },
   // 获取产品分类
   getProductSorts() {
@@ -340,6 +306,7 @@ Page({
   typeChange(event){
     this.setData({
       activeButtonIndex:0,
+      pageNo:1,
       timeShow: false,
       myDataList:[],
       active:event.detail.name,
@@ -350,6 +317,7 @@ Page({
   // goodChange
   goodChange(event){
     this.setData({
+      pageNo:1,
       activeButtonIndex:0,
       timeShow: false,
       myDataList:[],
@@ -358,9 +326,9 @@ Page({
     this.getMyAchievement()
   },
   selectChange(event){
-    console.log(event)
     const index = event.detail
     this.setData({
+      pageNo:1,
       field:this.data.selectMap[index].field,
       direction:this.data.selectMap[index].direction
     })
@@ -385,6 +353,11 @@ Page({
           } else {
             this.setData({
               myDataList:this.data.myDataList.concat(res.data)
+            })
+          }
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
             })
           }
           resolve()

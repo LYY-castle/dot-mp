@@ -57,17 +57,9 @@ Page({
       .then(() => this.routerParams())
   },
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-    console.log(456)
-  },
-
-  /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
     if(!this.data.bottomLineShow){
       const pageNo = this.data.pageNo+1
       this.setData({
@@ -89,7 +81,10 @@ Page({
     const activeKey = event.detail
     this.setData({
       activeKey,
-      open:false
+      open:false,
+      pageNo:1,
+      bottomLineShow:false,
+      goodTypes:[]
     })
     if (activeKey !== 0) {
       const activeId = this.data.productTypes[activeKey - 1].id
@@ -97,18 +92,24 @@ Page({
         .then(() => this.getProductTypes(activeId))
         .then(() => this.getProductsListById())
     } else {
-      this.getAllProductList()
+
+      Promise.resolve()
+      .then(()=>this.getAllProductList())
+
     }
+    console.log('open',this.data.open)
   },
   // 商品种类切换
   goodChange(event) {
     // 全部和其他产品类型点击事件区分
     let id = event.type === 'click' ? event.detail.name : event.currentTarget.dataset.id
     this.setData({
+      pageNo:1,
       activeGood: id,
       open: false,
       pageNo: 1,
-      productList: []
+      productList: [],
+      bottomLineShow:false
     })
     this.getProductsListById()
   },
@@ -225,6 +226,9 @@ Page({
     })
   },
   getAllProductList() {
+    this.setData({
+      open:false
+    })
     return new Promise(resolve => {
       const params = {
         pageSize: this.data.pageSize,
@@ -234,6 +238,7 @@ Page({
       this.getProductsList(params)
       resolve()
     })
+
   },
   getProductsListById() {
     return new Promise(resolve => {
@@ -249,16 +254,12 @@ Page({
   },
   //  获取产品列表
   getProductsList(params) {
-  let productDetailObj= {}
+    let productDetailObj= {}
     return new Promise((resolve) => {
       tool.getProductList(params).then(async (res) => {
         let products = []
         if (res.success) {
-          if(params.pageNo===res.page.totalPage){
-            this.setData({
-              bottomLineShow:true
-            })
-          }
+
           let productDetailRes,item
           const dealQseProduct = async (item) => {
             if (constantCfg.productCode.qsebao.includes(item.code)) {
@@ -281,16 +282,19 @@ Page({
           } else {
             this.data.productList = this.data.productList.concat(products)
           }
-
           this.data.productList.forEach((item) => {
             if (item.image !== null && item.image.indexOf(';') !== -1) {
               item.image = item.image.split(';')[0]
             }
           })
-
           this.setData({
             productList: this.data.productList
           })
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
+            })
+          }
           resolve()
         }
       })

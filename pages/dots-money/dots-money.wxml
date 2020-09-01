@@ -1,12 +1,24 @@
 <!--pages/dots-money/dots-money.wxml-->
 <view class="container">
-	<van-tabs type="line" active="{{active}}" sticky border="{{false}}" line-height="0" bind:change="typeChange"
-		custom-class="achievementSort" color="#333333" background="#f9ae08">
+	<van-sticky>
+		<van-tabs
+	type="line"
+	active="{{active}}"
+	sticky="{{true}}"
+	border="{{false}}"
+	line-height="0"
+	bind:change="typeChange"
+	class="achievementSort"
+	color="#333333"
+	background="#f9ae08"
+	>
 		<van-tab title="我的业绩" name="mine"></van-tab>
 		<van-tab title="小点点业绩" name="dots"></van-tab>
 		<van-tab title="渠道业绩" name="channel"></van-tab>
 		<van-tab title="我的团队" name="team"></van-tab>
 	</van-tabs>
+	</van-sticky>
+
 	<van-tabs active="{{activeProductType}}" sticky bind:click="goodChange" wx:if="{{active !== 'team'}}">
 		<van-tab wx:for="{{productTypes}}" wx:key="productIndex" title="{{item.name}}" name="{{item.code}}"></van-tab>
 	</van-tabs>
@@ -53,4 +65,5 @@
 		<main-components bindmyevent="goToNextPage" myDataList="{{myDataList}}" active="{{active}}"></main-components>
 	</view>
 	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{myDataList.length===0}}" />
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 </view>

@@ -1,5 +1,5 @@
-import http from '../../utils/request.js'
-import qseBaoUtil from '../../utils/qsebao.js'
+import http from '../../utils/request'
+import tool from '../../utils/mixin'
 import constantCfg from '../../config/constant'
 
 Page({
@@ -8,6 +8,7 @@ Page({
    */
   data: {
     empty: '/static/img/empty.png',
+    bottomLineShow:false,
     historyListShow: true,
     loading: false,
     finished: false,
@@ -25,20 +26,6 @@ Page({
   },
 
   /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
@@ -50,40 +37,18 @@ Page({
       historyList:list
     })
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+    console.log('触底函数')
+    if(!this.data.bottomLineShow){
+      const pageNo = this.data.pageNo+1
+      this.setData({
+        pageNo
+      })
+      this.getProductList()
+    }
   },
   change(e){
     this.setData({
@@ -102,21 +67,19 @@ Page({
   },
   search() {
     let list = []
-      if(wx.getStorageSync('historyList')){
-        list = wx.getStorageSync('historyList')
-      }
+    if(wx.getStorageSync('historyList')){
+      list = wx.getStorageSync('historyList')
+    }
     if (this.data.searchValue !== '') {
       list.unshift(this.data.searchValue)
       const res = new Map()
       list = list.filter(option => !res.has(option) && res.set(option, 1))
       wx.setStorageSync('historyList', list)
-      this.setData({
-
-      })
     }
     this.setData({
       historyListShow:false,
-      historyList:list
+      historyList:list,
+      pageNo:1
     })
     this.getProductList()
   },
@@ -160,54 +123,56 @@ Page({
   },
    // 获取产品的列表
    getProductList() {
-    return new Promise(resolve => {
+    let productDetailObj= {}
+    return new Promise((resolve) => {
       const params = {
         name: this.data.searchValue,
         pageSize: 10,
         pageNo: this.data.pageNo,
         status: 0
       }
-      http.wxRequest({
-        ...this.data.api.getProductsList,
-        params
-      }).then(res => {
-        let productDetailObj = {}
+      tool.getProductList(params).then(async (res) => {
         let products = []
-        res.data.forEach(item => {
-          if (constantCfg.productCode.qsebao.includes(item.code)) {
-            const insuranceCode = {
-              insuranceCode:item.code
+        if (res.success) {
+
+          let productDetailRes,item
+          const dealQseProduct = async (item) => {
+            if (constantCfg.productCode.qsebao.includes(item.code)) {
+              productDetailRes = await tool.insuranceProduct()
+              productDetailObj = productDetailRes.data.productDetail
+                // 因为轻松保接口中 type 与原有商品类型 type 冲突.
+                productDetailObj.insurance_type = productDetailObj.type
+                delete productDetailObj.type
+                products.push(Object.assign({}, item, productDetailRes.data.productDetail))
+            } else {
+              products.push(item)
             }
-            qseBaoUtil.getProductDetail(insuranceCode).then(result=>{
-              console.log(result)
-            })
-            // .then(productDetailRes => {
-            //   console.log('重疾险对象',productDetailRes)
-            //   productDetailObj = productDetailRes.data.productDetail
-            //   // 因为轻松保接口中 type 与原有商品类型 type 冲突.
-            //   productDetailObj.insurance_type = productDetailObj.type
-            //   delete productDetailObj.type
-            //   products.push(Object.assign({}, item, productDetailRes.data.productDetail))
-            // })
+          }
+          for (let i = 0; i < res.data.length; i++) {
+            item = res.data[i]
+            await dealQseProduct(item)
+          }
+          if (params.pageNo === 1) {
+            this.data.productList = products
           } else {
-            products.push(item)
+            this.data.productList = this.data.productList.concat(products)
           }
-        })
-        if (params.pageNo === 1) {
-          this.data.productList = products
-        } else {
-          this.data.productList = this.data.productList.concat(products)
+          this.data.productList.forEach((item) => {
+            if (item.image !== null && item.image.indexOf(';') !== -1) {
+              item.image = item.image.split(';')[0]
+            }
+          })
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
+            })
+          }
+          this.setData({
+            productList: this.data.productList
+          })
+          resolve()
         }
-        this.data.productList.forEach(item => {
-          if (item.image !== null && item.image.indexOf(';') !== -1) {
-            item.image = item.image.split(';')[0]
-          }
-        })
-        this.setData({
-          productList: this.data.productList
-        })
       })
-      resolve()
     })
   },
 })

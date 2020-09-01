@@ -32,6 +32,7 @@
 			</view>
 		</view>
 		<van-empty wx:else src="{{empty}}" description="暂无符合条件的商品"></van-empty>
+		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 	</view>
 	<view class="searchContent" wx:else>
 		<view class="searchItem">

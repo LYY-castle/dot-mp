@@ -1,6 +1,5 @@
 /* pages/product/search/search.wxss */
 .container {
-  overflow: scroll;
 }
 .goodContent {
   display: flex;

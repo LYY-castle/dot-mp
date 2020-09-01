@@ -14,7 +14,7 @@
 	</view>
 	<view class="productsContent">
 		<van-overlay show="{{open}}" bind:click="closeOverlay" />
-		<van-icon size="18" name="{{open ? 'arrow-up' : 'arrow-down'}}" class="openContent" color=" #878787" bind:click="openContent" wx:if="{{goodTypes.length > 1 && !share}}" />
+		<van-icon size="18" name="{{open ? 'arrow-up' : 'arrow-down'}}" class="openContent" color=" #878787" bind:click="openContent" wx:if="{{goodTypes.length > 1 }}" />
 		<view class="sortContent" wx:if="{{open}}">
 			<view class="fz-12">全部分类</view>
 			<view class="sort">
@@ -23,7 +23,7 @@
 				</van-tag>
 			</view>
 		</view>
-		<van-tabs active="{{activeGood}}" line-width="0" bind:click="goodChange" swipe-threshold="3" wx:if="{{goodTypes.length > 1 && !share}}" border="{{false}}">
+		<van-tabs active="{{activeGood}}" line-width="0" bind:click="goodChange" swipe-threshold="3" wx:if="{{goodTypes.length>1}}" border="{{false}}">
 			<van-tab wx:for="{{goodTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" title="{{goodtype.name}}" name="{{goodtype.id}}"></van-tab>
 		</van-tabs>
 		<view class="listContent" wx:if="{{productList.length>0}}">

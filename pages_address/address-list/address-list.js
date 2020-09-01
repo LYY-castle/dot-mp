@@ -26,28 +26,6 @@ Page({
     const _this = this
     this.getMyAddressList()
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
   /**
    * 生命周期函数--监听页面卸载
    */
@@ -64,26 +42,11 @@ Page({
       })
     }
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
     console.log('到底了')
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
   },
    // 获取当前用户的收货地址
    getMyAddressList() {
@@ -139,7 +102,6 @@ Page({
       if(activeAddressId){
         wx.removeStorageSync('activeAddressId')
         addressList.forEach((address,index)=>{
-          console.log(address.id,option.id)
           if(address.id===activeAddressId){
             addressList.splice(index,1,option)
           }
@@ -147,8 +109,12 @@ Page({
       }else{
         addressList.push(option)
       }
-      addressList = Array.from(new Set(addressList))
-      wx.setStorageSync('addressList',addressList)
+      let obj = {}
+      let newAddressList = addressList.reduce((cur,next) => {
+        obj[next.id] ? "" : obj[next.id] = true && cur.push(next)
+        return cur
+      },[])
+      wx.setStorageSync('addressList',newAddressList)
       wx.navigateTo({
         url:'../../pages_product/perchase/perchase',
       })

@@ -2,8 +2,6 @@
   display: flex;
   padding-bottom:20px;
   height:100%;
-  overflow:hidden;
-  overflow-y:scroll;
 }
 .container .shareMainContent {
   background-color: #eee;
