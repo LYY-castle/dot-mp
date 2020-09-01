@@ -42,7 +42,6 @@ Page({
       })
       _this.getProductDetail()
       _this.getProductEnablePricingRule()
-
     }else{
       const eventChannel = this.getOpenerEventChannel()
       eventChannel.on('acceptDataFromOpenerPage', function(res) {
@@ -61,7 +60,9 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    if(wx.getStorageSync('addressList')){
+      wx.removeStorageSync('addressList')
+    }
   },
 
   /**

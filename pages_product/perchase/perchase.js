@@ -1,4 +1,5 @@
 import http from '../../utils/request.js'
+import util from '../../utils/util.js'
 import areaList from '../../utils/area.js'
 import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog'
 Page({
@@ -58,105 +59,79 @@ Page({
 
     },
   },
-  // computed:{
-  //   totalCount() {
-  //     let arr = []
-  //     let sumCount = 1
-  //     if (this.data.order.length > 0) {
-  //       this.data.order.forEach((element) => {
-  //         arr.push(element.productNum)
-  //       })
-  //       sumCount = arr.reduce((sum, number) => {
-  //         return sum + number
-  //       })
-  //     }
-  //     console.log('总数量',sumCount)
-  //     return sumCount
-  //   },
-  // },
-  // methods:{
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
       const _this = this
-      // const eventChannel = this.getOpenerEventChannel()
-      // eventChannel.on('acceptDataFromOpenerPage', function(res) {
-      //   _this.setData({
-      //     pathParams:res.data,
-      //   })
-      //   if(_this.data.pathParams.fromPath==='perchase-add'){
-      //     _this.orderAddressList()
-      //   }else if(_this.data.pathParams.fromPath==='perchase-edit'){
-      //     _this.orderAddressList()
-      //   }else{
-
-      //   }
-
-      // })
-      _this.orderAddressList()
       _this.getProduct()
-      _this.calcTotalAmount()
+      _this.orderAddressList()
     },
     /**
    * 生命周期函数--监听页面卸载
    */
         onUnload: function () {
-          wx.removeStorageSync('perchaseAddressList')
+          wx.removeStorageSync('addressList')
           wx.removeStorageSync('activeAddressId')
-          wx.navigateTo({
+          console.log(util.getCurrentPageUrl())
+          wx.redirectTo({
             url:'../product-detail/product-detail?src='+wx.getStorageSync('activeProductId')
           })
         },
         // 地址处理
         orderAddressList(){
           const _this = this
-          const order = []
-          http.wxRequest({ ..._this.data.api.getAddressList, params: { userId: wx.getStorageSync('userId') } }).then(res => {
-            if (res.success) {
-              if(res.data.length>0){
-                const perchaseAddressList = wx.getStorageSync('perchaseAddressList')
-                if(perchaseAddressList&&perchaseAddressList.length>0){
-                  for(let i=0;i<perchaseAddressList.length;i++){
-                    for(let j=0;j<res.data.length;j++){
-                      if(perchaseAddressList[i]===res.data[j].id){
-                        order.push(res.data[j])
-                      }
-                    }
-                  }
-                }else{
-                  const arr = []
-                  arr.push(res.data[0].id)
-                  wx.setStorageSync('perchaseAddressList',arr)
-                  order.push(res.data[0])
-                }
-                order.forEach(item=>{
+          let orderAddress = []
+          let arr = []
+          let sumCount = 0
+          const addressList = wx.getStorageSync('addressList')
+          if(addressList){
+            orderAddress = addressList
+            orderAddress.forEach(item=>{
+              const address = item.addressObject?JSON.parse(item.addressObject):JSON.parse(item.address)
+              item.province=address.province
+              item.city=address.city
+              item.county=address.county
+              item.addressDetail=address.addressDetail
+              item.isDefault=item.isDefault===1
+              item.productNum = item.productNum||1
+              arr.push(item.productNum)
+            })
+            sumCount = arr.reduce((sum, number) => {
+              return sum + number
+            })
+            console.log(sumCount)
+            this.calcTotalAmount(sumCount)
+            wx.setStorageSync('addressList',orderAddress)
+            _this.setData({
+              order:orderAddress
+            })
+          }else{
+            http.wxRequest({ ..._this.data.api.getAddressList, params: { userId: wx.getStorageSync('userId') } }).then(res => {
+              if (res.success) {
+                orderAddress.push(res.data[0])
+                orderAddress.forEach(item=>{
                   const address = JSON.parse(item.address)
                   item.province=address.province
                   item.city=address.city
                   item.county=address.county
                   item.addressDetail=address.addressDetail
                   item.isDefault=item.isDefault===1
-                  item.productNum = 1
-                })
-
-              }
-              if(order.length>1){
-                let arr = []
-                let sumCount = 0
-                order.forEach((element) => {
-                  arr.push(element.productNum)
+                  item.productNum = item.productNum
+                  arr.push(item.productNum)
                 })
                 sumCount = arr.reduce((sum, number) => {
                   return sum + number
                 })
-                this.calcTotalAmount(sumCount)
+                this.calcTotalAmount(1)
+                wx.setStorageSync('addressList',orderAddress)
+                _this.setData({
+                  order:orderAddress
+                })
               }
-              _this.setData({
-                order
-              })
-            }
-          })
+            })
+          }
+
         },
         productNumChange(event){
          const option = event.currentTarget.dataset.item
@@ -165,6 +140,7 @@ Page({
          this.setData({
            order:this.data.order,
          })
+         wx.setStorageSync('addressList',this.data.order)
           let arr = []
           let sumCount = 0
           this.data.order.forEach((element) => {
@@ -217,10 +193,10 @@ Page({
             })
           })
         },
+
         editAddress(e){
-          console.log(e)
-          const addressId = e.currentTarget.dataset.option
-          wx.setStorageSync('activeAddressId',addressId)
+          const addressOption = e.currentTarget.dataset.option
+          wx.setStorageSync('activeAddressId',addressOption.id)
           // 编辑订单地址
           wx.navigateTo({
             url: '../../pages_address/address-list/address-list',
@@ -234,27 +210,33 @@ Page({
         },
         // 删除订单地址
         deleteOrder(e) {
-          console.log(e)
           const index = e.currentTarget.dataset.index
           Dialog.confirm({
             title: '确定删除',
           })
             .then(() => {
-              const addAddressId = wx.getStorageSync('perchaseAddressList')
-              addAddressId.splice(index,1)
-              wx.setStorageSync('perchaseAddressList',addAddressId)
+              const addressList = wx.getStorageSync('addressList')
+              addressList.splice(index,1)
+              wx.setStorageSync('addressList',addressList)
               this.data.order.splice(index,1)
               this.setData({
                 order:this.data.order
               })
-              console.log(this.data.order)
+              let arr = []
+              let sumCount = 0
+              this.data.order.forEach((element) => {
+                arr.push(element.productNum)
+              })
+              sumCount = arr.reduce((sum, number) => {
+                return sum + number
+              })
+              this.calcTotalAmount(sumCount)
             })
         },
         onSubmit(){
-          console.log(this.data.order)
           const orderExtends = []
           this.data.order.forEach(item=>{
-            const address = JSON.parse(item.address)
+            const address = item.addressObject?JSON.parse(item.addressObject):JSON.parse(item.address)
             const option = {
               addresseeAddress: address.province+address.city+address.county+address.addressDetail,
               addresseeName: item.name,

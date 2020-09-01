@@ -30,22 +30,6 @@ Page({
         phoneShow:true
       })
     }
-      // wx.authorize({
-      //   scope: 'scope.userInfo',
-      //   success () {
-      //     wx.getUserInfo({
-      //       lang:'zh_CN',
-      //       success:res=>{
-      //         console.log('授权成功,获取用户基本信息',res)
-      //         app.globalData.userInfo = res
-      //         _this.setData({
-      //           userInfoShow:false,
-      //           phoneShow:true
-      //         })
-      //       }
-      //     })
-      //   }
-      // })
   },
   bindGetPhoneNumber (e) {
       app.globalData.phone = e.detail
@@ -69,7 +53,6 @@ Page({
         })
       }
     })
-
   },
   login(){
     const params = {
@@ -100,7 +83,8 @@ Page({
       }
     })
   },
-  onLoad: function () {
+  onLoad: function (options) {
+    console.log('启动页面的参数',options)
     const _this = this
     const code = wx.getStorageSync('code')
     if(code){
@@ -131,5 +115,5 @@ Page({
         }
       })
     }
-  },
+  }
 })

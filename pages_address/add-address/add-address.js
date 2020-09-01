@@ -93,7 +93,7 @@ Page({
                       title:'编辑成功',
                       success(){
                         setTimeout(function() {
-                          wx.redirectTo({
+                          wx.navigateTo({
                             url:'../address-list/address-list',
                           })
                         }, 1000)
@@ -109,7 +109,7 @@ Page({
                       title:'新增成功',
                       success(){
                         setTimeout(function() {
-                          wx.redirectTo({
+                          wx.navigateTo({
                             url:'../address-list/address-list',
                           })
                         }, 1000)
@@ -196,7 +196,7 @@ Page({
                 title:'删除成功',
                 success(){
                   setTimeout(function() {
-                    wx.redirectTo({
+                    wx.navigateTo({
                       url:'../address-list/address-list',
                     })
                   }, 1000);

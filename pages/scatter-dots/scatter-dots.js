@@ -22,10 +22,6 @@ Page({
         url: '/users/{id}',
         method: 'get'
       },
-      getAccessToken:{
-        url: 'https://api.weixin.qq.com/cgi-bin/token',
-        method:'get'
-      },
       getQRcode:{
         url: '/wx-ma/generate/ma-code',
         method:'get'
@@ -48,7 +44,7 @@ Page({
   },
   onShow: function () {
     const params = {
-      params:'https://dot-dev.com',
+      params:wx.getStorageSync('code'),
       wechatAppId:env.env.appid
     }
     const header = {
@@ -70,41 +66,6 @@ Page({
     Promise.resolve()
       .then(() => tool.checkToken())
       .then(() => this.getUserInfo())
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
   },
   // 获取用户的头像信息
   getUserInfo() {
@@ -147,19 +108,7 @@ Page({
             }
           }
         })
-
-        // 获取二维码操作
-        // .then(()=>this.getAccessToken())
       resolve()
     })
   },
-  getAccessToken(){
-    const params = {
-      secret:env.env.appSecret,
-      appid:env.env.appid
-    }
-    http.wxRequest({...this.data.api.getAccessToken,params}).then(res=>{
-      console.log(res)
-    })
-  }
 })

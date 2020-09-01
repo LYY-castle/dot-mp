@@ -201,7 +201,7 @@ Page({
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success(res) {
         const src = res.tempFilePaths[0]
-        wx.redirectTo({
+        wx.navigateTo({
           url: './upload/upload?src=' + src
         })
       }

@@ -86,8 +86,9 @@ function getStartTime(timeStr, type) {
 }
 // 获取当前页面参数
 function getCurrentPageUrl(){
-  var pages = getCurrentPages();
-  return pages[pages.length - 1];
+  var pages = getCurrentPages()
+  console.log(pages)
+  return pages[pages.length - 1]
 }
 function ellipsis(value, vlength = 25){
   if (!value) {

@@ -97,6 +97,7 @@ Page({
         if (res.data && res.data.length > 0) {
           res.data.forEach(element => {
             const addressStr = JSON.parse(element.address)
+            element.addressObject = element.address
             element.tel = element.phone
             element.address = addressStr.province + addressStr.city + addressStr.county + addressStr.addressDetail
             element.isDefault = element.isDefault === 1
@@ -127,20 +128,28 @@ Page({
     })
   },
   selectAddress(e){
+    console.log(e)
     const fromPath = wx.getStorageSync('fromPath')
-    const option = e.currentTarget.dataset.option.id
     if(fromPath==='mine'){
       console.log('mine')
     }else{
-      const isMultiAddresses = wx.getStorageSync('isMultiAddresses')
-      let perchaseAddressList = []
-      if(isMultiAddresses===1){
-        perchaseAddressList = wx.getStorageSync('perchaseAddressList')
+      const option = e.currentTarget.dataset.option
+      let addressList =  wx.getStorageSync('addressList')
+      const activeAddressId = wx.getStorageSync('activeAddressId')
+      if(activeAddressId){
+        wx.removeStorageSync('activeAddressId')
+        addressList.forEach((address,index)=>{
+          console.log(address.id,option.id)
+          if(address.id===activeAddressId){
+            addressList.splice(index,1,option)
+          }
+        })
+      }else{
+        addressList.push(option)
       }
-      perchaseAddressList.push(option)
-      perchaseAddressList = Array.from(new Set(perchaseAddressList))
-      wx.setStorageSync('perchaseAddressList',perchaseAddressList)
-      wx.redirectTo({
+      addressList = Array.from(new Set(addressList))
+      wx.setStorageSync('addressList',addressList)
+      wx.navigateTo({
         url:'../../pages_product/perchase/perchase',
       })
     }
