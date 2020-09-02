@@ -1,10 +1,23 @@
+import http from './utils/request'
 App({
-  onLaunch: function () {
-    // 登录
+  data:{
+    login:{
+      url:'/users/wx-ma/login',
+      method:'post'
+    }
+  },
+  onLaunch: function (options) {
+    this.globalData.promoCode = options.query.code
+    // 静默登录
     wx.login({
       success: res => {
-        console.log('login赋值')
         this.globalData.wechatCode = res.code
+        console.log('wechatCode===',res.code)
+        http.wxRequest({...this.data.login,params:this.globalData}).then(res=>{
+          if(res.success){
+            console.log('登录')
+          }
+        })
       }
     })
   },
@@ -13,8 +26,6 @@ App({
   },
 
   globalData: {
-    userInfo: null,
-    phone:null,
     wechatCode:null,
     promoCode:null
   }

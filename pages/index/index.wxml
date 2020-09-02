@@ -1,17 +1,20 @@
 <!--index.wxml-->
 <view class="container">
-    <view class="userAvatar"><open-data type="userAvatarUrl"></open-data></view>
-<view wx:if="{{userInfoShow}}">
-  <button class="userInfoButton" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" lang="zh_CN">头像昵称授权</button>
-  <view wx:else>请升级微信版本</view>
-</view>
-<view wx:if="{{phoneShow}}">
-  <button class="userInfoButton" wx:if="{{canIusePhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindGetPhoneNumber" lang="zh_CN">手机号授权</button>
-  <view wx:else>请升级微信版本</view>
-</view>
-    <van-popup show="{{ codeShow }}" bind:close="onClose" position="bottom" round="{{true}}" overlay="{{false}}">
-      <view>请填写邀请码</view>
-      <view>123</view>
-      <button bindtap="loginByCode"> 获取手机号再登录 </button>
-    </van-popup>
+	<view class="userAvatar">
+		<open-data type="userAvatarUrl"></open-data>
+  </view>
+  金小点欢迎您
+	<!-- <view wx:if="{{userInfoShow}}">
+		<button class="userInfoButton" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" lang="zh_CN">头像昵称授权</button>
+		<view wx:else>请升级微信版本</view>
+	</view>
+	<view wx:if="{{phoneShow}}">
+		<button class="userInfoButton" wx:if="{{canIusePhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindGetPhoneNumber" lang="zh_CN">手机号授权</button>
+		<view wx:else>请升级微信版本</view>
+	</view>
+	<van-popup show="{{ codeShow }}" bind:close="onClose" position="bottom" round="{{true}}" overlay="{{false}}">
+		<view>请填写邀请码</view>
+		<view>123</view>
+		<button bindtap="loginByCode"> 获取手机号再登录 </button>
+	</van-popup> -->
 </view>

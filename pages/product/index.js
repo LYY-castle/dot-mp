@@ -132,7 +132,7 @@ Page({
 	},
 	onLoad() {
 		Promise.resolve()
-			.then(() => tool.checkToken())
+			// .then(() => tool.checkToken())
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
 	},

@@ -84,8 +84,8 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/index/index",
-					"pathName": "pages/index/index",
+					"name": "pages/product/index",
+					"pathName": "pages/product/index",
 					"query": "code=FQAC",
 					"scene": null
 				}

@@ -11,8 +11,8 @@ Page({
     interval: 2000,
     duration: 500,
     showContent: false,
-      pageTitle: '',
-      pathParams: {},
+    pageTitle: '',
+    pathParams: {},
       productId: null,
       product: {},
       pricingRule: {},
@@ -35,7 +35,6 @@ Page({
    */
   onLoad: function (options) {
     const _this = this
-    console.log(options)
     if(options.src){
       this.setData({
         productId:options.src
@@ -53,15 +52,24 @@ Page({
       _this.getProductEnablePricingRule()
     })
     }
-
   },
-
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
     if(wx.getStorageSync('addressList')){
       wx.removeStorageSync('addressList')
+    }
+  },
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    return {
+      title:this.data.product.name,
+      query:wx.getStorageSync('code'),
+      path:'/pages_product/product-detail/product-detail?src='+this.data.productId,
+      imageUrl:this.data.product.image[0]||''
     }
   },
   getProductDetail(){

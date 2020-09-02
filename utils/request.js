@@ -11,12 +11,7 @@ import env from '../config/env.config'
 function getSuccess(res) {
 	if (res.statusCode === 401) {
 		wx.reLaunch({
-			url: '/pages/index/index'
-		})
-		wx.clearStorageSync()
-		wx.showToast({
-			title: res.data.message,
-			icon: 'none'
+			url: '/pages/product/index'
 		})
 	} else {
 		if (res.header['Authorization']) {
@@ -31,7 +26,6 @@ function getSuccess(res) {
 		}
 	}
 }
-
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 	let header = {}
 	wx.showLoading({
