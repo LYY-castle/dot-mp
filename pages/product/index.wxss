@@ -1,60 +1,104 @@
 .container {
-  overflow: scroll;
-}
-.container .text-align-center {
-  text-align: center;
-  font-size: 12px;
-  padding: 10px 0;
-  background: #eee;
-}
-.container .sort {
-  margin: 0 12px;
-  padding: 10px 10px;
-  background: #fff;
-  border-radius: 7px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  font-weight: 800;
-  font-size: 12px;
 }
-.container .sort .sortItem .imgWidth {
-  width: 40px;
-  height: 40px;
+
+.container .shareMainContent {
+  background-color: #eee;
+  display: flex;
+  padding-bottom: 0;
 }
-.container .goodContent {
+
+.container .productsContent {
+  padding: 0 5px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 0 12px;
-}
-.container .goodContent .goodItem {
-  display: block;
-  width: 49%;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-.container .goodContent .goodItem .imgContent {
-  min-height: 150px;
-  text-align: center;
-  background: linear-gradient(to bottom, rgba(254, 254, 254, 0.6), rgba(243, 243, 243, 0.1));
-  display: flex;
   align-items: center;
-  font-size: 0;
+  justify-content: space-between;
 }
-.container .goodContent .goodItem .imgContent van-image {
-  width: 100%;
+
+.container .productsContent .productItem {
+  text-align: center;
+  width: 30%;
 }
-.container .goodContent .goodItem .textContent {
-  height: 100%;
-  font-size: 10px;
-  font-weight: 800;
+
+.container .buttonGroup {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.container .buttonGroup .buttonItem {
+  width: 30%;
+}
+
+.container .user-sideBar {
+  width: 60px !important;
+  overflow: hidden;
+  background-color: #fff;
+  border-right: 1px solid #eee;
+  z-index: 2;
+}
+
+.container .goodItem {
+  margin-top: 10px;
   background: #fff;
   padding: 10px;
-  color: #333333;
 }
-.container .scroll-view_H {
-  white-space: nowrap;
+
+.van-sidebar-item__text {
+  font-size: 12px !important;
+}
+
+.van-tabs {
+  padding-top: 10px;
+  padding-right: 30px;
+  background-color: transparent;
+}
+
+.van-tabs--line .van-tabs__wrap {
+  height: 30px !important;
+}
+
+.van-tab {
+  background-color: #fff;
+  border-radius: 3px;
+  margin-right: 5px;
+  color: #797979;
+  font-size: 12px !important;
+  height: 25px;
+  line-height: 25px !important;
+}
+
+.van-tab--active {
+  color: #f9ad07 !important;
+  background: rgba(247, 189, 79, 0.15);
+}
+
+.van-tabs__nav--line {
+  background-color: transparent;
+  padding-bottom: 0;
+}
+
+.van-tabs__wrap {
+  width: 100%;
+  height: 25px !important;
+  background-color: transparent;
+}
+
+.van-tabs__scroll {
+  background-color: transparent !important;
+}
+
+.wp-70 {
+  width: 70% !important;
+}
+
+.van-empty__description {
+  font-size: 12px !important;
+}
+
+.van-sidebar-item--selected {
+  color: #F7BD4F !important;
+  border-color: #F7BD4F !important;
 }

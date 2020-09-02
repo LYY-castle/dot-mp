@@ -2,18 +2,9 @@
   "pages": [
     "pages/index/index",
     "pages/product/index",
-    "pages/dots-money/dots-money",
-    "pages/scatter-dots/scatter-dots",
     "pages/mine/mine"
   ],
   "subpackages": [
-    {
-      "name": "pages_dots_money",
-      "root": "pages_dots_money",
-      "pages": [
-        "detail-page/detail-page"
-      ]
-    },
     {
       "name": "pages_product",
       "root": "pages_product",
@@ -33,14 +24,6 @@
         "bank-card/bank-card",
         "personal-info/personal-info",
         "personal-info/cropper/cropper"
-      ]
-    },
-    {
-      "name": "pages_address",
-      "root": "pages_address",
-      "pages": [
-        "address-list/address-list",
-        "add-address/add-address"
       ]
     },
     {
@@ -64,12 +47,6 @@
       "packages": [
         "pages_order"
       ]
-    },
-    "pages/dots-money/dots-money": {
-      "network": "all",
-      "packages": [
-        "pages_dots_money"
-      ]
     }
   },
   "window": {
@@ -87,22 +64,16 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/product/index",
+        "pagePath": "pages/index/index",
         "text": "首页",
         "iconPath": "static/img/product-list.png",
         "selectedIconPath": "static/img/product-list-active.png"
       },
       {
-        "pagePath": "pages/scatter-dots/scatter-dots",
-        "text": "撒点点",
+        "pagePath": "pages/product/index",
+        "text": "分类",
         "iconPath": "static/img/scatter-dots.png",
         "selectedIconPath": "static/img/scatter-dots-active.png"
-      },
-      {
-        "pagePath": "pages/dots-money/dots-money",
-        "text": "点点财",
-        "iconPath": "static/img/dots-money.png",
-        "selectedIconPath": "static/img/dots-money-active.png"
       },
       {
         "pagePath": "pages/mine/mine",

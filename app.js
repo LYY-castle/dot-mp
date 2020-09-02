@@ -7,7 +7,7 @@ App({
     }
   },
   onLaunch: function (options) {
-    this.globalData.promoCode = options.query.code
+    console.log('options',options)
     // 静默登录
     wx.login({
       success: res => {

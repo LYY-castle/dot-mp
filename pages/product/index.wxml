@@ -1,39 +1,19 @@
+<!--pages/product/product-list/product-list.wxml-->
 <view class="container">
-  <van-sticky>
-    <van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
-  </van-sticky>
-  <view class="sort">
-    <view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" bindtap="gotoProductList" data-item="{{sort}}">
-      <van-image src="{{sort.icon}}" alt width="30px" height="30px"/>
-      <view>{{sort.name}}</view>
-    </view>
-    <view bind:tap="gotoProductList">
-      <van-image src="{{ProductAll}}" alt width="30px" height="30px" />
-      <view>全部</view>
-    </view>
-  </view>
-  <view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
-  <view class="goodContent" wx:if="{{productList.length>0}}">
-    <view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
-      <view class="imgContent">
-        <van-image src="{{item.image}}" alt width="100%" height="150px" fit="cover" wx:if="{{item.image !== ''}}" />
-        <van-image  alt width="100%" height="150px" fit="cover" wx:else use-loading-slot />
-      </view>
-      <view class="textContent">
-        <view class="m-b-5">{{ item.name }}</view>
-        <view class="m-b-5" wx:if="{{item.pricingMethod}}">
-          <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10 m-r-5">多买优惠
-          </van-tag>
-          <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10">多单有礼</van-tag>
-        </view>
-        <view>
-          <text class="minPrice fz-16">￥{{ item.pricingMethod === 1 ? item.minPrice : item.price }}</text>
-          <text class="m-r-10 minPrice fz-10">起</text>
-          <text class="originPrice">￥{{ item.pricingMethod === 1 ? item.maxPrice : item.originalPrice }}</text>
-        </view>
-      </view>
-    </view>
-  </view>
-  <van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
-  <van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+	<van-sidebar active-key="{{ activeKey }}" class="user-sideBar" bind:change="firstChange">
+		<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
+	</van-sidebar>
+	<view class="productsContent" wx:if="{{secondTypes.length>0}}">
+		<view wx:for="{{secondTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" bindtap="goToProductsListPageById" class="productItem">
+			<van-image
+				width="100"
+				height="100"
+				fit="contain"
+				src="{{goodtype.icon}}"
+			/>
+			<view>{{goodtype.name}}</view>
+		</view>
+	</view>
+	<van-empty image="{{empty}}" description="正在为您寻找更多商品" class="fz-12" wx:if="{{secondTypes.length===0}}"></van-empty>
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 </view>

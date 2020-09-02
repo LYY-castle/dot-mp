@@ -1,6 +1,0 @@
-/* pages/dots-money/components/main-components/index.wxss */
-@import '../../../../static/less/common.wxss';
-@import '../../../../static/scss/_color.min.wxss';
-@import '../../../../static/scss/_font-size.min.wxss';
-@import '../../../../static/scss/_spacing.min.wxss';
-@import '../../../../static/scss/_useful_class.min.wxss';

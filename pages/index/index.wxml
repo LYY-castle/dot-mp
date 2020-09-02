@@ -1,20 +1,29 @@
-<!--index.wxml-->
 <view class="container">
-	<view class="userAvatar">
-		<open-data type="userAvatarUrl"></open-data>
-  </view>
-  金小点欢迎您
-	<!-- <view wx:if="{{userInfoShow}}">
-		<button class="userInfoButton" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" lang="zh_CN">头像昵称授权</button>
-		<view wx:else>请升级微信版本</view>
+	<van-sticky>
+		<van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
+	</van-sticky>
+	<view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
+	<view class="goodContent" wx:if="{{productList.length>0}}">
+		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
+			<view class="imgContent">
+				<van-image src="{{item.image}}" alt width="100%" height="150px" fit="cover" wx:if="{{item.image !== ''}}" />
+				<van-image alt width="100%" height="150px" fit="cover" wx:else use-loading-slot />
+			</view>
+			<view class="textContent">
+				<view class="m-b-5">{{ item.name }}</view>
+				<view class="m-b-5" wx:if="{{item.pricingMethod}}">
+					<van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10 m-r-5">多买优惠
+					</van-tag>
+					<van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10">多单有礼</van-tag>
+				</view>
+				<view>
+					<text class="minPrice fz-16">￥{{ item.pricingMethod === 1 ? item.minPrice : item.price }}</text>
+					<text class="m-r-10 minPrice fz-10">起</text>
+					<text class="originPrice">￥{{ item.pricingMethod === 1 ? item.maxPrice : item.originalPrice }}</text>
+				</view>
+			</view>
+		</view>
 	</view>
-	<view wx:if="{{phoneShow}}">
-		<button class="userInfoButton" wx:if="{{canIusePhone}}" open-type="getPhoneNumber" bindgetphonenumber="bindGetPhoneNumber" lang="zh_CN">手机号授权</button>
-		<view wx:else>请升级微信版本</view>
-	</view>
-	<van-popup show="{{ codeShow }}" bind:close="onClose" position="bottom" round="{{true}}" overlay="{{false}}">
-		<view>请填写邀请码</view>
-		<view>123</view>
-		<button bindtap="loginByCode"> 获取手机号再登录 </button>
-	</van-popup> -->
+	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 </view>

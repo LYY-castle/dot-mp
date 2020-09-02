@@ -51,7 +51,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    Promise.resolve().then(()=>tool.checkToken()).then(()=>this.getUserInfo())
+    Promise.resolve().then(()=>this.getUserInfo())
   },
   // 获取用户的头像信息
   getUserInfo(){
