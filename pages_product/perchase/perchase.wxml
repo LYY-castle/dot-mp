@@ -1,63 +1,44 @@
 <!--pages/product/perchase/perchase.wxml-->
 <view class="container">
-    <view class="bigBox">
-      <view class="border m-t-10 p-10">
-        <!-- 地址部分 -->
-            <view class="flex-between m-b-5 ">
-              <view>
-                <view class="flex-between-start">
-                  <text>{{ order.addresseeName }}</text>
-                  <text class="text-color-999 m-l-10">{{ order.addresseePhone }}</text>
-                </view>
-                <view class="text-color-999 font-size-10">
-                  <text>{{order.addresseeAddress}}</text>
-                </view>
-              </view>
-              <van-icon class="m-l-10" name="arrow" color="#969799" bindtap="addAddress"/>
-            </view>
-            <view
-              class="flex-between m-b-10"
-              wx:if="{{item.addresseeName !== ''}}"
-            >
-              <view class="flex-start">
-                <text class="c-gray fz-12">该地址邮寄数量</text>
-                <van-stepper min="1" value="{{item.productNum}}" async-change bind:change="productNumChange" data-item="{{index}}" class="m-l-10" />
-              </view>
-            </view>
-      </view>
-      <view class="m-t-10 border p-10">
-        <view class="flex-start">
-          <van-image src="{{product.image}}" alt width="100px" height="50px" fit="contain" class="productImg"></van-image>
-          <view class="m-l-10">
-            <text class="fz-14">{{ product.name }}</text>
-            <view class="c-gray fz-12">{{ product.description }}</view>
-          </view>
-        </view>
-      </view>
-    </view>
-    <van-submit-bar
-      price="{{totalPrice * 100}}"
-      color="#f9ae08"
-      button-text="提交"
-      bind:submit="onSubmit"
-      safe-area-inset-bottom
-
-    >
-      <view slot="default" class="text-color-ccc">
-        共
-        <text style="color:#000;font-size:16px">{{ totalCount }}</text>
-        {{ product.unit }}
-      </view>
-    </van-submit-bar>
-    <van-dialog
-      show="{{dialogShow}}"
-      title="请确认支付"
-      use-slot="{{true}}"
-      show-cancel-button
-      bind:confirm="confirm"
-      bind:cancel="cancle"
-    >
-      <view class="flex-center mt font-size-20">￥{{ totalPrice }}</view>
-    </van-dialog>
-    <van-dialog id="van-dialog" />
-  </view>
+	<view class="bigBox">
+		<view class="border m-t-10 p-10">
+			<!-- 地址部分 -->
+			<view class="address">
+				<view class="address">
+					<van-icon name="location-o" class="m-r-10"/>
+					<view wx:if="{{order}}">
+						<view>
+							<text>{{ order.addresseeName }}</text>
+							<text class="text-color-999 m-l-10">{{ order.addresseePhone }}</text>
+						</view>
+						<view class="text-color-999 font-size-10">
+							{{order.addresseeAddress}}
+						</view>
+					</view>
+					<text wx:else>请选择地址</text>
+				</view>
+				<van-icon class="addressIcon" name="arrow" color="#969799" bindtap="addAddress" />
+			</view>
+		</view>
+		<view class="m-t-10 border p-10">
+			<view class="goodContent">
+				<van-image src="{{product.image}}" alt width="100px" height="60px" fit="cover"></van-image>
+				<view class="m-l-10">
+					<text class="fz-14">{{ product.name }}</text>
+					<view class="c-gray fz-12">{{ product.description }}</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<van-submit-bar price="{{totalPrice * 100}}" color="#f9ae08" button-text="提交" bind:submit="onSubmit" safe-area-inset-bottom>
+		<view slot="default" class="text-color-ccc">
+			共
+			<text style="color:#000;font-size:16px">{{ totalCount }}</text>
+			{{ product.unit }}
+		</view>
+	</van-submit-bar>
+	<van-dialog show="{{dialogShow}}" title="请确认支付" use-slot="{{true}}" show-cancel-button bind:confirm="confirm" bind:cancel="cancle">
+		<view class="flex-center mt font-size-20">￥{{ totalPrice }}</view>
+	</van-dialog>
+	<van-dialog id="van-dialog" />
+</view>

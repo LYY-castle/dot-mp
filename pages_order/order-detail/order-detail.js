@@ -69,21 +69,24 @@ Page({
   onLoad: function (options) {
     const _this = this
     const eventChannel = this.getOpenerEventChannel()
-    eventChannel.on('acceptDataFromOpenerPage', function(res) {
+    eventChannel.on('acceptDataFromOpenerPage', function (res) {
       _this.setData({
-        orderId:res.data
+        orderId: res.data
       })
       _this.getOrderDetail()
     })
   },
-  getOrderDetail(){
+  getOrderDetail() {
     http.wxRequest({
       ...this.data.api.getOrderById,
-      urlReplacements: [{ substr: '{id}', replacement: this.data.orderId }]
+      urlReplacements: [{
+        substr: '{id}',
+        replacement: this.data.orderId
+      }]
     }).then(res => {
       if (res.success) {
         res.data.orderExtends.forEach(extend => {
-          extend.product.name = utils.ellipsis(extend.product.name,10)
+          extend.product.name = utils.ellipsis(extend.product.name, 10)
           if (extend.product.image) {
             if (extend.product.image !== null && extend.product.image.indexOf(';') !== -1) {
               extend.product.image = extend.product.image.split(';')[0]
@@ -91,15 +94,15 @@ Page({
           }
         })
         this.setData({
-          orderInfo:res.data
+          orderInfo: res.data
         })
       }
     })
   },
-  copy(){
+  copy() {
     wx.setClipboardData({
-      data:this.data.orderInfo.orderNo,
-      success(res){
+      data: this.data.orderInfo.orderNo,
+      success(res) {
         wx.showToast({
           title: '复制成功'
         })

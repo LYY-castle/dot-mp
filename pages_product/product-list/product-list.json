@@ -1,17 +1,13 @@
 {
   "usingComponents": {
-    "van-sidebar": "@vant/weapp/sidebar/index",
-    "van-sidebar-item": "@vant/weapp/sidebar-item/index",
-    "van-overlay": "@vant/weapp/overlay/index",
-    "van-icon": "@vant/weapp/icon/index",
-    "van-tag": "@vant/weapp/tag/index",
     "van-button": "@vant/weapp/button/index",
-    "van-tab": "@vant/weapp/tab/index",
-    "van-tabs": "@vant/weapp/tabs/index",
+    "van-search": "@vant/weapp/search/index",
     "van-image": "@vant/weapp/image/index",
+    "van-sticky": "@vant/weapp/sticky/index",
     "van-empty": "@vant/weapp/empty/index",
-    "van-cell": "@vant/weapp/cell/index",
-    "van-divider": "@vant/weapp/divider/index"
+    "van-tag": "@vant/weapp/tag/index",
+    "van-divider": "@vant/weapp/divider/index",
+    "van-loading": "@vant/weapp/loading/index"
   },
   "onReachBottomDistance": 0,
   "enablePullDownRefresh": true

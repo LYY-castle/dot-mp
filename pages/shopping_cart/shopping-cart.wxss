@@ -1,0 +1,5 @@
+/* pages_shopping_cart/shopping-cart.wxss */
+.loginButton{
+  display:block;
+  margin:0 10px;
+}

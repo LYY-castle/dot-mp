@@ -1,4 +1,3 @@
-import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
 import qseBaoUtil from '../../utils/qsebao.js'
 import constantCfg from '../../config/constant'
@@ -7,26 +6,27 @@ Page({
 	data: {
 		bottomLineShow: false,
 		empty: '/static/img/empty.png',
-		ProductAll: '/static/img/product-all.png',
-		productList: [],
-		productSorts: [],
+		productList: null,
+		productSorts: null,
+		loadingShow:true,
 		sortsImages: [
 			'/static/img/product-01.png',
 			'/static/img/product-02.png',
 			'/static/img/product-03.png',
 			'/static/img/product-04.png',
 		],
-		pageNo: 1,
-		api: {
-			getProductList: {
-				url: '/products',
-				method: 'get',
-			},
-			getProductTypes: {
-				url: '/product-categories',
-				method: 'get',
-			}
-		},
+		pageNo: 1
+	},
+	onShow() {
+		Promise.resolve()
+			.then(() => this.getProductSorts())
+			.then(() => this.getProductList())
+	},
+	scrollToTop(){
+		wx.pageScrollTo({
+			scrollTop: 0,
+			duration: 300
+		})
 	},
 	// 搜索栏聚焦事件
 	focus() {
@@ -36,11 +36,10 @@ Page({
 	},
 	// 获取特惠产品的列表
 	getProductList() {
-		const that = this.data
 		return new Promise((resolve) => {
 			let params = {
 				isHot: 0,
-				pageNo: that.pageNo,
+				pageNo: this.data.pageNo,
 				pageSize: 10,
 				status: 0,
 			}
@@ -68,24 +67,31 @@ Page({
 						products.push(item)
 					}
 				})
-				if (that.pageNo === 1) {
-					that.productList = products
-				} else {
-					that.productList = that.productList.concat(products)
-				}
-				if ((that.pageNo = res.page.totalPage)) {
-					this.setData({
-						bottomLineShow: true,
-					})
-				}
-				that.productList.forEach((item) => {
+				products.forEach((item) => {
 					if (item.image !== null && item.image.indexOf(';') !== -1) {
 						item.image = item.image.split(';')[0]
 					}
-				})
-				this.setData({
-					productList: that.productList,
-				})
+        })
+        if (params.pageNo === 1) {
+          this.setData({
+            productList:products,
+            loadingShow:false
+          })
+				} else {
+          this.setData({
+            productList:this.data.productList.concat(products),
+            loadingShow:false
+          })
+				}
+				if (params.pageNo === res.page.totalPage) {
+					this.setData({
+						bottomLineShow: true,
+					})
+				}else{
+					this.setData({
+						bottomLineShow: false
+					})
+				}
 			})
 			resolve()
 		})
@@ -109,9 +115,9 @@ Page({
 		})
 	},
 	gotoProductList(event) {
-		const sortId = event.currentTarget.dataset.item
-			? event.currentTarget.dataset.item.id
-			: 'all'
+		const sortId = event.currentTarget.dataset.item ?
+			event.currentTarget.dataset.item.id :
+			'all'
 		wx.navigateTo({
 			url: '../../pages_product/product-list/product-list?sortId=' + sortId,
 		})
@@ -126,22 +132,22 @@ Page({
 			url: '../../pages_product/product-detail/product-detail',
 			success: function (res) {
 				// 通过eventChannel向被打开页面传送数据
-				res.eventChannel.emit('acceptDataFromOpenerPage', { data: pathParams })
+				res.eventChannel.emit('acceptDataFromOpenerPage', {
+					data: pathParams
+				})
 			},
 		})
 	},
-	onLoad() {
-		Promise.resolve()
-			.then(() => this.getProductSorts())
-			.then(() => this.getProductList())
-	},
+
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
+		console.log('上拉加载')
 		if (!this.data.bottomLineShow) {
 			const pageNo = this.data.pageNo + 1
 			this.setData({
+				loadingShow:true,
 				pageNo,
 			})
 			this.getProductList()
@@ -149,6 +155,7 @@ Page({
 	},
 	// 下拉刷新
 	onPullDownRefresh() {
+		console.log('下拉刷新')
 		this.setData({
 			pageNo: 1,
 		})
@@ -158,9 +165,5 @@ Page({
 	 * 用户点击右上角分享
 	 */
 	onShareAppMessage: function () {
-		return {
-			title: '转发特惠商品',
-			query: 'code=FQAC',
-		}
 	},
 })

@@ -10,8 +10,8 @@
 		<view wx:if="{{productList.length>0}}" class="goodContent">
 			<view wx:for="{{productList}}" wx:for-item="list" wx:key="listIndex" class="goodItem" bindtap="gotoDetail" data-option="{{list}}">
         <view class="imgContent">
-					<van-image src="{{list.image}}" alt width="100%" height="150px" fit="fill" wx:if="{{list.image !== ''}}" />
-					<van-image  alt width="100%" height="150px" fit="fill" wx:else use-loading-slot />
+					<van-image src="{{list.image}}" alt width="100%" height="160px" fit="cover" wx:if="{{list.image !== ''}}" />
+					<van-image  alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
         </view>
         <view class="textContent">
           <view class="m-b-5">{{ list.name }}</view>
@@ -31,8 +31,9 @@
         </view>
 			</view>
 		</view>
-		<van-empty wx:else src="{{empty}}" description="暂无符合条件的商品"></van-empty>
+		<van-empty wx:if="{{productList.length===0}}" src="{{empty}}" description="暂无符合条件的商品"></van-empty>
 		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+		<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 	</view>
 	<view class="searchContent" wx:else>
 		<view class="searchItem">
@@ -51,7 +52,7 @@
 				>{{ list }}</van-tag
 			>
 		</view>
-		<van-empty description="暂无搜索记录" v-else></van-empty>
+		<van-empty description="暂无搜索记录" wx:else></van-empty>
 	</view>
 
 </view>

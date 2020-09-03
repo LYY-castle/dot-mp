@@ -10,13 +10,12 @@ Page({
     empty: '/static/img/empty.png',
     bottomLineShow:false,
     historyListShow: true,
-    loading: false,
-    finished: false,
+    loadingShow: true,
     pageNo: 1,
     searchValue:'',
     pageTitle: '搜索',
-    productList: [],
-    historyList: [],
+    productList: null,
+    historyList: null,
     api: {
       getProductsList: {
         url: '/products',
@@ -43,13 +42,14 @@ Page({
   onReachBottom: function () {
     console.log('触底函数')
     if(!this.data.bottomLineShow){
-      const pageNo = this.data.pageNo+1
       this.setData({
-        pageNo
+        loadingShow:true,
+        pageNo:this.data.pageNo+1
       })
       this.getProductList()
     }
   },
+
   change(e){
     this.setData({
       searchValue:e.detail
@@ -152,24 +152,31 @@ Page({
             item = res.data[i]
             await dealQseProduct(item)
           }
-          if (params.pageNo === 1) {
-            this.data.productList = products
-          } else {
-            this.data.productList = this.data.productList.concat(products)
-          }
-          this.data.productList.forEach((item) => {
+          products.forEach((item) => {
             if (item.image !== null && item.image.indexOf(';') !== -1) {
               item.image = item.image.split(';')[0]
             }
           })
+          if (params.pageNo === 1) {
+            this.setData({
+              productList:products,
+              loadingShow:false
+            })
+          } else {
+            this.setData({
+              productList:this.data.productList.concat(products),
+              loadingShow:false
+            })
+          }
           if(params.pageNo===res.page.totalPage){
             this.setData({
               bottomLineShow:true
             })
+          }else{
+            this.setData({
+              bottomLineShow:false
+            })
           }
-          this.setData({
-            productList: this.data.productList
-          })
           resolve()
         }
       })

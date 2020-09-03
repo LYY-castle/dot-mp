@@ -14,11 +14,11 @@ function getSuccess(res) {
 			url: '/pages/product/index'
 		})
 	} else {
-		if (res.header['Authorization']) {
-			wx.setStorageSync('authorization', res.header.Authorization)
-		}
 		if (res.data.success) {
-			wx.hideLoading()
+			wx.hideNavigationBarLoading({
+				success(){
+				}
+			})
 		} else {
 			wx.showToast({
 				title: res.data.message
@@ -27,18 +27,8 @@ function getSuccess(res) {
 	}
 }
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
-	let header = {}
-	wx.showLoading({
-		title: '请稍后'
-	})
-	if (wx.getStorageSync('authorization')) {
-		header = {
-			authorization: wx.getStorageSync('authorization')
-		}
-	} else {
-		header = {
-			'content-type': 'application/json' // 默认值
-		}
+	let header = {
+		authorization:'eyJhbGciOiJIUzI1NiJ9.eyJUT0tFTl9VU0VSX0lEIjo5LCJpYXQiOjE1OTkxMTcxMzMsImp0aSI6IjhmN2IyODkzLTJkMmMtNGI4Yy04MWNlLTQ2M2E2MGQ2NTBhYSIsImV4cCI6MTU5OTEyNDMzM30.ewhJp48eyD6kVgC9P7TTacil5JeNjH2zlSVx36reAyI'
 	}
 	let reqUrl = env.env.VUE_APP_BASE_URL + url
 	urlReplacements.forEach((replacement) => {
@@ -46,41 +36,51 @@ function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 	})
 	return new Promise((resolve, reject) => {
 		if (['post', 'patch', 'put'].includes(method)) {
-			wx.request({
-				url: reqUrl,
-				data: params,
-				method,
-				header,
-				success: function (res) {
-					getSuccess(res)
-					resolve(res.data)
-				},
-				fail: function (res) {
-					const httpParams = {
-						url,
-						params
-					}
-					console.log(httpParams)
-					reject(res)
+			wx.showNavigationBarLoading({
+				success(){
+					wx.request({
+						url: reqUrl,
+						data: params,
+						method,
+						header,
+						success: function (res) {
+							getSuccess(res)
+							resolve(res.data)
+						},
+						fail: function (res) {
+							const httpParams = {
+								url,
+								params
+							}
+							console.log(httpParams)
+							reject(res)
+						}
+					})
 				}
 			})
+
 		} else if (['get', 'delete'].includes(method)) {
-			wx.request({
-				url: reqUrl,
-				data: params,
-				method,
-				header,
-				success: function (res) {
-					getSuccess(res)
-					resolve(res.data)
-				},
-				fail: function (res) {
-					console.log(header)
-					console.log(url)
-					console.log(params)
-					reject(res)
+			wx.showNavigationBarLoading({
+				success(){
+					wx.request({
+						url: reqUrl,
+						data: params,
+						method,
+						header,
+						success: function (res) {
+							getSuccess(res)
+							resolve(res.data)
+						},
+						fail: function (res) {
+							console.log(header)
+							console.log(url)
+							console.log(params)
+							reject(res)
+						}
+					})
 				}
 			})
+
 		}
 	})
 }

@@ -13,8 +13,8 @@ Page({
     bottomLineShow:false,
     pageNo: 1,
     pageSize: 10,
-    firstTypes: [],
-    secondTypes: [],
+    firstTypes: null,
+    secondTypes: null,
     api: {
       getProductsList: {
         url: '/products',
@@ -26,7 +26,10 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onShow: function () {
+  onLoad: function () {
+    this.setData({
+      activeKey:0
+    })
     Promise.resolve()
       .then(() => this.getTypes(0))
       .then(() => this.getTypes())
@@ -35,6 +38,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    console.log('触底了')
     if(!this.data.bottomLineShow){
       const pageNo = this.data.pageNo+1
       this.setData({
@@ -57,7 +61,7 @@ Page({
       activeKey,
       pageNo:1,
       bottomLineShow:false,
-      secondTypes:[]
+      secondTypes:null
     })
     Promise.resolve()
       .then(() => this.getTypes())
@@ -191,8 +195,9 @@ Page({
   // 根据二级分类跳转到商品列表页面
   goToProductsListPageById(e) {
     console.log('跳转到商品列表页面',e)
-    // wx.navigateTo({
-    //   url:'/pages_product'
-    // })
+    const secondType = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url:'/pages_product/product-list/product-list?secondType='+secondType
+    })
   },
 })

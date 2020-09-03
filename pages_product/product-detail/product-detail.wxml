@@ -3,10 +3,11 @@
     <view wx:if="{{showContent}}">
       <view class="cardContent">
         <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
-        autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" wx:if="{{product.image && product.image.length > 0}}">
+        autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
         <block wx:for="{{product.image}}" wx:for-item="image" wx:key="imgIndex">
           <swiper-item>
-            <van-image src="{{image}}" width="100%" height="100%" fit="cover"></van-image>
+            <van-image src="{{image}}" width="100%" height="100%" fit="cover" wx:if="{{image}}"></van-image>
+            <van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
           </swiper-item>
         </block>
       </swiper>
@@ -94,9 +95,33 @@
           </view>
         </view>
       </view>
-      <van-goods-action>
-        <van-button block="{{true}}" round="{{true}}" bind:click="buyCard" color="#f9ae08">立即购买</van-button>
-      </van-goods-action>
     </view>
     <van-empty description="暂无描述信息" wx:else />
+    <van-popup
+    show="{{ perchaseShow }}"
+    bind:close="onClose"
+    round
+    position="bottom"
+    closeable
+    >
+    <view class="popContent">
+      <view>
+        商品规格
+      </view>
+      <view class="buttonGroup">
+        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08">加入购物车</van-button>
+        <van-button round block="{{true}}" class="buttonItem" color="#ee0a24">立即购买</van-button>
+      </view>
+    </view>
+    </van-popup>
+    <van-goods-action>
+      <van-goods-action-icon icon="chat-o" text="首页" url="/pages/index/index" link-type="switchTab"/>
+      <van-goods-action-icon icon="cart-o" text="购物车" url="/pages/shopping_cart/shopping-cart" link-type="switchTab"/>
+      <van-goods-action-button
+        text="加入购物车"
+        color="#f9ae08"
+        bind:click="onClickButton"
+      />
+      <van-goods-action-button color="#ee0a24" text="立即购买" bind:click="onClickButton" />
+    </van-goods-action>
   </view>

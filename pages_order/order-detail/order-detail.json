@@ -3,5 +3,6 @@
     "van-cell": "@vant/weapp/cell/index",
     "van-tag": "@vant/weapp/tag/index",
     "van-image": "@vant/weapp/image/index"
-  }
+  },
+  "navigationBarTitleText": "订单详情"
 }

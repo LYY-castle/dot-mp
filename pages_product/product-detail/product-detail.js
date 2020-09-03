@@ -6,16 +6,17 @@ Page({
    */
   data: {
     indicatorDots:true,
+    perchaseShow:false,
     vertical: false,
     autoplay: false,
     interval: 2000,
     duration: 500,
-    showContent: false,
+    showContent: true,
     pageTitle: '',
-    pathParams: {},
-      productId: null,
-      product: {},
-      pricingRule: {},
+    pathParams: null,
+    productId: null,
+    product: null,
+    pricingRule: null,
     api:{
       // 查询产品详情.
     getProductById: {
@@ -94,6 +95,10 @@ Page({
             product:res.data
           })
           resolve()
+        }else{
+          this.setData({
+            showContent:false,
+          })
         }
       })
     })
@@ -119,4 +124,29 @@ Page({
       url: '../perchase/perchase',
     })
   },
+  //
+  onClickButton(e){
+    const isLogin = wx.getStorageSync('isLogin')===1
+    if(isLogin){
+      this.setData({
+        perchaseShow:true
+      })
+      console.log('加入购物车还是购买',e)
+    }else{
+      wx.navigateTo({
+        url:'/pages_mine/login/login'
+      })
+    }
+  },
+  onClose(){
+    this.setData({
+      perchaseShow:false
+    })
+  }
+  // goBac
+  // goBackShopCarts(){
+  //   wx.switchTab({
+  //     url:'/pages/shopping-cart/shopping-cart'
+  //   })
+  // }
 })

@@ -67,7 +67,6 @@ function review({bucketName, fileName}){
       }
   })
 }
-
 module.exports = {
   checkToken,
   review,

@@ -30,7 +30,7 @@
 
 .product {
   background: #fff;
-  padding: 10px 20px 50px;
+  padding: 10px 0 50px 0;
   margin-top: 10px;
 }
 
@@ -66,9 +66,24 @@
 }
 
 swiper {
-  height: 300px !important;
+  min-height: 300px !important;
 }
 
 van-button {
   width: 100%;
+}
+
+.popContent {
+  padding: 20px;
+}
+
+.popContent .buttonGroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popContent .buttonGroup .buttonItem {
+  display: inline-block;
+  width: 45%;
+  border-radius: 20px;
 }

@@ -1,11 +1,13 @@
-.container {
-  background: #fff;
-  overflow-y: scroll;
+.userAvatarUrl {
+  margin: 20% auto 60%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
 }
-.container .loginBtn {
-  color: #fff;
-  background: linear-gradient(-90deg, #ffb201, #ffbf01);
-}
-.container button::after {
-  border: none;
+
+.loginButton {
+  display: block;
+  margin: 0 20px;
+  font-size: 14px;
 }

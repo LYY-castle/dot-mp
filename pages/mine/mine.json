@@ -4,5 +4,6 @@
     "van-button": "@vant/weapp/button/index",
     "van-image": "@vant/weapp/image/index",
     "van-dialog": "@vant/weapp/dialog/index"
-  }
+  },
+  "navigationBarTitleText": "个人中心"
 }

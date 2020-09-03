@@ -1,0 +1,11 @@
+<!--pages_shopping_cart/shopping-cart.wxml-->
+<view class="container">
+  <view wx:if="{{isLogin}}">
+    <view wx:if="{{shoppingCartList.length>0}}">购物车列表</view>
+    <van-empty description="快去看看要买点啥吧" wx:else/>
+  </view>
+  <view wx:else>
+    <van-empty description="未登录"/>
+    <van-button block="{{true}}" round="{{true}}" bind:click="goLogin" color="#f9ae08" class="loginButton">请先登录</van-button>
+  </view>
+</view>

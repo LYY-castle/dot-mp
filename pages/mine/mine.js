@@ -34,11 +34,8 @@ Page({
       title: '我的订单',
       iconHref: '/static/img/order.png',
       path:'../../pages_order/order-list/order-list'
-    }, {
-      title: '我的地址',
-      iconHref: '/static/img/address.png',
-      path:'../../pages_address/address-list/address-list'
-    }]
+    }
+  ]
   },
 
   /**
@@ -51,7 +48,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    Promise.resolve().then(()=>this.getUserInfo())
+    const isLogin = wx.getStorageSync('isLogin')
+    if(isLogin===1){
+      // Promise.resolve().then(()=>this.getUserInfo())
+    }
   },
   // 获取用户的头像信息
   getUserInfo(){
@@ -63,59 +63,29 @@ Page({
             this.setData({
               userInfo:res.data
             })
+            resolve()
           }
         })
-        .then(() => {
-          if (this.data.userInfo.headImage) {
-            if(this.data.userInfo.headImage.indexOf('https')===-1){
-              const params = {
-                bucketName: constantCfg.minio.bucketName,
-                fileName: this.data.userInfo.headImage
-              }
-              tool.review(params).then(result => {
-                if (result.success) {
-                  this.setData({
-                    avatar:result.data
-                  })
-                }
-              })
-            }
-          }
-        })
-        resolve()
     })
   },
   gotoPage(event){
     const option = event.currentTarget.dataset.option
-    wx.navigateTo({
-      url: option.path,
-      success(res){
-        if(option.title === '我的地址'){
-          wx.setStorageSync('fromPath','mine')
-        }
-      }
-    })
-  },
-  // 退出登录
-  logout() {
-    Dialog.confirm({
-      title: '确定退出？'
-    })
-      .then(() => {
-        let params = {
-          id: wx.getStorageSync('userId')
-        }
-        http.wxRequest({ ...this.data.api.logout, params }).then(res => {
-          if (res.success) {
-            wx.clearStorageSync()
-            wx.reLaunch({
-              url: '../../pages_mine/login/login'
-            })
+    const isLogin = wx.getStorageSync('isLogin')===1
+    if(isLogin){
+      wx.navigateTo({
+        url: option.path,
+        success(res){
+          if(option.title === '我的地址'){
+            wx.setStorageSync('fromPath','mine')
           }
-        })
+        }
       })
-      .catch(() => {
-        // on cancel
+    }else{
+      wx.navigateTo({
+        url:'/pages_mine/login/login'
       })
+    }
+
   },
+
 })

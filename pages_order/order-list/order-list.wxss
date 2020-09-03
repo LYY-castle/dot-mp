@@ -1,5 +1,4 @@
 .container {
-  padding-bottom: 0;
 }
 .textCenter {
   color: pink;

@@ -10,8 +10,11 @@
     "van-image": "@vant/weapp/image/index",
     "van-field": "@vant/weapp/field/index",
     "van-tag": "@vant/weapp/tag/index",
-    "van-divider": "@vant/weapp/divider/index"
+    "van-divider": "@vant/weapp/divider/index",
+    "van-loading": "@vant/weapp/loading/index",
+    "van-sticky": "@vant/weapp/sticky/index"
   },
+  "navigationBarTitleText": "我的订单",
   "onReachBottomDistance": 0,
   "enablePullDownRefresh": true
 }

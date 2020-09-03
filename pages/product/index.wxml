@@ -3,11 +3,11 @@
 	<van-sidebar active-key="{{ activeKey }}" class="user-sideBar" bind:change="firstChange">
 		<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
 	</van-sidebar>
-	<view class="productsContent" wx:if="{{secondTypes.length>0}}">
-		<view wx:for="{{secondTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" bindtap="goToProductsListPageById" class="productItem">
+	<view class="productsContent">
+		<view wx:for="{{secondTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" bindtap="goToProductsListPageById" class="productItem" wx:if="{{secondTypes.length>0}}">
 			<van-image
-				width="100"
-				height="100"
+				width="100%"
+				height="60"
 				fit="contain"
 				src="{{goodtype.icon}}"
 			/>

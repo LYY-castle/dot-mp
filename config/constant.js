@@ -1,5 +1,5 @@
 import env from './env.config'
-module.exports =  {
+module.exports = {
   MAX_PAGE_SIZE: 1000,
   TOKEN_EXPIRE_TIMEOUT: 24 * 60 * 60 * 1000,
   crypto: {

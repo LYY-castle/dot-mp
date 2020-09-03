@@ -1,72 +1,31 @@
 <!--pages/mine/order/order-list/order-list.wxml-->
-<div style="width:100%;height:100%">
-  <view class="container">
-    <van-tabs bind:change="getOrderListProductType" active="{{activeProductType}}"
-    fixed="{{true}}"
-      title-active-color="rgba(249, 173, 8, 1)" color="rgba(249, 173, 8, 1)">
-      <van-tab wx:for="{{productTypes}}" wx:for-item="type" wx:key="idx" title="{{type.name}}" name="{{type.code}}">
+<view class="container">
+	<van-sticky>
+		<van-tabs bind:change="getOrderListByType" active="{{activeProductType}}" fixed="{{true}}" title-active-color="rgba(249, 173, 8, 1)" color="rgba(249, 173, 8, 1)" animated="{{true}}">
+			<van-tab wx:for="{{productTypes}}" wx:for-item="type" wx:key="idx" title="{{type.name}}" name="{{type.code}}">
       </van-tab>
-    </van-tabs>
-    <view class="selectButtons">
-      <van-button wx:for="{{buttonGroup}}" wx:for-item="button" wx:key="index" round="{{true}}" size="mini"
-        color="{{activeButtonIndex === index ? 'rgba(247, 189, 79, 1)' : ''}}" bind:click="MyAchievementByTime"
-        data-index="{{index}}" class="m-r-5">{{button.text}}</van-button>
-      <van-button size="mini" round="{{true}}" color="{{activeButtonIndex === 3 ? 'rgba(247, 189, 79, 1)' : ''}}"
-        bind:click="MyAchievementByTime" data-index="{{3}}" class="m-r-5">{{createAt}}</van-button>
-    </view>
-    <view wx:if="{{timeShow}}" class="selectTime">
-		<picker mode="date" bindchange="startTimeSelect" value="{{createAtStart}}">
-			<view class="picker" >
-				开始时间
-				<van-field
-    			value="{{createAtStart}}"
-    			placeholder="请输入用户名"
-					border="{{ false }}"
-					readonly="{{true}}"
-    			bind:change="onChange"
-  			/>
+	  </van-tabs>
+	</van-sticky>
+	<van-cell wx:if="{{orderList.length > 0}}" wx:for="{{orderList}}" wx:for-item="order" wx:key="index" bind:click="orderDetail" data-option="{{order.id}}" class="m-b-5">
+		<view slot="title">
+			<text class="fz-13 description">订单号：{{ order.orderNo }}</text>
+			<view class="container-title m-t-10">
+				<van-image src="{{order.orderExtends[0].product.image}}" alt width="100px" fit="widthFix" />
+				<view class="c-darkgrey weight">
+					<text> {{constantCfg.productType.qsebao.includes(order.type)?order.policy.insuranceName:order.orderExtends[0].productName }}</text>
+					<text class="m-l-10 c-gray">*{{ order.totalNum }}</text>
+					<view align="right">总价：￥{{ order.amount }}</view>
+				</view>
 			</view>
-		</picker>
-		<picker mode="date" bindchange="endTimeSelect" value="{{createAtEnd}}">
-			<view class="picker">
-				结束时间
-				<van-field
-    			value="{{createAtEnd}}"
-    			placeholder="请输入用户名"
-					border="{{ false }}"
-					readonly="{{true}}"
-    			bind:change="onChange"
-  			/>
+			<view slot="label" class="container-title flex-right">
+				<text class="fz-13 description">下单时间：{{ order.createAt }}</text>
+				<van-tag plain size="medium" color="{{!constantCfg.productType.qsebao.includes(order.type)? statusMap[order.status]['color']:insureStatusMap[order.status]['color']}}">
+					{{constantCfg.productType.qsebao.includes(order.type)?insureStatusMap[order.status]['text']:statusMap[order.status]['text']}}
+				</van-tag>
 			</view>
-		</picker>
-		<van-button size="mini" bind:click="searchByDiyTime" color="#f9ae08">搜索</van-button>
-	</view>
-    <van-cell wx:if="{{orderList.length > 0}}" wx:for="{{orderList}}" wx:for-item="order" wx:key="index"
-      bind:click="orderDetail" data-option="{{order.id}}" class="m-b-5">
-      <view slot="title">
-        <text class="fz-13 description">订单号：{{ order.orderNo }}</text>
-        <view class="container-title m-t-10">
-          <van-image src="{{order.orderExtends[0].product.image}}" alt width="100px" fit="widthFix" />
-          <view class="c-darkgrey weight">
-            <text> {{constantCfg.productType.qsebao.includes(order.type)?order.policy.insuranceName:order.orderExtends[0].productName }}</text>
-            <text class="m-l-10 c-gray">*{{ order.totalNum }}</text>
-            <view align="right">总价：￥{{ order.amount }}</view>
-          </view>
-        </view>
-        <view slot="label" class="container-title flex-right">
-          <text class="fz-13 description">下单时间：{{ order.createAt }}</text>
-          <van-tag
-          plain
-          size="medium"
-          color="{{!constantCfg.productType.qsebao.includes(order.type)? statusMap[order.status]['color']:insureStatusMap[order.status]['color']}}"
-          >
-            {{constantCfg.productType.qsebao.includes(order.type)?insureStatusMap[order.status]['text']:statusMap[order.status]['text']}}
-          </van-tag>
-        </view>
-      </view>
-    </van-cell>
-    <van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
-    <van-empty image="{{empty}}" description="暂无订单" wx:if="{{orderList.length === 0}}"/>
-  </view>
-
-</div>
+		</view>
+	</van-cell>
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+	<van-empty description="还没有任何订单呢" wx:if="{{orderList.length === 0}}" />
+	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
+</view>

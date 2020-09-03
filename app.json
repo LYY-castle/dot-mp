@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/product/index",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/shopping_cart/shopping-cart"
   ],
   "subpackages": [
     {
@@ -23,7 +24,8 @@
       "pages": [
         "bank-card/bank-card",
         "personal-info/personal-info",
-        "personal-info/cropper/cropper"
+        "personal-info/cropper/cropper",
+        "login/login"
       ]
     },
     {
@@ -40,12 +42,6 @@
       "network": "all",
       "packages": [
         "pages_product"
-      ]
-    },
-    "pages/mine/mine": {
-      "network": "all",
-      "packages": [
-        "pages_order"
       ]
     }
   },
@@ -76,8 +72,14 @@
         "selectedIconPath": "static/img/scatter-dots-active.png"
       },
       {
+        "pagePath": "pages/shopping_cart/shopping-cart",
+        "text": "购物车",
+        "iconPath": "static/img/scatter-dots.png",
+        "selectedIconPath": "static/img/scatter-dots-active.png"
+      },
+      {
         "pagePath": "pages/mine/mine",
-        "text": "我的",
+        "text": "个人",
         "iconPath": "static/img/mine.png",
         "selectedIconPath": "static/img/mine-active.png"
       }
