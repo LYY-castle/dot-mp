@@ -11,6 +11,7 @@ Page({
     activeKey: 0,
     activeId:null,
     bottomLineShow:false,
+    loadingShow:true,
     pageNo: 1,
     pageSize: 10,
     firstTypes: null,
@@ -39,14 +40,14 @@ Page({
    */
   onReachBottom: function () {
     console.log('触底了')
-    if(!this.data.bottomLineShow){
-      const pageNo = this.data.pageNo+1
+    if(!this.data.bottomLineShow&&!this.data.loadingShow){
       this.setData({
-        pageNo
+        loadingShow:true,
+        pageNo:this.data.pageNo+1
       })
+      this.getTypes()
     }
   },
-
   /**
    * 用户点击右上角分享
    */
@@ -69,6 +70,7 @@ Page({
   // 获取产品列表 0 一级,其他是二级
   getTypes(val) {
     let params = {
+      pageNo:this.data.pageNo,
       pageSize: 100
     }
     if(val===0){
@@ -87,6 +89,17 @@ Page({
           } else {
             this.setData({
               secondTypes: res.data,
+            })
+          }
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true,
+              loadingShow:false
+            })
+          }else{
+            this.setData({
+              bottomLineShow:false,
+              loadingShow:false
             })
           }
           resolve()
@@ -144,7 +157,6 @@ Page({
       })
     }
   },
-
   //  获取产品列表
   getProductsList(params) {
     let productDetailObj= {}
@@ -169,24 +181,21 @@ Page({
             item = res.data[i]
             await dealQseProduct(item)
           }
-          if (params.pageNo === 1) {
-            this.data.productList = products
-          } else {
-            this.data.productList = this.data.productList.concat(products)
-          }
-          this.data.productList.forEach((item) => {
+          products.forEach((item) => {
             if (item.image !== null && item.image.indexOf(';') !== -1) {
               item.image = item.image.split(';')[0]
             }
           })
-          this.setData({
-            productList: this.data.productList
-          })
-          if(params.pageNo===res.page.totalPage){
+          if (params.pageNo === 1) {
             this.setData({
-              bottomLineShow:true
+              productList: products
+            })
+          } else {
+            this.setData({
+              productList: this.data.productList.concat(products)
             })
           }
+
           resolve()
         }
       })

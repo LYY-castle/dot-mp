@@ -4,7 +4,8 @@
     "van-sidebar-item": "@vant/weapp/sidebar-item/index",
     "van-image": "@vant/weapp/image/index",
     "van-empty": "@vant/weapp/empty/index",
-    "van-divider": "@vant/weapp/divider/index"
+    "van-divider": "@vant/weapp/divider/index",
+    "van-loading": "@vant/weapp/loading/index"
   },
   "onReachBottomDistance": 0,
   "enablePullDownRefresh": true,

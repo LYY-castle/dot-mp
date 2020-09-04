@@ -1,19 +1,22 @@
 <!--pages/product/product-list/product-list.wxml-->
 <view class="container">
-	<van-sidebar active-key="{{ activeKey }}" class="user-sideBar" bind:change="firstChange">
-		<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
-	</van-sidebar>
+		<van-sidebar active-key="{{ activeKey }}" class="user-sideBar" bind:change="firstChange">
+			<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
+		</van-sidebar>
 	<view class="productsContent">
-		<view wx:for="{{secondTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" bindtap="goToProductsListPageById" class="productItem" wx:if="{{secondTypes.length>0}}">
-			<van-image
-				width="100%"
-				height="60"
-				fit="contain"
-				src="{{goodtype.icon}}"
-			/>
-			<view>{{goodtype.name}}</view>
+		<view class="goodTypes">
+			<view wx:for="{{secondTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" bindtap="goToProductsListPageById" class="productItem" wx:if="{{secondTypes.length>0}}">
+				<van-image
+					width="100%"
+					height="60"
+					fit="contain"
+					src="{{goodtype.icon}}"
+				/>
+				<view>{{goodtype.name}}</view>
+			</view>
 		</view>
+		<van-empty image="{{empty}}" description="正在为您寻找更多商品" class="fz-12" wx:if="{{secondTypes.length===0}}"></van-empty>
+		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">更多商品，敬请期待</van-divider>
+		<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 	</view>
-	<van-empty image="{{empty}}" description="正在为您寻找更多商品" class="fz-12" wx:if="{{secondTypes.length===0}}"></van-empty>
-	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 </view>

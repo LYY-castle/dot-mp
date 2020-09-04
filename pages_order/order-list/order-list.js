@@ -105,7 +105,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    if (!this.data.bottomLineShow) {
+    if (!this.data.bottomLineShow&&!this.data.loadingShow) {
       this.setData({
         pageNo: this.data.pageNo + 1,
         loadingShow: true
@@ -168,21 +168,21 @@ Page({
           if (params.pageNo === 1) {
             this.setData({
               orderList: res.data,
-              loadingShow: false
             })
           } else {
             this.setData({
               orderList: this.data.orderList.concat(res.data),
-              loadingShow: false
             })
           }
           if (params.pageNo === res.page.totalPage) {
             this.setData({
-              bottomLineShow: true
+              bottomLineShow: true,
+              loadingShow: false
             })
           } else {
             this.setData({
-              bottomLineShow: false
+              bottomLineShow: false,
+              loadingShow: false
             })
           }
           resolve()

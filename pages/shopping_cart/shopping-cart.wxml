@@ -1,8 +1,12 @@
 <!--pages_shopping_cart/shopping-cart.wxml-->
 <view class="container">
   <view wx:if="{{isLogin}}">
-    <view wx:if="{{shoppingCartList.length>0}}">购物车列表</view>
-    <van-empty description="快去看看要买点啥吧" wx:else/>
+    <view wx:if="{{shoppingCartList.length>0}}">
+
+    </view>
+    <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
+    <van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
+    <van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
   </view>
   <view wx:else>
     <van-empty description="未登录"/>

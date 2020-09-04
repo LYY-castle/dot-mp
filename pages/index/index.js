@@ -144,11 +144,10 @@ Page({
 	 */
 	onReachBottom: function () {
 		console.log('上拉加载')
-		if (!this.data.bottomLineShow) {
-			const pageNo = this.data.pageNo + 1
+		if (!this.data.bottomLineShow&&!this.data.loadingShow) {
 			this.setData({
 				loadingShow:true,
-				pageNo,
+				pageNo:this.data.pageNo + 1,
 			})
 			this.getProductList()
 		}

@@ -32,7 +32,7 @@
 			</view>
 		</view>
 		<van-empty wx:if="{{productList.length===0}}" src="{{empty}}" description="暂无符合条件的商品"></van-empty>
-		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">更多商品，敬请期待</van-divider>
 		<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 	</view>
 	<view class="searchContent" wx:else>

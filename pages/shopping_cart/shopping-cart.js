@@ -6,6 +6,8 @@ Page({
    */
   data: {
     isLogin:null,
+    loadingShow:false,
+    bottomLineShow:false,
   },
   /**
    * 生命周期函数--监听页面显示
@@ -26,20 +28,6 @@ Page({
     })
   },
   /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
@@ -50,9 +38,17 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    if(!this.data.bottomLineShow&&!this.data.loadingShow){
+      this.setData({
+        pageNo:this.data.pageNo+1,
+        loadingShow:true
+      })
+      this.getShoppingOrderList()
+    }
+  },
+  getShoppingOrderList(){
 
   },
-
   /**
    * 用户点击右上角分享
    */

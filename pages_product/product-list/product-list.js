@@ -74,21 +74,21 @@ Page({
           if (params.pageNo === 1) {
             this.setData({
               productList:products,
-              loadingShow:false
             })
           } else {
             this.setData({
               productList:this.data.productList.concat(products),
-              loadingShow:false
             })
           }
           if(params.pageNo===res.page.totalPage){
             this.setData({
-              bottomLineShow:true
+							bottomLineShow:true,
+							loadingShow:false
             })
           }else{
             this.setData({
-              bottomLineShow:false
+							bottomLineShow:false,
+							loadingShow:false
             })
           }
           resolve()
@@ -143,11 +143,10 @@ Page({
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		if (!this.data.bottomLineShow) {
-			const pageNo = this.data.pageNo + 1
+		if (!this.data.bottomLineShow&&!this.data.loadingShow) {
 			this.setData({
 				loadingShow:true,
-				pageNo,
+				pageNo:this.data.pageNo + 1,
 			})
 			this.getProductList()
 		}

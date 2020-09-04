@@ -6,8 +6,8 @@
 	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
-				<van-image src="{{item.image}}" alt width="100%" height="160px" fit="widthFix" wx:if="{{item.image !== ''}}" />
-				<van-image alt width="100%" height="160px" fit="widthFix" wx:else use-loading-slot />
+				<van-image src="{{item.image}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.image !== ''}}" />
+				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
 			</view>
 			<view class="textContent">
 				<view class="m-b-5">{{ item.name }}</view>
@@ -25,6 +25,6 @@
 		</view>
 	</view>
 	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
-	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">更多商品，敬请期待</van-divider>
 	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 </view>
