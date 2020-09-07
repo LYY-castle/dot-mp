@@ -88,8 +88,6 @@ Page({
           if(res.data.detail){
             res.data.detail = res.data.detail.replace(/\<img/gi, '<img class="richImg"')
           }
-          const isMultiAddresses = res.data.multiAddresses
-          wx.setStorageSync('isMultiAddresses',isMultiAddresses)
           this.setData({
             showContent:true,
             product:res.data

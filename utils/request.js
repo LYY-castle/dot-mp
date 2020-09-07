@@ -28,7 +28,7 @@ function getSuccess(res) {
 }
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 	let header = {
-		authorization:'eyJhbGciOiJIUzI1NiJ9.eyJUT0tFTl9VU0VSX0lEIjo5LCJpYXQiOjE1OTkyMDAyNTAsImp0aSI6IjA1ZGI1OWU3LWY2ODUtNGZlNi1hNjExLThkMTBjYmEwZGE3NiIsImV4cCI6MTU5OTIwNzQ1MH0.aTzcXBWM28PRZID3KdLtI8pSkUEJWpzK5ZBwEaiyItM'
+		authorization:'eyJhbGciOiJIUzI1NiJ9.eyJUT0tFTl9VU0VSX0lEIjo5LCJpYXQiOjE1OTk0NDMzMzcsImp0aSI6IjU0ZjI3ZjhiLWZhM2QtNDIxMi05MjhjLTZjNmExZDExZWU4YiIsImV4cCI6MTU5OTQ1MDUzN30.HIyMBomK-UIVw9UghDvAJjf3MV5EaXRHQ25P7LEvkhE'
 	}
 	let reqUrl = env.env.VUE_APP_BASE_URL + url
 	urlReplacements.forEach((replacement) => {

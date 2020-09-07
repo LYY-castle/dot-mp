@@ -22,7 +22,7 @@
 		</view>
 		<view class="m-t-10 border p-10">
 			<view class="goodContent">
-				<van-image src="{{product.image}}" alt width="100px" height="60px" fit="cover"></van-image>
+				<van-image src="{{product.image}}" alt width="100px" height="60px" fit="contain"></van-image>
 				<view class="m-l-10">
 					<text class="fz-14">{{ product.name }}</text>
 					<view class="c-gray fz-12">{{ product.description }}</view>

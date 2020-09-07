@@ -1,12 +1,34 @@
 <!--pages_shopping_cart/shopping-cart.wxml-->
 <view class="container">
   <view wx:if="{{isLogin}}">
-    <view wx:if="{{shoppingCartList.length>0}}">
-
+    <view wx:if="{{shoppingCartList.length>0}}" >
+      <van-checkbox-group value="{{ result }}" bind:change="onChange">
+        <van-checkbox wx:for="{{shoppingCartList}}" wx:key="index" name="{{item.id}}" class="checkItem" label-disabled="{{true}}">
+          <view class="flex-start">
+            <van-image width="80" height="80" src="https://img.yzcdn.cn/vant/cat.jpeg" fit="cover" />
+            <view class="m-l-10" style="width:100%">
+              <view >{{item.name}}</view>
+              <view class="flex-between">
+              <view>￥{{item.price}}</view>
+              <van-stepper value="{{ item.count }}" bind:change="addCount" data-option="{{index}}"/>
+            </view>
+          </view>
+          </view>
+        </van-checkbox>
+      </van-checkbox-group>
     </view>
     <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
     <van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
     <van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
+    <van-submit-bar
+    price="{{ totalPrice }}"
+    button-text="结算"
+    disabled="{{totalPrice===0}}"
+    bind:submit="onClickButton"
+    tip="{{ true }}"
+  >
+<van-checkbox value="{{ all }}" bind:change="selectAll">全选</van-checkbox>
+</van-submit-bar>
   </view>
   <view wx:else>
     <van-empty description="未登录"/>

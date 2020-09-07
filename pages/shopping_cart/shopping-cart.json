@@ -3,7 +3,12 @@
     "van-button": "@vant/weapp/button/index",
     "van-empty": "@vant/weapp/empty/index",
     "van-divider": "@vant/weapp/divider/index",
-    "van-loading": "@vant/weapp/loading/index"
+    "van-loading": "@vant/weapp/loading/index",
+    "van-checkbox-group": "@vant/weapp/checkbox-group/index",
+    "van-checkbox": "@vant/weapp/checkbox/index",
+    "van-submit-bar": "@vant/weapp/submit-bar/index",
+    "van-stepper": "@vant/weapp/stepper/index",
+    "van-image": "@vant/weapp/image/index"
   },
   "navigationBarTitleText": "购物车"
 }

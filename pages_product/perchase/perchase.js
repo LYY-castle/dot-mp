@@ -47,7 +47,7 @@ Page({
   onUnload: function () {
   },
   getProduct() {
-    const productId = wx.getStorageSync('activeProductId')
+    const productId = 4
     return new Promise((resolve) => {
       http.wxRequest({
         ...this.data.api.getProductById,

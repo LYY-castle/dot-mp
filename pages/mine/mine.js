@@ -24,16 +24,21 @@ Page({
     list: [{
       title: '个人资料',
       iconHref: '/static/img/mine-info.png',
-      path:'../../pages_mine/personal-info/personal-info'
+      path:'/pages_mine/personal-info/personal-info'
     }, {
       title: '银行卡',
       iconHref: '/static/img/bank-card.png',
-      path:'../../pages_mine/bank-card/bank-card'
+      path:'/pages_mine/bank-card/bank-card'
     },
     {
       title: '我的订单',
       iconHref: '/static/img/order.png',
-      path:'../../pages_order/order-list/order-list'
+      path:'/pages_order/order-list/order-list'
+    },
+    {
+      title: '我的地址',
+      iconHref: '/static/img/address.png',
+      path:'/pages_order/order-list/order-list'
     }
   ]
   },
@@ -71,21 +76,25 @@ Page({
   gotoPage(event){
     const option = event.currentTarget.dataset.option
     const isLogin = wx.getStorageSync('isLogin')===1
-    if(isLogin){
-      wx.navigateTo({
-        url: option.path,
-        success(res){
-          if(option.title === '我的地址'){
-            wx.setStorageSync('fromPath','mine')
+    console.log(event)
+    if(option.title!=='我的地址'){
+      if(isLogin){
+        wx.navigateTo({
+          url: option.path,
+          success(res){
           }
+        })
+      }else{
+        wx.navigateTo({
+          url:'/pages_mine/login/login'
+        })
+      }
+    }else{
+      wx.chooseAddress({
+        success(res) {
         }
       })
-    }else{
-      wx.navigateTo({
-        url:'/pages_mine/login/login'
-      })
     }
-
   },
 
 })

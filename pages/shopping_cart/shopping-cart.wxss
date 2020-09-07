@@ -1,5 +1,20 @@
 /* pages_shopping_cart/shopping-cart.wxss */
-.loginButton{
-  display:block;
-  margin:0 10px;
+.container{
+  padding-bottom:50px;
+}
+.loginButton {
+  display: block;
+  margin: 0 10px;
+}
+
+.van-checkbox {
+  background: #fff;
+  padding: 10px;
+}
+.van-checkbox__label {
+width:100%;
+
+}
+.van-submit-bar__bar{
+  padding: 0 10px 0 0 !important;
 }
