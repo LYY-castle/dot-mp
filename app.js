@@ -18,8 +18,16 @@ App({
           wechatAppId:env.env.appid,
           wechatCode:res.code
         }
-        http.wxRequest(...this.data.login,params).then(res=>{
-          console.log(res.data)
+        http.wxRequest({...this.data.login,params}).then(res=>{
+          if(res.success){
+            wx.setStorageSync('openId',res.data.weixinOpenid)
+            wx.setStorageSync('userId',res.data.id)
+            wx.reLaunch({
+              url: '/pages/index/index'
+            })
+          }else{
+            console.log('请求失败',res)
+          }
         })
       }
     })

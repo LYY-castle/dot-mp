@@ -8,7 +8,7 @@ Page({
 		empty: '/static/img/empty.png',
 		productList: null,
 		productSorts: null,
-		loadingShow:true,
+		loadingShow:false,
 		sortsImages: [
 			'/static/img/product-01.png',
 			'/static/img/product-02.png',
@@ -18,9 +18,14 @@ Page({
 		pageNo: 1
 	},
 	onShow() {
-		Promise.resolve()
+		if(wx.getStorageSync('authorization')){
+			Promise.resolve()
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
+		}
+	},
+	test(){
+		this.getProductSorts()
 	},
 	scrollToTop(){
 		wx.pageScrollTo({

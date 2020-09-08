@@ -11,23 +11,17 @@ Page({
    */
   data: {
       empty:'/static/img/avatar.png',
-      areaList,
-      selectBox: false,
-      city: [],
-      addressShow: false,
-      fields: [],
-      avatar:null,
       uploadAvatar:null,
       userInfo: {},
       // 图片剪切所需参数
       src:'',
-    width: 200,//宽度
-    height: 200,//高度
-    max_width: 400,
-    max_height: 400,
-    disable_rotate:true,//是否禁用旋转
-    disable_ratio: false,//锁定比例
-    limit_move: true,//是否限制移动
+      width: 200,//宽度
+      height: 200,//高度
+      max_width: 400,
+      max_height: 400,
+      disable_rotate:true,//是否禁用旋转
+      disable_ratio: false,//锁定比例
+      limit_move: true,//是否限制移动
       api: {
         getUserInfo: {
           url: '/users/{id}',
@@ -48,42 +42,22 @@ Page({
         }
       }
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-    const event = options
-    console.log(event)
-    if(event.src){
-      this.setData({
-        avatar:event.src
-      })
-    }
-    this.getUserInfo()
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.getUserInfo()
   },
-
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    if(wx.getStorageSync('isLogin')===1){
+      wx.reLaunch({
+        url:'/pages/mine/mine'
+      })
+    }
   },
-
   /**
    * 生命周期函数--监听页面卸载
    */
@@ -115,84 +89,25 @@ Page({
 
   },
   getUserInfo() {
-    const id = wx.getStorageSync('userId')
-    const _this = this
-    http.wxRequest({ ...this.data.api.getUserInfo, urlReplacements: [{ substr: '{id}', replacement: id }] }).then(res => {
-      if (res.success) {
-        if (res.data.idNo === null) {
-          res.data.idNo = ''
-        }
-        if (res.data.phone === null) {
-          res.data.phone = ''
-        }
-        _this.setData({
-          userInfo: res.data,
-          uploadAvatar:res.data.headImage,
-          cityString:res.data.province + '/' + res.data.city
-        })
-        if(_this.data.avatar){
-          const header = {
-            'authorization': wx.getStorageSync('authorization')
+    if(wx.getStorageSync('isLogin')===1){
+      const id = wx.getStorageSync('userId')
+      const _this = this
+      http.wxRequest({ ...this.data.api.getUserInfo, urlReplacements: [{ substr: '{id}', replacement: id }] }).then(res => {
+        if (res.success) {
+          if (res.data.mobile === null) {
+            res.data.mobile = ''
           }
-          wx.uploadFile({
-            url: env.env.VUE_APP_BASE_URL+'/system/minio/'+constantCfg.minio.bucketName, //仅为示例，非真实的接口地址
-            filePath: _this.data.avatar,
-            name: 'file',
-            header,
-            formData: {
-              bucketName: constantCfg.minio.bucketName,
-              fileName: _this.data.avatar
-            },
-            success (res){
-              const data = JSON.parse(res.data)
-              if(data.success){
-                _this.setData({
-                  avatar:data.data.presignedUrl,
-                  uploadAvatar:data.data.fileName
-                })
-              }
-            }
+          _this.setData({
+            userInfo: res.data,
           })
-        }else{
-          if (res.data.headImage) {
-            if(_this.data.userInfo.headImage.indexOf('https')===-1){
-              const params = {
-                bucketName: constantCfg.minio.bucketName,
-                fileName: res.data.headImage
-              }
-              tool.review(params).then(result => {
-                if (result.success) {
-                  _this.setData({
-                    avatar:result.data
-                })
-                }
-              })
-            }
-
-          }
         }
-      }
-    })
-  },
-  selectAddress(){
-    this.setData({
-      addressShow:true
-    })
-  },
-  confirm(val) {
-    const city = val.detail.values
-    console.log(val)
-    this.setData({
-      addressShow:false,
-      city,
-      cityString:city[0].name + '/' + city[1].name
-    })
-    this.addressShow = false
-  },
-  cancel() {
-    this.setData({
-      addressShow:false
-    })
+      })
+    }else{
+      wx.navigateTo({
+        url:'/pages_mine/login/login'
+      })
+    }
+
   },
   upload() {
     wx.chooseImage({
@@ -226,49 +141,33 @@ Page({
     const option = e.detail.value
     const params = {
       id:wx.getStorageSync('userId'),
-      idNo:option.idNo,
-      name:option.name,
-      phone:option.phone,
-      province:this.data.city.length>0?this.data.city[0].name:this.data.userInfo.province,
-      city:this.data.city.length>0?this.data.city[1].name:this.data.userInfo.city,
-      headImage:this.data.uploadAvatar
+      nickname:option.nickname,
+      mobile:option.mobile,
+      avatar:option.avatar,
+      weixinOpenid:wx.getStorageSync('openId')
     }
-    console.log(params)
-    if(option.name!==''){
-      if(option.phone!==''){
-        if(isMobile(option.phone)){
-          if(option.idNo!==''){
-            if(isIDNumber(option.idNo)){
-              http.wxRequest({
-                ...this.data.api.modifyUserInfo,
-                params
-              }).then(res=>{
-                if(res.success){
-                  wx.showToast({
-                    title:'提交成功',
-                    icon:'none',
-                    success(){
-                      setTimeout(function() {
-                        wx.switchTab({
-                          url:'../../pages/mine/mine',
-                        })
-                      }, 1000);
-                    }
-                  })
+    console.log('修改用户信息',params)
+    if(option.nickname!==''){
+      if(option.mobile!==''){
+        if(isMobile(option.mobile)){
+          http.wxRequest({
+            ...this.data.api.modifyUserInfo,
+            params
+          }).then(res=>{
+            if(res.success){
+              wx.showToast({
+                title:'提交成功',
+                icon:'none',
+                success(){
+                  setTimeout(function() {
+                    wx.switchTab({
+                      url:'/pages/mine/mine',
+                    })
+                  }, 1000);
                 }
               })
-            }else{
-              wx.showToast({
-                title:'身份证号格式错误',
-                icon:'none'
-              })
             }
-          }else{
-            wx.showToast({
-              title:'身份证号不能为空',
-              icon:'none'
-            })
-          }
+          })
         }else{
           wx.showToast({
             title:'手机号格式错误',

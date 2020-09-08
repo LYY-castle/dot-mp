@@ -1,6 +1,5 @@
 <!--pages_shopping_cart/shopping-cart.wxml-->
 <view class="container">
-  <view wx:if="{{isLogin}}">
     <view wx:if="{{shoppingCartList.length>0}}" >
       <van-checkbox-group value="{{ result }}" bind:change="onChange">
         <van-checkbox wx:for="{{shoppingCartList}}" wx:key="index" name="{{item.id}}" class="checkItem" label-disabled="{{true}}">
@@ -27,11 +26,6 @@
     bind:submit="onClickButton"
     tip="{{ true }}"
   >
-<van-checkbox value="{{ all }}" bind:change="selectAll">全选</van-checkbox>
+  <van-checkbox value="{{ all }}" bind:change="selectAll">全选</van-checkbox>
 </van-submit-bar>
-  </view>
-  <view wx:else>
-    <van-empty description="未登录"/>
-    <van-button block="{{true}}" round="{{true}}" bind:click="goLogin" color="#f9ae08" class="loginButton">请先登录</van-button>
-  </view>
 </view>

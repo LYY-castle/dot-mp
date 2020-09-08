@@ -21,7 +21,7 @@
 		]
 	},
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"enhance": false,
 		"postcss": true,
@@ -84,8 +84,8 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/mine/mine",
-					"pathName": "pages/mine/mine",
+					"name": "pages/shopping_cart/shopping-cart",
+					"pathName": "pages/shopping_cart/shopping-cart",
 					"query": "",
 					"scene": null
 				}

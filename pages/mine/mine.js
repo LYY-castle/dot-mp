@@ -10,7 +10,7 @@ Page({
   data: {
     bg: '/static/img/bg.png',
     avatar: '/static/img/avatar.png',
-
+    userInfo:null,
     api: {
       getUserInfo: {
         url: '/users/{id}',
@@ -25,11 +25,12 @@ Page({
       title: '个人资料',
       iconHref: '/static/img/mine-info.png',
       path:'/pages_mine/personal-info/personal-info'
-    }, {
-      title: '银行卡',
-      iconHref: '/static/img/bank-card.png',
-      path:'/pages_mine/bank-card/bank-card'
     },
+    // {
+    //   title: '银行卡',
+    //   iconHref: '/static/img/bank-card.png',
+    //   path:'/pages_mine/bank-card/bank-card'
+    // },
     {
       title: '我的订单',
       iconHref: '/static/img/order.png',
@@ -38,7 +39,7 @@ Page({
     {
       title: '我的地址',
       iconHref: '/static/img/address.png',
-      path:'/pages_order/order-list/order-list'
+      path:'/pages_address/address-list/address-list'
     }
   ]
   },
@@ -53,10 +54,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const isLogin = wx.getStorageSync('isLogin')
-    if(isLogin===1){
-      // Promise.resolve().then(()=>this.getUserInfo())
-    }
+    this.getUserInfo()
   },
   // 获取用户的头像信息
   getUserInfo(){
@@ -75,26 +73,9 @@ Page({
   },
   gotoPage(event){
     const option = event.currentTarget.dataset.option
-    const isLogin = wx.getStorageSync('isLogin')===1
-    console.log(event)
-    if(option.title!=='我的地址'){
-      if(isLogin){
-        wx.navigateTo({
-          url: option.path,
-          success(res){
-          }
-        })
-      }else{
-        wx.navigateTo({
-          url:'/pages_mine/login/login'
-        })
-      }
-    }else{
-      wx.chooseAddress({
-        success(res) {
-        }
-      })
-    }
+    wx.navigateTo({
+      url: option.path,
+    })
   },
 
 })

@@ -10,15 +10,34 @@ import env from '../config/env.config'
  */
 function getSuccess(res) {
 	if (res.statusCode === 401) {
-		wx.reLaunch({
-			url: '/pages/product/index'
-		})
+		wx.removeStorageSync('authorization')
+		const login = {
+      url: '/auth/wx/login',
+      method: 'post'
+		}
+		wx.login({
+      success: res => {
+        const params = {
+          wechatAppId:env.env.appid,
+          wechatCode:res.code
+        }
+        wxRequest({...login,params}).then(res=>{
+          if(res.success){
+						wx.setStorageSync('openId',res.data.weixinOpenid)
+            wx.setStorageSync('userId',res.data.id)
+           	wx.navigateBack({
+              delta: 1
+            })
+          }
+        })
+      }
+    })
 	} else {
+		if (res.header['Authorization']) {
+			wx.setStorageSync('authorization', res.header.Authorization)
+		}
 		if (res.data.success) {
-			wx.hideNavigationBarLoading({
-				success(){
-				}
-			})
+			wx.hideLoading()
 		} else {
 			wx.showToast({
 				title: res.data.message
@@ -26,62 +45,42 @@ function getSuccess(res) {
 		}
 	}
 }
+
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
-	let header = {
-		authorization:'eyJhbGciOiJIUzI1NiJ9.eyJUT0tFTl9VU0VSX0lEIjo5LCJpYXQiOjE1OTk0NDMzMzcsImp0aSI6IjU0ZjI3ZjhiLWZhM2QtNDIxMi05MjhjLTZjNmExZDExZWU4YiIsImV4cCI6MTU5OTQ1MDUzN30.HIyMBomK-UIVw9UghDvAJjf3MV5EaXRHQ25P7LEvkhE'
+	let header = {}
+	wx.showLoading({
+		title: '请稍后'
+	})
+	if (wx.getStorageSync('authorization')) {
+		header = {
+			authorization: wx.getStorageSync('authorization')
+		}
+	} else {
+		header = {
+			'content-type': 'application/json' // 默认值
+		}
 	}
 	let reqUrl = env.env.VUE_APP_BASE_URL + url
 	urlReplacements.forEach((replacement) => {
 		reqUrl = reqUrl.replace(replacement.substr, replacement.replacement)
 	})
 	return new Promise((resolve, reject) => {
-		if (['post', 'patch', 'put'].includes(method)) {
-			wx.showNavigationBarLoading({
-				success(){
-					wx.request({
-						url: reqUrl,
-						data: params,
-						method,
-						header,
-						success: function (res) {
-							getSuccess(res)
-							resolve(res.data)
-						},
-						fail: function (res) {
-							const httpParams = {
-								url,
-								params
-							}
-							console.log(httpParams)
-							reject(res)
-						}
-					})
-				}
-			})
-
-		} else if (['get', 'delete'].includes(method)) {
-			wx.showNavigationBarLoading({
-				success(){
-					wx.request({
-						url: reqUrl,
-						data: params,
-						method,
-						header,
-						success: function (res) {
-							getSuccess(res)
-							resolve(res.data)
-						},
-						fail: function (res) {
-							console.log(header)
-							console.log(url)
-							console.log(params)
-							reject(res)
-						}
-					})
-				}
-			})
-
-		}
+		wx.request({
+			url: reqUrl,
+			data: params,
+			method,
+			header,
+			success: function (res) {
+				getSuccess(res)
+				resolve(res.data)
+			},
+			fail: function (res) {
+				console.log(header)
+				console.log(url)
+				console.log(params)
+				reject(res)
+			}
+		})
 	})
 }
 

@@ -25,7 +25,7 @@ Page({
 		addressId: null,
 		api: {
 			addAddress: {
-				url: '/user-addressees',
+				url: '/user-address',
 				method: 'post'
 			},
 			updateAddress: {
@@ -39,8 +39,7 @@ Page({
 			deleteAddress: {
 				url: '/user-addressees/{ids}',
 				method: 'delete'
-			},
-
+			}
 		}
 	},
 	isDefaultToggle() {
@@ -67,92 +66,115 @@ Page({
 	},
 	formSubmit(e) {
 		const option = e.detail.value
-		if (option.name) {
-			if (option.phone) {
-				if (isMobile(option.phone)) {
-					if (option.address) {
-						if (option.addressDetail) {
-							const addressOption = {
-								addressDetail: option.addressDetail,
-								city: this.data.addressOption.city,
-								county: this.data.addressOption.county,
-								province: this.data.addressOption.province
-							}
-							let params = {
-								userId: wx.getStorageSync('userId'),
-								address: JSON.stringify(addressOption),
-								isDefault: this.data.isDefault ? 1 : 0,
-								phone: option.phone,
-								name: option.name
-							}
-							if (this.data.addressId) {
-								// 编辑
-								params.id = this.data.addressId
-								http
-									.wxRequest({ ...this.data.api.updateAddress, params })
-									.then((res) => {
-										if (res.success) {
-											wx.showToast({
-												title: '编辑成功',
-												success() {
-													setTimeout(function () {
-														wx.navigateBack({
-															delta: 1
-														})
-													}, 1000)
-												}
-											})
-										}
-									})
-							} else {
-								// 新增
-								http
-									.wxRequest({ ...this.data.api.addAddress, params })
-									.then((res) => {
-										if (res.success) {
-											wx.showToast({
-												title: '新增成功',
-												success() {
-													setTimeout(function () {
-														wx.navigateBack({
-															delta: 1
-														})
-													}, 1000)
-												}
-											})
-										}
-									})
-							}
-						} else {
-							wx.showToast({
-								title: '详细地址不能为空',
-								icon: 'none'
-							})
-						}
-					} else {
-						wx.showToast({
-							title: '请选择地区',
-							icon: 'none'
-						})
-					}
-				} else {
-					wx.showToast({
-						title: '手机号格式错误',
-						icon: 'none'
-					})
-				}
-			} else {
+		// 新增
+		const params = {
+			provinceId: 2,
+			districtId: 33,
+			countryId: 379,
+			name: '123',
+			mobile: '13262092399',
+			address: '小香港',
+			userId: wx.getStorageSync('userId')
+		}
+		http.wxRequest({ ...this.data.api.addAddress, params }).then((res) => {
+			if (res.success) {
 				wx.showToast({
-					title: '手机号不能为空',
-					icon: 'none'
+					title: '新增成功',
+					success() {
+						setTimeout(function () {
+							wx.navigateBack({
+								delta: 1
+							})
+						}, 1000)
+					}
 				})
 			}
-		} else {
-			wx.showToast({
-				title: '姓名不能为空',
-				icon: 'none'
-			})
-		}
+		})
+		// if (option.name) {
+		// 	if (option.phone) {
+		// 		if (isMobile(option.phone)) {
+		// 			if (option.address) {
+		// 				if (option.addressDetail) {
+		// 					const addressOption = {
+		// 						addressDetail: option.addressDetail,
+		// 						city: this.data.addressOption.city,
+		// 						county: this.data.addressOption.county,
+		// 						province: this.data.addressOption.province
+		// 					}
+		// 					let params = {
+		// 						userId: wx.getStorageSync('userId'),
+		// 						address: JSON.stringify(addressOption),
+		// 						isDefault: this.data.isDefault ? 1 : 0,
+		// 						phone: option.phone,
+		// 						name: option.name
+		// 					}
+		// 					if (this.data.addressId) {
+		// 						// 编辑
+		// 						params.id = this.data.addressId
+		// 						http.wxRequest({ ...this.data.api.updateAddress, params })
+		// 							.then((res) => {
+		// 								if (res.success) {
+		// 									wx.showToast({
+		// 										title: '编辑成功',
+		// 										success() {
+		// 											setTimeout(function () {
+		// 												wx.navigateBack({
+		// 													delta: 1
+		// 												})
+		// 											}, 1000)
+		// 										}
+		// 									})
+		// 								}
+		// 							})
+		// 					} else {
+		// 						// 新增
+		// 						http
+		// 							.wxRequest({ ...this.data.api.addAddress, params })
+		// 							.then((res) => {
+		// 								if (res.success) {
+		// 									wx.showToast({
+		// 										title: '新增成功',
+		// 										success() {
+		// 											setTimeout(function () {
+		// 												wx.navigateBack({
+		// 													delta: 1
+		// 												})
+		// 											}, 1000)
+		// 										}
+		// 									})
+		// 								}
+		// 							})
+		// 					}
+		// 				} else {
+		// 					wx.showToast({
+		// 						title: '详细地址不能为空',
+		// 						icon: 'none'
+		// 					})
+		// 				}
+		// 			} else {
+		// 				wx.showToast({
+		// 					title: '请选择地区',
+		// 					icon: 'none'
+		// 				})
+		// 			}
+		// 		} else {
+		// 			wx.showToast({
+		// 				title: '手机号格式错误',
+		// 				icon: 'none'
+		// 			})
+		// 		}
+		// 	} else {
+		// 		wx.showToast({
+		// 			title: '手机号不能为空',
+		// 			icon: 'none'
+		// 		})
+		// 	}
+		// } else {
+		// 	wx.showToast({
+		// 		title: '姓名不能为空',
+		// 		icon: 'none'
+		// 	})
+		// }
 	},
 	selectAddress() {
 		this.setData({
@@ -160,6 +182,7 @@ Page({
 		})
 	},
 	confirm(e) {
+		console.log(e)
 		let address = e.detail.values
 		this.setData({
 			addressOption: {

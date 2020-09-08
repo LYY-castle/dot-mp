@@ -5,7 +5,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    isLogin:null,
     loadingShow:false,
     bottomLineShow:true,
     shoppingCartList:[],
@@ -17,14 +16,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const isLogin = wx.getStorageSync('isLogin')===1
-    this.setData({
-      isLogin
-    })
-    if(isLogin){
-      console.log('购物车列表')
-      this.getShoppingOrderList()
-    }
+    this.getShoppingOrderList()
   },
   goLogin(){
     wx.navigateTo({

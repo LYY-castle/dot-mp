@@ -3,5 +3,5 @@
   <view class="userAvatarUrl">
     <open-data type="userAvatarUrl"></open-data>
   </view>
-  <van-button icon="wechat" block="{{true}}" color="#1aad19" open-type="getUserInfo" bind:getuserinfo="login" class="loginButton">微信授权登录</van-button>
+  <van-button icon="wechat" block="{{true}}" color="#1aad19" open-type="getUserInfo" bind:getuserinfo="login" class="loginButton" lang="zh_CN">微信授权登录</van-button>
 </view>

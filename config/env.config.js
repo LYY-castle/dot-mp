@@ -7,7 +7,7 @@ if (__wxConfig.envVersion === 'develop') {
 		VCONSOLE: true,
 		appid: 'wxd8233d62e992e916',
 		appSecret: '7060d0a558597c51c47abc275adde454',
-		VUE_APP_BASE_URL: 'https://dot-dev.hkjindian.com:18700',
+		VUE_APP_BASE_URL: 'https://dot-dev.hkjindian.com:18703',
 		LINK_URL: 'https://dot-dev.hkjindian.com/register',
 		qsebao: {
 			baseURL: 'https://qcapi.qsebao.com',
@@ -25,7 +25,7 @@ if (__wxConfig.envVersion === 'trial') {
 		VCONSOLE: true,
 		appid: 'wxd8233d62e992e916',
 		appSecret: '7060d0a558597c51c47abc275adde454',
-		VUE_APP_BASE_URL: 'https://dot-dev.hkjindian.com:18700',
+		VUE_APP_BASE_URL: 'https://dot-dev.hkjindian.com:18703',
 		LINK_URL: 'https://dot-dev.hkjindian.com/register',
 		qsebao: {
 			baseURL: 'https://qcapi.qsebao.com',

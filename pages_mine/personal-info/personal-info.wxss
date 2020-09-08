@@ -1,6 +1,7 @@
 /* pages/mine/personal-info/personal-info.wxss */
 .container{
   background:#fff;
+  height:100%;
 }
 .avatarContent{
   height:200px;

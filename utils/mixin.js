@@ -12,7 +12,7 @@ const productListParams = {
   method: 'get'
 }
 const productTypeParams = {
-  url: '/product-categories',
+  url: '/categories',
   method: 'get'
 }
 const qsbParams = {

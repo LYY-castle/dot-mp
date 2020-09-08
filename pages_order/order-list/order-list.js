@@ -39,7 +39,7 @@ Page({
     api: {
       getOrderList: {
         url: '/orders',
-        methods: 'get'
+        method: 'get'
       },
       getPolicies: {
         url: '/policies',
@@ -47,7 +47,7 @@ Page({
       },
       getDotsList: {
         url: '/users',
-        methods: 'get'
+        method: 'get'
       },
       getOrderById: {
         url: '/orders/{id}',
