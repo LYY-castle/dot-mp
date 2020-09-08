@@ -1,0 +1,147 @@
+// pages/mine/address/address-list/address-list.js
+import http from '../../utils/request.js'
+
+Page({
+	/**
+	 * 页面的初始数据
+	 */
+	data: {
+    nbTitle: '收货地址',
+    empty: '/static/img/empty.png',
+		list: [],
+		pageNo: 1,
+		disabledList: [],
+		pathParams: null,
+    editAddressId: null,
+    bottomLineShow:false,
+		api: {
+			getAddressList: {
+				url: '/user-addressees',
+				method: 'get'
+			}
+		}
+  },
+    /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    const _this = this
+    this.setData({
+      pageNo:1
+    })
+    this.getMyAddressList()
+  },
+
+	/**
+	 * 生命周期函数--监听页面卸载
+	 */
+	onUnload: function () {
+		const fromPath = wx.getStorageSync('fromPath')
+		if (fromPath === 'mine') {
+			wx.removeStorageSync('fromPath')
+			wx.switchTab({
+				url: '/pages/mine/mine'
+			})
+		} else {
+			wx.navigateTo({
+				url: '/pages_product/perchase/perchase'
+			})
+		}
+	},
+
+	/**
+	 * 页面上拉触底事件的处理函数
+	 */
+	onReachBottom: function () {
+    console.log('到底了')
+    if(!this.data.bottomLineShow){
+      this.setData({
+        pageNo:this.data.pageNo+1
+      })
+      this.getMyAddressList()
+    }
+	},
+
+	/**
+	 * 用户点击右上角分享
+	 */
+	onShareAppMessage: function () {},
+	// 获取当前用户的收货地址
+	getMyAddressList() {
+		const params = {
+			userId: wx.getStorageSync('userId'),
+			pageSize: 10,
+			pageNo: this.data.pageNo
+		}
+		http.wxRequest({ ...this.data.api.getAddressList, params }).then((res) => {
+			if (res.success) {
+				if (res.data && res.data.length > 0) {
+					res.data.forEach((element) => {
+						const addressStr = JSON.parse(element.address)
+						element.addressObject = element.address
+						element.tel = element.phone
+						element.address =
+							addressStr.province +
+							addressStr.city +
+							addressStr.county +
+							addressStr.addressDetail
+						element.isDefault = element.isDefault === 1
+						element.bigName = element.name.substring(0, 1)
+					})
+					if (params.pageNo === 1) {
+						this.setData({
+							list: res.data
+						})
+					} else {
+						this.setData({
+							list: this.data.list.concat(res.data)
+						})
+          }
+          if(params.pageNo===res.page.totalPage){
+            this.setData({
+              bottomLineShow:true
+            })
+          }
+				}
+			}
+		})
+	},
+	onEdit(event) {
+		const option = event.currentTarget.dataset.option
+		wx.navigateTo({
+			url: '../add-address/add-address?src=' + option
+		})
+	},
+	onAdd() {
+		wx.navigateTo({
+			url: '../add-address/add-address'
+		})
+	},
+	selectAddress(e) {
+		console.log(e)
+		const fromPath = wx.getStorageSync('fromPath')
+		if (fromPath === 'mine') {
+			console.log('mine')
+		} else {
+			const option = e.currentTarget.dataset.option
+			let addressList = wx.getStorageSync('addressList')
+			const activeAddressId = wx.getStorageSync('activeAddressId')
+			if (activeAddressId) {
+				wx.removeStorageSync('activeAddressId')
+				addressList.forEach((address, index) => {
+					console.log(address.id, option.id)
+					if (address.id === activeAddressId) {
+						addressList.splice(index, 1, option)
+					}
+				})
+			} else {
+				addressList.push(option)
+			}
+			addressList = Array.from(new Set(addressList))
+			wx.setStorageSync('addressList', addressList)
+			wx.navigateTo({
+				url: '../../pages_product/perchase/perchase'
+			})
+		}
+	}
+})

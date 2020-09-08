@@ -1,8 +1,9 @@
 import http from './utils/request'
+import env from './config/env.config'
 App({
   data: {
     login: {
-      url: '/users/wx-ma/login',
+      url: '/auth/wx/login',
       method: 'post'
     }
   },
@@ -12,6 +13,14 @@ App({
     wx.login({
       success: res => {
         this.globalData.wechatCode = res.code
+        console.log(res.code)
+        const params = {
+          wechatAppId:env.env.appid,
+          wechatCode:res.code
+        }
+        http.wxRequest(...this.data.login,params).then(res=>{
+          console.log(res.data)
+        })
       }
     })
   },

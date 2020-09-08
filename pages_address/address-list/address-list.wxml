@@ -1,0 +1,23 @@
+<!--pages/mine/address/address-list/address-list.wxml-->
+<page-meta>
+    <navigation-bar
+      title="{{nbTitle}}"
+    />
+  </page-meta>
+  <view class="container" >
+      <view wx:for="{{list}}" wx:key="index" class="addressItem" hover-stop-propagation="{{true}}" wx:if="{{list.length>0}}">
+        <view class="roundName">{{ item.bigName }}</view>
+        <view class="m-l-10 m-r-20 addressDetail" bindtap="selectAddress" data-option="{{item}}">
+          <text class="fz-16">{{ item.name }}</text>
+          <text class="m-l-10">{{ item.phone }}</text>
+          <van-tag wx:if="{{item.isDefault}}" round type="danger" class="fz-12 m-l-15">默认</van-tag>
+          <view class="fz-12 m-t-5">{{ item.address }}</view>
+        </view>
+        <van-icon name="edit" bind:click="onEdit" data-option="{{item.id}}"></van-icon>
+      </view>
+      <van-empty image="{{empty}}" description="暂无地址数据" wx:if="{{list.length===0}}" />
+      <van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+    <van-goods-action>
+      <van-button block="{{true}}" round="{{true}}" bindtap="onAdd" color="#f9ae08">新增地址</van-button>
+    </van-goods-action>
+  </view>
