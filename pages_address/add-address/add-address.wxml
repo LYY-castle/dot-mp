@@ -15,36 +15,43 @@
   <van-field
     label="电话"
     type="tel"
-    name="phone"
-    value="{{ phone }}"
+    name="mobile"
+    value="{{ mobile }}"
     placeholder="收货人手机号"
-    bind:change="validatePhone"
   />
-    <van-field
-    label="地区"
-    readonly="{{true}}"
-    is-link="{{true}}"
-    name="address"
-    value="{{ address }}"
-    placeholder="选择省市区"
-    bindtap="selectAddress"
-  />
-  <van-field
-    label="详细地址"
-    name="addressDetail"
-    value="{{ addressDetail }}"
-    placeholder="街道门牌、楼层房间号等信息"
-  />
-    <view class="contentField">
-      <view class="fz-13">智能识别地址</view>
+  <picker mode="multiSelector" range="{{multiArray}}" bindcolumnchange="columnchange" value="{{multiIndex}}" bindchange='pickchange'>
+        <!-- <view class='right' wx:if="{{step == 0}}">
+          <text>请选择</text>
+        </view>
+        <view class="picker" wx:if="{{step == 1}}">
+          <view></view>
+        </view> -->
+        <van-field
+          label="地区"
+          readonly="{{true}}"
+          is-link="{{true}}"
+          name="addressById"
+          value="{{ addressById }}"
+          placeholder="选择省市区"
+          bindtap="selectAddress"
+        />
+      </picker>
       <van-field
-      model:value="{{addressInfoText}}"
-      type="textarea"
-      placeholder="粘贴地址信息，自动拆分姓名、电话和地址"
-      autosize="{{textareaHeight}}"
-      class="inputClass"
-      show-confirm-bar="{{false}}"
-    ></van-field>
+        label="详细地址"
+        name="address"
+        value="{{ address }}"
+        placeholder="街道门牌、楼层房间号等信息"
+      />
+      <view class="contentField">
+        <view class="fz-13">智能识别地址</view>
+        <van-field
+        model:value="{{addressInfoText}}"
+        type="textarea"
+        placeholder="粘贴地址信息，自动拆分姓名、电话和地址"
+        autosize="{{textareaHeight}}"
+        class="inputClass"
+        show-confirm-bar="{{false}}"
+      ></van-field>
     <van-button
       size="small"
       color="#F8BE50"
@@ -63,12 +70,4 @@
     <van-button block="{{true}}" color="#f9ae08" form-type="submit" class="blockButton">保存</van-button>
     </form>
     <van-button block="{{true}}" type="default" bindtap="deleteAddress" wx:if="{{deleteButtonShow}}" class="blockButton">删除</van-button>
-    <van-popup show="{{addressShow}}" position="bottom">
-      <van-area
-        title="请选择地址"
-        area-list="{{areaList}}"
-        bind:confirm="confirm"
-        bind:cancel="cancel"
-      />
-    </van-popup>
 </view>
