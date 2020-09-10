@@ -19,21 +19,23 @@
     value="{{ mobile }}"
     placeholder="收货人手机号"
   />
-  <picker mode="multiSelector" range="{{multiArray}}" bindcolumnchange="columnchange" value="{{multiIndex}}" bindchange='pickchange'>
-        <!-- <view class='right' wx:if="{{step == 0}}">
+  <!-- <picker mode="multiSelector" range="{{multiArray}}" bindcolumnchange="columnchange" value="{{multiIndex}}" bindchange='pickchange'>
+        <view class='right' wx:if="{{step == 0}}">
           <text>请选择</text>
         </view>
         <view class="picker" wx:if="{{step == 1}}">
           <view></view>
-        </view> -->
+        </view>
+
+      </picker> -->
+      <picker mode="region" bindchange="bindRegionChange" value="{{region}}">
         <van-field
           label="地区"
           readonly="{{true}}"
           is-link="{{true}}"
-          name="addressById"
-          value="{{ addressById }}"
+          name="addressArr"
+          value="{{ addressArr }}"
           placeholder="选择省市区"
-          bindtap="selectAddress"
         />
       </picker>
       <van-field

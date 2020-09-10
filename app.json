@@ -22,7 +22,6 @@
       "name": "pages_mine",
       "root": "pages_mine",
       "pages": [
-        "bank-card/bank-card",
         "personal-info/personal-info",
         "personal-info/cropper/cropper",
         "login/login"

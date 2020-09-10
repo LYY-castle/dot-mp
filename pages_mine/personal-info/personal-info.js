@@ -13,6 +13,7 @@ Page({
 		empty: '/static/img/avatar.png',
 		uploadAvatar: null,
 		userInfo: {},
+		region: [],
 		// 图片剪切所需参数
 		src: '',
 		width: 200, //宽度
@@ -57,33 +58,23 @@ Page({
 	/**
 	 * 生命周期函数--监听页面显示
 	 */
-	// onShow: function (options) {
-	// 	const event = options
-	// 	console.log(event)
-	// 	if (event) {
-	// 		this.setData({
-	// 			avatar: event.src
-	// 		})
-	// 	}
-	// 	this.getUserInfo()
-	// },
-	// /**
-	//  * 生命周期函数--监听页面隐藏
-	//  */
-	// onHide: function () {
-	//   if(wx.getStorageSync('isLogin')===1){
-	//     wx.reLaunch({
-	//       url:'/pages/mine/mine'
-	//     })
-	//   }
-	// },
+	onShow: function (options) {
+		const event = options
+		console.log(event)
+		if (event.src) {
+			this.setData({
+				receiveAvatar: event.src
+			})
+		}
+		this.getUserInfo()
+	},
 	/**
 	 * 生命周期函数--监听页面卸载
 	 */
 	onUnload: function () {
 		console.log('返回')
 		wx.switchTab({
-			url: '../../pages/mine/mine'
+			url: '/pages/mine/mine'
 		})
 	},
 
@@ -102,16 +93,16 @@ Page({
 	 */
 	onShareAppMessage: function () {},
 	getUserInfo() {
-		if (wx.getStorageSync('isLogin') === 1) {
-			const id = wx.getStorageSync('userId')
-			const _this = this
-			http
-				.wxRequest({
-					...this.data.api.getUserInfo,
-					urlReplacements: [{ substr: '{id}', replacement: id }]
-				})
-				.then((res) => {
-					if (res.success) {
+		const id = wx.getStorageSync('userId')
+		const _this = this
+		http
+			.wxRequest({
+				...this.data.api.getUserInfo,
+				urlReplacements: [{ substr: '{id}', replacement: id }]
+			})
+			.then((res) => {
+				if (res.success) {
+					if (res.data.avatar) {
 						if (res.data.mobile === null) {
 							res.data.mobile = ''
 						}
@@ -125,13 +116,13 @@ Page({
 						_this.setData({
 							userInfo: res.data
 						})
+					} else {
+						wx.navigateTo({
+							url: '/pages_mine/login/login'
+						})
 					}
-				})
-		} else {
-			wx.navigateTo({
-				url: '/pages_mine/login/login'
+				}
 			})
-		}
 	},
 	upload() {
 		wx.chooseImage({
@@ -161,6 +152,7 @@ Page({
 			}
 		})
 	},
+
 	updateUserInfo(e) {
 		const option = e.detail.value
 		console.log()

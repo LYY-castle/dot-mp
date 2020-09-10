@@ -107,28 +107,42 @@
     <!-- 商品规格 -->
     <view class="popContent">
       <view class="goods">
-        <!-- <goods></goods> -->
       </view>
       <view class="content">
-        <view wx:for="{{goodsSpecificationResults}}" wx:key="specificationIndex" wx:for-item="specification">
-          <view>规格类型:{{specification[0].specificationName}}</view>
-          <van-tag type="danger" size="large" wx:for="specification" wx:for-item="specificationItem" wx:key="specificationItemIndex" class="specificationItem">规格名{{specificationItem.goodsSpecificationValue}}</van-tag>
+        <view wx:for="{{specificationResults}}" wx:key="index">
+          <view>{{item.specificationName}}</view>
+          <van-tag
+          size="large"
+          plain
+          wx:for="{{item.goodsSpecificationResults}}"
+          wx:for-index="index2"
+          wx:for-item="specificationItem"
+          class="specificationItem"
+          bindtap="selectSpecification"
+          data-option="{{item}}"
+          data-parent='{{index}}'
+          data-child="{{index2}}"
+          text-color="{{specificationItem.goodsSpecificationValue===specificationItem.activeGoodsSpecificationNameValue?'#f2826a':'#7232dd'}}"
+          >
+          {{specificationItem.goodsSpecificationValue}}
+        </van-tag>
         </view>
       </view>
       <view class="buttonGroup">
-        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08">加入购物车</van-button>
-        <van-button round block="{{true}}" class="buttonItem" color="#ee0a24">立即购买</van-button>
+        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08" bind:click="addCartBy">加入购物车</van-button>
+        <van-button round block="{{true}}" class="buttonItem" color="#ee0a24" bind:click="perchaseBy">立即购买</van-button>
       </view>
     </view>
     </van-popup>
     <van-goods-action>
-      <van-goods-action-icon icon="chat-o" text="首页" url="/pages/index/index" link-type="switchTab"/>
-      <van-goods-action-icon icon="cart-o" text="购物车" url="/pages/shopping_cart/shopping-cart" link-type="switchTab"/>
+      <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab"/>
+      <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab"/>
       <van-goods-action-button
         text="加入购物车"
         color="#f9ae08"
         bind:click="onClickButton"
+        data-option="cart"
       />
-      <van-goods-action-button color="#ee0a24" text="立即购买" bind:click="onClickButton" />
+      <van-goods-action-button color="#ee0a24" text="立即购买" bind:click="onClickButton" data-option="perchase"/>
     </van-goods-action>
   </view>
