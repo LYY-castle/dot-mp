@@ -8,7 +8,7 @@ const reviewParams = {
 	method: 'get'
 }
 const productListParams = {
-	url: '/products',
+	url: '/goods',
 	method: 'get'
 }
 const productTypeParams = {

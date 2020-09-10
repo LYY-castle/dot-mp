@@ -10,7 +10,7 @@
 					width="100%"
 					height="60"
 					fit="contain"
-					src="{{goodtype.icon}}"
+					src="{{goodtype.iconUrl}}"
 				/>
 				<view>{{goodtype.name}}</view>
 			</view>

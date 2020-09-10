@@ -7,6 +7,7 @@
     "van-goods-action": "@vant/weapp/goods-action/index",
     "van-goods-action-icon": "@vant/weapp/goods-action-icon/index",
     "van-goods-action-button": "@vant/weapp/goods-action-button/index",
-    "van-popup": "@vant/weapp/popup/index"
+    "van-popup": "@vant/weapp/popup/index",
+    "van-tag": "@vant/weapp/tag/index"
   }
 }

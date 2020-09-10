@@ -75,9 +75,23 @@ van-button {
 
 .popContent {
   padding: 20px;
+  height: 450px;
+  position: relative;
+}
+
+.popContent .content {
+  height: 100%;
+  padding-bottom:50px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .popContent .buttonGroup {
+  width: 100%;
+  background: #fff;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
 }
@@ -86,4 +100,9 @@ van-button {
   display: inline-block;
   width: 45%;
   border-radius: 20px;
+}
+
+.specificationItem {
+  display: inline-block;
+  margin: 5px;
 }

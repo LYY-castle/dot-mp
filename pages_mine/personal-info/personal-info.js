@@ -22,6 +22,8 @@ Page({
 		disable_rotate: true, //是否禁用旋转
 		disable_ratio: false, //锁定比例
 		limit_move: true, //是否限制移动
+		receiveAvatar: null,
+		avatar: null,
 		api: {
 			getUserInfo: {
 				url: '/users/{id}',
@@ -42,12 +44,29 @@ Page({
 			}
 		}
 	},
+	onLoad: function (options) {
+		const event = options
+		console.log(event)
+		if (event.src) {
+			this.setData({
+				receiveAvatar: event.src
+			})
+		}
+		this.getUserInfo()
+	},
 	/**
 	 * 生命周期函数--监听页面显示
 	 */
-	onShow: function () {
-		this.getUserInfo()
-	},
+	// onShow: function (options) {
+	// 	const event = options
+	// 	console.log(event)
+	// 	if (event) {
+	// 		this.setData({
+	// 			avatar: event.src
+	// 		})
+	// 	}
+	// 	this.getUserInfo()
+	// },
 	// /**
 	//  * 生命周期函数--监听页面隐藏
 	//  */
@@ -96,6 +115,13 @@ Page({
 						if (res.data.mobile === null) {
 							res.data.mobile = ''
 						}
+						if (this.data.receiveAvatar) {
+							res.data.avatar = this.data.receiveAvatar
+						} else {
+							this.setData({
+								receiveAvatar: res.data.avatar
+							})
+						}
 						_this.setData({
 							userInfo: res.data
 						})
@@ -137,12 +163,14 @@ Page({
 	},
 	updateUserInfo(e) {
 		const option = e.detail.value
+		console.log()
 		const params = {
 			id: wx.getStorageSync('userId'),
 			nickname: option.nickname,
 			mobile: option.mobile,
 			avatar: option.avatar,
-			weixinOpenid: wx.getStorageSync('openId')
+			weixinOpenid: wx.getStorageSync('openId'),
+			avatar: this.data.receiveAvatar
 		}
 		console.log('修改用户信息', params)
 		if (option.nickname !== '') {

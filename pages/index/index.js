@@ -8,26 +8,26 @@ Page({
 		empty: '/static/img/empty.png',
 		productList: null,
 		productSorts: null,
-		loadingShow:false,
+		loadingShow: false,
 		sortsImages: [
 			'/static/img/product-01.png',
 			'/static/img/product-02.png',
 			'/static/img/product-03.png',
-			'/static/img/product-04.png',
+			'/static/img/product-04.png'
 		],
 		pageNo: 1
 	},
 	onShow() {
-		if(wx.getStorageSync('authorization')){
+		if (wx.getStorageSync('authorization')) {
 			Promise.resolve()
-			.then(() => this.getProductSorts())
-			.then(() => this.getProductList())
+				.then(() => this.getProductSorts())
+				.then(() => this.getProductList())
 		}
 	},
-	test(){
+	test() {
 		this.getProductSorts()
 	},
-	scrollToTop(){
+	scrollToTop() {
 		wx.pageScrollTo({
 			scrollTop: 0,
 			duration: 300
@@ -36,7 +36,7 @@ Page({
 	// 搜索栏聚焦事件
 	focus() {
 		wx.navigateTo({
-			url: '../../pages_product/search/search',
+			url: '/pages_product/search/search'
 		})
 	},
 	// 获取特惠产品的列表
@@ -46,7 +46,7 @@ Page({
 				isHot: 0,
 				pageNo: this.data.pageNo,
 				pageSize: 10,
-				status: 0,
+				isOnSale: 1
 			}
 			tool.getProductList(params).then((res) => {
 				let productDetailObj = {}
@@ -56,7 +56,7 @@ Page({
 						const insuranceCode = item.code
 						qseBaoUtil
 							.getProductDetail({
-								insuranceCode,
+								insuranceCode
 							})
 							.then((productDetailRes) => {
 								productDetailObj = productDetailRes.data.productDetail
@@ -72,27 +72,22 @@ Page({
 						products.push(item)
 					}
 				})
-				products.forEach((item) => {
-					if (item.image !== null && item.image.indexOf(';') !== -1) {
-						item.image = item.image.split(';')[0]
-					}
-        })
-        if (params.pageNo === 1) {
-          this.setData({
-            productList:products,
-            loadingShow:false
-          })
+				if (params.pageNo === 1) {
+					this.setData({
+						productList: products,
+						loadingShow: false
+					})
 				} else {
-          this.setData({
-            productList:this.data.productList.concat(products),
-            loadingShow:false
-          })
+					this.setData({
+						productList: this.data.productList.concat(products),
+						loadingShow: false
+					})
 				}
 				if (params.pageNo === res.page.totalPage) {
 					this.setData({
-						bottomLineShow: true,
+						bottomLineShow: true
 					})
-				}else{
+				} else {
 					this.setData({
 						bottomLineShow: false
 					})
@@ -107,12 +102,12 @@ Page({
 			const params = {
 				parentId: 0,
 				pageSize: 100,
-				isEnable: 1,
+				isEnable: 1
 			}
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {
 					this.setData({
-						productSorts: res.data,
+						productSorts: res.data
 					})
 					resolve()
 				}
@@ -120,27 +115,27 @@ Page({
 		})
 	},
 	gotoProductList(event) {
-		const sortId = event.currentTarget.dataset.item ?
-			event.currentTarget.dataset.item.id :
-			'all'
+		const sortId = event.currentTarget.dataset.item
+			? event.currentTarget.dataset.item.id
+			: 'all'
 		wx.navigateTo({
-			url: '../../pages_product/product-list/product-list?sortId=' + sortId,
+			url: '/pages_product/product-list/product-list?sortId=' + sortId
 		})
 	},
 	gotoDetail(e) {
 		console.log(e)
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
-			productId: option.id,
+			productId: option.id
 		}
 		wx.navigateTo({
-			url: '../../pages_product/product-detail/product-detail',
+			url: '/pages_product/product-detail/product-detail',
 			success: function (res) {
 				// 通过eventChannel向被打开页面传送数据
 				res.eventChannel.emit('acceptDataFromOpenerPage', {
 					data: pathParams
 				})
-			},
+			}
 		})
 	},
 
@@ -149,10 +144,10 @@ Page({
 	 */
 	onReachBottom: function () {
 		console.log('上拉加载')
-		if (!this.data.bottomLineShow&&!this.data.loadingShow) {
+		if (!this.data.bottomLineShow && !this.data.loadingShow) {
 			this.setData({
-				loadingShow:true,
-				pageNo:this.data.pageNo + 1,
+				loadingShow: true,
+				pageNo: this.data.pageNo + 1
 			})
 			this.getProductList()
 		}
@@ -161,13 +156,12 @@ Page({
 	onPullDownRefresh() {
 		console.log('下拉刷新')
 		this.setData({
-			pageNo: 1,
+			pageNo: 1
 		})
 		this.getProductList()
 	},
 	/**
 	 * 用户点击右上角分享
 	 */
-	onShareAppMessage: function () {
-	},
+	onShareAppMessage: function () {}
 })

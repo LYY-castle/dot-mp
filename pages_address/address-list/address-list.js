@@ -170,7 +170,7 @@ Page({
 			addressList = Array.from(new Set(addressList))
 			wx.setStorageSync('addressList', addressList)
 			wx.navigateTo({
-				url: '../../pages_product/perchase/perchase'
+				url: '/pages_product/perchase/perchase'
 			})
 		}
 	}

@@ -4,16 +4,16 @@
       <view class="cardContent">
         <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
         autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-        <block wx:for="{{product.image}}" wx:for-item="image" wx:key="imgIndex">
+        <block wx:for="{{goodsGalleries}}" wx:for-item="image" wx:key="imgIndex">
           <swiper-item>
-            <van-image src="{{image}}" width="100%" height="100%" fit="cover" wx:if="{{image}}"></van-image>
+            <van-image src="{{image.imgUrl}}" width="100%" height="100%" fit="cover" wx:if="{{image}}"></van-image>
             <van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
           </swiper-item>
         </block>
       </swiper>
         <view class="cardDetail bg-white">
           <view class="allprice">
-            <view class="title fz-14">{{ product.name }}</view>
+            <!-- <view class="title fz-14">{{ product.name }}</view> -->
             <view class="description fz-12">{{ product.description }}</view>
             <!-- pricingMethod = 0 表示使用固定单价规则. -->
             <view wx:if="{{product.pricingMethod === 0}}" class="m-t-15">
@@ -89,9 +89,9 @@
             </view>
           </view>
 
-          <view wx:if="{{product.detail}}">
+          <view wx:if="{{product.goodsDetail}}">
             <van-divider dashed="{{true}}" contentPosition="center">产品详情</van-divider>
-            <rich-text nodes="{{product.detail}}" class="produceDetail"></rich-text>
+            <rich-text nodes="{{product.goodsDetail}}" class="produceDetail"></rich-text>
           </view>
         </view>
       </view>
@@ -104,9 +104,16 @@
     position="bottom"
     closeable
     >
+    <!-- 商品规格 -->
     <view class="popContent">
-      <view>
-        商品规格
+      <view class="goods">
+        <!-- <goods></goods> -->
+      </view>
+      <view class="content">
+        <view wx:for="{{goodsSpecificationResults}}" wx:key="specificationIndex" wx:for-item="specification">
+          <view>规格类型:{{specification[0].specificationName}}</view>
+          <van-tag type="danger" size="large" wx:for="specification" wx:for-item="specificationItem" wx:key="specificationItemIndex" class="specificationItem">规格名{{specificationItem.goodsSpecificationValue}}</van-tag>
+        </view>
       </view>
       <view class="buttonGroup">
         <van-button round block="{{true}}" class="buttonItem" color="#f9ae08">加入购物车</van-button>
