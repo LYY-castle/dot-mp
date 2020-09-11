@@ -8,7 +8,9 @@
     "van-checkbox": "@vant/weapp/checkbox/index",
     "van-submit-bar": "@vant/weapp/submit-bar/index",
     "van-stepper": "@vant/weapp/stepper/index",
-    "van-image": "@vant/weapp/image/index"
+    "van-image": "@vant/weapp/image/index",
+    "van-tag": "@vant/weapp/tag/index",
+    "van-icon": "@vant/weapp/icon/index"
   },
   "navigationBarTitleText": "购物车"
 }

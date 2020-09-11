@@ -14,8 +14,9 @@ Page {
 
 .container .originPrice {
   color: #969799;
-  font-size: 10px;
+  font-size: 12px;
   text-decoration: line-through;
+  margin-left:10px;
 }
 
 .container .minPrice {

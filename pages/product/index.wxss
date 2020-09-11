@@ -1,6 +1,7 @@
-page{
-  background:#fff;
+page {
+  background: #fff;
 }
+
 .container {
   display: flex;
 }
@@ -27,7 +28,7 @@ page{
 .container .productsContent .productItem {
   text-align: center;
   font-size: 12px;
-  width: 30%;
+  width: 33%;
   margin-bottom: 10px;
 }
 
@@ -43,7 +44,7 @@ page{
 }
 
 .container .user-sideBar {
-  width: 60px !important;
+  /* width: 60px !important; */
   overflow: hidden;
   background-color: #fff;
   border-right: 1px solid #eee;

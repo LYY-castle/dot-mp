@@ -16,6 +16,9 @@ Page({
 		isDefault: false,
 		name: '',
 		mobile: '',
+		province: null,
+		city: null,
+		district: null,
 		address: '',
 		addressArr: null,
 		addressOption: null,
@@ -53,21 +56,31 @@ Page({
 	distinguish() {
 		const [result] = AddressParse.parse(this.data.addressInfoText, true)
 		console.log(result)
-		// if()
-		this.setData({
-			// region:
-			name: result.name,
-			mobile: result.mobile,
-			address: result.details
-		})
+		if (result.province && result.city && result.area) {
+			this.setData({
+				region: [result.province, result.city, result.area],
+				addressStr: result.province + '/' + result.city + '/' + result.area,
+				province: Number(result.code.substring(0, 2) + '0000'),
+				city: Number(result.code.substring(0, 4) + '00'),
+				district: result.code,
+				name: result.name,
+				mobile: result.mobile,
+				address: result.details
+			})
+		} else {
+			wx.showToast({
+				title: '省市区信息不完整',
+				icon: 'none'
+			})
+		}
 	},
 	formSubmit(e) {
 		const option = e.detail.value
 		// // 新增
 		const params = {
-			provinceId: this.data.provinceId,
-			cityId: this.data.cityId,
-			districtId: this.data.areaId,
+			province: Number(this.data.province),
+			city: Number(this.data.city),
+			district: Number(this.data.district),
 			name: option.name,
 			mobile: option.mobile,
 			address: option.address,
@@ -78,7 +91,7 @@ Page({
 		if (option.name) {
 			if (option.mobile) {
 				if (isMobile(option.mobile)) {
-					if (this.data.provinceId) {
+					if (this.data.province && this.data.city && this.data.district) {
 						if (option.address) {
 							if (this.data.addressId) {
 								// 编辑
@@ -156,29 +169,15 @@ Page({
 	},
 	bindRegionChange(e) {
 		console.log(e)
-		let address = e.detail.value
+		const address = e.detail.value
+		const code = e.detail.code
 		this.setData({
 			region: address,
-			addressArr: address[0] + '/' + address[1] + '/' + address[2]
-			// addressOption: {
-
-			// province: address[0].name,
-			// city: address[1].name,
-			// county: address[2].name
-			// }
+			addressStr: address[0] + '/' + address[1] + '/' + address[2],
+			province: code[0],
+			city: code[1],
+			district: code[2]
 		})
-		// let addressStr = ''
-		// for (let i = 0; i < address.length; i++) {
-		// 	if (i < 2) {
-		// 		addressStr += address[i].name + '/'
-		// 	} else {
-		// 		addressStr += address[i].name
-		// 	}
-		// }
-		// this.setData({
-		// 	addressShow: false,
-		// 	address: addressStr
-		// })
 	},
 	cancel() {
 		this.setData({
@@ -228,36 +227,22 @@ Page({
 			.then((res) => {
 				if (res.success) {
 					const option = res.data
-					let province, city, area
-					const dealData = async () => {
-						province = await tool.getProvince(option.provinceId).then((p) => {
-							return p.name
-						})
-						city = await tool
-							.getCity(option.provinceId, option.cityId)
-							.then((c) => {
-								return c.name
-							})
-						area = await tool
-							.getArea(option.cityId, option.districtId)
-							.then((a) => {
-								return a.name
-							})
-					}
-					Promise.resolve()
-						.then(() => dealData())
-						.then(() => {
-							this.setData({
-								name: option.name,
-								mobile: option.mobile,
-								address: option.address,
-								provinceId: option.provinceId,
-								cityId: option.cityId,
-								areaId: option.districtId,
-								isDefault: option.isDefault === 1,
-								addressById: province + '/' + city + '/' + area
-							})
-						})
+					this.setData({
+						name: option.name,
+						mobile: option.mobile,
+						address: option.address,
+						province: option.province,
+						city: option.city,
+						district: option.district,
+						isDefault: option.isDefault === 1,
+						addressStr:
+							option.provinceName +
+							'/' +
+							option.cityName +
+							'/' +
+							option.districtName,
+						region: [option.provinceName, option.cityName, option.districtName]
+					})
 				}
 			})
 	},

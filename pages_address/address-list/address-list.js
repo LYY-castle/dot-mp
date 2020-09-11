@@ -83,56 +83,12 @@ Page({
 		}
 		http.wxRequest({ ...this.data.api.getAddressList, params }).then((res) => {
 			if (res.success) {
-				let num = 0
-				if (res.data && res.data.length > 0) {
-					let deatElement = async (element) => {
-						element.province = await tool
-							.getProvince(element.provinceId)
-							.then((p) => {
-								console.log(num)
-								return p.name
-							})
-						element.city = await tool
-							.getCity(element.provinceId, element.cityId)
-							.then((c) => {
-								console.log(num, c)
-								return c.name
-							})
-						element.area = await tool
-							.getArea(element.cityId, element.districtId)
-							.then((a) => {
-								console.log(num, a)
-								return a.name
-							})
-						element.isDefault = element.isDefault === 1
-						element.bigName = element.name.substring(0, 1)
-					}
-					const dealData = async () => {
-						for (let i = 0; i < res.data.length; i++) {
-							num++
-							await deatElement(res.data[i])
-						}
-					}
-					Promise.resolve()
-						.then(() => dealData())
-						.then(() => {
-							if (params.pageNo === 1) {
-								this.setData({
-									list: res.data
-								})
-							} else {
-								this.setData({
-									list: this.data.list.concat(res.data)
-								})
-							}
-							if (params.pageNo === res.page.totalPage) {
-								this.setData({
-									bottomLineShow: true
-								})
-							}
-							console.log(this.data.list)
-						})
-				}
+				res.data.forEach((item) => {
+					item.bigName = item.name.substring(0, 1)
+				})
+				this.setData({
+					list: res.data
+				})
 			}
 		})
 	},

@@ -7,7 +7,7 @@
 		<view class="goodTypes">
 			<view wx:for="{{secondTypes}}" wx:for-item="goodtype" wx:key="index" data-id="{{goodtype.id}}" bindtap="goToProductsListPageById" class="productItem" wx:if="{{secondTypes.length>0}}">
 				<van-image
-					width="100%"
+					width="90%"
 					height="60"
 					fit="contain"
 					src="{{goodtype.iconUrl}}"

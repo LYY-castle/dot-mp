@@ -2,28 +2,41 @@
 <view class="container">
     <view wx:if="{{shoppingCartList.length>0}}" >
       <van-checkbox-group value="{{ result }}" bind:change="onChange">
-        <van-checkbox
-          wx:for="{{shoppingCartList}}"
-          wx:key="index"
-          wx:for-item="item"
+        <view class="flex-start main-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item">
+          <van-checkbox
           name="{{item.id}}"
           class="checkItem"
           bindtap="itemChange"
           data-option="{{item}}"
-          label-disabled="{{true}}"
+          checked-color="#ee0a24"
         >
-          <view class="flex-start">
+        </van-checkbox>
+        <view class="right-content">
             <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}"/>
-            <van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
+            <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
             <view class="m-l-10" style="width:100%">
-              <view >{{item.name}}</view>
+              <view class="fz-14">{{item.goods.name}}</view>
+              <view class="guige m-t-5">
+                {{item.goodsSpecificationNameValue}}
+                <van-icon name="arrow-down" size="10"/>
+              </view>
               <view class="flex-between">
-              <view>￥{{item.price}}</view>
-              <van-stepper value="{{ item.count }}" bind:change="addCount" data-option="{{index}}"/>
+                <view>
+                  <view wx:if="item.goods.isPromote">
+                  <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.promotePrice}}元</view>
+                  <view class="c-red fz-16 bold left">￥{{item.product.promotePrice}}</view>
+                  </view>
+                  <view wx:else>
+                    <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.retailPrice}}元</view>
+                  <view class="c-red fz-16 bold left">￥{{item.product.retailPrice}}</view>
+                  </view>
+                </view>
+                <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{index}}"/>
             </view>
           </view>
           </view>
-        </van-checkbox>
+        </view>
+
       </van-checkbox-group>
     </view>
     <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
@@ -36,6 +49,6 @@
       bind:submit="onClickButton"
       tip="{{ true }}"
     >
-  <van-checkbox value="{{ all }}" bind:change="selectAll">全选</van-checkbox>
+  <van-checkbox value="{{ all }}" bind:change="selectAll" checked-color="#ee0a24">全选</van-checkbox>
 </van-submit-bar>
 </view>

@@ -76,9 +76,10 @@ Page({
 				this.setData({
 					loadingShow: false,
 					shoppingCartList: res.data,
-					result: resultArr
+					result: resultArr,
+					all: resultArr.length === res.data.length
 				})
-				this.getTotalPrice(this.data.result, this.data.shoppingCartList)
+				this.getTotalPrice(resultArr, this.data.shoppingCartList)
 			}
 		})
 	},
@@ -87,6 +88,7 @@ Page({
 	 */
 	onShareAppMessage: function () {},
 	onChange(event) {
+		console.log('触发组时间')
 		console.log(event)
 		const detail = event.detail
 		this.setData({
@@ -103,6 +105,7 @@ Page({
 		this.getTotalPrice(this.data.result, this.data.shoppingCartList)
 	},
 	itemChange(e) {
+		console.log('触发单个事件')
 		const option = e.currentTarget.dataset.option
 		const params = {
 			id: option.id,
@@ -138,13 +141,19 @@ Page({
 		const option = event.currentTarget.dataset.option
 	},
 	getTotalPrice(arr1, arr2) {
+		console.log('计算价格')
 		let sumPrice = 0
 		for (let i = 0; i < arr1.length; i++) {
 			for (let j = 0; j < arr2.length; j++) {
 				if (Number(arr1[i]) === arr2[j].id) {
-					sumPrice += arr2[j].retailPrice * arr2[j].number
+					if (arr2[j].goods.isPromote) {
+						sumPrice += arr2[j].product.promotePrice * arr2[j].number
+					} else {
+						sumPrice += arr2[j].product.retailPrice * arr2[j].number
+					}
 				}
 			}
+			console.log(sumPrice)
 		}
 		this.setData({
 			totalPrice: sumPrice * 100

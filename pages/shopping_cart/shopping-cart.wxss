@@ -1,7 +1,8 @@
 /* pages_shopping_cart/shopping-cart.wxss */
-.container{
-  padding-bottom:50px;
+.container {
+  padding-bottom: 50px;
 }
+
 .loginButton {
   display: block;
   margin: 0 10px;
@@ -11,10 +12,41 @@
   background: #fff;
   padding: 10px;
 }
+
 .van-checkbox__label {
-width:100%;
+  width: 100%;
 
 }
-.van-submit-bar__bar{
+
+.van-submit-bar__bar {
   padding: 0 10px 0 0 !important;
+}
+
+.main-content {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  margin: 5px;
+  border-radius: 7px;
+  padding: 10px 10px 10px 0;
+}
+
+.right-content {
+  width: 100%;
+  display: flex;
+}
+
+.guige {
+  display: inline-block;
+  background: #eee;
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 1px 10px;
+  color: rgba(0, 0, 0, .5);
+  /* display: flex; */
+  align-items: center;
+}
+
+.left {
+  text-align: left;
 }

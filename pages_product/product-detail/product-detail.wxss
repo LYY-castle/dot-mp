@@ -2,11 +2,14 @@
   background: #f9f9f9;
 }
 
-.cardContent .bg-white {
+.cardContent {
+  margin: 10px;
+  padding: 10px;
   background: #fff;
+  border-radius: 10px;
 }
 
-.cardContent .cardDetail {
+.cardDetail {
   padding: 20px 20px 0 20px;
   display: flex;
   justify-content: space-between;
@@ -74,32 +77,32 @@ van-button {
 }
 
 .popContent {
-  padding: 20px;
+  box-sizing: border-box;
+  padding: 100px 20px 50px 20px;
   height: 450px;
   position: relative;
 }
 
+.popContent .goods {
+  width: 100;
+  padding: 20px 20px 0 20px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .popContent .content {
   height: 100%;
-  padding-bottom:50px;
   overflow: hidden;
   overflow-y: scroll;
 }
 
 .popContent .buttonGroup {
-  width: 100%;
-  background: #fff;
   position: absolute;
   bottom: 0;
   left: 0;
-  display: flex;
-  justify-content: space-between;
-}
-
-.popContent .buttonGroup .buttonItem {
-  display: inline-block;
-  width: 45%;
-  border-radius: 20px;
+  width: 100%;
 }
 
 .specificationItem {

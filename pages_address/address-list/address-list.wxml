@@ -10,8 +10,8 @@
         <view class="m-l-10 m-r-20 addressDetail" bindtap="selectAddress" data-option="{{item}}">
           <text class="fz-16">{{ item.name }}</text>
           <text class="m-l-10">{{ item.mobile }}</text>
-          <van-tag wx:if="{{item.isDefault}}" round type="danger" class="fz-12 m-l-15">默认</van-tag>
-          <view class="fz-12 m-t-5">{{item.province}}{{item.city}}{{item.area}}{{item.address}}</view>
+          <van-tag wx:if="{{item.isDefault}}" round type="danger" class="fz-12 m-l-15 p-l-10 p-r-10">默认</van-tag>
+          <view class="fz-12 m-t-5">{{item.provinceName}}{{item.cityName}}{{item.districtName}}{{item.address}}</view>
         </view>
         <van-icon name="edit" bind:click="onEdit" data-option="{{item.id}}"></van-icon>
       </view>

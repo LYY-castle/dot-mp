@@ -61,7 +61,7 @@ Page({
 	onShow: function (options) {
 		const event = options
 		console.log(event)
-		if (event.src) {
+		if (event) {
 			this.setData({
 				receiveAvatar: event.src
 			})

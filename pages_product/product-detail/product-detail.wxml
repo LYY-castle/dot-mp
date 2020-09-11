@@ -1,8 +1,7 @@
 <!--pages/product/product-detail/product-detail.wxml-->
 <view class="container">
     <view wx:if="{{showContent}}">
-      <view class="cardContent">
-        <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
+      <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
         autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
         <block wx:for="{{goodsGalleries}}" wx:for-item="image" wx:key="imgIndex">
           <swiper-item>
@@ -10,74 +9,16 @@
             <van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
           </swiper-item>
         </block>
-      </swiper>
-        <view class="cardDetail bg-white">
-          <view class="allprice">
-            <!-- <view class="title fz-14">{{ product.name }}</view> -->
-            <view class="description fz-12">{{ product.description }}</view>
-            <!-- pricingMethod = 0 表示使用固定单价规则. -->
-            <view wx:if="{{product.pricingMethod === 0}}" class="m-t-15">
-              <view>
-                <text class="title">市场价：</text>
-                <text class="money">￥{{ product.originalPrice }}</text>
-                <text>/ {{ product.unit }}</text>
-              </view>
-              <view>
-                <text class="title">平台优惠价：</text>
-                <text class="money">￥{{ product.price }}</text>
-                <text>/ {{ product.unit }}</text>
-              </view>
-            </view>
-          </view>
+        </swiper>
+      <view class="cardContent">
+        <view class="flex-start">
+          <view class="minPrice fz-12">￥<text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>起</view>
+          <view class="originPrice">￥{{goods.marketPrice}}</view>
         </view>
-        <!-- pricingMethod = 0 表示使用自定义单价规则. -->
-        <view wx:if="{{product.pricingMethod === 1}}">
-          <!-- <van-divider dashed>产品价格</van-divider> -->
-
-          <view class="price-container m-t-10 bg-white">
-            <view class="price-title">活动</view>
-            <view class="m-l-15">
-              <view class="block" v-if="!!product.originalPrice">
-                <text class="title-normal">市场价：</text>
-                <text class="money-normal">￥{{ product.originalPrice }}</text>
-                <text class="title-normal">/ {{ product.unit }}</text>
-              </view>
-
-              <view wx:for="{{pricingRule.pricingRuleDetails}}" wx:key="idx" class="m-b-5">
-                <!-- 只有最大值, 并且最大值为 1 时显示为会员优惠价 -->
-
-                <text class="title-normal" wx:if="{{item.maxNum === 1}}">会员优惠价：</text>
-                <text wx:else class="money-red m-r-10 fz-12 bold">多买优惠</text>
-
-                <!-- 最小值、最大值都 > 1 -->
-                <text
-                  class="title-normal"
-                  wx:if="{{item.maxNum > 1}}"
-                >会员团购 {{ item.minNum }} ~ {{ item.maxNum }} {{ product.unit }}</text>
-
-                <!-- 只有最小值, 并且最小值大于 1 时显示为团购几张及以上 -->
-                <text
-                  class="title-normal"
-                  wx:if="{{item.minNum > 0 && !item.maxNum}}"
-                >会员团购 {{ item.minNum }} {{ product.unit }}及以上</text>
-
-                <text class="money-normal">￥{{ item.price }}</text>
-                <text class="title-normal">/ {{ product.unit }}</text>
-              </view>
-
-              <!-- 食品/红酒类产品显示促销文案 -->
-              <view
-                wx:if="{{product.category.code === constantCfg.productType.foodRedWineProductType}}"
-              >
-                <text class="money-red m-r-10 fz-12 bold">多单有礼</text>
-                <text class="title-normal">购买满 5 瓶发货时赠送 1 瓶</text>
-              </view>
-            </view>
-          </view>
-        </view>
-
+        <view class="goodsBrief m-t-10">{{goods.goodsBrief}}</view>
+    </view>
         <view class="product">
-          <view wx:if="{{product.properties && product.properties.length > 0}}">
+          <!-- <view wx:if="{{product.properties && product.properties.length > 0}}">
             <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
             <view wx:for="{{product.properties}}" wx:for-item="content" wx:key="index">
               <view>
@@ -87,16 +28,14 @@
                 <text class="description">{{ content.val }}</text>
               </view>
             </view>
-          </view>
-
+          </view> -->
           <view wx:if="{{product.goodsDetail}}">
             <van-divider dashed="{{true}}" contentPosition="center">产品详情</van-divider>
             <rich-text nodes="{{product.goodsDetail}}" class="produceDetail"></rich-text>
           </view>
+          <van-empty description="暂无描述信息" wx:else />
         </view>
       </view>
-    </view>
-    <van-empty description="暂无描述信息" wx:else />
     <van-popup
     show="{{ perchaseShow }}"
     bind:close="onClose"
@@ -106,31 +45,50 @@
     >
     <!-- 商品规格 -->
     <view class="popContent">
-      <view class="goods">
+      <view class="goods flex-start">
+        <van-image src="{{activePic}}" width="80px" height="80px" fit="cover"></van-image>
+        <view class="m-l-10 fz-12">
+          <view class="minPrice">￥<text class="fz-20 bold">{{activePrice}}</text></view>
+          <view class="c-gray">库存{{activeProductNumber}}件</view>
+          <view>
+            <text wx:if="{{goodsSpecificationNameValue!==''}}">已选:{{goodsSpecificationNameValue}}</text>
+            <view wx:else>请选择
+              <text wx:for="{{specificationResults}}" wx:key="idName" wx:for-item="name">
+                {{name.specificationName}}
+                <!-- <text wx:for="{{name.goodsSpecificationResults}}" wx:key="gIndex" wx:for-item="good" wx:if="{{good}}"></text> -->
+              </text>
+            </view>
+          </view>
+        </view>
       </view>
       <view class="content">
-        <view wx:for="{{specificationResults}}" wx:key="index">
-          <view>{{item.specificationName}}</view>
+        <view wx:for="{{specificationResults}}" wx:key="index" wx:for-item="item">
+          <view class="m-t-10 m-b-10">{{item.specificationName}}</view>
           <van-tag
           size="large"
           plain
           wx:for="{{item.goodsSpecificationResults}}"
+          wx:key="goodIndex"
           wx:for-index="index2"
           wx:for-item="specificationItem"
           class="specificationItem"
           bindtap="selectSpecification"
-          data-option="{{item}}"
+          data-option="{{specificationItem}}"
           data-parent='{{index}}'
           data-child="{{index2}}"
-          text-color="{{specificationItem.goodsSpecificationValue===specificationItem.activeGoodsSpecificationNameValue?'#f2826a':'#7232dd'}}"
+          text-color="{{specificationItem.goodsSpecificationValue===specificationItem.activeGoodsSpecificationNameValue?'#ee0a24':'#aaa'}}"
           >
+          <van-image src="{{specificationItem.goodsSpecificationPicUrl}}" width="10px" height="10px" fit="cover" wx:if="{{specificationItem.goodsSpecificationPicUrl!==''}}" class="m-r-2"></van-image>
           {{specificationItem.goodsSpecificationValue}}
         </van-tag>
         </view>
+        <view class="flex-between m-t-10 m-b-10">
+          数量
+          <van-stepper value="{{ number }}" min="1" max="{{activeProductNumber}}" disable-input="{{false}}" bind:change="changeNumber" />
+        </view>
       </view>
       <view class="buttonGroup">
-        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08" bind:click="addCartBy">加入购物车</van-button>
-        <van-button round block="{{true}}" class="buttonItem" color="#ee0a24" bind:click="perchaseBy">立即购买</van-button>
+        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08" bind:click="operate">确定</van-button>
       </view>
     </view>
     </van-popup>
