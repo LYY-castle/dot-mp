@@ -1,5 +1,6 @@
 import http from '../../utils/request'
 import tool from '../../utils/mixin'
+import util from '../../utils/util'
 import constantCfg from '../../config/constant'
 
 Page({
@@ -134,6 +135,14 @@ Page({
 				if (res.success) {
 					let productDetailRes, item
 					const dealQseProduct = async (item) => {
+						item.name = util.ellipsis(item.name, 20)
+						let labelArr = []
+						if (item.label.indexOf(',')) {
+							labelArr = item.label.split(',')
+						} else {
+							labelArr = item.label || []
+						}
+						item.label = labelArr
 						if (constantCfg.productCode.qsebao.includes(item.code)) {
 							productDetailRes = await tool.insuranceProduct()
 							productDetailObj = productDetailRes.data.productDetail

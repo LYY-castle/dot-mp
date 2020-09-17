@@ -10,27 +10,25 @@
 				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
 			</view>
 			<view class="textContent">
-				<view class="fz-14 m-b-5">{{ item.name }}</view>
-				<view class="m-b-5" wx:if="{{item.pricingMethod}}">
-					<van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10 m-r-5">多买优惠
-					</van-tag>
-					<van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10">多单有礼</van-tag>
-				</view>
-				<view>
+					<view class="fz-14 m-b-5">
+						<text
+					class="guige guige-label m-r-5 m-b-5"
+					wx:for="{{item.label}}"
+					wx:for-item="labelItem"
+					wx:key="labelIndex">{{labelItem}}</text>
+					{{item.name}}</view>
+					<view class="fz-12 m-b-5 c-gray">{{ item.goodsBrief }}</view>
+
 					<view class="minPrice fz-12">
 						￥
 						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
 						<text class="minPrice fz-12">起</text>
 						<text class="originPrice">￥{{ item.marketPrice }}</text>
 					</view>
-
-
-				</view>
 			</view>
 		</view>
 	</view>
 	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
 	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">更多商品，敬请期待</van-divider>
 	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
-	<!-- <button bindtap="test">测试token</button> -->
 </view>

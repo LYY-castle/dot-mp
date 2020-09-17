@@ -287,3 +287,21 @@ Page {
   margin:0 auto;
   text-align:center;
 }
+.guige {
+  display: inline-block;
+  background: #eee;
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 1px 10px;
+  color: rgba(0, 0, 0, .5);
+  /* display: flex; */
+  align-items: center;
+}
+.guige-label{
+  background: #d30000;
+  color: #fff;
+}
+.left-width{
+  display:inline-block;
+  width:80px;
+}

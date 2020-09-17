@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/product/index",
     "pages/mine/mine",
-    "pages/shopping_cart/shopping-cart"
+    "pages/shopping_cart/shopping-cart",
+    "components/specification/specification",
+    "components/navigator/navigator"
   ],
   "subpackages": [
     {

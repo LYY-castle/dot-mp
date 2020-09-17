@@ -1,4 +1,5 @@
 import tool from '../../utils/mixin.js'
+import util from '../../utils/util.js'
 import qseBaoUtil from '../../utils/qsebao.js'
 import constantCfg from '../../config/constant'
 
@@ -51,6 +52,14 @@ Page({
 				if (res.success) {
 					let productDetailRes, item
 					const dealQseProduct = async (item) => {
+						item.name = util.ellipsis(item.name, 20)
+						let labelArr = []
+						if (item.label.indexOf(',')) {
+							labelArr = item.label.split(',')
+						} else {
+							labelArr = item.label || []
+						}
+						item.label = labelArr
 						if (constantCfg.productCode.qsebao.includes(item.code)) {
 							productDetailRes = await tool.insuranceProduct()
 							productDetailObj = productDetailRes.data.productDetail

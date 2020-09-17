@@ -4,6 +4,7 @@ page {
 
 .container {
   display: flex;
+  height:100%;
 }
 
 .container .shareMainContent {
@@ -22,7 +23,7 @@ page {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .container .productsContent .productItem {

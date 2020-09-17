@@ -1,5 +1,5 @@
 import http from '../../utils/request.js'
-
+import util from '../../utils/util.js'
 Page({
 	/**
 	 * 页面的初始数据
@@ -20,15 +20,13 @@ Page({
 		activePic: null, // 默认展示的规格图
 		activeProductNumber: null, //默认展示库存
 		activePrice: null, // 默认展示价格
-		activeGoodsSpecificationId: '',
 		goodsSpecificationIds: null,
-		activeGoodsSpecificationNameValue: '',
 		goodsSpecificationNameValue: '',
 		goods: null,
 		products: null,
+		specificationResults: null, // 规格
 		goodsAttributeResults: null, // 属性
 		goodsGalleries: null, // 轮播图
-		specificationResults: null, // 规格
 		specificationId: null,
 		operateType: null,
 		api: {
@@ -51,6 +49,8 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		wx.removeStorageSync('perchaseByCart')
+		wx.removeStorageSync('activeAddressId')
 		const _this = this
 		if (options.src) {
 			this.setData({
@@ -108,12 +108,17 @@ Page({
 								'<img class="richImg"'
 							)
 						}
+						let imgArr = [res.data.goods.listPicUrl]
+						res.data.goodsGalleries.forEach((img) => {
+							imgArr.push(img.imgUrl)
+						})
+						res.data.goods.name = util.ellipsis(res.data.goods.name, 80)
 						this.setData({
 							showContent: true,
 							goods: res.data.goods,
 							products: res.data.products,
 							goodsAttributeResults: res.data.goodsAttributeResults, // 属性
-							goodsGalleries: res.data.goodsGalleries, // 轮播图
+							goodsGalleries: imgArr, // 轮播图
 							specificationResults: res.data.specificationResults,
 							activePic: res.data.goods.listPicUrl,
 							activePrice: res.data.goods.isPromote
@@ -150,20 +155,29 @@ Page({
 			this.addCartOrPerchase(option)
 		}
 	},
-	addCartOrPerchase(event) {
+	addCartOrPerchase(event, data) {
+		console.log(data)
+		const _this = this
 		const params = {
 			checked: 1,
 			goodsId: this.data.goods.id,
-			goodsSpecificationIds: this.data.goodsSpecificationIds.join,
-			goodsSpecificationNameValue: this.data.goodsSpecificationNameValue.join,
-			number: this.data.number,
-			listPicUrl: this.data.goods.listPicUrl,
-			productId: this.data.productId,
-			retailPrice: this.data.goods.idPromote
+			goodsSpecificationIds: data
+				? data.goodsSpecificationIds
+				: this.data.goodsSpecificationIds,
+			goodsSpecificationNameValue: data
+				? data.goodsSpecificationNameValue
+				: this.data.goodsSpecificationNameValue,
+			number: data ? data.number : this.data.number,
+			listPicUrl: data.activePic,
+			productId: data ? data.productId : this.data.productId,
+			retailPrice: data
+				? data.retailPrice
+				: this.data.goods.idPromote
 				? this.data.goods.promotePrice
 				: this.data.goods.retailPrice,
 			userId: wx.getStorageSync('userId')
 		}
+		console.log(params)
 		this.onClose()
 		if (event === 'cart') {
 			http.wxRequest({ ...this.data.api.addCart, params }).then((res) => {
@@ -173,13 +187,14 @@ Page({
 						icon: 'none',
 						success() {
 							setTimeout(() => {
-								this.getCartDotsNum()
+								_this.getCartDotsNum()
 							}, 2000)
 						}
 					})
 				}
 			})
 		} else if (event === 'perchase') {
+			wx.setStorageSync('activeProductId', params.productId)
 			wx.navigateTo({
 				url: '/pages_product/perchase/perchase'
 			})
@@ -190,103 +205,10 @@ Page({
 			perchaseShow: false
 		})
 	},
-	// 选中规格
-	selectSpecification(e) {
-		const option = e.currentTarget.dataset.option
-		const parentIndex = e.currentTarget.dataset.parent
-		const childIndex = e.currentTarget.dataset.child
-		let goodsSpecificationIds = []
-		let goodsSpecificationNameValue = []
-		// 给选中的同类规格加一个active标志,其他同类去除active标志
-		this.data.specificationResults[
-			parentIndex
-		].goodsSpecificationResults.forEach((item, index) => {
-			if (index === childIndex) {
-				if (item.activeGoodsSpecificationNameValue) {
-					delete item.activeGoodsSpecificationNameValue
-				} else {
-					item.activeGoodsSpecificationNameValue =
-						option.goodsSpecificationValue
-				}
-			} else {
-				if (item.activeGoodsSpecificationNameValue) {
-					delete item.activeGoodsSpecificationNameValue
-				}
-			}
-		})
-		this.setData({
-			specificationResults: this.data.specificationResults
-		})
-		// 遍历得出当前选中的不同类的规格名
-		this.data.specificationResults.map((option) => {
-			option.goodsSpecificationResults.map((item) => {
-				if (item.activeGoodsSpecificationNameValue) {
-					goodsSpecificationNameValue.push(item.goodsSpecificationValue)
-					goodsSpecificationIds.push(item.goodsSpecificationId)
-				}
-			})
-		})
-		// 当规格种类和选中的规格种类数量相同时确定一个产品
-		if (
-			goodsSpecificationNameValue.length ===
-			this.data.specificationResults.length
-		) {
-			this.data.products.map((pro) => {
-				if (pro.goodsSpecificationIds === goodsSpecificationIds.join('_')) {
-					this.setData({
-						activePic: pro.productUrl
-							? pro.productUrl
-							: this.data.goods.listPicUrl, // 产品图
-						activeProductNumber: pro.productNumber, //库存
-						activePrice: this.data.goods.isPromote
-							? pro.promotePrice
-							: pro.retailPrice
-					})
-				}
-			})
-			this.setData({
-				goodsSpecificationIds: goodsSpecificationIds.join('_'),
-				goodsSpecificationNameValue: goodsSpecificationNameValue.join(';')
-			})
-		} else {
-			this.setData({
-				activePic: this.data.goods.listPicUrl,
-				activePrice: this.data.goods.isPromote
-					? this.data.goods.promotePrice
-					: this.data.goods.retailPrice,
-				activeProductNumber: this.data.goods.goodsNumber,
-				goodsSpecificationIds: '',
-				goodsSpecificationNameValue: ''
-			})
-		}
-	},
-	// 数量修改
-	changeNumber(e) {
-		if (e.detail <= this.data.activeProductNumber) {
-			this.setData({
-				number: e.detail
-			})
-		} else {
-			wx.showToast({
-				title: '库存数量不足'
-			})
-		}
-	},
 	// 规格弹框确定按钮操作
-	operate() {
-		const flag = this.data.specificationResults.every((option) => {
-			return option.goodsSpecificationResults.some((item) => {
-				return item.activeGoodsSpecificationNameValue
-			})
-		})
-		if (flag) {
-			this.addCartOrPerchase(this.data.operateType)
-		} else {
-			wx.showToast({
-				title: '请完善规格信息',
-				icon: 'none'
-			})
-		}
+	operate(e) {
+		wx.setStorageSync('activeProductNumber', e.detail.params.number)
+		this.addCartOrPerchase(e.detail.operateType, e.detail.params)
 	},
 	// 获取购物车下单数
 	getCartDotsNum() {
@@ -296,7 +218,7 @@ Page({
 		http.wxRequest({ ...this.data.api.getCart, params }).then((res) => {
 			if (res.success) {
 				this.setData({
-					cartDotsNum: res.page.totalCount
+					cartDotsNum: res.page.totalCount > 0 ? res.page.totalCount : ''
 				})
 			}
 		})

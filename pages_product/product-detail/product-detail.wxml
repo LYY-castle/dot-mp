@@ -1,97 +1,54 @@
 <!--pages/product/product-detail/product-detail.wxml-->
 <view class="container">
+  <v-navigator page-name="你当前页面的名字"></v-navigator>
     <view wx:if="{{showContent}}">
       <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
         autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-        <block wx:for="{{goodsGalleries}}" wx:for-item="image" wx:key="imgIndex">
+        <block wx:for="{{goodsGalleries}}" wx:key="imgIndex">
           <swiper-item>
-            <van-image src="{{image.imgUrl}}" width="100%" height="100%" fit="cover" wx:if="{{image}}"></van-image>
+            <van-image src="{{item}}" width="100%" height="100%" fit="cover" wx:if="{{item}}"></van-image>
             <van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
           </swiper-item>
         </block>
         </swiper>
-      <view class="cardContent">
+      <view class="border p-10 m-10">
         <view class="flex-start">
           <view class="minPrice fz-12">￥<text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>起</view>
           <view class="originPrice">￥{{goods.marketPrice}}</view>
         </view>
-        <view class="goodsBrief m-t-10">{{goods.goodsBrief}}</view>
+        <view class="fz-14 m-b-5">{{goods.name}}</view>
+					<view class="fz-12 m-t-5 c-gray">{{ goods.goodsBrief }}</view>
     </view>
-        <view class="product">
-          <!-- <view wx:if="{{product.properties && product.properties.length > 0}}">
+     <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
             <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
-            <view wx:for="{{product.properties}}" wx:for-item="content" wx:key="index">
-              <view>
-                <text
+            <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
+              <view
                   class="title"
-                >{{ content.propertyTemplate ? content.propertyTemplate.label : '参数' + index }}：</text>
-                <text class="description">{{ content.val }}</text>
-              </view>
+                >{{ content.categoryAttributeName}}</view>
+                <view class="description">{{ content.goodsAttributeVal }}</view>
             </view>
-          </view> -->
-          <view wx:if="{{product.goodsDetail}}">
+          </view>
+        <view class="product">
+          <view wx:if="{{goods.goodsDetail}}">
             <van-divider dashed="{{true}}" contentPosition="center">产品详情</van-divider>
-            <rich-text nodes="{{product.goodsDetail}}" class="produceDetail"></rich-text>
+            <rich-text nodes="{{goods.goodsDetail}}" class="produceDetail"></rich-text>
           </view>
           <van-empty description="暂无描述信息" wx:else />
         </view>
       </view>
-    <van-popup
-    show="{{ perchaseShow }}"
-    bind:close="onClose"
-    round
-    position="bottom"
-    closeable
-    >
-    <!-- 商品规格 -->
-    <view class="popContent">
-      <view class="goods flex-start">
-        <van-image src="{{activePic}}" width="80px" height="80px" fit="cover"></van-image>
-        <view class="m-l-10 fz-12">
-          <view class="minPrice">￥<text class="fz-20 bold">{{activePrice}}</text></view>
-          <view class="c-gray">库存{{activeProductNumber}}件</view>
-          <view>
-            <text wx:if="{{goodsSpecificationNameValue!==''}}">已选:{{goodsSpecificationNameValue}}</text>
-            <view wx:else>请选择
-              <text wx:for="{{specificationResults}}" wx:key="idName" wx:for-item="name">
-                {{name.specificationName}}
-                <!-- <text wx:for="{{name.goodsSpecificationResults}}" wx:key="gIndex" wx:for-item="good" wx:if="{{good}}"></text> -->
-              </text>
-            </view>
-          </view>
-        </view>
-      </view>
-      <view class="content">
-        <view wx:for="{{specificationResults}}" wx:key="index" wx:for-item="item">
-          <view class="m-t-10 m-b-10">{{item.specificationName}}</view>
-          <van-tag
-          size="large"
-          plain
-          wx:for="{{item.goodsSpecificationResults}}"
-          wx:key="goodIndex"
-          wx:for-index="index2"
-          wx:for-item="specificationItem"
-          class="specificationItem"
-          bindtap="selectSpecification"
-          data-option="{{specificationItem}}"
-          data-parent='{{index}}'
-          data-child="{{index2}}"
-          text-color="{{specificationItem.goodsSpecificationValue===specificationItem.activeGoodsSpecificationNameValue?'#ee0a24':'#aaa'}}"
-          >
-          <van-image src="{{specificationItem.goodsSpecificationPicUrl}}" width="10px" height="10px" fit="cover" wx:if="{{specificationItem.goodsSpecificationPicUrl!==''}}" class="m-r-2"></van-image>
-          {{specificationItem.goodsSpecificationValue}}
-        </van-tag>
-        </view>
-        <view class="flex-between m-t-10 m-b-10">
-          数量
-          <van-stepper value="{{ number }}" min="1" max="{{activeProductNumber}}" disable-input="{{false}}" bind:change="changeNumber" />
-        </view>
-      </view>
-      <view class="buttonGroup">
-        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08" bind:click="operate">确定</van-button>
-      </view>
-    </view>
-    </van-popup>
+      <specification
+      perchaseShow="{{perchaseShow}}"
+      activePic="{{activePic}}"
+      activePrice="{{activePrice}}"
+      activeProductNumber="{{activeProductNumber}}"
+      goodsSpecificationNameValue="{{goodsSpecificationNameValue}}"
+      specificationResults="{{specificationResults}}"
+      number="{{number}}"
+      goods="{{goods}}"
+      products="{{products}}"
+      operateType="{{operateType}}"
+      bind:operate="operate"
+      ></specification>
     <van-goods-action>
       <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab"/>
       <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab"/>

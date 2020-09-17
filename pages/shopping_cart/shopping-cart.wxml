@@ -1,54 +1,77 @@
 <!--pages_shopping_cart/shopping-cart.wxml-->
 <view class="container">
     <view wx:if="{{shoppingCartList.length>0}}" >
+      <van-sticky>
+        <view class="flex-between p-10 bg-white">
+          <text class="fz-16 bold">购物车({{cartCount}})</text>
+          <text bindtap="manage" class="fz-12">{{manage}}</text>
+        </view>
+      </van-sticky>
+
       <van-checkbox-group value="{{ result }}" bind:change="onChange">
         <view class="flex-start main-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item">
-          <van-checkbox
-          name="{{item.id}}"
-          class="checkItem"
-          bindtap="itemChange"
-          data-option="{{item}}"
-          checked-color="#ee0a24"
-        >
-        </van-checkbox>
-        <view class="right-content">
-            <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}"/>
+            <van-checkbox
+            name="{{item.id}}"
+            class="checkItem"
+            bindtap="itemChange"
+            data-option="{{item}}"
+            checked-color="#ee0a24"
+          >
+          </van-checkbox>
+          <view class="right-content">
+            <view bindtap="gotoGoodDetail" data-option="{{item}}">
+              <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}"/>
             <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
+            </view>
             <view class="m-l-10" style="width:100%">
-              <view class="fz-14">{{item.goods.name}}</view>
-              <view class="guige m-t-5">
+              <view class="fz-14">{{item.goods.name}}被动句巴萨基础上把基础安居八局把数据包VB就是比较动不动就</view>
+              <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}">
                 {{item.goodsSpecificationNameValue}}
                 <van-icon name="arrow-down" size="10"/>
               </view>
-              <view class="flex-between">
-                <view>
+              <view>
                   <view wx:if="item.goods.isPromote">
-                  <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.promotePrice}}元</view>
-                  <view class="c-red fz-16 bold left">￥{{item.product.promotePrice}}</view>
+                    <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.promotePrice}}元</view>
+                    <view class="c-red fz-16 bold left flex-between">￥{{item.product.promotePrice}}<van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>
                   <view wx:else>
                     <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.retailPrice}}元</view>
-                  <view class="c-red fz-16 bold left">￥{{item.product.retailPrice}}</view>
+                    <view class="c-red fz-16 bold left flex-between">￥{{item.product.retailPrice}} <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>
                 </view>
-                <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{index}}"/>
             </view>
           </view>
-          </view>
         </view>
-
       </van-checkbox-group>
+      <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
+      <van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
+      <van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
     </view>
-    <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
-    <van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
-    <van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
     <van-submit-bar
+      wx:if="{{!deleteButtonShow&&shoppingCartList.length>0}}"
       price="{{ totalPrice }}"
       button-text="结算"
-      disabled="{{totalPrice===0}}"
+      disabled="{{result.length===0}}"
       bind:submit="onClickButton"
       tip="{{ true }}"
     >
-  <van-checkbox value="{{ all }}" bind:change="selectAll" checked-color="#ee0a24">全选</van-checkbox>
-</van-submit-bar>
+      <van-checkbox value="{{ all }}" bind:change="selectAll" checked-color="#ee0a24">全选</van-checkbox>
+  </van-submit-bar>
+  <view wx:if="{{deleteButtonShow}}" class="flex-between deleteContent">
+    <van-checkbox value="{{ all }}" bind:change="selectAll" checked-color="#ee0a24">全选</van-checkbox>
+    <van-button size="small" bindtap="deleteCarts" round class="m-r-10" disabled="{{result.length===0}}">删除</van-button>
+  </view>
+  <specification
+      perchaseShow="{{perchaseShow}}"
+      activePic="{{activePic}}"
+      activePrice="{{activePrice}}"
+      activeProductNumber="{{activeProductNumber}}"
+      goodsSpecificationNameValue="{{goodsSpecificationNameValue}}"
+      specificationResults="{{specificationResults}}"
+      number="{{number}}"
+      goods="{{goods}}"
+      products="{{products}}"
+      operateType="{{operateType}}"
+      bind:operate="operate"
+      ></specification>
 </view>

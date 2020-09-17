@@ -1,63 +1,78 @@
 <!--pages/mine/order/order-detail/order-detail.wxml-->
 <view class="container">
-	<van-cell title="订单信息" use-label-slot="{{true}}">
-		<view slot="label">
-			<view>
-				<text>订单号：</text>
-				<text class="order-no">{{ orderInfo.orderNo }}</text>
-				<text class="fz-12 m-l-20 copyBtn" bindtap="copy">复制</text>
-			</view>
-			<text>下单时间：</text>
-			<text class="order-no">{{ orderInfo.createAt }}</text>
+	<view class="p-t-20 topContentText">
+		<van-icon name="clock-o" wx:if="{{orderInfo.orderStatus===100}}"/>
+		{{statusMap[orderInfo.orderStatus].text}}
+		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10">需付款:<text class="m-r-10">￥{{orderInfo.actualPrice}}</text>
+			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish"/></view>
+		<view wx:if="{{orderInfo.orderStatus===100}}" class="m-t-10">
+			<van-button bindtap="goPay" round class="payButton" color="#fff" size="small">去支付</van-button>
 		</view>
-	</van-cell>
-	<van-cell class="m-t-10">
-		<view slot="title">
-			<view wx:if="{{!constantCfg.productType.qsebao.includes(orderInfo.type)}}">
-				<view class="container-title">
-					<van-image src="{{orderInfo.orderExtends[0].product.image}}" alt width="150px" height="80px" fit="contain"></van-image>
-					<view>
-						<text class="order-no">{{ orderInfo.orderExtends[0].product.name }}</text>
-						<text class="c-gray m-l-30">*{{ orderInfo.totalNum }}</text>
-						<view align="right" class="m-t-20">总价：￥{{ orderInfo.amount }}</view>
+	</view>
+	<view class="border p-10 m-10 fz-12">
+		<view
+			class="flex-between m-b-10"
+			wx:for="{{ orderInfo.orderGoods }}"
+			wx:key="index"
+		>
+			<view class="flex-start-start">
+				<van-image
+					src="{{ item.listPicUrl }}"
+					width="80px"
+					height="80px"
+					fit="cover"
+				></van-image>
+				<view class="m-l-10" style="text-align: left">
+					<view class="fz-14 black">{{ item.goodsName }}</view>
+					<view class="guige m-t-5">{{
+						item.goodsSpecificationNameValue
+					}}</view>
+					<view class="m-t-5 c-gray fz-12">
+						<text>数量：{{ item.number }}</text>
+						<text class="m-l-10">单价：￥{{ item.retailPrice }}</text>
 					</view>
 				</view>
 			</view>
-			<view class="flex-between" wx:else>
-				<text class="order-no">{{ orderInfo.policy.insuranceName }}</text>
-				<text class="c-gray m-l-30">*{{ orderInfo.totalNum }}</text>
-				<text align="right">总价：￥{{ orderInfo.amount }}</text>
-			</view>
+			<view>￥{{ item.retailPrice * item.number }}</view>
 		</view>
-		<view slot="label">
-			<view align="right" class="m-t-10">
-				<van-tag plain>
-				</van-tag>
-			</view>
+		<van-divider />
+		<view class="flex-between m-b-10">商品总额<text>￥{{orderInfo.goodsPrice}}</text></view>
+		<!-- <view class="flex-between m-b-10 c-gray">优惠总额<text class="c-red">-￥{{}}</text></view> -->
+		<!-- <view class="flex-between m-b-10 c-gray">运费<text>+12</text></view> -->
+		<van-divider />
+		<view class="flex-between-end m-b-10">
+			<text wx:if="{{orderInfo.orderStatus>=200}}">实</text>
+			<text wx:if="{{orderInfo.orderStatus===100}}">需</text>
+			<text wx:if="{{orderInfo.orderStatus===101||orderInfo.orderStatus===102}}">应</text>
+			付款<text class="bold fz-14">￥{{orderInfo.actualPrice}}</text>
 		</view>
-	</van-cell>
-	<van-cell title="收货信息" class="m-t-10" use-label-slot="{{true}}">
-		<view wx:for="{{orderInfo.orderExtends}}" wx:for-item="order" wx:key="index" slot="label">
-			<view class="logistics-user-container">
-				<text class="c-black">{{ order.addresseeName }}</text>
-				<text class="c-black">{{ order.addresseePhone }}</text>
-				<text>
-              <text class="c-black">数量: {{ order.productNum }}</text>
-				</text>
-				<view wx:if="{{!constantCfg.productType.qsebao.includes(orderInfo.type) && orderInfo.status === 1}}">
-					<van-tag round color="{{logisticsMap[order.logisticsStatus]['color']}}">
-						{{ logisticsMap[order.logisticsStatus]['text'] }}
-					</van-tag>
+	</view>
+		<view class="border p-10 m-10 ">
+			<view>配送信息</view>
+			<van-divider />
+			<view class="flex-start-start fz-12">
+				<text class="left-width c-gray">收货地址</text>
+				<view class="black">
+					{{orderInfo.provinceName}}{{orderInfo.cityName}}{{orderInfo.districtName}}{{orderInfo.address}}
+					<view>{{orderInfo.name}}<text class="m-l-10">{{orderInfo.mobile}}</text></view>
 				</view>
 			</view>
-			<view class="m-b-10">{{ order.addresseeAddress }}</view>
-			<view wx:if="{{order.logisticsStatus === 1}}">
-				<text class="c-black">物流公司：</text>
-				<text>{{ order.courierCompany }}</text>
-				<text class="c-black m-l-20">运单号：</text>
-				<text>{{ order.trackingNo }}</text>
-			</view>
-
+			<!-- <view class="flex-start-start m-t-10 fz-12">
+				<view class="left-width c-gray">送达时间</view>
+				<view class="black">{{orderInfo.updateAt}}</view>
+			</view> -->
 		</view>
-	</van-cell>
+		<view class="border p-10 m-10 ">
+			<view>订单信息</view>
+			<van-divider />
+			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy">复制</text></view>
+			<view class="c-gray fz-12 m-t-10"><text class="left-width">下单时间</text><text class="black">{{orderInfo.createAt}}</text></view>
+		</view>
+		<van-goods-action wx:if="{{orderInfo.orderStatus===100}}">
+			<van-goods-action-button text="取消订单" plain color="rgba(0,0,0,.6)" bind:click="cancelPay"/>
+			<van-goods-action-button text="去支付" bind:click="goPay"/>
+		</van-goods-action>
+			<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm">
+			</van-dialog>
+			<van-dialog id="van-dialog" />
 </view>

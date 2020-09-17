@@ -10,7 +10,8 @@
     "van-stepper": "@vant/weapp/stepper/index",
     "van-image": "@vant/weapp/image/index",
     "van-tag": "@vant/weapp/tag/index",
-    "van-icon": "@vant/weapp/icon/index"
-  },
-  "navigationBarTitleText": "购物车"
+    "van-icon": "@vant/weapp/icon/index",
+    "specification": "/components/specification/specification",
+    "van-sticky": "@vant/weapp/sticky/index"
+  }
 }

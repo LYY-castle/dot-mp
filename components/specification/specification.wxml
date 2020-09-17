@@ -1,0 +1,56 @@
+<!--pages_product/components/specification.wxml-->
+ <van-popup
+    show="{{ perchaseShow }}"
+    bind:close="popClose"
+    round
+    position="bottom"
+    closeable
+    >
+    <!-- 商品规格 -->
+    <view class="popContent">
+      <view class="goods flex-start">
+        <van-image src="{{activePic}}" width="80px" height="80px" fit="cover"></van-image>
+        <view class="m-l-10 fz-12">
+          <view class="minPrice">￥<text class="fz-20 bold">{{activePrice}}</text></view>
+          <view class="c-gray">库存{{activeProductNumber}}件</view>
+          <view>
+            <text wx:if="{{goodsSpecificationNameValue!==''}}">已选:{{goodsSpecificationNameValue}}</text>
+            <view wx:else class="flex-start">请选择:
+              <view wx:for="{{specificationResults}}" wx:key="idName" wx:for-item="name">
+                {{name.specificationName}}
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="content">
+        <view wx:for="{{specificationResults}}" wx:key="index" wx:for-item="item">
+          <view class="m-t-10 m-b-10">{{item.specificationName}}</view>
+          <van-tag
+          size="large"
+          plain
+          wx:for="{{item.goodsSpecificationResults}}"
+          wx:key="goodIndex"
+          wx:for-index="index2"
+          wx:for-item="specificationItem"
+          class="specificationItem"
+          bindtap="selectSpecification"
+          data-option="{{specificationItem}}"
+          data-parent='{{index}}'
+          data-child="{{index2}}"
+          text-color="{{specificationItem.goodsSpecificationValue===specificationItem.activeGoodsSpecificationNameValue?'#ee0a24':'#aaa'}}"
+          >
+          <van-image src="{{specificationItem.goodsSpecificationPicUrl}}" width="10px" height="10px" fit="cover" wx:if="{{specificationItem.goodsSpecificationPicUrl!==''}}" class="m-r-2"></van-image>
+          {{specificationItem.goodsSpecificationValue}}
+        </van-tag>
+        </view>
+        <view class="flex-between m-t-10 m-b-10">
+          数量
+          <van-stepper value="{{ number }}" min="1" max="{{activeProductNumber}}" disable-input="{{false}}" bind:change="changeNumber" />
+        </view>
+      </view>
+      <view class="buttonGroup">
+        <van-button round block="{{true}}" class="buttonItem" color="#f9ae08" bind:click="_operate">确定</van-button>
+      </view>
+    </view>
+    </van-popup>

@@ -41,20 +41,12 @@ Page({
 	 * 生命周期函数--监听页面卸载
 	 */
 	onUnload: function () {
-		const fromPath = wx.getStorageSync('fromPath')
 		wx.navigateBack({
 			delta: 1
 		})
-		// if (fromPath === 'mine') {
-		// 	wx.removeStorageSync('fromPath')
-		// 	wx.switchTab({
-		// 		url: '/pages/mine/mine'
-		// 	})
-		// } else {
-		// 	wx.navigateTo({
-		// 		url: '/pages_product/perchase/perchase'
-		// 	})
-		// }
+		if (wx.getStorageSync('activeAddressId')) {
+			wx.removeStorageSync('activeAddressId')
+		}
 	},
 
 	/**
@@ -104,27 +96,9 @@ Page({
 		})
 	},
 	selectAddress(e) {
-		console.log(e)
-		const fromPath = wx.getStorageSync('fromPath')
-		if (fromPath === 'mine') {
-			console.log('mine')
-		} else {
-			const option = e.currentTarget.dataset.option
-			let addressList = wx.getStorageSync('addressList')
-			const activeAddressId = wx.getStorageSync('activeAddressId')
-			if (activeAddressId) {
-				wx.removeStorageSync('activeAddressId')
-				addressList.forEach((address, index) => {
-					console.log(address.id, option.id)
-					if (address.id === activeAddressId) {
-						addressList.splice(index, 1, option)
-					}
-				})
-			} else {
-				addressList.push(option)
-			}
-			addressList = Array.from(new Set(addressList))
-			wx.setStorageSync('addressList', addressList)
+		const option = e.currentTarget.dataset.option
+		if (wx.getStorageSync('activeAddressId')) {
+			wx.setStorageSync('activeAddressId', option.id)
 			wx.navigateTo({
 				url: '/pages_product/perchase/perchase'
 			})

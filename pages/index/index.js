@@ -1,5 +1,6 @@
-import tool from '../../utils/mixin.js'
-import qseBaoUtil from '../../utils/qsebao.js'
+import tool from '../../utils/mixin'
+import qseBaoUtil from '../../utils/qsebao'
+import util from '../../utils/util'
 import constantCfg from '../../config/constant'
 
 Page({
@@ -52,6 +53,14 @@ Page({
 				let productDetailObj = {}
 				let products = []
 				res.data.forEach((item) => {
+					item.name = util.ellipsis(item.name, 20)
+					let labelArr = []
+					if (item.label.indexOf(',')) {
+						labelArr = item.label.split(',')
+					} else {
+						labelArr = item.label || []
+					}
+					item.label = labelArr
 					if (constantCfg.productCode.qsebao.includes(item.code)) {
 						const insuranceCode = item.code
 						qseBaoUtil

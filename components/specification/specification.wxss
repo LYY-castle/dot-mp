@@ -1,0 +1,38 @@
+/* pages_product/components/specification.wxss */
+@import '/static/less/common.wxss';
+@import '/static/scss/_color.min.wxss';
+@import '/static/scss/_font-size.min.wxss';
+@import '/static/scss/_spacing.min.wxss';
+@import '/static/scss/_useful_class.min.wxss';
+.popContent {
+  box-sizing: border-box;
+  padding: 100px 20px 50px 20px;
+  height: 450px;
+  position: relative;
+}
+.popContent .goods {
+  width: 100;
+  padding: 20px 20px 0 20px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.popContent .content {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.popContent .buttonGroup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.specificationItem {
+  display: inline-block;
+  margin: 5px;
+}

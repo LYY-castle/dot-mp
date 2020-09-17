@@ -36,9 +36,9 @@
   padding: 10px 0 50px 0;
   margin-top: 10px;
 }
-
-.product .title {
-  font-size: 12px;
+.title {
+  font-size: 14px;
+  width:80px;
 }
 
 .product .description {

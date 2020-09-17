@@ -1,5 +1,6 @@
 /* pages_shopping_cart/shopping-cart.wxss */
 .container {
+  position: relative;
   padding-bottom: 50px;
 }
 
@@ -26,7 +27,7 @@
   display: flex;
   align-items: center;
   background: #fff;
-  margin: 5px;
+  margin: 10px;
   border-radius: 7px;
   padding: 10px 10px 10px 0;
 }
@@ -36,17 +37,31 @@
   display: flex;
 }
 
-.guige {
-  display: inline-block;
-  background: #eee;
-  border-radius: 10px;
-  font-size: 10px;
-  padding: 1px 10px;
-  color: rgba(0, 0, 0, .5);
-  /* display: flex; */
-  align-items: center;
-}
 
 .left {
   text-align: left;
+}
+
+.manage {
+  text-align: right;
+  background: #fff;
+  padding-top: 5px;
+  padding-right: 10px;
+}
+
+.deleteContent {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+  display: flex;
+  justify-content: space-between;
+  justify-items: center;
+  padding: 10px 10px 10px 0;
+}
+
+.bg-white {
+  background: #fff;
 }

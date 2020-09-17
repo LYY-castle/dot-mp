@@ -12,26 +12,26 @@ function getSuccess(res) {
 	if (res.statusCode === 401) {
 		wx.removeStorageSync('authorization')
 		const login = {
-      url: '/auth/wx/login',
-      method: 'post'
+			url: '/auth/wx/login',
+			method: 'post'
 		}
 		wx.login({
-      success: res => {
-        const params = {
-          wechatAppId:env.env.appid,
-          wechatCode:res.code
-        }
-        wxRequest({...login,params}).then(res=>{
-          if(res.success){
-						wx.setStorageSync('openId',res.data.weixinOpenid)
-            wx.setStorageSync('userId',res.data.id)
-           	wx.navigateBack({
-              delta: 1
-            })
-          }
-        })
-      }
-    })
+			success: (res) => {
+				const params = {
+					wechatAppId: env.env.appid,
+					wechatCode: res.code
+				}
+				wxRequest({ ...login, params }).then((res) => {
+					if (res.success) {
+						wx.setStorageSync('openId', res.data.weixinOpenid)
+						wx.setStorageSync('userId', res.data.id)
+						wx.navigateBack({
+							delta: 1
+						})
+					}
+				})
+			}
+		})
 	} else {
 		if (res.header['Authorization']) {
 			wx.setStorageSync('authorization', res.header.Authorization)
@@ -40,7 +40,8 @@ function getSuccess(res) {
 			wx.hideLoading()
 		} else {
 			wx.showToast({
-				title: res.data.message
+				title: res.data.message,
+				icon: 'none'
 			})
 		}
 	}
