@@ -132,10 +132,32 @@ Page({
 			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			success: function (res) {
 				//图片的临时路径
-				const src = res.tempFilePaths[0]
-				tool.review({})
-				wx.navigateTo({
-					url: './cropper/cropper?src=' + src
+				wx.uploadFile({
+					url:
+						env.env.VUE_APP_BASE_URL +
+						'/system/minio/' +
+						constantCfg.minio.bucketName, //仅为示例，非真实的接口地址
+					filePath: res.tempFilePaths[0],
+					name: 'file',
+					header,
+					formData: {
+						bucketName: constantCfg.minio.bucketName,
+						fileName: res.tempFilePaths[0]
+					},
+					success(res) {
+						const data = JSON.parse(res.data)
+						console.log(data)
+						// if (data.success) {
+						// 	_this.setData({
+						// 		avatar: data.data.presignedUrl,
+						// 		uploadAvatar: data.data.fileName
+						// 	})
+
+						// 	// wx.navigateTo({
+						// 	// 	url: './cropper/cropper?src=' + src
+						// 	// })
+						// }
+					}
 				})
 			}
 		})
