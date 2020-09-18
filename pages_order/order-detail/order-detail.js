@@ -93,7 +93,7 @@ Page({
 					if (res.data.orderStatus === 100) {
 						let body = ''
 						const time =
-							new Date(res.data.createAt).getTime() +
+							new Date(res.data.createAt.replace(/-/g, '/')).getTime() +
 							15 * 60 * 1000 -
 							new Date().getTime()
 						res.data.orderGoods.forEach((good) => {

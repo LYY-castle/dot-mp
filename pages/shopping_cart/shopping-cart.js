@@ -56,6 +56,10 @@ Page({
 			beforeCart: {
 				url: '/configs',
 				method: 'get'
+			},
+			batch: {
+				url: '/shop-carts/batch',
+				method: 'put'
 			}
 		}
 	},
@@ -152,7 +156,6 @@ Page({
 		}
 	},
 	itemChange(e) {
-		console.log(this.data.result)
 		if (!this.data.deleteButtonShow) {
 			const option = e.currentTarget.dataset.option
 			const params = {
@@ -170,6 +173,7 @@ Page({
 		const resultArr = this.data.shoppingCartList.map((item) => {
 			return String(item.id)
 		})
+
 		this.setData({
 			all: !this.data.all
 		})
@@ -183,11 +187,24 @@ Page({
 			})
 		}
 		if (!this.data.deleteButtonShow) {
-			this.getTotalPrice(this.data.result, this.data.shoppingCartList)
+			const shopCarts = this.data.shoppingCartList.map((item) => {
+				const obj = {
+					checked: this.data.all ? 1 : 0,
+					id: Number(item.id)
+				}
+				return obj
+			})
+			http
+				.wxRequest({ ...this.data.api.batch, params: shopCarts })
+				.then((res) => {
+					if (res.success) {
+						console.log('批量修改状态')
+						this.getShoppingOrderList()
+					}
+				})
 		}
 	},
 	addCount(event) {
-		console.log(event)
 		const option = event.currentTarget.dataset.option
 		const params = {
 			id: option.id,
@@ -200,7 +217,6 @@ Page({
 		})
 	},
 	getTotalPrice(arr1, arr2) {
-		console.log('计算价格')
 		let sumPrice = 0
 		for (let i = 0; i < arr1.length; i++) {
 			for (let j = 0; j < arr2.length; j++) {
@@ -234,11 +250,11 @@ Page({
 		}
 	},
 	deleteCarts() {
-		if (this.data.result.length > 0) {
-			const ids = this.data.result.join(',')
-			console.log(ids)
+		const _this = this
+		if (_this.data.result.length > 0) {
+			const ids = _this.data.result.join(',')
 			wx.showModal({
-				title: '确认要删除这' + this.data.result.length + '种商品吗？',
+				title: '确认要删除这' + _this.data.result.length + '种商品吗？',
 				success(res) {
 					if (res.confirm) {
 						http
@@ -252,7 +268,6 @@ Page({
 								}
 							})
 					} else if (res.cancel) {
-						console.log('用户点击取消')
 					}
 				}
 			})
@@ -294,7 +309,6 @@ Page({
 		return new Promise((resolve) => {})
 	},
 	gotoGoodDetail(e) {
-		console.log()
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
 			productId: option.goods.id
@@ -327,9 +341,7 @@ Page({
 					nameArr.forEach((name) => {
 						res.data.specificationResults.forEach((obj) => {
 							obj.goodsSpecificationResults.forEach((item, index) => {
-								console.log(name, item.goodsSpecificationValue)
 								if (name === item.goodsSpecificationValue) {
-									console.log(index)
 									obj.goodsSpecificationResults[
 										index
 									].activeGoodsSpecificationNameValue =
@@ -339,7 +351,6 @@ Page({
 						})
 					})
 
-					console.log(res.data)
 					this.setData({
 						activeChecked: option.checked,
 						productId: option.product.id,

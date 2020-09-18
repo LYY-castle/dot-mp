@@ -77,3 +77,13 @@ bottom-button2 .right .step {
   align-items: center;
   font-size: 12px;
 }
+
+/* .inputClass {
+  margin: 10px 0;
+  display: block;
+  background-color: #eee;
+}
+
+.inputClass .van-cell {
+  background: transparent;
+} */

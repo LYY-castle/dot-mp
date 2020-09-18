@@ -1,7 +1,7 @@
 import tool from '../../utils/mixin.js'
 import constantCfg from '../../config/constant'
 import env from '../../config/env.config'
-
+import http from '../../utils/request.js'
 Page({
 	/**
 	 * 页面的初始数据
@@ -15,7 +15,14 @@ Page({
 		pageNo: 1,
 		pageSize: 10,
 		firstTypes: null,
-		secondTypes: null
+		secondTypes: null,
+		api: {
+			// 获取二三级树
+			getTree: {
+				url: '/categories/tree',
+				method: 'get'
+			}
+		}
 	},
 
 	/**
@@ -27,7 +34,7 @@ Page({
 		})
 		Promise.resolve()
 			.then(() => this.getTypes(0))
-			.then(() => this.getTypes())
+			.then(() => this.getSecondThirdType())
 	},
 	/**
 	 * 页面上拉触底事件的处理函数
@@ -52,17 +59,16 @@ Page({
 		const activeKey = event.detail
 		this.setData({
 			activeKey,
-			pageNo: 1,
 			bottomLineShow: false,
+			loadingShow: true,
 			secondTypes: null
 		})
-		Promise.resolve().then(() => this.getTypes())
+		Promise.resolve().then(() => this.getSecondThirdType())
 	},
 	// 获取产品列表 0 一级,其他是二级
 	getTypes(val) {
 		let params = {
-			pageNo: this.data.pageNo,
-			pageSize: 100
+			scope: 'all'
 		}
 		if (val === 0) {
 			params.isEnable = 1
@@ -77,26 +83,27 @@ Page({
 						this.setData({
 							firstTypes: res.data
 						})
-					} else {
-						this.setData({
-							secondTypes: res.data
-						})
-					}
-					if (params.pageNo === res.page.totalPage) {
-						this.setData({
-							bottomLineShow: true,
-							loadingShow: false
-						})
-					} else {
-						this.setData({
-							bottomLineShow: false,
-							loadingShow: false
-						})
 					}
 					resolve()
 				}
 			})
 		})
+	},
+	getSecondThirdType() {
+		http
+			.wxRequest({
+				...this.data.api.getTree,
+				params: {
+					idPath: this.data.firstTypes[this.data.activeKey].idPath
+				}
+			})
+			.then((res) => {
+				this.setData({
+					secondTypes: res.data[0].children,
+					bottomLineShow: true,
+					loadingShow: false
+				})
+			})
 	},
 	// 四个按钮点击事件 self购买 share分享案例
 	buttonClickEvent(e) {
@@ -196,12 +203,12 @@ Page({
 			})
 		})
 	},
-	// 根据二级分类跳转到商品列表页面
+	// 根据三级分类跳转到商品列表页面
 	goToProductsListPageById(e) {
 		console.log('跳转到商品列表页面', e)
-		const secondType = e.currentTarget.dataset.id
+		const id = e.currentTarget.dataset.id
 		wx.navigateTo({
-			url: '/pages_product/product-list/product-list?secondType=' + secondType
+			url: '/pages_product/product-list/product-list?id=' + id
 		})
 	}
 })

@@ -1,10 +1,12 @@
 <!--pages/mine/order/order-detail/order-detail.wxml-->
 <view class="container">
 	<view class="p-t-20 topContentText">
-		<van-icon name="clock-o" wx:if="{{orderInfo.orderStatus===100}}"/>
-		{{statusMap[orderInfo.orderStatus].text}}
-		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10">需付款:<text class="m-r-10">￥{{orderInfo.actualPrice}}</text>
-			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish"/></view>
+		<view class="flex-center">
+			<van-icon name="clock-o" wx:if="{{orderInfo.orderStatus===100}}" class="m-r-5"/>
+		{{statusMap[orderInfo.orderStatus].text}}</view>
+		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10 fz-12">
+			需付款:<text class="m-r-10 fz-16 bold c-red">￥{{orderInfo.actualPrice}}</text>
+			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish" class="fz-16 bold m-l-5"/></view>
 		<view wx:if="{{orderInfo.orderStatus===100}}" class="m-t-10">
 			<van-button bindtap="goPay" round class="payButton" color="#fff" size="small">去支付</van-button>
 		</view>

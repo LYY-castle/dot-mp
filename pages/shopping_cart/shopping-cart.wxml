@@ -24,7 +24,7 @@
             <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
             </view>
             <view class="m-l-10" style="width:100%">
-              <view class="fz-14">{{item.goods.name}}被动句巴萨基础上把基础安居八局把数据包VB就是比较动不动就</view>
+              <view class="fz-14">{{item.goods.name}}</view>
               <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}">
                 {{item.goodsSpecificationNameValue}}
                 <van-icon name="arrow-down" size="10"/>
@@ -43,10 +43,10 @@
           </view>
         </view>
       </van-checkbox-group>
-      <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
       <van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
       <van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
     </view>
+    <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
     <van-submit-bar
       wx:if="{{!deleteButtonShow&&shoppingCartList.length>0}}"
       price="{{ totalPrice }}"

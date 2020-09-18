@@ -13,6 +13,7 @@ Page({
 		payment: null,
 		totalPrice: null,
 		order: null,
+		textareaHeight: { minHeight: 20 },
 		pathParams: {},
 		totalCount: null,
 		remark: null,

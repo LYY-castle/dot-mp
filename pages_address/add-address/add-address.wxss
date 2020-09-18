@@ -13,12 +13,14 @@
       background-color: #fff;
 }
 
-.contentField .inputClass{
+.contentField
+.inputClass{
   margin:10px 0;
   display: block;
   background-color:#eee;
 }
-.contentField .inputClass .van-cell{
+.contentField
+.inputClass .van-cell{
   background:transparent;
 }
 .blockButton{

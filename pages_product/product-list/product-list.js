@@ -20,17 +20,12 @@ Page({
 		pageNo: 1
 	},
 	onLoad(options) {
-		const secondType = options.secondType
+		const id = options.id
 		this.setData({
-			productCategoryId: secondType
+			productCategoryId: id
 		})
 		this.getProductList()
 	},
-	// onShow() {
-	// 	Promise.resolve()
-	// 		.then(() => this.getProductSorts())
-	// 		.then(() => this.getProductList())
-	// },
 	// 搜索栏聚焦事件
 	focus() {
 		wx.navigateTo({
@@ -118,14 +113,6 @@ Page({
 					resolve()
 				}
 			})
-		})
-	},
-	gotoProductList(event) {
-		const sortId = event.currentTarget.dataset.item
-			? event.currentTarget.dataset.item.id
-			: 'all'
-		wx.navigateTo({
-			url: '/pages_product/product-list/product-list?sortId=' + sortId
 		})
 	},
 	gotoDetail(e) {

@@ -36,13 +36,15 @@
 				</view>
 			</view>
 			<view class="flex-between">购买数量<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/></view>
-			<view class="flex-between">
-				备注
-				<van-field
+			<view class="">
+			<van-field
+				label="备注"
+        type="textarea"
+				autosize="{{true}}"
 				model:value="{{ remark }}"
 				placeholder="选填"
 				border="{{ false }}"
-				/>
+      ></van-field>
 			</view>
 			<view class="bottom-text">
 				<text class="c-gray">共{{ totalCount }}件</text>
@@ -70,13 +72,15 @@
 				<text class="minPrice">￥{{list.goods.isPromote?list.product.promotePrice*list.number:list.product.retailPrice*list.number}}</text>
 			</view>
 			</view>
-			<view class="flex-between border m-t-10 p-10 fz-12" wx:if="{{cartPerchase}}">
-				备注
+			<view class="border m-t-10 p-10 fz-12" wx:if="{{cartPerchase}}">
 				<van-field
+				label="备注"
+        type="textarea"
+				autosize="{{true}}"
 				model:value="{{ remark }}"
 				placeholder="选填"
 				border="{{ false }}"
-				/>
+      ></van-field>
 			</view>
 	</view>
 	<van-submit-bar price="{{totalPrice * 100}}" color="#f9ae08" tip="{{ true }}" button-text="提交" bind:submit="onSubmit" safe-area-inset-bottom>
