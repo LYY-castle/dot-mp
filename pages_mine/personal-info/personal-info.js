@@ -1,21 +1,18 @@
-import http from '../../utils/request.js'
+import http from '../../utils/request'
+import tool from '../../utils/mixin'
+import { isMobile, isIDNumber } from '../../utils/validate'
 import constantCfg from '../../config/constant'
-import env from '../../config/env.config'
-import areaList from '../../utils/area.js'
-import tool from '../../utils/mixin.js'
-import { isMobile, isIDNumber } from '../../utils/validate.js'
-
 Page({
 	/**
 	 * 页面的初始数据
 	 */
 	data: {
 		empty: '/static/img/avatar.png',
-		uploadAvatar: null,
 		userInfo: {},
 		region: [],
 		// 图片剪切所需参数
 		src: '',
+		resiveOption: null,
 		width: 200, //宽度
 		height: 200, //高度
 		max_width: 400,
@@ -47,23 +44,9 @@ Page({
 	},
 	onLoad: function (options) {
 		const event = options
-		console.log(event)
 		if (event.src) {
 			this.setData({
-				receiveAvatar: event.src
-			})
-		}
-		this.getUserInfo()
-	},
-	/**
-	 * 生命周期函数--监听页面显示
-	 */
-	onShow: function (options) {
-		const event = options
-		console.log(event)
-		if (event) {
-			this.setData({
-				receiveAvatar: event.src
+				resiveOption: event.src
 			})
 		}
 		this.getUserInfo()
@@ -94,7 +77,6 @@ Page({
 	onShareAppMessage: function () {},
 	getUserInfo() {
 		const id = wx.getStorageSync('userId')
-		const _this = this
 		http
 			.wxRequest({
 				...this.data.api.getUserInfo,
@@ -106,16 +88,40 @@ Page({
 						if (res.data.mobile === null) {
 							res.data.mobile = ''
 						}
-						if (this.data.receiveAvatar) {
-							res.data.avatar = this.data.receiveAvatar
+						if (this.data.resiveOption) {
+							console.log(1)
+							this.setData({
+								userInfo: res.data
+							})
+							const viewParam = {
+								bucketName: constantCfg.minio.bucketName,
+								fileName: this.data.resiveOption
+							}
+							tool.review(viewParam).then((result) => {
+								this.setData({
+									receiveAvatar: result.data
+								})
+							})
 						} else {
 							this.setData({
-								receiveAvatar: res.data.avatar
+								userInfo: res.data
 							})
+							if (res.data.avatar.indexOf('https') === -1) {
+								const viewParam = {
+									bucketName: constantCfg.minio.bucketName,
+									fileName: this.data.userInfo.avatar
+								}
+								tool.review(viewParam).then((result) => {
+									this.setData({
+										receiveAvatar: result.data
+									})
+								})
+							} else {
+								this.setData({
+									receiveAvatar: res.data.avatar
+								})
+							}
 						}
-						_this.setData({
-							userInfo: res.data
-						})
 					} else {
 						wx.navigateTo({
 							url: '/pages_mine/login/login'
@@ -132,32 +138,9 @@ Page({
 			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			success: function (res) {
 				//图片的临时路径
-				wx.uploadFile({
-					url:
-						env.env.VUE_APP_BASE_URL +
-						'/system/minio/' +
-						constantCfg.minio.bucketName, //仅为示例，非真实的接口地址
-					filePath: res.tempFilePaths[0],
-					name: 'file',
-					header,
-					formData: {
-						bucketName: constantCfg.minio.bucketName,
-						fileName: res.tempFilePaths[0]
-					},
-					success(res) {
-						const data = JSON.parse(res.data)
-						console.log(data)
-						// if (data.success) {
-						// 	_this.setData({
-						// 		avatar: data.data.presignedUrl,
-						// 		uploadAvatar: data.data.fileName
-						// 	})
-
-						// 	// wx.navigateTo({
-						// 	// 	url: './cropper/cropper?src=' + src
-						// 	// })
-						// }
-					}
+				const src = res.tempFilePaths[0]
+				wx.navigateTo({
+					url: './cropper/cropper?src=' + src
 				})
 			}
 		})
@@ -170,11 +153,9 @@ Page({
 			id: wx.getStorageSync('userId'),
 			nickname: option.nickname,
 			mobile: option.mobile,
-			avatar: option.avatar,
 			weixinOpenid: wx.getStorageSync('openId'),
-			avatar: this.data.receiveAvatar
+			avatar: this.data.resiveOption
 		}
-		console.log('修改用户信息', params)
 		if (option.nickname !== '') {
 			if (option.mobile !== '') {
 				if (isMobile(option.mobile)) {

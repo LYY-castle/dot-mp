@@ -17,7 +17,7 @@ Page({
 		disabledList: [],
 		pathParams: null,
 		editAddressId: null,
-		bottomLineShow: true,
+		bottomLineShow: false,
 		api: {
 			getAddressList: {
 				url: '/user-address',
@@ -46,6 +46,9 @@ Page({
 		})
 		if (wx.getStorageSync('activeAddressId')) {
 			wx.removeStorageSync('activeAddressId')
+		}
+		if (wx.getStorageSync('addAddress')) {
+			wx.removeStorageSync('addAddress')
 		}
 	},
 
@@ -78,9 +81,26 @@ Page({
 				res.data.forEach((item) => {
 					item.bigName = item.name.substring(0, 1)
 				})
-				this.setData({
-					list: res.data
-				})
+				if (params.pageNo === 1) {
+					this.setData({
+						list: res.data
+					})
+				} else {
+					this.setData({
+						list: this.data.res.data.concat(res.data)
+					})
+				}
+				if (res.data.length > 0) {
+					if (params.pageNo === res.page.totalPage) {
+						this.setData({
+							bottomLineShow: true
+						})
+					}
+				} else {
+					this.setData({
+						bottomLineShow: false
+					})
+				}
 			}
 		})
 	},
@@ -97,7 +117,10 @@ Page({
 	},
 	selectAddress(e) {
 		const option = e.currentTarget.dataset.option
-		if (wx.getStorageSync('activeAddressId')) {
+		if (
+			wx.getStorageSync('activeAddressId') ||
+			wx.getStorageSync('addAddress')
+		) {
 			wx.setStorageSync('activeAddressId', option.id)
 			wx.navigateTo({
 				url: '/pages_product/perchase/perchase'

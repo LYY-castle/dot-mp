@@ -163,11 +163,11 @@ Page({
 	},
 	// 下拉刷新
 	onPullDownRefresh() {
-		console.log('下拉刷新')
 		this.setData({
 			pageNo: 1
 		})
 		this.getProductList()
+		wx.stopPullDownRefresh()
 	},
 	/**
 	 * 用户点击右上角分享

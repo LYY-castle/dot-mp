@@ -4,8 +4,8 @@
 	<view class="bigBox">
 		<view class="border m-t-10 p-10">
 			<!-- 地址部分 -->
-			<view class="address">
-				<view class="address">
+			<view class="address" bindtap="selectAddress">
+				<view class="address" >
 					<van-icon name="location-o" class="m-r-10"/>
 					<view wx:if="{{order}}">
 						<view>
@@ -18,7 +18,7 @@
 					</view>
 					<text wx:else>请选择地址</text>
 				</view>
-				<van-icon class="addressIcon" name="arrow" color="#969799" bindtap="selectAddress" data-option="{{order}}"/>
+				<van-icon class="addressIcon" name="arrow" color="#969799"  data-option="{{order}}"/>
 			</view>
 		</view>
 		<view class="m-t-10 border p-10 fz-12" wx:if="{{!cartPerchase}}">
@@ -26,8 +26,8 @@
 				<view class="flex-start-start">
 					<van-image src="{{product.pictureUrl||goods.listPicUrl}}" alt width="100px" height="100px" fit="cover"></van-image>
 					<view class="m-l-10">
-						<view>{{ goods.goodsBrief }}</view>
-						<view class="guige m-t-10">{{product.goodsSpecificationNameValue}}</view>
+						<view>{{ goods.name }}</view>
+						<view class="guige m-t-10" wx:if="{{product.goodsSpecificationNameValue}}">{{product.goodsSpecificationNameValue}}</view>
 					</view>
 				</view>
 				<view class="m-l-10">

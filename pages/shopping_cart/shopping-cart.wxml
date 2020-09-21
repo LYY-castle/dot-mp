@@ -25,12 +25,12 @@
             </view>
             <view class="m-l-10" style="width:100%">
               <view class="fz-14">{{item.goods.name}}</view>
-              <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}">
+              <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}" wx:if="{{item.goodsSpecificationNameValue}}">
                 {{item.goodsSpecificationNameValue}}
                 <van-icon name="arrow-down" size="10"/>
               </view>
               <view>
-                  <view wx:if="item.goods.isPromote">
+                  <view wx:if="{{item.goods.isPromote}}">
                     <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.promotePrice}}元</view>
                     <view class="c-red fz-16 bold left flex-between">￥{{item.product.promotePrice}}<van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>

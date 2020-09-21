@@ -51,6 +51,7 @@ Page({
 	onLoad: function (options) {
 		wx.removeStorageSync('perchaseByCart')
 		wx.removeStorageSync('activeAddressId')
+		wx.removeStorageSync('addAddress')
 		const _this = this
 		if (options.src) {
 			this.setData({
@@ -168,8 +169,8 @@ Page({
 				? data.goodsSpecificationNameValue
 				: this.data.goodsSpecificationNameValue,
 			number: data ? data.number : this.data.number,
-			listPicUrl: data.activePic,
-			productId: data ? data.productId : this.data.productId,
+			listPicUrl: data ? data.activePic : this.data.goods.listPicUrl,
+			productId: data ? data.productId : this.data.products[0].id,
 			retailPrice: data
 				? data.retailPrice
 				: this.data.goods.idPromote
@@ -177,7 +178,6 @@ Page({
 				: this.data.goods.retailPrice,
 			userId: wx.getStorageSync('userId')
 		}
-		console.log(params)
 		this.onClose()
 		if (event === 'cart') {
 			http.wxRequest({ ...this.data.api.addCart, params }).then((res) => {

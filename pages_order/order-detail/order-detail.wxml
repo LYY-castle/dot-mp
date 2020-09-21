@@ -53,7 +53,7 @@
 			<view>配送信息</view>
 			<van-divider />
 			<view class="flex-start-start fz-12">
-				<text class="left-width c-gray">收货地址</text>
+				<text class="left-width c-gray">收货信息</text>
 				<view class="black">
 					{{orderInfo.provinceName}}{{orderInfo.cityName}}{{orderInfo.districtName}}{{orderInfo.address}}
 					<view>{{orderInfo.name}}<text class="m-l-10">{{orderInfo.mobile}}</text></view>

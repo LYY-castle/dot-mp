@@ -27,11 +27,6 @@ Page({
 				iconHref: '/static/img/mine-info.png',
 				path: '/pages_mine/personal-info/personal-info'
 			},
-			// {
-			//   title: '银行卡',
-			//   iconHref: '/static/img/bank-card.png',
-			//   path:'/pages_mine/bank-card/bank-card'
-			// },
 			{
 				title: '我的订单',
 				iconHref: '/static/img/order.png',
@@ -49,6 +44,10 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
+	},
 	/**
 	 * 生命周期函数--监听页面显示
 	 */
@@ -66,9 +65,24 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
-						this.setData({
-							userInfo: res.data
-						})
+						console.log(res.data.avatar.indexOf('https') === -1)
+						if (res.data.avatar.indexOf('https') === -1) {
+							const viewParam = {
+								bucketName: constantCfg.minio.bucketName,
+								fileName: res.data.avatar
+							}
+							tool.review(viewParam).then((result) => {
+								res.data.avatar = result.data
+								this.setData({
+									userInfo: res.data
+								})
+							})
+						} else {
+							this.setData({
+								userInfo: res.data
+							})
+						}
+
 						resolve()
 					}
 				})

@@ -77,6 +77,10 @@ Page({
 			this.getOrderDetail()
 		}
 	},
+	onPullDownRefresh: function () {
+		this.getOrderDetail()
+		wx.stopPullDownRefresh()
+	},
 	getOrderDetail() {
 		http
 			.wxRequest({

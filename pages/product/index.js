@@ -49,6 +49,10 @@ Page({
 			this.getTypes()
 		}
 	},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
+	},
 	/**
 	 * 用户点击右上角分享
 	 */

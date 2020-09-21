@@ -13,5 +13,6 @@
     "van-icon": "@vant/weapp/icon/index",
     "specification": "/components/specification/specification",
     "van-sticky": "@vant/weapp/sticky/index"
-  }
+  },
+  "navigationBarTitleText": ""
 }

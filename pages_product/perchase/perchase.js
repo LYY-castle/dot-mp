@@ -64,10 +64,7 @@ Page({
 			this.getMyaddress()
 		}
 	},
-	/**
-	 * 生命周期函数--监听页面卸载
-	 */
-	onUnload: function () {},
+
 	getProduct() {
 		return new Promise((resolve) => {
 			http
@@ -156,17 +153,24 @@ Page({
 						this.setData({
 							order: res.data[0]
 						})
+					} else {
+						this.setData({
+							order: null
+						})
 					}
 				}
 			}
-			console.log(res)
 		})
 	},
 	// 选择添加地址
 	selectAddress(e) {
 		const option = e.currentTarget.dataset.option
-		console.log(option)
-		wx.setStorageSync('activeAddressId', option.id)
+		if (option) {
+			console.log(option)
+			wx.setStorageSync('activeAddressId', option.id)
+		} else {
+			wx.setStorageSync('addAddress', true)
+		}
 		wx.navigateTo({
 			url: '/pages_address/address-list/address-list'
 		})
@@ -278,10 +282,11 @@ Page({
 	},
 	// 拉起微信支付
 	confirm() {
+		const _this = this
 		http
 			.wxRequest({
-				...this.data.api.payment,
-				params: this.data.payment
+				..._this.data.api.payment,
+				params: _this.data.payment
 			})
 			.then((result) => {
 				console.log(result.data)
@@ -296,7 +301,11 @@ Page({
 				wx.requestPayment({
 					...wechatParams,
 					success(res) {
-						console.log(res)
+						wx.navigateTo({
+							url:
+								'/pages_order/order-detail/order-detail?src=' +
+								_this.data.payment.id
+						})
 					}
 				})
 			})

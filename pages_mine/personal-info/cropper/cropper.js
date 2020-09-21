@@ -1,4 +1,6 @@
 //获取应用实例
+import env from '../../../config/env.config'
+import constantCfg from '../../../config/constant'
 const app = getApp()
 Page({
 	data: {
@@ -108,9 +110,32 @@ Page({
 	},
 	submit() {
 		this.cropper.getImg((obj) => {
-			console.log(obj)
-			wx.navigateTo({
-				url: '../personal-info?src=' + obj.url
+			const header = {
+				authorization: wx.getStorageSync('authorization')
+			}
+			wx.uploadFile({
+				url:
+					env.env.VUE_APP_BASE_URL +
+					'/system/minio/' +
+					constantCfg.minio.bucketName, //仅为示例，非真实的接口地址
+				filePath: obj.url,
+				name: 'file',
+				header,
+				formData: {
+					bucketName: constantCfg.minio.bucketName,
+					fileName: obj.url
+				},
+				success(res) {
+					const data = JSON.parse(res.data)
+					if (data.success) {
+						console.log('剪裁后', data.data)
+						wx.navigateTo({
+							url:
+								'/pages_mine/personal-info/personal-info?src=' +
+								data.data.fileName
+						})
+					}
+				}
 			})
 		})
 	},

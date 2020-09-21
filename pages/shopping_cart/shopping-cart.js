@@ -68,6 +68,7 @@ Page({
 	 */
 	onShow: function () {
 		wx.removeStorageSync('activeAddressId')
+		wx.removeStorageSync('addAddress')
 		this.getShoppingOrderList()
 	},
 	goLogin() {
@@ -75,13 +76,10 @@ Page({
 			url: '/pages_mine/login/login'
 		})
 	},
-	/**
-	 * 页面相关事件处理函数--监听用户下拉动作
-	 */
-	onPullDownRefresh: function () {
-		console.log(123)
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	},
-
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */

@@ -1,5 +1,4 @@
 <view class="container">
-
     <form catchsubmit="updateUserInfo" class="form">
     <view class="avatarContent">
           <van-image
