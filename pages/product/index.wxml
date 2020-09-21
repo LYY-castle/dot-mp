@@ -8,7 +8,7 @@
 				<view class="fz-12 bold">{{second.name}}</view>
 				<van-divider />
 				<view class="goodTypes">
-					<view wx:for="{{second.children}}" wx:key="thirdIdx" wx:for-item="third" class="productItem" data-id="{{third.id}}" bindtap="goToProductsListPageById">
+					<view wx:for="{{second.children}}" wx:key="thirdIdx" wx:for-item="third" class="productItem" data-option="{{third}}" bindtap="goToProductsListPageById">
 						<van-image
 						width="90%"
 						height="60"

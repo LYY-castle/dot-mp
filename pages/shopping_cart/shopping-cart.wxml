@@ -31,11 +31,11 @@
               </view>
               <view>
                   <view wx:if="{{item.goods.isPromote}}">
-                    <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.promotePrice}}元</view>
+                    <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.promotePrice*100)/10000}}元</view>
                     <view class="c-red fz-16 bold left flex-between">￥{{item.product.promotePrice}}<van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>
                   <view wx:else>
-                    <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{item.retailPrice-item.product.retailPrice}}元</view>
+                    <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.retailPrice*100)/10000}}元</view>
                     <view class="c-red fz-16 bold left flex-between">￥{{item.product.retailPrice}} <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>
                 </view>
@@ -59,7 +59,7 @@
   </van-submit-bar>
   <view wx:if="{{deleteButtonShow}}" class="flex-between deleteContent">
     <van-checkbox value="{{ all }}" bind:change="selectAll" checked-color="#ee0a24">全选</van-checkbox>
-    <van-button size="small" bindtap="deleteCarts" round class="m-r-10" disabled="{{result.length===0}}">删除</van-button>
+    <van-button size="small" bindtap="deleteCarts" round class="m-r-10">删除</van-button>
   </view>
   <specification
       perchaseShow="{{perchaseShow}}"

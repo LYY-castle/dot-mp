@@ -35,7 +35,9 @@
 					<view class="c-gray" style="text-align:right">x{{totalCount}}</view>
 				</view>
 			</view>
-			<view class="flex-between">购买数量<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/></view>
+			<view class="flex-between">
+				<view class="text-content">购买数量</view>
+				<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/></view>
 			<view class="">
 			<van-field
 				label="备注"
@@ -49,7 +51,7 @@
 			<view class="bottom-text">
 				<text class="c-gray">共{{ totalCount }}件</text>
 				<text class="m-l-10">小计:</text>
-				<text class="minPrice">￥{{totalPrice}}</text>
+				<text class="minPrice">￥{{totalPrice * 100 / 100}}</text>
 			</view>
 		</view>
 			<view class="m-t-10 border p-10 fz-12" wx:if="{{cartPerchase}}" wx:for="{{dataList}}" wx:key="index" wx:for-item="list">
@@ -69,7 +71,7 @@
 			<view class="bottom-text">
 				<text class="c-gray">共{{ list.number }}件</text>
 				<text class="m-l-10">小计:</text>
-				<text class="minPrice">￥{{list.goods.isPromote?list.product.promotePrice*list.number:list.product.retailPrice*list.number}}</text>
+				<text class="minPrice">￥{{ totalPrice * 100 / 100 }}</text>
 			</view>
 			</view>
 			<view class="border m-t-10 p-10 fz-12" wx:if="{{cartPerchase}}">
@@ -89,7 +91,7 @@
 		</view>
 	</van-submit-bar>
 	<van-dialog show="{{dialogShow}}" title="请确认支付" use-slot="{{true}}" show-cancel-button bind:confirm="confirm" bind:cancel="cancle">
-		<view class="flex-center mt font-size-20">￥{{ totalPrice }}</view>
+		<view class="flex-center mt font-size-20">￥{{ totalPrice * 100 / 100 }}</view>
 	</van-dialog>
 	<van-dialog id="van-dialog" />
 </view>

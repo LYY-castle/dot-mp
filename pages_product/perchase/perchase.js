@@ -88,8 +88,10 @@ Page({
 							totalCount: count,
 							totalPrice:
 								res.data.goods.isPromote === 1
-									? res.data.product.promotePrice * count
-									: res.data.product.retailPrice * count
+									? (Math.round(res.data.product.promotePrice * 100) * count) /
+									  100
+									: (Math.round(res.data.product.retailPrice * 100) * count) /
+									  100
 						})
 						resolve()
 					}
@@ -103,14 +105,17 @@ Page({
 			totalCount += this.data.dataList[i].number
 			if (this.data.dataList[i].goods.isPromote) {
 				totalPrice +=
-					this.data.dataList[i].product.promotePrice *
-					this.data.dataList[i].number
+					(Math.round(this.data.dataList[i].product.promotePrice * 100) *
+						this.data.dataList[i].number) /
+					100
 			} else {
 				totalPrice +=
-					this.data.dataList[i].product.retailPrice *
-					this.data.dataList[i].number
+					(Math.round(this.data.dataList[i].product.retailPrice * 100) *
+						this.data.dataList[i].number) /
+					100
 			}
 		}
+		console.log(totalPrice)
 		this.setData({
 			totalCount,
 			totalPrice
@@ -178,83 +183,90 @@ Page({
 	// 生成订单
 	onSubmit() {
 		let orderGoods = []
-		if (this.data.cartPerchase) {
-			this.data.dataList.forEach((list) => {
-				const obj = {
-					goodsId: list.goods.id,
-					goodsName: list.goods.name,
-					goodsSpecificationIds: list.goodsSpecificationIds,
-					goodsSpecificationNameValue: list.goodsSpecificationNameValue,
-					listPicUrl: list.listPicUrl,
-					productId: list.product.id,
-					number: list.number,
-					retailPrice: list.goods.isPromote
-						? list.product.promotePrice
-						: list.product.retailPrice
-				}
-				orderGoods.push(obj)
-			})
-		} else {
-			orderGoods = [
-				{
-					goodsId: this.data.goods.id,
-					goodsName: this.data.goods.name,
-					goodsSpecificationIds: this.data.product.goodsSpecificationIds,
-					goodsSpecificationNameValue: this.data.product
-						.goodsSpecificationNameValue,
-					listPicUrl: this.data.product.pictureUrl
-						? this.data.product.pictureUrl
-						: this.data.goods.listPicUrl,
-					productId: this.data.product.id,
-					number: this.data.totalCount,
-					retailPrice: this.data.goods.isPromote
-						? this.data.product.promotePrice
-						: this.data.product.retailPrice
-				}
-			]
-		}
-		const params = {
-			isFromShopCat: this.data.cartPerchase ? 1 : 0,
-			address: this.data.order.address,
-			province: this.data.order.province,
-			city: this.data.order.city,
-			district: this.data.order.district,
-			mobile: this.data.order.mobile,
-			name: this.data.order.name,
-			remark: this.data.remark,
-			createBy: wx.getStorageSync('userId'),
-			goodsPrice: this.data.totalPrice,
-			orderGoods
-		}
-		http
-			.wxRequest({
-				...this.data.api.addOrder,
-				params
-			})
-			.then((res) => {
-				if (res.success) {
-					let body = ''
-					if (this.data.cartPerchase) {
-						this.data.dataList.forEach((list) => {
-							body += list.goods.name
-						})
-						body = util.ellipsis(body, 128)
-					} else {
-						body = this.data.goods.name
+		if (this.data.order) {
+			if (this.data.cartPerchase) {
+				this.data.dataList.forEach((list) => {
+					const obj = {
+						goodsId: list.goods.id,
+						goodsName: list.goods.name,
+						goodsSpecificationIds: list.goodsSpecificationIds,
+						goodsSpecificationNameValue: list.goodsSpecificationNameValue,
+						listPicUrl: list.listPicUrl,
+						productId: list.product.id,
+						number: list.number,
+						retailPrice: list.goods.isPromote
+							? list.product.promotePrice
+							: list.product.retailPrice
 					}
-					this.setData({
-						dialogShow: true,
-						payment: {
-							id: res.data.id,
-							openid: wx.getStorageSync('openId'),
-							outTradeNo: res.data.orderNo,
-							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
-							body,
-							tradeType: 'JSAPI'
+					orderGoods.push(obj)
+				})
+			} else {
+				orderGoods = [
+					{
+						goodsId: this.data.goods.id,
+						goodsName: this.data.goods.name,
+						goodsSpecificationIds: this.data.product.goodsSpecificationIds,
+						goodsSpecificationNameValue: this.data.product
+							.goodsSpecificationNameValue,
+						listPicUrl: this.data.product.pictureUrl
+							? this.data.product.pictureUrl
+							: this.data.goods.listPicUrl,
+						productId: this.data.product.id,
+						number: this.data.totalCount,
+						retailPrice: this.data.goods.isPromote
+							? this.data.product.promotePrice
+							: this.data.product.retailPrice
+					}
+				]
+			}
+			const params = {
+				isFromShopCat: this.data.cartPerchase ? 1 : 0,
+				address: this.data.order.address,
+				province: this.data.order.province,
+				city: this.data.order.city,
+				district: this.data.order.district,
+				mobile: this.data.order.mobile,
+				name: this.data.order.name,
+				remark: this.data.remark,
+				createBy: wx.getStorageSync('userId'),
+				goodsPrice: this.data.totalPrice,
+				orderGoods
+			}
+			http
+				.wxRequest({
+					...this.data.api.addOrder,
+					params
+				})
+				.then((res) => {
+					if (res.success) {
+						let body = ''
+						if (this.data.cartPerchase) {
+							this.data.dataList.forEach((list) => {
+								body += list.goods.name
+							})
+							body = util.ellipsis(body, 128)
+						} else {
+							body = this.data.goods.name
 						}
-					})
-				}
+						this.setData({
+							dialogShow: true,
+							payment: {
+								id: res.data.id,
+								openid: wx.getStorageSync('openId'),
+								outTradeNo: res.data.orderNo,
+								totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
+								body,
+								tradeType: 'JSAPI'
+							}
+						})
+					}
+				})
+		} else {
+			wx.showToast({
+				title: '请选择收货地址',
+				icon: 'none'
 			})
+		}
 	},
 	// 取消支付
 	cancle() {
@@ -313,12 +325,16 @@ Page({
 	numberChange(e) {
 		const count = e.detail
 		const price = this.data.goods.isPromote
-			? this.data.product.promotePrice * count
-			: this.data.product.retailPrice * count
+			? (Math.round(this.data.product.promotePrice * 100) * count) / 100
+			: (Math.round(this.data.product.retailPrice * 100) * count) / 100
 		this.setData({
 			totalCount: count,
 			totalPrice: price
 		})
 		wx.setStorageSync('activeProductNumber', count)
+	},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	}
 })

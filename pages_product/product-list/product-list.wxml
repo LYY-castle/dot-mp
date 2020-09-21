@@ -1,9 +1,16 @@
+<page-meta>
+  <navigation-bar
+    title="{{nbTitle}}"
+  />
+</page-meta>
 <view class="container">
 	<van-sticky>
-		<van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
+		<van-search value="{{ searchValue }}" use-action-slot bind:change="change"
+		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search" background="#fff" clearable="{{false}}" >
+			<view slot="action" bind:tap="search" class="searchColor" wx:if="{{historyListShow}}">搜索</view>
+		</van-search>
 	</van-sticky>
-	<view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
-<view class="goodContent" wx:if="{{productList.length>0}}">
+	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
 				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />

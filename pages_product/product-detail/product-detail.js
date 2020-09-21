@@ -42,6 +42,11 @@ Page({
 			getCart: {
 				url: '/shop-carts',
 				method: 'get'
+			},
+			// 加入购物车上限
+			config: {
+				url: '/configs/code/{code}',
+				method: 'get'
 			}
 		}
 	},
@@ -52,6 +57,7 @@ Page({
 		wx.removeStorageSync('perchaseByCart')
 		wx.removeStorageSync('activeAddressId')
 		wx.removeStorageSync('addAddress')
+		wx.removeStorageSync('activeProductNumber')
 		const _this = this
 		if (options.src) {
 			this.setData({
@@ -157,42 +163,63 @@ Page({
 		}
 	},
 	addCartOrPerchase(event, data) {
-		console.log(data)
 		const _this = this
 		const params = {
 			checked: 1,
-			goodsId: this.data.goods.id,
+			goodsId: _this.data.goods.id,
 			goodsSpecificationIds: data
 				? data.goodsSpecificationIds
-				: this.data.goodsSpecificationIds,
+				: _this.data.goodsSpecificationIds,
 			goodsSpecificationNameValue: data
 				? data.goodsSpecificationNameValue
-				: this.data.goodsSpecificationNameValue,
-			number: data ? data.number : this.data.number,
-			listPicUrl: data ? data.activePic : this.data.goods.listPicUrl,
-			productId: data ? data.productId : this.data.products[0].id,
+				: _this.data.goodsSpecificationNameValue,
+			number: data ? data.number : _this.data.number,
+			listPicUrl: data ? data.activePic : _this.data.goods.listPicUrl,
+			productId: data ? data.productId : _this.data.products[0].id,
 			retailPrice: data
 				? data.retailPrice
-				: this.data.goods.idPromote
-				? this.data.goods.promotePrice
-				: this.data.goods.retailPrice,
+				: _this.data.goods.idPromote
+				? _this.data.goods.promotePrice
+				: _this.data.goods.retailPrice,
 			userId: wx.getStorageSync('userId')
 		}
-		this.onClose()
+		_this.onClose()
 		if (event === 'cart') {
-			http.wxRequest({ ...this.data.api.addCart, params }).then((res) => {
-				if (res.success) {
-					wx.showToast({
-						title: '加入购物车成功',
-						icon: 'none',
-						success() {
-							setTimeout(() => {
-								_this.getCartDotsNum()
-							}, 2000)
-						}
-					})
-				}
-			})
+			http
+				.wxRequest({
+					..._this.data.api.config,
+					urlReplacements: [
+						{ substr: '{code}', replacement: 'max_cart_goods_count' }
+					]
+				})
+				.then((res) => {
+					console.log(
+						_this.data.cartDotsNum,
+						_this.data.cartDotsNum < Number(res.data.val)
+					)
+					if (_this.data.cartDotsNum < Number(res.data.val)) {
+						http
+							.wxRequest({ ..._this.data.api.addCart, params })
+							.then((res) => {
+								if (res.success) {
+									wx.showToast({
+										title: '加入购物车成功',
+										icon: 'none',
+										success() {
+											setTimeout(() => {
+												_this.getCartDotsNum()
+											}, 2000)
+										}
+									})
+								}
+							})
+					} else {
+						wx.showToast({
+							title: '购物车已满，请先去清理购物车商品',
+							icon: 'none'
+						})
+					}
+				})
 		} else if (event === 'perchase') {
 			wx.setStorageSync('activeProductId', params.productId)
 			wx.navigateTo({
@@ -222,5 +249,9 @@ Page({
 				})
 			}
 		})
+	},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	}
 })

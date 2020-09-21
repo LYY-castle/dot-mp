@@ -15,8 +15,6 @@
         "search/search",
         "product-list/product-list",
         "product-detail/product-detail",
-        "share-detail/share-detail",
-        "share-list/share-list",
         "perchase/perchase"
       ]
     },

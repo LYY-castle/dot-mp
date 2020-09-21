@@ -26,7 +26,7 @@
 				></van-image>
 				<view class="m-l-10" style="text-align: left">
 					<view class="fz-14 black">{{ item.goodsName }}</view>
-					<view class="guige m-t-5">{{
+					<view class="guige m-t-5" wx:if="{{item.goodsSpecificationNameValue}}">{{
 						item.goodsSpecificationNameValue
 					}}</view>
 					<view class="m-t-5 c-gray fz-12">

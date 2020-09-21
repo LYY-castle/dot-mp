@@ -263,5 +263,9 @@ Page({
 				nbTitle: '新增收货地址'
 			})
 		}
+	},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	}
 })

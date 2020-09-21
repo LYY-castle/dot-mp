@@ -60,6 +60,11 @@ Page({
 			batch: {
 				url: '/shop-carts/batch',
 				method: 'put'
+			},
+			// 结算上限
+			config: {
+				url: '/configs/code/{code}',
+				method: 'get'
 			}
 		}
 	},
@@ -233,10 +238,26 @@ Page({
 	},
 	// 结算
 	onClickButton() {
-		wx.setStorageSync('perchaseByCart', true)
-		wx.navigateTo({
-			url: '/pages_product/perchase/perchase'
-		})
+		http
+			.wxRequest({
+				...this.data.api.config,
+				urlReplacements: [
+					{ substr: '{code}', replacement: 'max_perchase_goods_count' }
+				]
+			})
+			.then((res) => {
+				if (this.data.result.length < Number(res.data.val)) {
+					wx.setStorageSync('perchaseByCart', true)
+					wx.navigateTo({
+						url: '/pages_product/perchase/perchase'
+					})
+				} else {
+					wx.showToast({
+						title: '商品数量超出结算上限',
+						icon: 'none'
+					})
+				}
+			})
 	},
 	manage() {
 		this.setData({
@@ -268,6 +289,11 @@ Page({
 					} else if (res.cancel) {
 					}
 				}
+			})
+		} else {
+			wx.showToast({
+				title: '请选择要删除的商品',
+				icon: 'none'
 			})
 		}
 	},

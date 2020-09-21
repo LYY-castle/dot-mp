@@ -19,7 +19,7 @@
 					<van-image src="{{order.orderGoods[0].listPicUrl}}" alt width="80px" height="80px" fit="cover" class="m-r-5"/>
 					<view class="m-l-10">
 						<view>{{order.orderGoods[0].goodsName}}</view>
-						<view class="guige m-t-10">{{order.orderGoods[0].goodsSpecificationNameValue}}</view>
+						<view class="guige m-t-10" wx:if="{{order.orderGoods[0].goodsSpecificationNameValue}}">{{order.orderGoods[0].goodsSpecificationNameValue}}</view>
 					</view>
 				</view>
 				<view class="c-darkgrey  flex-between-end">

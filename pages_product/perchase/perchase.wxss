@@ -78,6 +78,17 @@ bottom-button2 .right .step {
   font-size: 12px;
 }
 
+.text-content {
+  width: 31%;
+  text-align: right;
+  font-size: 14px;
+}
+
+.van-field__label {
+  text-align: right;
+  color: #000 !important;
+}
+
 /* .inputClass {
   margin: 10px 0;
   display: block;

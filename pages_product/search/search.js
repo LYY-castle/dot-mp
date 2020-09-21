@@ -50,7 +50,6 @@ Page({
 			this.getProductList()
 		}
 	},
-
 	change(e) {
 		this.setData({
 			searchValue: e.detail
@@ -184,5 +183,8 @@ Page({
 				}
 			})
 		})
+	},
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	}
 })

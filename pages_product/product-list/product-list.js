@@ -5,6 +5,7 @@ import constantCfg from '../../config/constant'
 
 Page({
 	data: {
+		nbTitle: '',
 		bottomLineShow: false,
 		empty: '/static/img/empty.png',
 		productCategoryId: null,
@@ -20,9 +21,9 @@ Page({
 		pageNo: 1
 	},
 	onLoad(options) {
-		const id = options.id
 		this.setData({
-			productCategoryId: id
+			productCategoryId: options.id,
+			nbTitle: options.name
 		})
 		this.getProductList()
 	},
@@ -37,7 +38,7 @@ Page({
 		let productDetailObj = {}
 		return new Promise((resolve) => {
 			let params = {
-				productCategoryId: this.data.productCategoryId,
+				categoryId: this.data.productCategoryId,
 				pageNo: this.data.pageNo,
 				pageSize: 10,
 				isOnSale: 1
@@ -151,6 +152,7 @@ Page({
 			pageNo: 1
 		})
 		this.getProductList()
+		wx.stopPullDownRefresh()
 	},
 	/**
 	 * 用户点击右上角分享

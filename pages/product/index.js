@@ -210,9 +210,13 @@ Page({
 	// 根据三级分类跳转到商品列表页面
 	goToProductsListPageById(e) {
 		console.log('跳转到商品列表页面', e)
-		const id = e.currentTarget.dataset.id
+		const option = e.currentTarget.dataset.option
 		wx.navigateTo({
-			url: '/pages_product/product-list/product-list?id=' + id
+			url:
+				'/pages_product/product-list/product-list?id=' +
+				option.id +
+				'&name=' +
+				option.name
 		})
 	}
 })

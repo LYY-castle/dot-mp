@@ -64,7 +64,10 @@ Page({
 	/**
 	 * 页面相关事件处理函数--监听用户下拉动作
 	 */
-	onPullDownRefresh: function () {},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
+	},
 
 	/**
 	 * 页面上拉触底事件的处理函数
@@ -186,10 +189,26 @@ Page({
 					})
 				}
 			} else {
-				wx.showToast({
-					title: '手机号不能为空',
-					icon: 'none'
-				})
+				http
+					.wxRequest({
+						...this.data.api.modifyUserInfo,
+						params
+					})
+					.then((res) => {
+						if (res.success) {
+							wx.showToast({
+								title: '提交成功',
+								icon: 'none',
+								success() {
+									setTimeout(function () {
+										wx.switchTab({
+											url: '/pages/mine/mine'
+										})
+									}, 1000)
+								}
+							})
+						}
+					})
 			}
 		} else {
 			wx.showToast({

@@ -7,32 +7,6 @@
 		</van-search>
 	</van-sticky>
 	<view wx:if="{{!historyListShow}}">
-		<!-- <view wx:if="{{productList.length>0}}" class="goodContent">
-			<view wx:for="{{productList}}" wx:for-item="list" wx:key="listIndex" class="goodItem" bindtap="gotoDetail" data-option="{{list}}">
-        <view class="imgContent">
-					<van-image src="{{list.image}}" alt width="100%" height="160px" fit="cover" wx:if="{{list.image !== ''}}" />
-					<van-image  alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
-        </view>
-        <view class="textContent">
-				<view class="minPrice fz-12">
-						￥
-						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
-						<text class="minPrice fz-12">起</text>
-						<text class="originPrice">￥{{ item.marketPrice }}</text>
-					</view>
-          <view class="m-b-5">
-            <van-tag round color="rgba(232, 31, 31, .1)" text-color="rgba(232, 31, 31, .7)" class="fz-10 m-r-5"
-              >多买优惠</van-tag
-            >
-          </view>
-          <view>
-            <view class="minPrice fz-16">￥{{ list.pricingMethod === 1 ? list.minPrice : list.price }}</view>
-            <view class="m-r-10 minPrice fz-10">起</view>
-            <view class="originPrice">￥{{ list.pricingMethod === 1 ? list.maxPrice : list.originalPrice }}</view>
-          </view>
-        </view>
-			</view>
-		</view> -->
 		<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
@@ -46,7 +20,8 @@
 					wx:for="{{item.label}}"
 					wx:for-item="labelItem"
 					wx:key="labelIndex">{{labelItem}}</text>
-						{{item.name}}</view>
+					</view>
+					<view>{{item.name}}</view>
 					<view class="fz-12 m-b-5 c-gray">{{ item.goodsBrief }}</view>
 						<text
 					class="guige m-r-5 m-b-5"
@@ -85,5 +60,4 @@
 		</view>
 		<van-empty description="暂无搜索记录" wx:else></van-empty>
 	</view>
-
 </view>

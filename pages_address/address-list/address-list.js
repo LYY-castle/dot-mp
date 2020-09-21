@@ -126,5 +126,9 @@ Page({
 				url: '/pages_product/perchase/perchase'
 			})
 		}
+	},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	}
 })

@@ -1,2 +1,0 @@
-<!--pages_address/components/address.wxml-->
-<van-area area-list="{{ areaList }}" />
