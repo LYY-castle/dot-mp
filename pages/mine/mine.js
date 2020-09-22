@@ -10,6 +10,7 @@ Page({
 	data: {
 		bg: '/static/img/bg.png',
 		avatar: '/static/img/avatar.png',
+		shopping_money: null, // 是否绑定购物金
 		userInfo: null,
 		api: {
 			getUserInfo: {
@@ -53,6 +54,7 @@ Page({
 	 */
 	onShow: function () {
 		this.getUserInfo()
+		this.getShoppingMoney()
 	},
 	// 获取用户的头像信息
 	getUserInfo() {
@@ -82,10 +84,16 @@ Page({
 								userInfo: res.data
 							})
 						}
-
 						resolve()
 					}
 				})
+		})
+	},
+	getShoppingMoney() {
+		this.setData({
+			shopping_money: wx.getStorageSync('shopping_money')
+				? wx.getStorageSync('shopping_money')
+				: false
 		})
 	},
 	bindRegionChange(e) {

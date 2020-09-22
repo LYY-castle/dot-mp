@@ -12,7 +12,7 @@
 			<view class="textContent">
 					<view class="fz-14 m-b-5">
 						<text
-					class="guige guige-label m-r-5 m-b-5"
+					class="guige guige-label m-r-3 m-b-5"
 					wx:for="{{item.label}}"
 					wx:for-item="labelItem"
 					wx:key="labelIndex">{{labelItem}}</text>

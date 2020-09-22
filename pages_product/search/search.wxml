@@ -16,18 +16,13 @@
 			<view class="textContent">
 					<view class="fz-14 m-b-5">
 						<text
-					class="guige guige-label m-r-5 m-b-5"
+					class="guige guige-label m-r-3 m-b-5"
 					wx:for="{{item.label}}"
 					wx:for-item="labelItem"
 					wx:key="labelIndex">{{labelItem}}</text>
+					{{item.name}}
 					</view>
-					<view>{{item.name}}</view>
 					<view class="fz-12 m-b-5 c-gray">{{ item.goodsBrief }}</view>
-						<text
-					class="guige m-r-5 m-b-5"
-					wx:for="{{item.label}}"
-					wx:for-item="labelItem"
-					wx:key="labelIndex">{{labelItem}}</text>
 					<view class="minPrice fz-12">
 						￥
 						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>

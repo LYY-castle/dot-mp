@@ -18,5 +18,11 @@
     bind:click="gotoPage"
     data-option="{{item}}"
   />
+  <van-cell
+    title="我的购物金"
+    wx:if="{{shopping_money}}"
+  />
+  <van-button icon="plus" plain block="{{true}}" wx:if="{{!shopping_money}}">绑定购物金</van-button>
   </view>
+
 </view>

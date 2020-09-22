@@ -24,7 +24,8 @@
       "pages": [
         "personal-info/personal-info",
         "personal-info/cropper/cropper",
-        "login/login"
+        "login/login",
+        "add-shopping-money/add-shopping-money"
       ]
     },
     {
