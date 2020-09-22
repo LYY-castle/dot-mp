@@ -28,10 +28,7 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
-	onLoad: function () {
-		this.setData({
-			activeKey: 0
-		})
+	onShow: function () {
 		Promise.resolve()
 			.then(() => this.getTypes(0))
 			.then(() => this.getSecondThirdType())
@@ -87,6 +84,20 @@ Page({
 						this.setData({
 							firstTypes: res.data
 						})
+						if (wx.getStorageSync('activeSortId')) {
+							this.data.firstTypes.forEach((item, index) => {
+								if (item.id === wx.getStorageSync('activeSortId')) {
+									this.setData({
+										activeKey: index
+									})
+									wx.removeStorageSync('activeSortId')
+								}
+							})
+						} else {
+							this.setData({
+								activeKey: 0
+							})
+						}
 					}
 					resolve()
 				}

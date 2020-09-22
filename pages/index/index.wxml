@@ -2,6 +2,12 @@
 	<van-sticky>
 		<van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
 	</van-sticky>
+	<view class="sort m-b-10">
+    <view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" bindtap="gotoProductList" data-item="{{sort}}" class="sortItem">
+      <van-image src="{{sort.iconUrl}}" alt width="40px" height="40px"/>
+      <view>{{sort.name}}</view>
+    </view>
+  </view>
 	<view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
 	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">

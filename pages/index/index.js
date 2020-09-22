@@ -124,11 +124,10 @@ Page({
 		})
 	},
 	gotoProductList(event) {
-		const sortId = event.currentTarget.dataset.item
-			? event.currentTarget.dataset.item.id
-			: 'all'
-		wx.navigateTo({
-			url: '/pages_product/product-list/product-list?sortId=' + sortId
+		const sortId = event.currentTarget.dataset.item.id
+		wx.setStorageSync('activeSortId', sortId)
+		wx.switchTab({
+			url: '/pages/product/index'
 		})
 	},
 	gotoDetail(e) {
@@ -147,7 +146,6 @@ Page({
 			}
 		})
 	},
-
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */
