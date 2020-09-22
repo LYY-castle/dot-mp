@@ -1,2 +1,22 @@
-<!--pages_mine/add-shopping-money/add-shopping-money.wxml-->
-<text>pages_mine/add-shopping-money/add-shopping-money.wxml</text>
+<page-meta>
+  <navigation-bar
+    title="{{nbTitle}}"
+  />
+</page-meta>
+<view class="container">
+    <form catchsubmit="addShoppingMoney" class="form" class="centerContent">
+        <van-field
+          model:value="{{accountNo}}"
+          label="账号"
+          name="accountNo"
+          placeholder="请输入账号"
+        />
+        <van-field
+          model:value="{{accountPassword}}"
+          name="accountPassword"
+          label="密码"
+          placeholder="请输入密码"
+        />
+        <van-button round type="info" form-type="submit" block="{{true}}" color="#f9ae08" class="block m-t-50">绑定</van-button>
+    </form>
+  </view>

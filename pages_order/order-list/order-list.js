@@ -95,7 +95,7 @@ Page({
 			params: {
 				pageNo: this.data.pageNo,
 				pageSize: this.data.pageSize,
-				createBy: wx.getStorageSync('userId')
+				userId: wx.getStorageSync('userId')
 			}
 		})
 		Promise.resolve().then(() => this.getOrderList())
@@ -115,7 +115,7 @@ Page({
 					params: {
 						pageNo,
 						pageSize: this.data.pageSize,
-						createBy: wx.getStorageSync('userId')
+						userId: wx.getStorageSync('userId')
 					}
 				})
 			} else {
@@ -123,7 +123,7 @@ Page({
 					params: {
 						pageNo,
 						pageSize: this.data.pageSize,
-						createBy: wx.getStorageSync('userId'),
+						userId: wx.getStorageSync('userId'),
 						orderStatus: this.data.orderStatus
 					}
 				})
@@ -145,7 +145,7 @@ Page({
 				params: {
 					pageNo: 1,
 					pageSize: this.data.pageSize,
-					createBy: wx.getStorageSync('userId')
+					userId: wx.getStorageSync('userId')
 				}
 			})
 		} else {
@@ -153,7 +153,7 @@ Page({
 				params: {
 					pageNo: 1,
 					pageSize: this.data.pageSize,
-					createBy: wx.getStorageSync('userId'),
+					userId: wx.getStorageSync('userId'),
 					orderStatus: this.data.orderStatus
 				}
 			})
@@ -161,6 +161,7 @@ Page({
 		this.getOrderList()
 	},
 	getOrderList() {
+		console.log('获取订单列表参数', this.data.params)
 		return new Promise((resolve) => {
 			http
 				.wxRequest({
@@ -206,5 +207,9 @@ Page({
 		wx.navigateTo({
 			url: '/pages_order/order-detail/order-detail?src=' + orderId
 		})
+	},
+	// 下拉
+	onPullDownRefresh() {
+		wx.stopPullDownRefresh()
 	}
 })

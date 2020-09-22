@@ -31,7 +31,7 @@
               </view>
               <view>
                   <view wx:if="{{item.goods.isPromote}}">
-                    <view wx:if="{{item.retailPrice-item.goods.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.promotePrice*100)/10000}}元</view>
+                    <view wx:if="{{item.retailPrice-item.product.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.promotePrice*100)/10000}}元</view>
                     <view class="c-red fz-16 bold left flex-between">￥{{item.product.promotePrice}}<van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>
                   <view wx:else>

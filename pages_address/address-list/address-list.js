@@ -41,15 +41,15 @@ Page({
 	 * 生命周期函数--监听页面卸载
 	 */
 	onUnload: function () {
-		wx.navigateBack({
-			delta: 1
-		})
-		if (wx.getStorageSync('activeAddressId')) {
-			wx.removeStorageSync('activeAddressId')
-		}
-		if (wx.getStorageSync('addAddress')) {
-			wx.removeStorageSync('addAddress')
-		}
+		// wx.navigateBack({
+		// 	delta: 1
+		// })
+		// if (wx.getStorageSync('activeAddressId')) {
+		// 	wx.removeStorageSync('activeAddressId')
+		// }
+		// if (wx.getStorageSync('addAddress')) {
+		// 	wx.removeStorageSync('addAddress')
+		// }
 	},
 
 	/**

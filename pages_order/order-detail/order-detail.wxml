@@ -39,7 +39,7 @@
 		</view>
 		<van-divider />
 		<view class="flex-between m-b-10">商品总额<text>￥{{orderInfo.goodsPrice}}</text></view>
-		<!-- <view class="flex-between m-b-10 c-gray">优惠总额<text class="c-red">-￥{{}}</text></view> -->
+		<view class="flex-between m-b-10 c-gray" wx:if="{{orderInfo.shoppingMoney}}">购物金抵扣<text class="c-red">-￥{{orderInfo.shoppingMoney}}</text></view>
 		<!-- <view class="flex-between m-b-10 c-gray">运费<text>+12</text></view> -->
 		<van-divider />
 		<view class="flex-between-end m-b-10">

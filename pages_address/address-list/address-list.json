@@ -5,7 +5,6 @@
     "van-button": "@vant/weapp/button/index",
     "van-goods-action": "@vant/weapp/goods-action/index",
     "van-empty": "@vant/weapp/empty/index",
-    "van-divider": "@vant/weapp/divider/index",
-    "address": "../components/address"
+    "van-divider": "@vant/weapp/divider/index"
   }
 }

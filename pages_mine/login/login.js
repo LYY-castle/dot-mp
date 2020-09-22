@@ -25,8 +25,8 @@ Page({
 				}
 				http.wxRequest({ ..._this.data.api.login, params }).then((res) => {
 					if (res.success) {
-						wx.navigateBack({
-							delta: 1
+						wx.navigateTo({
+							url: '/pages_mine/personal-info/personal-info'
 						})
 					}
 				})

@@ -1,6 +1,6 @@
 import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
-import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog'
+import Dialog from '@vant/weapp/dialog/dialog'
 import constantCfg from '../../config/constant'
 
 Page({
@@ -10,7 +10,7 @@ Page({
 	data: {
 		bg: '/static/img/bg.png',
 		avatar: '/static/img/avatar.png',
-		shopping_money: null, // 是否绑定购物金
+		money: null, // 购物金
 		userInfo: null,
 		api: {
 			getUserInfo: {
@@ -20,6 +20,14 @@ Page({
 			logout: {
 				url: '/users/logout',
 				method: 'get'
+			},
+			getShoppingMoney: {
+				url: '/user-shopping-accounts',
+				method: 'get'
+			},
+			deleteShoppingMoney: {
+				url: '/user-shopping-accounts',
+				method: 'delete'
 			}
 		},
 		list: [
@@ -90,11 +98,53 @@ Page({
 		})
 	},
 	getShoppingMoney() {
-		this.setData({
-			shopping_money: wx.getStorageSync('shopping_money')
-				? wx.getStorageSync('shopping_money')
-				: false
+		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
+			if (res.success) {
+				if (res.data) {
+					this.setData({
+						money: res.data.amount
+					})
+				} else {
+					this.setData({
+						money: null
+					})
+				}
+			}
 		})
+	},
+	addShopingMoney() {
+		wx.navigateTo({
+			url: '/pages_mine/add-shopping-money/add-shopping-money'
+		})
+	},
+	deleteShopingMoney() {
+		const _this = this
+		Dialog.confirm({
+			title: '确认解绑',
+			message: '解绑后您将无法使用购物金购买商品',
+			asyncClose: true
+		})
+			.then(() => {
+				http
+					.wxRequest({ ..._this.data.api.deleteShoppingMoney })
+					.then((res) => {
+						if (res.success) {
+							wx.showToast({
+								title: '解绑成功',
+								icon: 'none',
+								success() {
+									wx.removeStorageSync('shopping_money')
+									_this.getUserInfo()
+									_this.getShoppingMoney()
+									Dialog.close()
+								}
+							})
+						}
+					})
+			})
+			.catch(() => {
+				Dialog.close()
+			})
 	},
 	bindRegionChange(e) {
 		console.log(e)

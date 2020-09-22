@@ -38,16 +38,14 @@
 			<view class="flex-between">
 				<view class="text-content">购买数量</view>
 				<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/></view>
-			<view class="">
-			<van-field
-				label="备注"
+				<van-field
+				label="订单备注"
         type="textarea"
 				autosize="{{true}}"
 				model:value="{{ remark }}"
 				placeholder="选填"
 				border="{{ false }}"
-      ></van-field>
-			</view>
+			></van-field>
 			<view class="bottom-text">
 				<text class="c-gray">共{{ totalCount }}件</text>
 				<text class="m-l-10">小计:</text>
@@ -68,30 +66,44 @@
 					<view class="c-gray" style="text-align:right">x{{list.number}}</view>
 				</view>
 			</view>
+			<van-field
+				label="订单备注"
+        type="textarea"
+				autosize="{{true}}"
+				model:value="{{ remark }}"
+				placeholder="选填"
+				border="{{ false }}"
+			></van-field>
 			<view class="bottom-text">
 				<text class="c-gray">共{{ list.number }}件</text>
 				<text class="m-l-10">小计:</text>
 				<text class="minPrice">￥{{ totalPrice * 100 / 100 }}</text>
 			</view>
 			</view>
-			<view class="border m-t-10 p-10 fz-12" wx:if="{{cartPerchase}}">
-				<van-field
-				label="备注"
-        type="textarea"
-				autosize="{{true}}"
-				model:value="{{ remark }}"
-				placeholder="选填"
-				border="{{ false }}"
-      ></van-field>
+			<view class="border m-t-10 p-10 fz-12" wx:if="{{money}}">
+<van-cell title="可用购物金抵扣">
+	<van-checkbox slot="right-icon" value="{{ selectMoney }}" bind:change="selectMoneyChange"></van-checkbox>
+</van-cell>
+<van-field
+		label="购物金数量"
+		type="number"
+		wx:if="{{selectMoney}}"
+    model:value="{{ shoppingMoney }}"
+    placeholder="当前可用购物金余额{{money}}"
+		border="{{ false }}"
+		bind:blur="checkMoney"
+		bind:change="shoppingMoneyChange"
+  />
+
 			</view>
 	</view>
-	<van-submit-bar price="{{totalPrice * 100}}" color="#f9ae08" tip="{{ true }}" button-text="提交" bind:submit="onSubmit" safe-area-inset-bottom>
+	<van-submit-bar price="{{actualPrice * 100}}" color="#f9ae08" tip="{{ true }}" button-text="提交" bind:submit="onSubmit" safe-area-inset-bottom>
 		<view class="text-color-ccc">
 			<tex>共{{ totalCount }}件</tex>
 		</view>
 	</van-submit-bar>
 	<van-dialog show="{{dialogShow}}" title="请确认支付" use-slot="{{true}}" show-cancel-button bind:confirm="confirm" bind:cancel="cancle">
-		<view class="flex-center mt font-size-20">￥{{ totalPrice * 100 / 100 }}</view>
+		<view class="flex-center mt font-size-20">￥{{ actualPrice }}</view>
 	</van-dialog>
 	<van-dialog id="van-dialog" />
 </view>

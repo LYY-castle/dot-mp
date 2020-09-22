@@ -6,6 +6,11 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		money: null, // 购物金
+		shoppingMoney: null, // 使用购物金的金额
+		shoppingAccountId: null, // 购物金账户id
+		selectMoney: false, //是否使用购物金
+		actualPrice: null, // 使用优惠后实际需要支付的金额
 		dialogShow: false,
 		product: null,
 		goods: null,
@@ -46,6 +51,10 @@ Page({
 			getMyAddress: {
 				url: '/user-address',
 				method: 'get'
+			},
+			getShoppingMoney: {
+				url: '/user-shopping-accounts',
+				method: 'get'
 			}
 		}
 	},
@@ -58,11 +67,11 @@ Page({
 				cartPerchase: true
 			})
 			this.getListDataByCartIds()
-			this.getMyaddress()
 		} else {
 			this.getProduct()
-			this.getMyaddress()
 		}
+		this.getMyaddress()
+		this.getShoppingMoney()
 	},
 
 	getProduct() {
@@ -82,16 +91,17 @@ Page({
 						const count = wx.getStorageSync('activeProductNumber')
 							? wx.getStorageSync('activeProductNumber')
 							: 1
+						const totalPrice =
+							res.data.goods.isPromote === 1
+								? (Math.round(res.data.product.promotePrice * 100) * count) /
+								  100
+								: (Math.round(res.data.product.retailPrice * 100) * count) / 100
 						this.setData({
 							product: res.data.product,
 							goods: res.data.goods,
 							totalCount: count,
-							totalPrice:
-								res.data.goods.isPromote === 1
-									? (Math.round(res.data.product.promotePrice * 100) * count) /
-									  100
-									: (Math.round(res.data.product.retailPrice * 100) * count) /
-									  100
+							totalPrice,
+							actualPrice: totalPrice
 						})
 						resolve()
 					}
@@ -115,10 +125,10 @@ Page({
 					100
 			}
 		}
-		console.log(totalPrice)
 		this.setData({
 			totalCount,
-			totalPrice
+			totalPrice,
+			actualPrice: totalPrice
 		})
 	},
 	getListDataByCartIds() {
@@ -182,91 +192,114 @@ Page({
 	},
 	// 生成订单
 	onSubmit() {
-		let orderGoods = []
 		if (this.data.order) {
-			if (this.data.cartPerchase) {
-				this.data.dataList.forEach((list) => {
-					const obj = {
-						goodsId: list.goods.id,
-						goodsName: list.goods.name,
-						goodsSpecificationIds: list.goodsSpecificationIds,
-						goodsSpecificationNameValue: list.goodsSpecificationNameValue,
-						listPicUrl: list.listPicUrl,
-						productId: list.product.id,
-						number: list.number,
-						retailPrice: list.goods.isPromote
-							? list.product.promotePrice
-							: list.product.retailPrice
+			if (this.data.selectMoney) {
+				if (this.data.shoppingMoney > 0) {
+					const flag = this.checkMoney()
+					if (flag) {
+						this.addOrder()
 					}
-					orderGoods.push(obj)
-				})
+				} else {
+					wx.showToast({
+						title: '请填写需要使用的购物金数量',
+						icon: 'none'
+					})
+				}
 			} else {
-				orderGoods = [
-					{
-						goodsId: this.data.goods.id,
-						goodsName: this.data.goods.name,
-						goodsSpecificationIds: this.data.product.goodsSpecificationIds,
-						goodsSpecificationNameValue: this.data.product
-							.goodsSpecificationNameValue,
-						listPicUrl: this.data.product.pictureUrl
-							? this.data.product.pictureUrl
-							: this.data.goods.listPicUrl,
-						productId: this.data.product.id,
-						number: this.data.totalCount,
-						retailPrice: this.data.goods.isPromote
-							? this.data.product.promotePrice
-							: this.data.product.retailPrice
-					}
-				]
+				this.addOrder()
 			}
-			const params = {
-				isFromShopCat: this.data.cartPerchase ? 1 : 0,
-				address: this.data.order.address,
-				province: this.data.order.province,
-				city: this.data.order.city,
-				district: this.data.order.district,
-				mobile: this.data.order.mobile,
-				name: this.data.order.name,
-				remark: this.data.remark,
-				createBy: wx.getStorageSync('userId'),
-				goodsPrice: this.data.totalPrice,
-				orderGoods
-			}
-			http
-				.wxRequest({
-					...this.data.api.addOrder,
-					params
-				})
-				.then((res) => {
-					if (res.success) {
-						let body = ''
-						if (this.data.cartPerchase) {
-							this.data.dataList.forEach((list) => {
-								body += list.goods.name
-							})
-							body = util.ellipsis(body, 128)
-						} else {
-							body = this.data.goods.name
-						}
-						this.setData({
-							dialogShow: true,
-							payment: {
-								id: res.data.id,
-								openid: wx.getStorageSync('openId'),
-								outTradeNo: res.data.orderNo,
-								totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
-								body,
-								tradeType: 'JSAPI'
-							}
-						})
-					}
-				})
 		} else {
 			wx.showToast({
 				title: '请选择收货地址',
 				icon: 'none'
 			})
 		}
+	},
+	// 封装生成订单函数
+	addOrder() {
+		let orderGoods = []
+		if (this.data.cartPerchase) {
+			this.data.dataList.forEach((list) => {
+				const obj = {
+					goodsId: list.goods.id,
+					goodsName: list.goods.name,
+					goodsSpecificationIds: list.goodsSpecificationIds,
+					goodsSpecificationNameValue: list.goodsSpecificationNameValue,
+					listPicUrl: list.listPicUrl,
+					productId: list.product.id,
+					number: list.number,
+					retailPrice: list.goods.isPromote
+						? list.product.promotePrice
+						: list.product.retailPrice
+				}
+				orderGoods.push(obj)
+			})
+		} else {
+			orderGoods = [
+				{
+					goodsId: this.data.goods.id,
+					goodsName: this.data.goods.name,
+					goodsSpecificationIds: this.data.product.goodsSpecificationIds,
+					goodsSpecificationNameValue: this.data.product
+						.goodsSpecificationNameValue,
+					listPicUrl: this.data.product.pictureUrl
+						? this.data.product.pictureUrl
+						: this.data.goods.listPicUrl,
+					productId: this.data.product.id,
+					number: this.data.totalCount,
+					retailPrice: this.data.goods.isPromote
+						? this.data.product.promotePrice
+						: this.data.product.retailPrice
+				}
+			]
+		}
+		let params = {
+			isFromShopCat: this.data.cartPerchase ? 1 : 0,
+			address: this.data.order.address,
+			province: this.data.order.province,
+			city: this.data.order.city,
+			district: this.data.order.district,
+			mobile: this.data.order.mobile,
+			name: this.data.order.name,
+			remark: this.data.remark,
+			createBy: wx.getStorageSync('userId'),
+			goodsPrice: this.data.totalPrice,
+			orderGoods
+		}
+		if (this.data.selectMoney) {
+			params.shoppingAccountId = this.data.shoppingAccountId
+			params.shoppingMoney = Number(this.data.shoppingMoney)
+		}
+		http
+			.wxRequest({
+				...this.data.api.addOrder,
+				params
+			})
+			.then((res) => {
+				if (res.success) {
+					let body = ''
+					if (this.data.cartPerchase) {
+						this.data.dataList.forEach((list) => {
+							body += list.goods.name
+						})
+						body = util.ellipsis(body, 128)
+					} else {
+						body = this.data.goods.name
+					}
+					this.setData({
+						dialogShow: true,
+						actualPrice: res.data.actualPrice,
+						payment: {
+							id: res.data.id,
+							openid: wx.getStorageSync('openId'),
+							outTradeNo: res.data.orderNo,
+							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
+							body,
+							tradeType: 'JSAPI'
+						}
+					})
+				}
+			})
 	},
 	// 取消支付
 	cancle() {
@@ -322,6 +355,51 @@ Page({
 				})
 			})
 	},
+	// 获取购物金
+	getShoppingMoney() {
+		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
+			if (res.success) {
+				if (res.data) {
+					this.setData({
+						shoppingAccountId: res.data.id,
+						money: res.data.amount
+					})
+				} else {
+					this.setData({
+						money: null
+					})
+				}
+			}
+		})
+	},
+	selectMoneyChange() {
+		this.setData({
+			selectMoney: !this.data.selectMoney
+		})
+		if (this.data.selectMoney) {
+			this.setData({})
+		}
+	},
+	checkMoney() {
+		// 判断购物金是否小于等于商品总价且小于等于可用余额
+		if (this.data.shoppingMoney <= this.data.money) {
+			if (this.data.shoppingMoney <= this.data.totalPrice) {
+				return true
+			} else {
+				wx.showToast({
+					title: '购物金超出商品总额',
+					icon: 'none'
+				})
+				return false
+			}
+		} else {
+			wx.showToast({
+				title: '购物金余额不足',
+				icon: 'none'
+			})
+			return false
+		}
+	},
 	numberChange(e) {
 		const count = e.detail
 		const price = this.data.goods.isPromote
@@ -331,7 +409,28 @@ Page({
 			totalCount: count,
 			totalPrice: price
 		})
+		if (this.data.selectMoney && this.data.shoppingMoney > 0) {
+			this.setData({
+				actualPrice: price - this.data.shoppingMoney
+			})
+		}
 		wx.setStorageSync('activeProductNumber', count)
+	},
+	shoppingMoneyChange(e) {
+		console.log(e)
+		const money = Number(e.detail)
+		const flag = this.checkMoney()
+		if (flag) {
+			const actualPrice = this.data.totalPrice - money
+			this.setData({
+				actualPrice
+			})
+		} else {
+			this.setData({
+				shoppingMoney: 0,
+				actualPrice: this.data.totalPrice
+			})
+		}
 	},
 	// 下拉
 	onPullDownRefresh() {

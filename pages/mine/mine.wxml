@@ -20,9 +20,11 @@
   />
   <van-cell
     title="我的购物金"
-    wx:if="{{shopping_money}}"
+    wx:if="{{money}}"
+    value="{{money}}"
   />
-  <van-button icon="plus" plain block="{{true}}" wx:if="{{!shopping_money}}">绑定购物金</van-button>
+  <van-button icon="plus" plain block="{{true}}" wx:if="{{!money}}" bind:click="addShopingMoney">绑定购物金账号</van-button>
+  <van-button icon="exchange" plain block="{{true}}" wx:if="{{money}}" bind:click="deleteShopingMoney">解绑购物金账号</van-button>
   </view>
-
+  <van-dialog id="van-dialog" />
 </view>
