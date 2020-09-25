@@ -3,7 +3,6 @@ import env from '../config/env.config'
 import constantCfg from '../config/constant'
 import http from './request'
 function getSign({ params = {} }) {
-	console.log('getsignParams', params)
 	return md5(`${env.env.qsebao.apiKey}${JSON.stringify(params)}`)
 }
 

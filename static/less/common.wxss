@@ -16,7 +16,7 @@ Page {
   color: #969799;
   font-size: 12px;
   text-decoration: line-through;
-  margin-left:10px;
+  margin-left: 10px;
 }
 
 .container .minPrice {
@@ -166,6 +166,10 @@ Page {
   transform: translate(-50%, -50%);
 }
 
+.disabled-content {
+  opacity: 0.5;
+}
+
 .topContent {
   position: fixed;
   width: 100%;
@@ -282,11 +286,13 @@ Page {
 .description {
   color: #888888 !important;
 }
-.loadingItem{
-  display:block;
-  margin:0 auto;
-  text-align:center;
+
+.loadingItem {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
 }
+
 .guige {
   display: inline-block;
   background: #eee;
@@ -297,11 +303,16 @@ Page {
   /* display: flex; */
   align-items: center;
 }
-.guige-label{
+
+.guige-label {
   background: #d30000;
   color: #fff;
 }
-.left-width{
-  display:inline-block;
-  width:80px;
+
+.left-width {
+  display: inline-block;
+  width: 80px;
+}
+.text-align-center{
+  text-align:center;
 }

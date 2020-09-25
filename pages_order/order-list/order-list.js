@@ -161,7 +161,6 @@ Page({
 		this.getOrderList()
 	},
 	getOrderList() {
-		console.log('获取订单列表参数', this.data.params)
 		return new Promise((resolve) => {
 			http
 				.wxRequest({
@@ -176,7 +175,6 @@ Page({
 								item.totalNum += good.number
 							})
 						})
-						console.log(res.data)
 						if (res.page.pageNo === 1) {
 							this.setData({
 								orderList: res.data,

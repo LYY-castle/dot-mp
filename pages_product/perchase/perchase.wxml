@@ -53,20 +53,22 @@
 			</view>
 		</view>
 			<view class="m-t-10 border p-10 fz-12" wx:if="{{cartPerchase}}" wx:for="{{dataList}}" wx:key="index" wx:for-item="list">
-			<view class="goodContent">
-				<view class="flex-start-start">
-					<van-image src="{{list.listPicUrl}}" alt width="100px" height="100px" fit="cover"></van-image>
+				<view class="goodContent">
+					<view class="flex-start-start">
+						<van-image src="{{list.listPicUrl}}" alt width="100px" height="100px" fit="cover"></van-image>
+						<view class="m-l-10">
+							<view>{{list.goods.name}}</view>
+							<view class="guige m-t-10">{{ list.goodsSpecificationNameValue }}</view>
+						</view>
+					</view>
 					<view class="m-l-10">
-						<view>{{list.goods.name}}</view>
-						<view class="guige m-t-10">{{ list.goodsSpecificationNameValue }}</view>
+						<view>￥{{list.goods.isPromote?list.product.promotePrice:list.product.retailPrice}}</view>
+						<view class="c-gray" style="text-align:right">x{{list.number}}</view>
 					</view>
 				</view>
-				<view class="m-l-10">
-					<view>￥{{list.goods.isPromote?list.product.promotePrice:list.product.retailPrice}}</view>
-					<view class="c-gray" style="text-align:right">x{{list.number}}</view>
-				</view>
 			</view>
-			<van-field
+			<view wx:if="{{cartPerchase}}" class="m-t-10 border p-10 fz-12">
+				<van-field
 				label="订单备注"
         type="textarea"
 				autosize="{{true}}"
@@ -75,26 +77,25 @@
 				border="{{ false }}"
 			></van-field>
 			<view class="bottom-text">
-				<text class="c-gray">共{{ list.number }}件</text>
+				<text class="c-gray">共{{ totalCount }}件</text>
 				<text class="m-l-10">小计:</text>
 				<text class="minPrice">￥{{ totalPrice * 100 / 100 }}</text>
 			</view>
 			</view>
 			<view class="border m-t-10 p-10 fz-12" wx:if="{{money}}">
-<van-cell title="可用购物金抵扣">
-	<van-checkbox slot="right-icon" value="{{ selectMoney }}" bind:change="selectMoneyChange"></van-checkbox>
-</van-cell>
-<van-field
-		label="购物金数量"
-		type="number"
-		wx:if="{{selectMoney}}"
-    model:value="{{ shoppingMoney }}"
-    placeholder="当前可用购物金余额{{money}}"
-		border="{{ false }}"
-		bind:blur="checkMoney"
-		bind:change="shoppingMoneyChange"
-  />
-
+			<van-cell title="可用购物金抵扣">
+				<van-checkbox slot="right-icon" value="{{ selectMoney }}" bind:change="selectMoneyChange"></van-checkbox>
+			</van-cell>
+			<van-field
+					label="购物金数量"
+					type="digit"
+					wx:if="{{selectMoney}}"
+					model:value="{{ shoppingMoney }}"
+					placeholder="当前可用购物金余额{{money}}"
+					border="{{ false }}"
+					bind:blur="checkMoney"
+					bind:change="shoppingMoneyChange"
+				/>
 			</view>
 	</view>
 	<van-submit-bar price="{{actualPrice * 100}}" color="#f9ae08" tip="{{ true }}" button-text="提交" bind:submit="onSubmit" safe-area-inset-bottom>

@@ -41,7 +41,6 @@ Page({
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		console.log('触底函数')
 		if (!this.data.bottomLineShow) {
 			this.setData({
 				loadingShow: true,
@@ -106,7 +105,6 @@ Page({
 		})
 	},
 	gotoDetail(e) {
-		console.log(e)
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
 			productId: option.id
@@ -135,11 +133,23 @@ Page({
 					let productDetailRes, item
 					const dealQseProduct = async (item) => {
 						item.name = util.ellipsis(item.name, 20)
-						let labelArr = []
-						if (item.label.indexOf(',')) {
-							labelArr = item.label.split(',')
+						if (
+							item.isPromote &&
+							tool.isInDurationTime(item.promoteStart, item.promoteEnd)
+						) {
+							item.isPromote = true
 						} else {
-							labelArr = item.label || []
+							item.isPromote = false
+						}
+						let labelArr = []
+						if (item.label === '') {
+							labelArr = []
+						} else {
+							if (item.label.indexOf(',')) {
+								labelArr = item.label.split(',')
+							} else {
+								labelArr = [item.label]
+							}
 						}
 						item.label = labelArr
 						if (constantCfg.productCode.qsebao.includes(item.code)) {

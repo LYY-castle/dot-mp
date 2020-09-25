@@ -31,7 +31,6 @@ Page({
 	 */
 	onUnload: function () {},
 	addShoppingMoney(val) {
-		console.log(val)
 		const option = val.detail.value
 		if (option.accountNo) {
 			if (option.accountPassword) {

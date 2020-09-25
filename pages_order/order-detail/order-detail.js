@@ -69,7 +69,6 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-		console.log(options)
 		if (options.src) {
 			this.setData({
 				orderId: options.src
@@ -137,7 +136,6 @@ Page({
 						params: this.data.payment
 					})
 					.then((result) => {
-						console.log(result.data)
 						const wechatParams = {
 							appId: result.data.appId,
 							timeStamp: result.data.timeStamp,

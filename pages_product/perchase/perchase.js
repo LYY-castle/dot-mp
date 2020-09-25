@@ -1,5 +1,6 @@
 import http from '../../utils/request.js'
 import util from '../../utils/util.js'
+import tool from '../../utils/mixin.js'
 import Dialog from '@vant/weapp/dialog/dialog'
 Page({
 	/**
@@ -88,14 +89,23 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
+						if (
+							res.data.goods.isPromote &&
+							tool.isInDurationTime(
+								res.data.goods.promoteStart,
+								res.data.goods.promoteEnd
+							)
+						) {
+							res.data.goods.isPromote = true
+						} else {
+							res.data.goods.isPromote = false
+						}
 						const count = wx.getStorageSync('activeProductNumber')
 							? wx.getStorageSync('activeProductNumber')
 							: 1
-						const totalPrice =
-							res.data.goods.isPromote === 1
-								? (Math.round(res.data.product.promotePrice * 100) * count) /
-								  100
-								: (Math.round(res.data.product.retailPrice * 100) * count) / 100
+						const totalPrice = res.data.goods.isPromote
+							? (Math.round(res.data.product.promotePrice * 100) * count) / 100
+							: (Math.round(res.data.product.retailPrice * 100) * count) / 100
 						this.setData({
 							product: res.data.product,
 							goods: res.data.goods,
@@ -142,6 +152,41 @@ Page({
 			})
 			.then((res) => {
 				if (res.success) {
+					res.data.forEach((item) => {
+						if (
+							item.goods.isPromote &&
+							tool.isInDurationTime(
+								item.goods.promoteStart,
+								item.goods.promoteEnd
+							)
+						) {
+							item.goods.isPromote = true
+						} else {
+							item.goods.isPromote = false
+						}
+						if (item.product.productNumber === 0) {
+							Dialog.alert({
+								title: '提示！',
+								message: '部分选中商品无货,请返回购物车重新选择',
+								theme: 'round-button'
+							}).then(() => {
+								wx.navigateBack({
+									delta: 1
+								})
+							})
+						}
+						if (item.goods.isOnsale === 0) {
+							Dialog.alert({
+								title: '提示！',
+								message: '部分选中商品已下架,请返回购物车重新选择',
+								theme: 'round-button'
+							}).then(() => {
+								wx.navigateBack({
+									delta: 1
+								})
+							})
+						}
+					})
 					this.setData({
 						dataList: res.data
 					})
@@ -181,7 +226,6 @@ Page({
 	selectAddress(e) {
 		const option = e.currentTarget.dataset.option
 		if (option) {
-			console.log(option)
 			wx.setStorageSync('activeAddressId', option.id)
 		} else {
 			wx.setStorageSync('addAddress', true)
@@ -312,14 +356,12 @@ Page({
 			confirmButtonText: '确认离开'
 		})
 			.then(() => {
-				console.log('确认离开')
 				wx.navigateTo({
 					url:
 						'/pages_order/order-detail/order-detail?src=' + this.data.payment.id
 				})
 			})
 			.catch(() => {
-				console.log('继续支付')
 				this.setData({
 					dialogShow: true
 				})
@@ -328,32 +370,38 @@ Page({
 	// 拉起微信支付
 	confirm() {
 		const _this = this
-		http
-			.wxRequest({
-				..._this.data.api.payment,
-				params: _this.data.payment
-			})
-			.then((result) => {
-				console.log(result.data)
-				const wechatParams = {
-					appId: result.data.appId,
-					timeStamp: result.data.timeStamp,
-					nonceStr: result.data.nonceStr,
-					package: result.data.packageValue,
-					paySign: result.data.paySign,
-					signType: result.data.signType
-				}
-				wx.requestPayment({
-					...wechatParams,
-					success(res) {
-						wx.navigateTo({
-							url:
-								'/pages_order/order-detail/order-detail?src=' +
-								_this.data.payment.id
-						})
-					}
+		if (this.payment.totalFee > 0) {
+			http
+				.wxRequest({
+					..._this.data.api.payment,
+					params: _this.data.payment
 				})
+				.then((result) => {
+					const wechatParams = {
+						appId: result.data.appId,
+						timeStamp: result.data.timeStamp,
+						nonceStr: result.data.nonceStr,
+						package: result.data.packageValue,
+						paySign: result.data.paySign,
+						signType: result.data.signType
+					}
+					wx.requestPayment({
+						...wechatParams,
+						success(res) {
+							wx.navigateTo({
+								url:
+									'/pages_order/order-detail/order-detail?src=' +
+									_this.data.payment.id
+							})
+						}
+					})
+				})
+		} else if (this.payment.totalFee === 0) {
+			wx.navigateTo({
+				url:
+					'/pages_order/order-detail/order-detail?src=' + _this.data.payment.id
 			})
+		}
 	},
 	// 获取购物金
 	getShoppingMoney() {

@@ -55,7 +55,6 @@ Page({
 	 * 生命周期函数--监听页面卸载
 	 */
 	onUnload: function () {
-		console.log('返回')
 		wx.switchTab({
 			url: '/pages/mine/mine'
 		})
@@ -92,7 +91,6 @@ Page({
 							res.data.mobile = ''
 						}
 						if (this.data.resiveOption) {
-							console.log(1)
 							this.setData({
 								userInfo: res.data
 							})
@@ -151,7 +149,6 @@ Page({
 
 	updateUserInfo(e) {
 		const option = e.detail.value
-		console.log()
 		const params = {
 			id: wx.getStorageSync('userId'),
 			nickname: option.nickname,

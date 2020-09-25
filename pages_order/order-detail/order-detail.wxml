@@ -69,6 +69,7 @@
 			<van-divider />
 			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy">复制</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width">下单时间</text><text class="black">{{orderInfo.createAt}}</text></view>
+			<view class="c-gray fz-12 m-t-10"><text class="left-width" wx:if="{{orderInfo.remark}}">订单备注</text><text class="black">{{orderInfo.remark}}</text></view>
 		</view>
 		<van-goods-action wx:if="{{orderInfo.orderStatus===100}}">
 			<van-goods-action-button text="取消订单" plain color="rgba(0,0,0,.6)" bind:click="cancelPay"/>

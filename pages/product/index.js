@@ -24,20 +24,27 @@ Page({
 			}
 		}
 	},
-
-	/**
-	 * 生命周期函数--监听页面加载
-	 */
-	onShow: function () {
+	onLoad: function () {
+		console.log('load')
 		Promise.resolve()
 			.then(() => this.getTypes(0))
 			.then(() => this.getSecondThirdType())
 	},
 	/**
+	 * 生命周期函数--监听页面加载
+	 */
+	onShow: function () {
+		console.log('show')
+		if (wx.getStorageSync('activeSortId')) {
+			Promise.resolve()
+				.then(() => this.getTypes(0))
+				.then(() => this.getSecondThirdType())
+		}
+	},
+	/**
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		console.log('触底了')
 		if (!this.data.bottomLineShow && !this.data.loadingShow) {
 			this.setData({
 				loadingShow: true,
@@ -146,7 +153,6 @@ Page({
 					option.id,
 				wechatAppId: env.env.appid
 			}
-			console.log(params)
 			const header = {
 				authorization: wx.getStorageSync('authorization')
 			}
@@ -220,7 +226,6 @@ Page({
 	},
 	// 根据三级分类跳转到商品列表页面
 	goToProductsListPageById(e) {
-		console.log('跳转到商品列表页面', e)
 		const option = e.currentTarget.dataset.option
 		wx.navigateTo({
 			url:

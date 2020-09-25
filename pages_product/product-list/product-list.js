@@ -49,11 +49,23 @@ Page({
 					let productDetailRes, item
 					const dealQseProduct = async (item) => {
 						item.name = util.ellipsis(item.name, 20)
-						let labelArr = []
-						if (item.label.indexOf(',')) {
-							labelArr = item.label.split(',')
+						if (
+							item.isPromote &&
+							tool.isInDurationTime(item.promoteStart, item.promoteEnd)
+						) {
+							item.isPromote = true
 						} else {
-							labelArr = item.label || []
+							item.isPromote = false
+						}
+						let labelArr = []
+						if (item.label === '') {
+							labelArr = []
+						} else {
+							if (item.label.indexOf(',')) {
+								labelArr = item.label.split(',')
+							} else {
+								labelArr = [item.label]
+							}
 						}
 						item.label = labelArr
 						if (constantCfg.productCode.qsebao.includes(item.code)) {
@@ -117,7 +129,6 @@ Page({
 		})
 	},
 	gotoDetail(e) {
-		console.log(e)
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
 			productId: option.id
@@ -147,7 +158,6 @@ Page({
 	},
 	// 下拉刷新
 	onPullDownRefresh() {
-		console.log('下拉刷新')
 		this.setData({
 			pageNo: 1
 		})

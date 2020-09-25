@@ -8,12 +8,10 @@ App({
 		}
 	},
 	onLaunch: function (options) {
-		console.log('options', options)
 		// 静默登录
 		wx.login({
 			success: (res) => {
 				this.globalData.wechatCode = res.code
-				console.log(res.code)
 				const params = {
 					wechatAppId: env.env.appid,
 					wechatCode: res.code

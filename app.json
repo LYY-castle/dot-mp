@@ -68,14 +68,14 @@
       {
         "pagePath": "pages/product/index",
         "text": "分类",
-        "iconPath": "static/img/scatter-dots.png",
-        "selectedIconPath": "static/img/scatter-dots-active.png"
+        "iconPath": "static/img/sorts.png",
+        "selectedIconPath": "static/img/active-sorts.png"
       },
       {
         "pagePath": "pages/shopping_cart/shopping-cart",
         "text": "购物车",
-        "iconPath": "static/img/scatter-dots.png",
-        "selectedIconPath": "static/img/scatter-dots-active.png"
+        "iconPath": "static/img/cart.png",
+        "selectedIconPath": "static/img/active-cart.png"
       },
       {
         "pagePath": "pages/mine/mine",

@@ -55,7 +55,6 @@ Page({
 	// 地址识别
 	distinguish() {
 		const [result] = AddressParse.parse(this.data.addressInfoText, true)
-		console.log(result)
 		if (result.province && result.city && result.area) {
 			this.setData({
 				region: [result.province, result.city, result.area],
@@ -87,7 +86,6 @@ Page({
 			userId: wx.getStorageSync('userId'),
 			isDefault: option.isDefault ? 1 : 0
 		}
-		console.log(params)
 		if (option.name) {
 			if (option.mobile) {
 				if (isMobile(option.mobile)) {
@@ -168,7 +166,6 @@ Page({
 		})
 	},
 	bindRegionChange(e) {
-		console.log(e)
 		const address = e.detail.value
 		const code = e.detail.code
 		this.setData({
@@ -186,7 +183,6 @@ Page({
 	},
 	deleteAddress() {
 		const _this = this
-		console.log(_this.data.addressId)
 		wx.showModal({
 			title: '确定删除？',
 			success(res) {

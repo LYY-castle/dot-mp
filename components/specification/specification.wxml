@@ -14,7 +14,7 @@
           <view class="minPrice">￥<text class="fz-20 bold">{{activePrice}}</text></view>
           <view class="c-gray">库存{{activeProductNumber}}件</view>
           <view>
-            <text wx:if="{{goodsSpecificationNameValue!==''}}">已选:{{goodsSpecificationNameValue}}</text>
+            <text wx:if="{{specArray.length>0}}">已选:{{specArray}}</text>
             <view wx:else class="flex-start">请选择:
               <view wx:for="{{specificationResults}}" wx:key="idName" wx:for-item="name">
                 {{name.specificationName}}
@@ -24,25 +24,20 @@
         </view>
       </view>
       <view class="content">
-        <view wx:for="{{specificationResults}}" wx:key="index" wx:for-item="item">
-          <view class="m-t-10 m-b-10">{{item.specificationName}}</view>
-          <van-tag
+        <view wx:for-item="specitem" wx:key="index" wx:for="{{specificationResults}}" title="{{specitem.specificationName}}" class="m-t-10 m-b-10">
+        <view class="m-t-10 m-b-10 bold black">{{specitem.specificationName}}</view>
+          <van-radio-group value="{{ specArray[index] }}" data-specId="{{specitem.specificationId}}" data-index="{{index}}"  bind:change="onChangeSpec" class="flex-start" >
+            <van-radio wx:key="item" wx:for-item="valitem" wx:for="{{specitem.goodsSpecificationResults}}" name="{{valitem.goodsSpecificationValue}}" disabled="{{valitem.disabled}}" class="m-r-20">
+              <!-- <van-tag
           size="large"
           plain
-          wx:for="{{item.goodsSpecificationResults}}"
-          wx:key="goodIndex"
-          wx:for-index="index2"
-          wx:for-item="specificationItem"
-          class="specificationItem"
-          bindtap="selectSpecification"
-          data-option="{{specificationItem}}"
-          data-parent='{{index}}'
-          data-child="{{index2}}"
-          text-color="{{specificationItem.goodsSpecificationValue===specificationItem.activeGoodsSpecificationNameValue?'#ee0a24':'#aaa'}}"
-          >
-          <van-image src="{{specificationItem.goodsSpecificationPicUrl}}" width="10px" height="10px" fit="cover" wx:if="{{specificationItem.goodsSpecificationPicUrl!==''}}" class="m-r-2"></van-image>
-          {{specificationItem.goodsSpecificationValue}}
-        </van-tag>
+          text-color="{{valitem.goodsSpecificationValue===specArray[index]?'#ee0a24':'#aaa'}}"
+          > -->
+          <!-- <van-image src="{{valitem.goodsSpecificationPicUrl}}" width="10px" height="10px" fit="cover" wx:if="{{valitem.goodsSpecificationPicUrl!==''}}" class="m-r-2"></van-image> -->
+          {{valitem.goodsSpecificationValue}}
+        <!-- </van-tag> -->
+            </van-radio>
+          </van-radio-group>
         </view>
         <view class="flex-between m-t-10 m-b-10">
           数量

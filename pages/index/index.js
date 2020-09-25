@@ -44,7 +44,7 @@ Page({
 	getProductList() {
 		return new Promise((resolve) => {
 			let params = {
-				isHot: 0,
+				isHot: 1,
 				pageNo: this.data.pageNo,
 				pageSize: 10,
 				isOnSale: 1
@@ -54,11 +54,23 @@ Page({
 				let products = []
 				res.data.forEach((item) => {
 					item.name = util.ellipsis(item.name, 20)
-					let labelArr = []
-					if (item.label.indexOf(',')) {
-						labelArr = item.label.split(',')
+					if (
+						item.isPromote &&
+						tool.isInDurationTime(item.promoteStart, item.promoteEnd)
+					) {
+						item.isPromote = true
 					} else {
-						labelArr = item.label || []
+						item.isPromote = false
+					}
+					let labelArr = []
+					if (item.label === '') {
+						labelArr = []
+					} else {
+						if (item.label.indexOf(',')) {
+							labelArr = item.label.split(',')
+						} else {
+							labelArr = [item.label]
+						}
 					}
 					item.label = labelArr
 					if (constantCfg.productCode.qsebao.includes(item.code)) {
@@ -131,7 +143,6 @@ Page({
 		})
 	},
 	gotoDetail(e) {
-		console.log(e)
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
 			productId: option.id
@@ -150,7 +161,6 @@ Page({
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		console.log('上拉加载')
 		if (!this.data.bottomLineShow && !this.data.loadingShow) {
 			this.setData({
 				loadingShow: true,

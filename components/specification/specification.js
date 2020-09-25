@@ -1,4 +1,5 @@
 // pages_product/components/specification.js
+import tool from '../../utils/mixin.js'
 Component({
 	/**
 	 * 组件的属性列表
@@ -43,13 +44,19 @@ Component({
 		operateType: {
 			type: null,
 			value: null
+		},
+		specArray: {
+			type: Array,
+			value: []
 		}
 	},
 
 	/**
 	 * 组件的初始数据
 	 */
-	data: {},
+	data: {
+		activeProduct: null
+	},
 
 	/**
 	 * 组件的方法列表
@@ -60,116 +67,213 @@ Component({
 				perchaseShow: false
 			})
 		},
-		// 选中规格
-		selectSpecification(e) {
-			const option = e.currentTarget.dataset.option
-			const parentIndex = e.currentTarget.dataset.parent
-			const childIndex = e.currentTarget.dataset.child
-			let goodsSpecificationIds = []
-			let goodsSpecificationNameValue = []
-			// 给选中的同类规格加一个active标志,其他同类去除active标志
-			this.data.specificationResults[
-				parentIndex
-			].goodsSpecificationResults.forEach((item, index) => {
-				if (index === childIndex) {
-					if (item.activeGoodsSpecificationNameValue) {
-						delete item.activeGoodsSpecificationNameValue
-					} else {
-						item.activeGoodsSpecificationNameValue =
-							option.goodsSpecificationValue
-					}
-				} else {
-					if (item.activeGoodsSpecificationNameValue) {
-						delete item.activeGoodsSpecificationNameValue
-					}
-				}
-			})
+		deleteItem(item, list) {
+			list.splice(list.indexOf(item), 1)
+		},
+		onChangeSpec(event) {
+			const { specArray } = this.data
+			specArray[event.currentTarget.dataset.index] = event.detail
 			this.setData({
-				specificationResults: this.data.specificationResults
+				specArray
 			})
-			// 遍历得出当前选中的不同类的规格名
-			this.data.specificationResults.map((option) => {
-				option.goodsSpecificationResults.map((item) => {
-					if (item.activeGoodsSpecificationNameValue) {
-						goodsSpecificationNameValue.push(item.goodsSpecificationValue)
-						goodsSpecificationIds.push(item.goodsSpecificationId)
-					}
-				})
-			})
-			// 当规格种类和选中的规格种类数量相同时确定一个产品
-			if (
-				goodsSpecificationNameValue.length ===
-				this.data.specificationResults.length
-			) {
-				this.data.products.map((pro) => {
-					if (pro.goodsSpecificationIds === goodsSpecificationIds.join('_')) {
-						this.setData({
-							activePic: pro.pictureUrl
-								? pro.pictureUrl
-								: this.data.goods.listPicUrl, // 产品图
-							activeProductNumber: pro.productNumber, //库存
-							activePrice: this.data.goods.isPromote
-								? pro.promotePrice
-								: pro.retailPrice,
-							productId: pro.id
+			console.log()
+			let activeTotalNumber = 0
+			if (specArray.length > 0) {
+				if (specArray.length === this.data.specificationResults.length) {
+					this.data.products.forEach((pro) => {
+						if (
+							pro.goodsSpecificationNameValue.indexOf(
+								specArray[event.currentTarget.dataset.index]
+							) !== -1
+						) {
+							if (pro.productNumber === 0) {
+								const arr = pro.goodsSpecificationNameValue.split(';')
+								this.deleteItem(
+									specArray[event.currentTarget.dataset.index],
+									arr
+								)
+								console.log(arr)
+								for (let i = 0; i < arr.length; i++) {
+									this.data.specificationResults.forEach((speci) => {
+										speci.goodsSpecificationResults.forEach((speciItem) => {
+											if (arr.includes(speciItem.goodsSpecificationValue)) {
+												speciItem.disabled = true
+											}
+										})
+									})
+								}
+								console.log(
+									'this.data.specificationResults',
+									this.data.specificationResults
+								)
+							} else {
+								const arr = pro.goodsSpecificationNameValue.split(';')
+								this.deleteItem(
+									specArray[event.currentTarget.dataset.index],
+									arr
+								)
+								for (let i = 0; i < arr.length; i++) {
+									this.data.specificationResults.forEach((speci) => {
+										speci.goodsSpecificationResults.forEach((speciItem) => {
+											if (arr[i] === speciItem.goodsSpecificationValue) {
+												if (speciItem.disabled) {
+													delete speciItem.disabled
+												}
+											}
+										})
+									})
+								}
+							}
+							this.setData({
+								specificationResults: this.data.specificationResults,
+								activePic: pro.pictureUrl
+									? pro.pictureUrl
+									: this.data.goods.listPicUrl,
+								activePrice: this.data.goods.isPromote
+									? pro.promotePrice
+									: pro.retailPrice,
+								activeProductNumber: pro.productNumber,
+								number: 1
+							})
+							console.log(this.data)
+						}
+					})
+				} else {
+					if (specArray.length === 1) {
+						this.data.products.forEach((pro) => {
+							if (
+								pro.goodsSpecificationNameValue.indexOf(
+									specArray[event.currentTarget.dataset.index]
+								) !== -1
+							) {
+								if (pro.productNumber === 0) {
+									const arr = pro.goodsSpecificationNameValue.split(';')
+									this.deleteItem(
+										specArray[event.currentTarget.dataset.index],
+										arr
+									)
+									for (let i = 0; i < arr.length; i++) {
+										this.data.specificationResults.forEach((speci) => {
+											speci.goodsSpecificationResults.forEach((speciItem) => {
+												if (arr[i] === speciItem.goodsSpecificationValue) {
+													speciItem.disabled = true
+												}
+											})
+										})
+									}
+								} else {
+									const arr = pro.goodsSpecificationNameValue.split(';')
+									this.deleteItem(
+										specArray[event.currentTarget.dataset.index],
+										arr
+									)
+									for (let i = 0; i < arr.length; i++) {
+										this.data.specificationResults.forEach((speci) => {
+											speci.goodsSpecificationResults.forEach((speciItem) => {
+												if (arr[i] === speciItem.goodsSpecificationValue) {
+													if (speciItem.disabled) {
+														delete speciItem.disabled
+													}
+												}
+											})
+										})
+									}
+								}
+								activeTotalNumber += pro.productNumber
+							}
+						})
+					} else if (specArray.length > 1) {
+						this.data.products.forEach((pro) => {
+							if (
+								pro.goodsSpecificationNameValue.indexOf(specArray.join(';')) !==
+								-1
+							) {
+								activeTotalNumber += pro.productNumber
+							}
 						})
 					}
-				})
-				this.setData({
-					goodsSpecificationIds: goodsSpecificationIds.join('_'),
-					goodsSpecificationNameValue: goodsSpecificationNameValue.join(';')
-				})
-			} else {
-				this.setData({
-					activePic: this.data.goods.listPicUrl,
-					activePrice: this.data.goods.isPromote
-						? this.data.goods.promotePrice
-						: this.data.goods.retailPrice,
-					activeProductNumber: this.data.goods.goodsNumber,
-					goodsSpecificationIds: '',
-					goodsSpecificationNameValue: ''
-				})
+					this.setData({
+						specificationResults: this.data.specificationResults,
+						activePic: this.data.goods.listPicUrl,
+						activePrice: this.data.goods.isPromote
+							? this.data.goods.promotePrice
+							: this.data.goods.retailPrice,
+						activeProductNumber: activeTotalNumber,
+						number: 1
+					})
+					console.log(this.data)
+				}
 			}
 		},
 		// 数量修改
 		changeNumber(e) {
 			if (e.detail <= this.data.activeProductNumber) {
+				wx.setStorageSync('activeProductNumber', e.detail)
 				this.setData({
 					number: e.detail
 				})
-				wx.setStorageSync('activeProductNumber', e.detail)
 			} else {
+				this.setData({
+					number: this.data.number
+				})
 				wx.showToast({
-					title: '库存数量不足'
+					title: '库存数量不足',
+					icon: 'none'
 				})
 			}
 		},
 		_operate() {
-			const flag = this.data.specificationResults.every((option) => {
-				return option.goodsSpecificationResults.some((item) => {
-					return item.activeGoodsSpecificationNameValue
-				})
+			const nameArr = this.data.specificationResults.map((speci) => {
+				return speci.specificationName
 			})
-			if (flag) {
+			let numberFlag = false
+			const flag = nameArr.every((name, i) => {
+				if (!this.data.specArray[i]) {
+					wx.showToast({
+						title: '请选择' + name,
+						icon: 'none'
+					})
+				}
+				return this.data.specArray[i]
+			})
+			if (this.data.number <= this.data.activeProductNumber) {
+				numberFlag = true
+			} else {
+				wx.showToast({
+					title: '库存数量不足',
+					icon: 'none'
+				})
+			}
+			console.log(this.data.number, this.data.activeProductNumber)
+			if (flag && numberFlag) {
+				let nameValue = this.data.specArray.join(';')
+				let activeProduct = null
+				this.data.products.forEach((pro) => {
+					if (pro.goodsSpecificationNameValue === nameValue) {
+						activeProduct = pro
+					}
+				})
 				const obj = {
 					params: {
 						activePic: this.data.activePic,
-						goodsSpecificationIds: this.data.goodsSpecificationIds,
-						goodsSpecificationNameValue: this.data.goodsSpecificationNameValue,
+						goodsSpecificationIds: activeProduct.goodsSpecificationIds,
+						goodsSpecificationNameValue:
+							activeProduct.goodsSpecificationNameValue,
 						number: this.data.number,
-						productId: this.data.productId,
-						retailPrice: this.data.goods.idPromote
-							? this.data.goods.promotePrice
-							: this.data.goods.retailPrice
+						productId: activeProduct.id,
+						retailPrice:
+							this.data.goods.isPromote &&
+							tool.isInDurationTime(
+								this.data.goods.promoteStart,
+								this.data.goods.promoteEnd
+							)
+								? activeProduct.promotePrice
+								: activeProduct.retailPrice
 					},
 					operateType: this.data.operateType
 				}
+				console.log(obj)
 				this.triggerEvent('operate', obj)
-			} else {
-				wx.showToast({
-					title: '请完善规格信息',
-					icon: 'none'
-				})
 			}
 		}
 	}

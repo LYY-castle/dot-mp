@@ -22,16 +22,12 @@ Page({
 		})
 	},
 	onUnload: function () {},
-	cropperload(e) {
-		console.log('cropper加载完成')
-	},
+	cropperload(e) {},
 	loadimage(e) {
 		wx.hideLoading()
-		console.log('图片')
 		this.cropper.imgReset()
 	},
 	clickcut(e) {
-		console.log(e.detail)
 		//图片预览
 		wx.previewImage({
 			current: e.detail.url, // 当前显示图片的http链接
@@ -128,7 +124,6 @@ Page({
 				success(res) {
 					const data = JSON.parse(res.data)
 					if (data.success) {
-						console.log('剪裁后', data.data)
 						wx.navigateTo({
 							url:
 								'/pages_mine/personal-info/personal-info?src=' +

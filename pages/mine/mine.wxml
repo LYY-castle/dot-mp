@@ -14,11 +14,14 @@
     wx:key="index"
     title="{{item.title}}"
     icon="{{item.iconHref}}"
-    is-link class="item"
+    is-link
+    class="item"
     bind:click="gotoPage"
     data-option="{{item}}"
   />
   <van-cell
+    class="item"
+    icon="{{shoppingMoneyIcon}}"
     title="我的购物金"
     wx:if="{{money}}"
     value="{{money}}"

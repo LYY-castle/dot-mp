@@ -1,5 +1,6 @@
 import http from '../../utils/request.js'
 import util from '../../utils/util.js'
+import tool from '../../utils/mixin.js'
 Page({
 	/**
 	 * 页面的初始数据
@@ -120,6 +121,17 @@ Page({
 							imgArr.push(img.imgUrl)
 						})
 						res.data.goods.name = util.ellipsis(res.data.goods.name, 80)
+						if (
+							res.data.goods.isPromote &&
+							tool.isInDurationTime(
+								res.data.goods.promoteStart,
+								res.data.goods.promoteEnd
+							)
+						) {
+							res.data.goods.isPromote = true
+						} else {
+							res.data.goods.isPromote = false
+						}
 						this.setData({
 							showContent: true,
 							goods: res.data.goods,
@@ -159,10 +171,11 @@ Page({
 				perchaseShow: true
 			})
 		} else {
-			this.addCartOrPerchase(option)
+			this.addCartOrPerchase(option, undefined)
 		}
 	},
 	addCartOrPerchase(event, data) {
+		console.log(event, data)
 		const _this = this
 		const params = {
 			checked: 1,
@@ -176,11 +189,16 @@ Page({
 			number: data ? data.number : _this.data.number,
 			listPicUrl: data ? data.activePic : _this.data.goods.listPicUrl,
 			productId: data ? data.productId : _this.data.products[0].id,
-			retailPrice: data
-				? data.retailPrice
-				: _this.data.goods.idPromote
-				? _this.data.goods.promotePrice
-				: _this.data.goods.retailPrice,
+			retailPrice:
+				this.data.specificationResults.length === 0
+					? _this.data.goods.isPromote &&
+					  tool.isInDurationTime(
+							this.data.goods.promoteStart,
+							this.data.goods.promoteEnd
+					  )
+						? _this.data.products[0].promotePrice
+						: _this.data.products[0].retailPrice
+					: data.retailPrice,
 			userId: wx.getStorageSync('userId')
 		}
 		_this.onClose()
@@ -193,10 +211,6 @@ Page({
 					]
 				})
 				.then((res) => {
-					console.log(
-						_this.data.cartDotsNum,
-						_this.data.cartDotsNum < Number(res.data.val)
-					)
 					if (_this.data.cartDotsNum < Number(res.data.val)) {
 						http
 							.wxRequest({ ..._this.data.api.addCart, params })

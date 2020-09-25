@@ -1,15 +1,14 @@
 <!--pages_shopping_cart/shopping-cart.wxml-->
 <view class="container">
-    <view wx:if="{{shoppingCartList.length>0}}" >
-      <van-sticky>
+  <van-sticky>
         <view class="flex-between p-10 bg-white">
           <text class="fz-16 bold">购物车({{cartCount}})</text>
           <text bindtap="manage" class="fz-12">{{manage}}</text>
         </view>
       </van-sticky>
-
+    <view wx:if="{{shoppingCartList.length>0}}" >
       <van-checkbox-group value="{{ result }}" bind:change="onChange">
-        <view class="flex-start main-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item">
+        <view class="flex-start main-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.product.productNumber>0&&item.goods.isOnSale}}">
             <van-checkbox
             name="{{item.id}}"
             class="checkItem"
@@ -31,12 +30,51 @@
               </view>
               <view>
                   <view wx:if="{{item.goods.isPromote}}">
-                    <view wx:if="{{item.retailPrice-item.product.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.promotePrice*100)/10000}}元</view>
+                    <view wx:if="{{item.retailPrice-item.product.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.promotePrice*100)/100}}元</view>
                     <view class="c-red fz-16 bold left flex-between">￥{{item.product.promotePrice}}<van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
                   </view>
                   <view wx:else>
-                    <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.retailPrice*100)/10000}}元</view>
+                    <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.retailPrice*100)/100}}元</view>
                     <view class="c-red fz-16 bold left flex-between">￥{{item.product.retailPrice}} <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/></view>
+                  </view>
+                </view>
+            </view>
+          </view>
+        </view>
+        <view class="flex-start main-content disabled-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.product.productNumber===0||item.goods.isOnSale===0}}">
+            <van-checkbox
+            name="{{item.id}}"
+            class="checkItem"
+            bindtap="itemChange"
+            data-option="{{item}}"
+            checked-color="#ee0a24"
+          >
+          </van-checkbox>
+          <view class="right-content">
+            <view bindtap="gotoGoodDetail" data-option="{{item}}">
+              <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" class="img-content"/>
+            <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
+            </view>
+            <view class="m-l-10" style="width:100%">
+              <view class="fz-14">{{item.goods.name}}</view>
+              <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}" wx:if="{{item.goodsSpecificationNameValue}}">
+                {{item.goodsSpecificationNameValue}}
+                <van-icon name="arrow-down" size="10"/>
+              </view>
+              <view>
+                {{item.product.productNumber}}无货或者
+                {{item.goods.isOnSale}}已下架
+                  <view wx:if="{{item.goods.isPromote}}">
+                    <!-- <view wx:if="{{item.retailPrice-item.product.promotePrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.promotePrice*100)/10000}}元</view> -->
+                    <view class="c-red fz-16 bold left flex-between">￥{{item.product.promotePrice}}
+                      <!-- <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/> -->
+                    </view>
+                  </view>
+                  <view wx:else>
+                    <!-- <view wx:if="{{item.retailPrice-item.product.retailPrice>0}}" class="c-red fz-12 bold">比加入时降{{(item.retailPrice*100-item.product.retailPrice*100)/10000}}元</view> -->
+                    <view class="c-red fz-16 bold left flex-between">￥{{item.product.retailPrice}}
+                      <!-- <van-stepper value="{{ item.number }}" bind:change="addCount" data-option="{{item}}" max="{{item.product.productNumber}}"/> -->
+                    </view>
                   </view>
                 </view>
             </view>
@@ -46,7 +84,8 @@
       <van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">我是有底线的</van-divider>
       <van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
     </view>
-    <van-empty description="快去看看要买点啥吧" wx:if="{{shoppingCartList.length===0}}"/>
+    <van-empty description="购物车竟然是空的" wx:if="{{shoppingCartList.length===0}}"/>
+    <view class="text-align-center" wx:if="{{shoppingCartList.length===0}}"><van-button plain color="#000" bind:click="goHome">去逛逛</van-button></view>
     <van-submit-bar
       wx:if="{{!deleteButtonShow&&shoppingCartList.length>0}}"
       price="{{ totalPrice }}"
@@ -63,6 +102,7 @@
   </view>
   <specification
       perchaseShow="{{perchaseShow}}"
+      specArray="{{specArray}}"
       activePic="{{activePic}}"
       activePrice="{{activePrice}}"
       activeProductNumber="{{activeProductNumber}}"

@@ -13,7 +13,10 @@
         </swiper>
       <view class="border p-10 m-10">
         <view class="flex-start">
-          <view class="minPrice fz-12">￥<text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>起</view>
+          <view class="minPrice fz-12">￥
+            <text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>
+            <text wx:if="{{specificationResults.length>0}}">起</text>
+          </view>
           <view class="originPrice">￥{{goods.marketPrice}}</view>
         </view>
         <view class="fz-14 m-b-5">{{goods.name}}</view>

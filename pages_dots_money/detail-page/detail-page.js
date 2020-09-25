@@ -122,7 +122,6 @@ Page({
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		console.log('触底函数')
 		if (!this.data.bottomLineShow) {
 			this.setData({
 				pageNo: this.data.pageNo + 1
@@ -198,7 +197,6 @@ Page({
 	},
 
 	freshPage(e) {
-		console.log('freshPage', e)
 		const option = e.currentTarget.dataset.option
 		let params = {
 			pageSize: 10,
@@ -231,7 +229,6 @@ Page({
 					}
 				})
 		} else {
-			console.log('不处理')
 			return
 		}
 	},

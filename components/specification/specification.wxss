@@ -4,12 +4,14 @@
 @import '/static/scss/_font-size.min.wxss';
 @import '/static/scss/_spacing.min.wxss';
 @import '/static/scss/_useful_class.min.wxss';
+
 .popContent {
   box-sizing: border-box;
   padding: 100px 20px 50px 20px;
   height: 450px;
   position: relative;
 }
+
 .popContent .goods {
   width: 100;
   padding: 20px 20px 0 20px;
@@ -23,6 +25,7 @@
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
+  font-size: 12px;
 }
 
 .popContent .buttonGroup {
@@ -35,4 +38,10 @@
 .specificationItem {
   display: inline-block;
   margin: 5px;
+}
+
+.disabledSpecificationItem {
+  display: inline-block;
+  margin: 5px;
+  text-decoration: line-through;
 }

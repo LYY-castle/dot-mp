@@ -48,6 +48,7 @@
 
 .product .richImg {
   display: block;
+  width:100%;
 }
 
 .allprice {

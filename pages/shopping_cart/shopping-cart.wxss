@@ -1,7 +1,7 @@
 /* pages_shopping_cart/shopping-cart.wxss */
 .container {
   position: relative;
-  padding-bottom: 50px;
+  /* padding-bottom: 50px; */
 }
 
 .loginButton {
@@ -60,6 +60,10 @@
   justify-content: space-between;
   justify-items: center;
   padding: 10px 10px 10px 0;
+}
+
+.van-image {
+  background: #eee;
 }
 
 .bg-white {

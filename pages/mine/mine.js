@@ -8,6 +8,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		shoppingMoneyIcon: '/static/img/shopping-money.png',
 		bg: '/static/img/bg.png',
 		avatar: '/static/img/avatar.png',
 		money: null, // 购物金
@@ -75,7 +76,6 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
-						console.log(res.data.avatar.indexOf('https') === -1)
 						if (res.data.avatar.indexOf('https') === -1) {
 							const viewParam = {
 								bucketName: constantCfg.minio.bucketName,
@@ -145,9 +145,6 @@ Page({
 			.catch(() => {
 				Dialog.close()
 			})
-	},
-	bindRegionChange(e) {
-		console.log(e)
 	},
 	gotoPage(event) {
 		const option = event.currentTarget.dataset.option

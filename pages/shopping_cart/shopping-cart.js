@@ -1,6 +1,7 @@
 // pages_shopping_cart/shopping-cart.js
 import http from '../../utils/request'
 import util from '../../utils/util'
+import tool from '../../utils/mixin'
 Page({
 	/**
 	 * 页面的初始数据
@@ -76,11 +77,6 @@ Page({
 		wx.removeStorageSync('addAddress')
 		this.getShoppingOrderList()
 	},
-	goLogin() {
-		wx.navigateTo({
-			url: '/pages_mine/login/login'
-		})
-	},
 	// 下拉
 	onPullDownRefresh() {
 		wx.stopPullDownRefresh()
@@ -107,6 +103,17 @@ Page({
 			if (res.success) {
 				const resultArr = []
 				res.data.forEach((item) => {
+					if (
+						item.goods.isPromote &&
+						tool.isInDurationTime(
+							item.goods.promoteStart,
+							item.goods.promoteEnd
+						)
+					) {
+						item.goods.isPromote = true
+					} else {
+						item.goods.isPromote = false
+					}
 					if (item.checked) {
 						resultArr.push(String(item.id))
 					}
@@ -163,6 +170,7 @@ Page({
 			const option = e.currentTarget.dataset.option
 			const params = {
 				id: option.id,
+				productId: option.product.id,
 				checked: option.checked === 1 ? 0 : 1
 			}
 			http.wxRequest({ ...this.data.api.updateCart, params }).then((res) => {
@@ -201,7 +209,6 @@ Page({
 				.wxRequest({ ...this.data.api.batch, params: shopCarts })
 				.then((res) => {
 					if (res.success) {
-						console.log('批量修改状态')
 						this.getShoppingOrderList()
 					}
 				})
@@ -211,6 +218,7 @@ Page({
 		const option = event.currentTarget.dataset.option
 		const params = {
 			id: option.id,
+			productId: option.product.id,
 			number: event.detail
 		}
 		http.wxRequest({ ...this.data.api.updateCart, params }).then((res) => {
@@ -329,9 +337,6 @@ Page({
 			}
 		})
 	},
-	getProductDetail(id) {
-		return new Promise((resolve) => {})
-	},
 	gotoGoodDetail(e) {
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
@@ -347,14 +352,13 @@ Page({
 			}
 		})
 	},
+	deleteItem(item, list) {
+		list.splice(list.indexOf(item), 1)
+	},
 	selectGuige(e) {
 		const option = e.currentTarget.dataset.option
-		let nameArr = []
-		if (option.goodsSpecificationNameValue.indexOf(';') !== -1) {
-			nameArr = option.goodsSpecificationNameValue.split(';')
-		} else {
-			nameArr.push(option.goodsSpecificationNameValue)
-		}
+		console.log(option)
+
 		http
 			.wxRequest({
 				...this.data.api.getProductById,
@@ -362,19 +366,26 @@ Page({
 			})
 			.then((res) => {
 				if (res.success) {
-					nameArr.forEach((name) => {
-						res.data.specificationResults.forEach((obj) => {
-							obj.goodsSpecificationResults.forEach((item, index) => {
-								if (name === item.goodsSpecificationValue) {
-									obj.goodsSpecificationResults[
-										index
-									].activeGoodsSpecificationNameValue =
-										item.goodsSpecificationValue
+					const currentName = option.goodsSpecificationNameValue.split(';')
+					currentName.forEach((name) => {
+						res.data.products.forEach((pro) => {
+							if (pro.goodsSpecificationNameValue.indexOf(name) !== -1) {
+								if (pro.productNumber === 0) {
+									const arr = pro.goodsSpecificationNameValue.split(';')
+									this.deleteItem(name, arr)
+									for (let i = 0; i < arr.length; i++) {
+										res.data.specificationResults.forEach((speci) => {
+											speci.goodsSpecificationResults.forEach((speciItem) => {
+												if (arr.includes(speciItem.goodsSpecificationValue)) {
+													speciItem.disabled = true
+												}
+											})
+										})
+									}
 								}
-							})
+							}
 						})
 					})
-
 					this.setData({
 						activeChecked: option.checked,
 						productId: option.product.id,
@@ -384,10 +395,18 @@ Page({
 						products: res.data.products,
 						specificationResults: res.data.specificationResults,
 						goodsSpecificationNameValue: option.goodsSpecificationNameValue,
+						specArray: option.goodsSpecificationNameValue.indexOf(';')
+							? option.goodsSpecificationNameValue.split(';')
+							: [option.goodsSpecificationNameValue],
 						activePic: option.listPicUrl,
-						activePrice: option.goods.isPromote
-							? option.goods.promotePrice
-							: option.goods.retailPrice,
+						activePrice:
+							option.goods.isPromote &&
+							tool.isInDurationTime(
+								option.goods.promoteStart,
+								option.goods.promoteEnd
+							)
+								? option.product.promotePrice
+								: option.product.retailPrice,
 						activeProductNumber: option.product.productNumber,
 						number: option.number
 					})
@@ -397,5 +416,10 @@ Page({
 					})
 				}
 			})
+	},
+	goHome() {
+		wx.switchTab({
+			url: '/pages/index/index'
+		})
 	}
 })
