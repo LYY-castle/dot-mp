@@ -7,6 +7,7 @@ Page({
 	 */
 	data: {
 		orderInfo: {},
+		logisticsInfo: null,
 		orderId: null,
 		productId: null,
 		time: null,
@@ -61,6 +62,11 @@ Page({
 			cancelOrder: {
 				url: '/orders',
 				method: 'put'
+			},
+			// /order-express
+			getOrderExpress: {
+				url: '/order-express',
+				method: 'get'
 			}
 		}
 	},
@@ -118,6 +124,9 @@ Page({
 					this.setData({
 						orderInfo: res.data
 					})
+					if (this.data.orderInfo.orderStatus === 300) {
+						this.getOrderExpress()
+					}
 				}
 			})
 	},
@@ -189,14 +198,32 @@ Page({
 				})
 		})
 	},
-	copy() {
+	copy(e) {
+		const text = e.currentTarget.dataset.text
+		console.log(text)
 		wx.setClipboardData({
-			data: this.data.orderInfo.orderNo,
+			data: text,
 			success(res) {
 				wx.showToast({
 					title: '复制成功'
 				})
 			}
 		})
+	},
+	getOrderExpress() {
+		http
+			.wxRequest({
+				...this.data.api.getOrderExpress,
+				params: {
+					orderId: this.data.orderInfo.id
+				}
+			})
+			.then((res) => {
+				if (res.success) {
+					this.setData({
+						logisticsInfo: res.data[0]
+					})
+				}
+			})
 	}
 })

@@ -58,7 +58,7 @@
 						<van-image src="{{list.listPicUrl}}" alt width="100px" height="100px" fit="cover"></van-image>
 						<view class="m-l-10">
 							<view>{{list.goods.name}}</view>
-							<view class="guige m-t-10">{{ list.goodsSpecificationNameValue }}</view>
+							<view class="guige m-t-10" wx:if="{{list.goodsSpecificationNameValue}}">{{ list.goodsSpecificationNameValue }}</view>
 						</view>
 					</view>
 					<view class="m-l-10">
@@ -83,11 +83,11 @@
 			</view>
 			</view>
 			<view class="border m-t-10 p-10 fz-12" wx:if="{{money}}">
-			<van-cell title="可用购物金抵扣">
+			<van-cell title="使用购物金抵扣">
 				<van-checkbox slot="right-icon" value="{{ selectMoney }}" bind:change="selectMoneyChange"></van-checkbox>
 			</van-cell>
 			<van-field
-					label="购物金数量"
+					label="购物金金额"
 					type="digit"
 					wx:if="{{selectMoney}}"
 					model:value="{{ shoppingMoney }}"
@@ -106,5 +106,33 @@
 	<van-dialog show="{{dialogShow}}" title="请确认支付" use-slot="{{true}}" show-cancel-button bind:confirm="confirm" bind:cancel="cancle">
 		<view class="flex-center mt font-size-20">￥{{ actualPrice }}</view>
 	</van-dialog>
+	<van-dialog
+  use-slot
+  title="以下商品无法购买"
+	show="{{ disabledShow }}"
+	confirmButtonText="返回购物车重新选择"
+  bind:confirm="goBackShoppingCart"
+>
+<view class="m-t-10 border p-10 fz-12" wx:if="{{cartPerchase}}" wx:for="{{dataList}}" wx:key="index" wx:for-item="list" wx:if="{{list.product.productNumber===0||list.goods.isOnSale===0}}">
+				<view class="goodContent">
+					<view class="flex-start-start">
+						<view class="img-content">
+							<view class="hasNoGoodsOrSaleOut" wx:if="{{list.goods.isOnSale&&list.product.productNumber===0}}">已售空</view>
+							<view class="hasNoGoodsOrSaleOut" wx:if="{{list.goods.isOnSale===0}}">已下架</view>
+							<van-image src="{{list.listPicUrl}}" alt width="100px" height="100px" fit="cover"></van-image>
+						</view>
+						<view class="m-l-10">
+							<view>{{list.goods.name}}</view>
+							<view class="guige m-t-10" wx:if="{{list.goodsSpecificationNameValue}}">{{ list.goodsSpecificationNameValue }}</view>
+						</view>
+					</view>
+					<view class="m-l-10">
+						<view>￥{{list.goods.isPromote?list.product.promotePrice:list.product.retailPrice}}</view>
+						<view class="c-gray" style="text-align:right">x{{list.number}}</view>
+					</view>
+				</view>
+			</view>
+</van-dialog>
+
 	<van-dialog id="van-dialog" />
 </view>

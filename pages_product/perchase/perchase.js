@@ -25,6 +25,7 @@ Page({
 		remark: null,
 		cartIds: null,
 		cartPerchase: false,
+		disabledShow: false,
 		api: {
 			addOrder: {
 				url: '/orders',
@@ -135,6 +136,7 @@ Page({
 					100
 			}
 		}
+		totalPrice = Math.round(totalPrice * 100) / 100
 		this.setData({
 			totalCount,
 			totalPrice,
@@ -164,29 +166,38 @@ Page({
 						} else {
 							item.goods.isPromote = false
 						}
-						if (item.product.productNumber === 0) {
-							Dialog.alert({
-								title: '提示！',
-								message: '部分选中商品无货,请返回购物车重新选择',
-								theme: 'round-button'
-							}).then(() => {
-								wx.navigateBack({
-									delta: 1
-								})
-							})
-						}
-						if (item.goods.isOnsale === 0) {
-							Dialog.alert({
-								title: '提示！',
-								message: '部分选中商品已下架,请返回购物车重新选择',
-								theme: 'round-button'
-							}).then(() => {
-								wx.navigateBack({
-									delta: 1
-								})
-							})
-						}
 					})
+					const flag = res.data.every((list) => {
+						return list.product.productNumber !== 0 && list.goods.isOnSale !== 0
+					})
+					console.log(flag)
+					if (!flag) {
+						this.setData({
+							disabledShow: true
+						})
+					}
+					// if (item.product.productNumber === 0) {
+					// 	Dialog.alert({
+					// 		title: '以下商品无法购买',
+					// 		message: '当前选中商品无货,请返回购物车重新选择',
+					// 		theme: 'round-button'
+					// 	}).then(() => {
+					// 		wx.navigateBack({
+					// 			delta: 1
+					// 		})
+					// 	})
+					// }
+					// if (item.goods.isOnsale === 0) {
+					// 	Dialog.alert({
+					// 		title: '提示！',
+					// 		message: '当前选中商品部分已下架,请返回购物车重新选择',
+					// 		theme: 'round-button'
+					// 	}).then(() => {
+					// 		wx.navigateBack({
+					// 			delta: 1
+					// 		})
+					// 	})
+					// }
 					this.setData({
 						dataList: res.data
 					})
@@ -331,7 +342,6 @@ Page({
 						body = this.data.goods.name
 					}
 					this.setData({
-						dialogShow: true,
 						actualPrice: res.data.actualPrice,
 						payment: {
 							id: res.data.id,
@@ -342,6 +352,17 @@ Page({
 							tradeType: 'JSAPI'
 						}
 					})
+					if (this.data.payment.totalFee === 0) {
+						wx.navigateTo({
+							url:
+								'/pages_order/order-detail/order-detail?src=' +
+								this.data.payment.id
+						})
+					} else {
+						this.setData({
+							dialogShow: true
+						})
+					}
 				}
 			})
 	},
@@ -370,7 +391,7 @@ Page({
 	// 拉起微信支付
 	confirm() {
 		const _this = this
-		if (this.payment.totalFee > 0) {
+		if (this.data.payment.totalFee > 0) {
 			http
 				.wxRequest({
 					..._this.data.api.payment,
@@ -396,11 +417,6 @@ Page({
 						}
 					})
 				})
-		} else if (this.payment.totalFee === 0) {
-			wx.navigateTo({
-				url:
-					'/pages_order/order-detail/order-detail?src=' + _this.data.payment.id
-			})
 		}
 	},
 	// 获取购物金
@@ -424,13 +440,12 @@ Page({
 		this.setData({
 			selectMoney: !this.data.selectMoney
 		})
-		if (this.data.selectMoney) {
-			this.setData({})
-		}
 	},
 	checkMoney() {
 		// 判断购物金是否小于等于商品总价且小于等于可用余额
 		if (this.data.shoppingMoney <= this.data.money) {
+			console.log('this.data.shoppingMoney', this.data.shoppingMoney)
+			console.log('this.data.totalPrice', this.data.totalPrice)
 			if (this.data.shoppingMoney <= this.data.totalPrice) {
 				return true
 			} else {
@@ -483,5 +498,10 @@ Page({
 	// 下拉
 	onPullDownRefresh() {
 		wx.stopPullDownRefresh()
+	},
+	goBackShoppingCart() {
+		wx.navigateBack({
+			delta: 1
+		})
 	}
 })

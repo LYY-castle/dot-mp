@@ -313,6 +313,35 @@ Page {
   display: inline-block;
   width: 80px;
 }
-.text-align-center{
-  text-align:center;
+
+.text-align-center {
+  text-align: center;
+}
+
+.hasSaleOut {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .6);
+}
+
+.img-content {
+  position: relative;
+}
+
+.hasNoGoodsOrSaleOut {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 60px;
+  height:60px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .6);
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  line-height: 60px;
 }

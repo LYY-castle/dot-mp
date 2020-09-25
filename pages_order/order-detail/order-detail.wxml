@@ -59,16 +59,30 @@
 					<view>{{orderInfo.name}}<text class="m-l-10">{{orderInfo.mobile}}</text></view>
 				</view>
 			</view>
-			<!-- <view class="flex-start-start m-t-10 fz-12">
-				<view class="left-width c-gray">送达时间</view>
-				<view class="black">{{orderInfo.updateAt}}</view>
-			</view> -->
+			<!-- 已发货 -->
+			<view wx:if="{{logisticsInfo}}">
+				<view class="flex-start-start m-t-10 fz-12" >
+					<text class="left-width c-gray">运单号</text>
+					<view class="black">{{logisticsInfo.logisticCode}} <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{logisticsInfo.logisticCode}}">复制</text></view>
+				</view>
+				<view class="flex-start-start m-t-10 fz-12" >
+					<text class="left-width c-gray">快递公司</text>
+					<view class="black">{{logisticsInfo.shipperName}}</view>
+				</view>
+				<view class="flex-start-start m-t-10 fz-12" >
+					<text class="left-width c-gray">发货时间</text>
+					<view class="black">{{logisticsInfo.shippingTime}}</view>
+				</view>
+			</view>
+
+
 		</view>
 		<view class="border p-10 m-10 ">
 			<view>订单信息</view>
 			<van-divider />
-			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy">复制</text></view>
+			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{orderInfo.orderNo}}">复制</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width">下单时间</text><text class="black">{{orderInfo.createAt}}</text></view>
+			<view class="c-gray fz-12 m-t-10" wx:if="{{orderInfo.payTime}}"><text class="left-width">支付时间</text><text class="black">{{orderInfo.payTime}}</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width" wx:if="{{orderInfo.remark}}">订单备注</text><text class="black">{{orderInfo.remark}}</text></view>
 		</view>
 		<van-goods-action wx:if="{{orderInfo.orderStatus===100}}">

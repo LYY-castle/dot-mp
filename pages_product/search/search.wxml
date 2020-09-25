@@ -10,6 +10,8 @@
 		<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
+				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.isOnSale&&item.goodsNumber===0}}">已售空</view>
+				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.isOnSale===0}}">已下架</view>
 				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
 				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
 			</view>

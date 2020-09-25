@@ -101,8 +101,23 @@ Page({
 		}
 		http.wxRequest({ ...this.data.api.getCart, params }).then((res) => {
 			if (res.success) {
-				const resultArr = []
-				res.data.forEach((item) => {
+				let resultArr = []
+				let disabledCount = 0
+				if (params.pageNo === 1) {
+					this.setData({
+						loadingShow: false,
+						shoppingCartList: res.data
+					})
+				} else {
+					this.setData({
+						loadingShow: false,
+						shoppingCartList: this.data.shoppingCartList.concat(res.data)
+					})
+				}
+				this.data.shoppingCartList.forEach((item) => {
+					if (!item.goods.isOnSale) {
+						disabledCount += 1
+					}
 					if (
 						item.goods.isPromote &&
 						tool.isInDurationTime(
@@ -119,23 +134,11 @@ Page({
 					}
 				})
 				this.setData({
-					cartCount: res.page.totalCount
+					cartCount: res.page.totalCount,
+					disabledCount,
+					result: resultArr,
+					all: resultArr.length === res.data.length
 				})
-				if (params.pageNo === 1) {
-					this.setData({
-						loadingShow: false,
-						shoppingCartList: res.data,
-						result: resultArr,
-						all: resultArr.length === res.data.length
-					})
-				} else {
-					this.setData({
-						loadingShow: false,
-						shoppingCartList: this.data.shoppingCartList.concat(res.data),
-						result: resultArr,
-						all: resultArr.length === res.data.length
-					})
-				}
 				if (res.page.totalPage === params.pageNo) {
 					this.setData({
 						bottomLineShow: true
@@ -181,14 +184,16 @@ Page({
 		}
 	},
 	selectAll() {
-		const resultArr = this.data.shoppingCartList.map((item) => {
-			return String(item.id)
-		})
-
 		this.setData({
 			all: !this.data.all
 		})
 		if (this.data.all) {
+			let resultArr = []
+			this.data.shoppingCartList.map((item) => {
+				if (item.isOnSale) {
+					resultArr.push(String(item.id))
+				}
+			})
 			this.setData({
 				result: resultArr
 			})
@@ -198,12 +203,15 @@ Page({
 			})
 		}
 		if (!this.data.deleteButtonShow) {
-			const shopCarts = this.data.shoppingCartList.map((item) => {
-				const obj = {
-					checked: this.data.all ? 1 : 0,
-					id: Number(item.id)
+			let shopCarts = []
+			this.data.shoppingCartList.map((item) => {
+				if (item.goods.isOnSale) {
+					const obj = {
+						checked: this.data.all ? 1 : 0,
+						id: Number(item.id)
+					}
+					shopCarts.push(obj)
 				}
-				return obj
 			})
 			http
 				.wxRequest({ ...this.data.api.batch, params: shopCarts })
@@ -416,6 +424,45 @@ Page({
 					})
 				}
 			})
+	},
+	removeDisabledGoods() {
+		const _this = this
+		wx.showModal({
+			title: '确认清空失效宝贝？',
+			success(res) {
+				if (res.confirm) {
+					let ids = []
+					_this.data.shoppingCartList.map((shop) => {
+						if (!shop.goods.isOnSale) {
+							ids.push(shop.id)
+						}
+					})
+					if (ids.length > 1) {
+						ids = ids.join(',')
+					} else {
+						ids = ids[0]
+					}
+					http
+						.wxRequest({
+							..._this.data.api.delete,
+							urlReplacements: [{ substr: '{ids}', replacement: ids }]
+						})
+						.then((res) => {
+							if (res.success) {
+								Dialog.close()
+								wx.showToast({
+									title: '失效宝贝已清空',
+									icon: 'none',
+									success() {
+										_this.getShoppingOrderList()
+									}
+								})
+							}
+						})
+				} else if (res.cancel) {
+				}
+			}
+		})
 	},
 	goHome() {
 		wx.switchTab({

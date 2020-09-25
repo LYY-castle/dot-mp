@@ -19,11 +19,12 @@ Page({
 		pageNo: 1
 	},
 	onShow() {
-		if (wx.getStorageSync('authorization')) {
-			Promise.resolve()
-				.then(() => this.getProductSorts())
-				.then(() => this.getProductList())
-		}
+		Promise.resolve()
+			.then(() => this.getProductSorts())
+			.then(() => this.getProductList())
+		// if (wx.getStorageSync('authorization')) {
+
+		// }
 	},
 	test() {
 		this.getProductSorts()

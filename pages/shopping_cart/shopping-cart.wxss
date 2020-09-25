@@ -69,3 +69,12 @@
 .bg-white {
   background: #fff;
 }
+
+.img-content {
+  position: relative;
+}
+
+.clearText {
+  text-align: right;
+  color: #f9ae08;
+}

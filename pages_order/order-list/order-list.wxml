@@ -24,7 +24,12 @@
 				</view>
 				<view class="c-darkgrey  flex-between-end">
 					<text class="m-r-10 c-gray">共{{ order.totalNum }}件</text>
-					<text>总额:￥{{ order.actualPrice }}</text>
+					<view>
+						<text wx:if="{{order.orderStatus>=200}}">实付款</text>
+						<text wx:if="{{order.orderStatus===100}}">需付款</text>
+						<text wx:if="{{order.orderStatus===101||order.orderStatus===102}}">应付款</text>
+						:￥{{ order.actualPrice }}
+					</view>
 				</view>
 			</view>
 	</view>
