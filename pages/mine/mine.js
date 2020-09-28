@@ -11,6 +11,7 @@ Page({
 		shoppingMoneyIcon: '/static/img/shopping-money.png',
 		bg: '/static/img/bg.png',
 		avatar: '/static/img/avatar.png',
+		shoppingMoneyData: null,
 		money: null, // 购物金
 		userInfo: null,
 		api: {
@@ -102,11 +103,11 @@ Page({
 			if (res.success) {
 				if (res.data) {
 					this.setData({
-						money: res.data.amount
+						shoppingMoneyData: res.data
 					})
 				} else {
 					this.setData({
-						money: null
+						shoppingMoneyData: null
 					})
 				}
 			}

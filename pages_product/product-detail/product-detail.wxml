@@ -6,8 +6,8 @@
         autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
         <block wx:for="{{goodsGalleries}}" wx:key="imgIndex">
           <swiper-item>
-            <van-image src="{{item}}" width="100%" height="100%" fit="cover" wx:if="{{item}}"></van-image>
-            <van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
+            <van-image src="{{item}}" height="100%" fit="heightFix" wx:if="{{item}}"></van-image>
+            <van-image alt height="100%" fit="heightFix" wx:else use-loading-slot />
           </swiper-item>
         </block>
         </swiper>

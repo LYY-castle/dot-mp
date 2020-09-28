@@ -71,16 +71,25 @@ Component({
 			list.splice(list.indexOf(item), 1)
 		},
 		onChangeSpec(event) {
+			console.log(event.currentTarget.dataset.index)
 			const { specArray } = this.data
 			specArray[event.currentTarget.dataset.index] = event.detail
 			this.setData({
 				specArray
 			})
-			console.log()
 			let activeTotalNumber = 0
+			console.log(
+				specArray,
+				specArray.length === this.data.specificationResults.length
+			)
 			if (specArray.length > 0) {
 				if (specArray.length === this.data.specificationResults.length) {
 					this.data.products.forEach((pro) => {
+						if (pro.goodsSpecificationNameValue === specArray.join(';')) {
+							this.setData({
+								activeProduct: pro
+							})
+						}
 						if (
 							pro.goodsSpecificationNameValue.indexOf(
 								specArray[event.currentTarget.dataset.index]
@@ -92,7 +101,6 @@ Component({
 									specArray[event.currentTarget.dataset.index],
 									arr
 								)
-								console.log(arr)
 								for (let i = 0; i < arr.length; i++) {
 									this.data.specificationResults.forEach((speci) => {
 										speci.goodsSpecificationResults.forEach((speciItem) => {
@@ -102,10 +110,6 @@ Component({
 										})
 									})
 								}
-								console.log(
-									'this.data.specificationResults',
-									this.data.specificationResults
-								)
 							} else {
 								const arr = pro.goodsSpecificationNameValue.split(';')
 								this.deleteItem(
@@ -124,19 +128,23 @@ Component({
 									})
 								}
 							}
-							this.setData({
-								specificationResults: this.data.specificationResults,
-								activePic: pro.pictureUrl
-									? pro.pictureUrl
-									: this.data.goods.listPicUrl,
-								activePrice: this.data.goods.isPromote
-									? pro.promotePrice
-									: pro.retailPrice,
-								activeProductNumber: pro.productNumber,
-								number: 1
-							})
-							console.log(this.data)
 						}
+					})
+					this.setData({
+						specificationResults: this.data.specificationResults,
+						activePic: this.data.activeProduct.pictureUrl
+							? this.data.activeProduct.pictureUrl
+							: this.data.goods.listPicUrl,
+						activePrice:
+							this.data.goods.isPromote &&
+							tool.isInDurationTime(
+								this.data.goods.promoteStart,
+								this.data.goods.promoteEnd
+							)
+								? this.data.activeProduct.promotePrice
+								: this.data.activeProduct.retailPrice,
+						activeProductNumber: this.data.activeProduct.productNumber,
+						number: 1
 					})
 				} else {
 					if (specArray.length === 1) {

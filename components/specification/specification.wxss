@@ -35,6 +35,17 @@
   width: 100%;
 }
 
+.speciGroup {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.van-icon-success:before {
+  content: '三片' !important;
+}
+
 .specificationItem {
   display: inline-block;
   margin: 5px;
@@ -44,4 +55,38 @@
   display: inline-block;
   margin: 5px;
   text-decoration: line-through;
+}
+
+.radioItem {
+  position: relative;
+  background: #eee !important;
+  padding: 2px 5px;
+  margin-right: 10px;
+}
+
+.iconItem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.van-radio__icon-wrap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.van-radio__label {
+  position: absolute;
+  z-index: 1;
+
+}
+
+.van-radio__icon {
+  width: 61px;
+  height: 20px;
+  position: absolute;
+  font-size: 0px;
+
 }

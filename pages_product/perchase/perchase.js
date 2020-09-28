@@ -8,6 +8,7 @@ Page({
 	 */
 	data: {
 		money: null, // 购物金
+		shoppingMoneyData: null,
 		shoppingMoney: null, // 使用购物金的金额
 		shoppingAccountId: null, // 购物金账户id
 		selectMoney: false, //是否使用购物金
@@ -337,10 +338,11 @@ Page({
 						this.data.dataList.forEach((list) => {
 							body += list.goods.name
 						})
-						body = util.ellipsis(body, 128)
 					} else {
 						body = this.data.goods.name
 					}
+					body = util.ellipsis(body, 29)
+					console.log('body length', body.length)
 					this.setData({
 						actualPrice: res.data.actualPrice,
 						payment: {
@@ -426,11 +428,11 @@ Page({
 				if (res.data) {
 					this.setData({
 						shoppingAccountId: res.data.id,
-						money: res.data.amount
+						shoppingMoneyData: res.data
 					})
 				} else {
 					this.setData({
-						money: null
+						shoppingMoneyData: null
 					})
 				}
 			}
@@ -443,7 +445,7 @@ Page({
 	},
 	checkMoney() {
 		// 判断购物金是否小于等于商品总价且小于等于可用余额
-		if (this.data.shoppingMoney <= this.data.money) {
+		if (this.data.shoppingMoney <= this.data.shoppingMoneyData.amount) {
 			console.log('this.data.shoppingMoney', this.data.shoppingMoney)
 			console.log('this.data.totalPrice', this.data.totalPrice)
 			if (this.data.shoppingMoney <= this.data.totalPrice) {
