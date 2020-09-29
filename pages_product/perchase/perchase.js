@@ -257,7 +257,7 @@ Page({
 					}
 				} else {
 					wx.showToast({
-						title: '请填写需要使用的购物金数量',
+						title: '请填写需要使用的购物金',
 						icon: 'none'
 					})
 				}
@@ -470,19 +470,23 @@ Page({
 		const price = this.data.goods.isPromote
 			? (Math.round(this.data.product.promotePrice * 100) * count) / 100
 			: (Math.round(this.data.product.retailPrice * 100) * count) / 100
-		this.setData({
-			totalCount: count,
-			totalPrice: price
-		})
+
 		if (this.data.selectMoney && this.data.shoppingMoney > 0) {
 			this.setData({
+				totalCount: count,
+				totalPrice: price,
 				actualPrice: price - this.data.shoppingMoney
+			})
+		} else {
+			this.setData({
+				totalCount: count,
+				totalPrice: price,
+				actualPrice: price
 			})
 		}
 		wx.setStorageSync('activeProductNumber', count)
 	},
 	shoppingMoneyChange(e) {
-		console.log(e)
 		const money = Number(e.detail)
 		const flag = this.checkMoney()
 		if (flag) {
