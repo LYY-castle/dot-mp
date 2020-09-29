@@ -6,6 +6,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		disabledBtn: false,
 		api: {
 			login: {
 				url: '/users/wx',
@@ -17,6 +18,9 @@ Page({
 		const _this = this
 		wx.login({
 			success(res) {
+				_this.setData({
+					disabledBtn: true
+				})
 				const params = {
 					wechatCode: res.code,
 					userInfoEncryptedData: e.detail.encryptedData,
