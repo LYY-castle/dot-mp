@@ -115,7 +115,7 @@ Page({
 					})
 				}
 				this.data.shoppingCartList.forEach((item) => {
-					if (!item.goods.isOnSale || item.product.productNumber === 0) {
+					if (!item.goods.isOnSale) {
 						disabledCount += 1
 					}
 					if (

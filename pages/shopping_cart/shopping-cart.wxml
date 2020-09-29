@@ -7,12 +7,15 @@
     </view>
   </van-sticky>
 
-  <view wx:if="{{shoppingCartList.length>0}}">
+  <view wx:if="{{shoppingCartList.length > 0}}">
     <van-checkbox-group value="{{ result }}" bind:change="onChange">
-      <view class="flex-start main-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.product.productNumber > 0 && item.goods.isOnSale}}">
-        <van-checkbox name="{{item.id}}" class="checkItem" bindtap="itemChange" data-option="{{item}}" checked-color="#ee0a24"></van-checkbox>
+      <view class="flex-start main-content" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.goods.isOnSale}}">
+        <van-checkbox name="{{item.id}}" class="checkItem" bindtap="itemChange" data-option="{{item}}" checked-color="#ee0a24" />
         <view class="right-content">
           <view bindtap="gotoGoodDetail" data-option="{{item}}">
+            <view class="hasNoGoodsOrSaleOut" wx:if="{{item.product.productNumber === 0}}">
+              已售空
+            </view>
             <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
             <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
           </view>
@@ -52,12 +55,9 @@
         <view class="bold" bindtap="removeDisabledGoods">失效宝贝({{disabledCount}})</view>
         <view class="clearText" bindtap="removeDisabledGoods">清空失效宝贝</view>
       </view>
-      <view class="flex-start" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.product.productNumber===0||item.goods.isOnSale===0}}">
+      <view class="flex-start" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.goods.isOnSale===0}}">
         <view class="right-content">
           <view bindtap="gotoGoodDetail" data-option="{{item}}" class="img-content">
-            <view class="hasNoGoodsOrSaleOut" wx:if="{{item.goods.isOnSale&&item.product.productNumber===0}}">
-              已售空
-            </view>
             <view class="hasNoGoodsOrSaleOut" wx:if="{{item.goods.isOnSale===0}}">已下架</view>
             <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
             <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
