@@ -449,7 +449,6 @@ Page({
 						})
 						.then((res) => {
 							if (res.success) {
-								Dialog.close()
 								wx.showToast({
 									title: '失效宝贝已清空',
 									icon: 'none',
