@@ -77,4 +77,5 @@
 .clearText {
   text-align: right;
   color: #f9ae08;
+  font-size: 14px;
 }

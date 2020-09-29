@@ -1,69 +1,49 @@
-<!--pages/product/product-detail/product-detail.wxml-->
+<!-- pages/product/product-detail/product-detail.wxml -->
 <view class="container">
   <v-navigator page-name="你当前页面的名字"></v-navigator>
-    <view wx:if="{{showContent}}">
-      <swiper indicator-dots="{{indicatorDots}}"  class="my-swipe"
-        autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-        <block wx:for="{{goodsGalleries}}" wx:key="imgIndex">
-          <swiper-item>
-            <van-image src="{{item}}" height="100%" fit="heightFix" wx:if="{{item}}"></van-image>
-            <van-image alt height="100%" fit="heightFix" wx:else use-loading-slot />
-          </swiper-item>
-        </block>
-        </swiper>
-      <view class="border p-10 m-10">
-        <view class="flex-start">
-          <view class="minPrice fz-12">￥
-            <text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>
-            <text wx:if="{{specificationResults.length>0}}">起</text>
-          </view>
-          <view class="originPrice">￥{{goods.marketPrice}}</view>
+  <view wx:if="{{showContent}}">
+    <swiper indicator-dots="{{indicatorDots}}" class="my-swipe" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{goodsGalleries}}" wx:key="imgIndex">
+        <swiper-item>
+          <van-image src="{{item}}" height="100%" fit="heightFix" wx:if="{{item}}"></van-image>
+          <van-image alt height="100%" fit="heightFix" wx:else use-loading-slot />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="border p-10 m-10">
+      <view class="flex-start">
+        <view class="minPrice fz-12">
+          ￥
+          <text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>
+          <text wx:if="{{specificationResults.length>0}}">起</text>
         </view>
-        <view class="fz-14 m-b-5">{{goods.name}}</view>
-					<view class="fz-12 m-t-5 c-gray">{{ goods.goodsBrief }}</view>
-    </view>
-     <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
-            <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
-            <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
-              <view
-                  class="title"
-                >{{ content.categoryAttributeName}}</view>
-                <view class="description">{{ content.goodsAttributeVal }}</view>
-            </view>
-          </view>
-        <view class="product">
-          <view wx:if="{{goods.goodsDetail}}">
-            <van-divider dashed="{{true}}" contentPosition="center">产品详情</van-divider>
-            <rich-text nodes="{{goods.goodsDetail}}" class="produceDetail"></rich-text>
-          </view>
-          <van-empty description="暂无描述信息" wx:else />
-        </view>
+        <view class="originPrice">￥{{goods.marketPrice}}</view>
       </view>
-      <specification
-      perchaseShow="{{perchaseShow}}"
-      activePic="{{activePic}}"
-      activePrice="{{activePrice}}"
-      activeProductNumber="{{activeProductNumber}}"
-      goodsSpecificationNameValue="{{goodsSpecificationNameValue}}"
-      specificationResults="{{specificationResults}}"
-      number="{{number}}"
-      goods="{{goods}}"
-      products="{{products}}"
-      operateType="{{operateType}}"
-      bind:operate="operate"
-      ></specification>
-    <van-goods-action>
-      <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab"/>
-      <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab"/>
-      <van-goods-action-button
-      wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}"
-        text="加入购物车"
-        color="#f9ae08"
-        bind:click="onClickButton"
-        data-option="cart"
-      />
-      <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}"color="#ee0a24" text="立即购买" bind:click="onClickButton" data-option="perchase"/>
-      <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.isOnSale&&goods.goodsNumber===0}}"/>
-      <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{!goods.isOnSale}}"/>
-    </van-goods-action>
+      <view class="fz-14 m-b-5">{{goods.name}}</view>
+      <view class="fz-12 m-t-5 c-gray">{{ goods.goodsBrief }}</view>
+    </view>
+    <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
+      <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
+      <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
+        <view class="title">{{ content.categoryAttributeName}}</view>
+        <view class="description">{{ content.goodsAttributeVal }}</view>
+      </view>
+    </view>
+    <view class="product">
+      <view wx:if="{{goods.goodsDetail}}">
+        <van-divider dashed="{{true}}" contentPosition="center">产品详情</van-divider>
+        <rich-text nodes="{{goods.goodsDetail}}" class="produceDetail"></rich-text>
+      </view>
+      <van-empty description="暂无描述信息" wx:else />
+    </view>
   </view>
+  <specification perchaseShow="{{perchaseShow}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
+  <van-goods-action>
+    <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
+    <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
+    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" text="加入购物车" color="#f9ae08" bind:click="onClickButton" data-option="cart" />
+    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" color="#ee0a24" text="立即购买" bind:click="onClickButton" data-option="perchase" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.isOnSale&&goods.goodsNumber===0}}" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{!goods.isOnSale}}" />
+  </van-goods-action>
+</view>
