@@ -108,6 +108,7 @@ Page({
 						const totalPrice = res.data.goods.isPromote
 							? (Math.round(res.data.product.promotePrice * 100) * count) / 100
 							: (Math.round(res.data.product.retailPrice * 100) * count) / 100
+
 						this.setData({
 							product: res.data.product,
 							goods: res.data.goods,
@@ -150,7 +151,8 @@ Page({
 				...this.data.api.getProductByCart,
 				params: {
 					scope: 'all',
-					checked: 1
+					checked: 1,
+					excludeEmptyProduct: 1
 				}
 			})
 			.then((res) => {

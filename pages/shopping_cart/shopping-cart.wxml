@@ -7,7 +7,7 @@
     </view>
   </van-sticky>
 
-  <view wx:if="{{shoppingCartList.length>0}}">
+  <view wx:if="{{shoppingCartList.length > 0}}">
     <van-checkbox-group value="{{ result }}" bind:change="onChange">
       <view class="{{item.product.productNumber===0?'flex-start main-content disabled-content':'flex-start main-content'}}" wx:for="{{shoppingCartListEffective}}" wx:key="index" wx:for-item="item">
     <van-checkbox name="{{item.id}}" class="checkItem" bindtap="itemChange" data-option="{{item}}" checked-color="#ee0a24"></van-checkbox>
@@ -89,7 +89,11 @@
         <view class="bold" bindtap="removeDisabledGoods">失效宝贝({{disabledCount}})</view>
         <view class="clearText" bindtap="removeDisabledGoods">清空失效宝贝</view>
       </view>
+<<<<<<< HEAD
       <view class="flex-start" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{!item.goods.isOnSale}}">
+=======
+      <view class="flex-start" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.goods.isOnSale===0}}">
+>>>>>>> e7880e407126b2ffafbea346d22ba4f2ce6e0d4d
         <view class="right-content">
           <view bindtap="gotoGoodDetail" data-option="{{item}}" class="img-content">
             <view class="hasNoGoodsOrSaleOut" wx:if="{{item.goods.isOnSale===0}}">已下架</view>
