@@ -152,7 +152,7 @@ Page({
 				params: {
 					scope: 'all',
 					checked: 1,
-					excludeEmptyProduct: 1
+					excludeDisabled: 1
 				}
 			})
 			.then((res) => {
