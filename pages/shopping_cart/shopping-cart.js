@@ -368,8 +368,11 @@ Page({
 	},
 	selectGuige(e) {
 		const option = e.currentTarget.dataset.option
-		console.log(option)
-
+		this.setData({
+			specArray: option.goodsSpecificationNameValue.indexOf(';')
+				? option.goodsSpecificationNameValue.split(';')
+				: [option.goodsSpecificationNameValue]
+		})
 		http
 			.wxRequest({
 				...this.data.api.getProductById,
@@ -377,8 +380,14 @@ Page({
 			})
 			.then((res) => {
 				if (res.success) {
-					const currentName = option.goodsSpecificationNameValue.split(';')
-					currentName.forEach((name) => {
+					this.data.specArray.forEach((name) => {
+						res.data.specificationResults.forEach((speci) => {
+							speci.goodsSpecificationResults.forEach((speciItem) => {
+								if (name === speciItem.goodsSpecificationValue) {
+									speciItem.activeGoodsSpecificationNameValue = name
+								}
+							})
+						})
 						res.data.products.forEach((pro) => {
 							if (pro.goodsSpecificationNameValue.indexOf(name) !== -1) {
 								if (pro.productNumber === 0) {
@@ -406,9 +415,7 @@ Page({
 						products: res.data.products,
 						specificationResults: res.data.specificationResults,
 						goodsSpecificationNameValue: option.goodsSpecificationNameValue,
-						specArray: option.goodsSpecificationNameValue.indexOf(';')
-							? option.goodsSpecificationNameValue.split(';')
-							: [option.goodsSpecificationNameValue],
+
 						activePic: option.listPicUrl,
 						activePrice:
 							option.goods.isPromote &&

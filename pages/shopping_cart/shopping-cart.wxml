@@ -138,5 +138,5 @@
     </van-checkbox>
     <van-button size="small" bindtap="deleteCarts" round class="m-r-10">删除</van-button>
   </view>
-  <specification perchaseShow="{{perchaseShow}}" specArray="{{specArray}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
+  <specification perchaseShow="{{perchaseShow}}" selectNameValueArr="{{specArray}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
 </view>
