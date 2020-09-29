@@ -14,9 +14,12 @@ Page({
 		deleteButtonShow: false,
 		manage: '编辑',
 		activeChecked: false,
-		shoppingCartList: null,
+		shoppingCartList: null, // 购物车所有产品
+		shoppingCartListEffective: null,
 		result: [],
 		totalPrice: 0,
+		disabledCount: null, // 失效宝贝数量
+		hasSaleOutCount: null, // 已售空宝贝数量
 		all: false,
 		perchaseShow: false,
 		number: 1,
@@ -103,20 +106,12 @@ Page({
 			if (res.success) {
 				let resultArr = []
 				let disabledCount = 0
-				if (params.pageNo === 1) {
-					this.setData({
-						loadingShow: false,
-						shoppingCartList: res.data
-					})
-				} else {
-					this.setData({
-						loadingShow: false,
-						shoppingCartList: this.data.shoppingCartList.concat(res.data)
-					})
-				}
-				this.data.shoppingCartList.forEach((item) => {
-					if (!item.goods.isOnSale || item.product.productNumber === 0) {
+				let shoppingCartListEffective = []
+				res.data.forEach((item) => {
+					if (!item.goods.isOnSale) {
 						disabledCount += 1
+					} else {
+						shoppingCartListEffective.push(item)
 					}
 					if (
 						item.goods.isPromote &&
@@ -129,16 +124,28 @@ Page({
 					} else {
 						item.goods.isPromote = false
 					}
-					if (item.checked) {
+					if (item.checked && item.goods.isOnSale) {
 						resultArr.push(String(item.id))
 					}
 				})
 				this.setData({
 					cartCount: res.page.totalCount,
+					shoppingCartListEffective,
 					disabledCount,
 					result: resultArr,
-					all: resultArr.length === res.data.length
+					all: resultArr.length === shoppingCartListEffective.length
 				})
+				if (params.pageNo === 1) {
+					this.setData({
+						loadingShow: false,
+						shoppingCartList: res.data
+					})
+				} else {
+					this.setData({
+						loadingShow: false,
+						shoppingCartList: this.data.shoppingCartList.concat(res.data)
+					})
+				}
 				if (res.page.totalPage === params.pageNo) {
 					this.setData({
 						bottomLineShow: true
@@ -189,10 +196,8 @@ Page({
 		})
 		if (this.data.all) {
 			let resultArr = []
-			this.data.shoppingCartList.map((item) => {
-				if (item.isOnSale) {
-					resultArr.push(String(item.id))
-				}
+			this.data.shoppingCartListEffective.map((item) => {
+				resultArr.push(String(item.id))
 			})
 			this.setData({
 				result: resultArr
@@ -204,14 +209,12 @@ Page({
 		}
 		if (!this.data.deleteButtonShow) {
 			let shopCarts = []
-			this.data.shoppingCartList.map((item) => {
-				if (item.goods.isOnSale) {
-					const obj = {
-						checked: this.data.all ? 1 : 0,
-						id: Number(item.id)
-					}
-					shopCarts.push(obj)
+			this.data.shoppingCartListEffective.map((item) => {
+				const obj = {
+					checked: this.data.all ? 1 : 0,
+					id: Number(item.id)
 				}
+				shopCarts.push(obj)
 			})
 			http
 				.wxRequest({ ...this.data.api.batch, params: shopCarts })
@@ -449,7 +452,7 @@ Page({
 							..._this.data.api.delete,
 							urlReplacements: [{ substr: '{ids}', replacement: ids }]
 						})
-						.then(res => {
+						.then((res) => {
 							if (res.success) {
 								wx.showToast({
 									title: '失效宝贝已清空',
