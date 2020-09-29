@@ -108,7 +108,7 @@ Page({
 						res.data.orderGoods.forEach((good) => {
 							body += good.goodsName
 						})
-						body = util.ellipsis(body, 128)
+						body = util.ellipsis(body, 29)
 						this.setData({
 							time,
 							payment: {
