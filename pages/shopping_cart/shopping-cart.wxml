@@ -47,7 +47,7 @@
       </view>
     </van-checkbox-group>
     <!-- 失效宝贝 -->
-    <view class="border disabled-content p-t-10 p-r-10 m-10" wx:if="{{disabledCount>0}}">
+    <view class="border disabled-content p-t-10 p-r-10 m-10" wx:if="{{disabledCount > 0}}">
       <view class="flex-between p-l-10">
         <view class="bold" bindtap="removeDisabledGoods">失效宝贝({{disabledCount}})</view>
         <view class="clearText" bindtap="removeDisabledGoods">清空失效宝贝</view>

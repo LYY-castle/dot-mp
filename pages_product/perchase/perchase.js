@@ -342,7 +342,6 @@ Page({
 						body = this.data.goods.name
 					}
 					body = util.ellipsis(body, 29)
-					console.log('body length', body.length)
 					this.setData({
 						actualPrice: res.data.actualPrice,
 						payment: {

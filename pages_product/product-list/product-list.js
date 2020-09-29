@@ -1,6 +1,5 @@
 import tool from '../../utils/mixin.js'
 import util from '../../utils/util.js'
-import qseBaoUtil from '../../utils/qsebao.js'
 import constantCfg from '../../config/constant'
 
 Page({
@@ -57,6 +56,7 @@ Page({
 						} else {
 							item.isPromote = false
 						}
+
 						let labelArr = []
 						if (item.label === '') {
 							labelArr = []

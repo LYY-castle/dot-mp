@@ -433,21 +433,23 @@ Page({
 				if (res.confirm) {
 					let ids = []
 					_this.data.shoppingCartList.map((shop) => {
-						if (!shop.goods.isOnSale) {
+						if (!shop.goods.isOnSale || !shop.goods.goodsNumber) {
 							ids.push(shop.id)
 						}
 					})
+
 					if (ids.length > 1) {
 						ids = ids.join(',')
 					} else {
 						ids = ids[0]
 					}
+
 					http
 						.wxRequest({
 							..._this.data.api.delete,
 							urlReplacements: [{ substr: '{ids}', replacement: ids }]
 						})
-						.then((res) => {
+						.then(res => {
 							if (res.success) {
 								Dialog.close()
 								wx.showToast({
