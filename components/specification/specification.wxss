@@ -46,14 +46,26 @@
   content: '三片' !important;
 }
 
-.specificationItem {
-  display: inline-block;
-  margin: 5px;
+.tagContent {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  justify-items: center;
+}
+
+.imgstyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.valueStyle {
+  height: 100%;
 }
 
 .disabledSpecificationItem {
-  display: inline-block;
-  margin: 5px;
+  opacity: 0.6;
   text-decoration: line-through;
 }
 

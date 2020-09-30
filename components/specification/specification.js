@@ -73,12 +73,18 @@ Component({
 			const option = e.currentTarget.dataset.option
 			const parentIndex = e.currentTarget.dataset.parent
 			const childIndex = e.currentTarget.dataset.child
-			this.data.selectNameValueArr[parentIndex] = option.goodsSpecificationValue
 			let goodsSpecificationIds = []
 			let goodsSpecificationNameValue = []
 			let disabledNameValue = []
 			let activeProductNumber = 0
+
 			if (!option.disabled) {
+				if (option.activeGoodsSpecificationNameValue) {
+					this.data.selectNameValueArr.splice(parentIndex, 1, '')
+				} else {
+					this.data.selectNameValueArr[parentIndex] =
+						option.goodsSpecificationValue
+				}
 				this.data.products.forEach((pro) => {
 					if (
 						pro.goodsSpecificationNameValue.indexOf(
@@ -102,7 +108,6 @@ Component({
 					})
 				})
 				disabledNameValue = Array.from(new Set(disabledNameValue))
-
 				this.setData({
 					disabledNameValue: disabledNameValue,
 					activeProductNumber
@@ -136,12 +141,8 @@ Component({
 					parentIndex
 				].goodsSpecificationResults.forEach((item, index) => {
 					if (index === childIndex) {
-						if (item.activeGoodsSpecificationNameValue) {
-							delete item.activeGoodsSpecificationNameValue
-						} else {
-							item.activeGoodsSpecificationNameValue =
-								option.goodsSpecificationValue
-						}
+						item.activeGoodsSpecificationNameValue =
+							option.goodsSpecificationValue
 					} else {
 						if (item.activeGoodsSpecificationNameValue) {
 							delete item.activeGoodsSpecificationNameValue
