@@ -134,15 +134,16 @@ Page({
 		this.getOrderDetail()
 	},
 	goPay() {
+		const _this = this
 		Dialog.confirm({
 			title: '确认支付',
-			message: '￥' + this.data.orderInfo.actualPrice
+			message: '￥' + _this.data.orderInfo.actualPrice
 		})
 			.then(() => {
 				http
 					.wxRequest({
-						...this.data.api.payment,
-						params: this.data.payment
+						..._this.data.api.payment,
+						params: _this.data.payment
 					})
 					.then((result) => {
 						const wechatParams = {
@@ -156,13 +157,13 @@ Page({
 						wx.requestPayment({
 							...wechatParams,
 							success(res) {
-								console.log(res)
+								_this.getOrderDetail()
 							}
 						})
 					})
 			})
 			.catch(() => {
-				this.setData({
+				_this.setData({
 					dialogShow: true
 				})
 			})
@@ -200,7 +201,6 @@ Page({
 	},
 	copy(e) {
 		const text = e.currentTarget.dataset.text
-		console.log(text)
 		wx.setClipboardData({
 			data: text,
 			success(res) {

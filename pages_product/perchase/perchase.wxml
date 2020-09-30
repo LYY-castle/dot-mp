@@ -37,15 +37,12 @@
 			</view>
 			<view class="flex-between">
 				<view class="text-content">购买数量</view>
-				<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/></view>
-				<van-field
-				label="订单备注"
-        type="textarea"
-				autosize="{{true}}"
-				model:value="{{ remark }}"
-				placeholder="选填"
-				border="{{ false }}"
-			></van-field>
+				<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/>
+			</view>
+			<view class="flex-between m-t-10 m-b-10" bindtap="remarkChange">
+				<view class="text-content">订单备注</view>
+				<view class="remarkText">{{newRemark!==''?newRemark:'选填'}}</view>
+			</view>
 			<view class="bottom-text">
 				<text class="c-gray">共{{ totalCount }}件</text>
 				<text class="m-l-10">小计:</text>
@@ -68,14 +65,10 @@
 				</view>
 			</view>
 			<view wx:if="{{cartPerchase}}" class="m-t-10 border p-10 fz-12">
-				<van-field
-				label="订单备注"
-        type="textarea"
-				autosize="{{true}}"
-				model:value="{{ remark }}"
-				placeholder="选填"
-				border="{{ false }}"
-			></van-field>
+			<view class="flex-between m-t-10 m-b-10" bindtap="remarkChange">
+				<view class="text-content">订单备注</view>
+				<view class="remarkText">{{newRemark!==''?newRemark:'选填'}}</view>
+			</view>
 			<view class="bottom-text">
 				<text class="c-gray">共{{ totalCount }}件</text>
 				<text class="m-l-10">小计:</text>
@@ -106,33 +99,26 @@
 	<van-dialog show="{{dialogShow}}" title="请确认支付" use-slot="{{true}}" show-cancel-button bind:confirm="confirm" bind:cancel="cancle">
 		<view class="flex-center mt font-size-20">￥{{ actualPrice }}</view>
 	</van-dialog>
-	<van-dialog
-  use-slot
-  title="以下商品无法购买"
-	show="{{ disabledShow }}"
-	confirmButtonText="返回购物车重新选择"
-  bind:confirm="goBackShoppingCart"
->
-<view class="m-t-10 border p-10 fz-12" wx:if="{{cartPerchase}}" wx:for="{{dataList}}" wx:key="index" wx:for-item="list" wx:if="{{list.product.productNumber===0||list.goods.isOnSale===0}}">
-				<view class="goodContent">
-					<view class="flex-start-start">
-						<view class="img-content">
-							<view class="hasNoGoodsOrSaleOut" wx:if="{{list.goods.isOnSale&&list.product.productNumber===0}}">已售空</view>
-							<view class="hasNoGoodsOrSaleOut" wx:if="{{list.goods.isOnSale===0}}">已下架</view>
-							<van-image src="{{list.listPicUrl}}" alt width="100px" height="100px" fit="cover"></van-image>
-						</view>
-						<view class="m-l-10">
-							<view>{{list.goods.name}}</view>
-							<view class="guige m-t-10" wx:if="{{list.goodsSpecificationNameValue}}">{{ list.goodsSpecificationNameValue }}</view>
-						</view>
-					</view>
-					<view class="m-l-10">
-						<view>￥{{list.goods.isPromote?list.product.promotePrice:list.product.retailPrice}}</view>
-						<view class="c-gray" style="text-align:right">x{{list.number}}</view>
-					</view>
-				</view>
-			</view>
-</van-dialog>
-
 	<van-dialog id="van-dialog" />
+	<van-popup
+  show="{{ remarkShow }}"
+	round
+  position="bottom"
+	bind:click-overlay="closeRemark"
+	auto-focus="{{true}}"
+>
+<view class="popStyle">
+	<view class="m-b-20">
+		<van-field
+				label="订单备注"
+        type="textarea"
+				autosize="{{true}}"
+				model:value="{{ remark }}"
+		/>
+	</view>
+		<van-button round color="#f9ae08" block bind:click="remarkSure">确定</van-button>
+</view>
+
+</van-popup>
+
 </view>

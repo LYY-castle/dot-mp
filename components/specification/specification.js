@@ -70,7 +70,6 @@ Component({
 		},
 		// 选中规格
 		selectSpecification(e) {
-			console.log(e)
 			const option = e.currentTarget.dataset.option
 			const parentIndex = e.currentTarget.dataset.parent
 			const childIndex = e.currentTarget.dataset.child
@@ -108,7 +107,6 @@ Component({
 					disabledNameValue: disabledNameValue,
 					activeProductNumber
 				})
-				console.log(disabledNameValue)
 				if (this.data.disabledNameValue.length > 0) {
 					this.data.disabledNameValue.forEach((val) => {
 						this.data.specificationResults.map((option) => {

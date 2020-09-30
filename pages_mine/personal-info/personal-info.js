@@ -169,12 +169,11 @@ Page({
 								wx.showToast({
 									title: '提交成功',
 									icon: 'none',
+									duration: 2000,
 									success() {
-										setTimeout(function () {
-											wx.switchTab({
-												url: '/pages/mine/mine'
-											})
-										}, 1000)
+										wx.switchTab({
+											url: '/pages/mine/mine'
+										})
 									}
 								})
 							}
@@ -196,12 +195,11 @@ Page({
 							wx.showToast({
 								title: '提交成功',
 								icon: 'none',
+								duration: 2000,
 								success() {
-									setTimeout(function () {
-										wx.switchTab({
-											url: '/pages/mine/mine'
-										})
-									}, 1000)
+									wx.switchTab({
+										url: '/pages/mine/mine'
+									})
 								}
 							})
 						}

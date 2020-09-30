@@ -22,9 +22,6 @@ Page({
 		Promise.resolve()
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
-		// if (wx.getStorageSync('authorization')) {
-
-		// }
 	},
 	test() {
 		this.getProductSorts()

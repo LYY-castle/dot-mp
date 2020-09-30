@@ -89,12 +89,14 @@ bottom-button2 .right .step {
   color: #000 !important;
 }
 
-/* .inputClass {
-  margin: 10px 0;
-  display: block;
-  background-color: #eee;
+.popStyle {
+  padding: 30px;
 }
 
-.inputClass .van-cell {
-  background: transparent;
-} */
+.remarkText {
+  width: 69%;
+  text-align: left;
+  margin-left: 10px;
+  color: rgba(0, 0, 0, .6);
+
+}

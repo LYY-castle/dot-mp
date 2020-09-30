@@ -7,6 +7,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		remarkShow: false,
 		money: null, // 购物金
 		shoppingMoneyData: null,
 		shoppingMoney: null, // 使用购物金的金额
@@ -24,6 +25,7 @@ Page({
 		pathParams: {},
 		totalCount: null,
 		remark: null,
+		newRemark: '',
 		cartIds: null,
 		cartPerchase: false,
 		disabledShow: false,
@@ -173,34 +175,11 @@ Page({
 					const flag = res.data.every((list) => {
 						return list.product.productNumber !== 0 && list.goods.isOnSale !== 0
 					})
-					console.log(flag)
 					if (!flag) {
 						this.setData({
 							disabledShow: true
 						})
 					}
-					// if (item.product.productNumber === 0) {
-					// 	Dialog.alert({
-					// 		title: '以下商品无法购买',
-					// 		message: '当前选中商品无货,请返回购物车重新选择',
-					// 		theme: 'round-button'
-					// 	}).then(() => {
-					// 		wx.navigateBack({
-					// 			delta: 1
-					// 		})
-					// 	})
-					// }
-					// if (item.goods.isOnsale === 0) {
-					// 	Dialog.alert({
-					// 		title: '提示！',
-					// 		message: '当前选中商品部分已下架,请返回购物车重新选择',
-					// 		theme: 'round-button'
-					// 	}).then(() => {
-					// 		wx.navigateBack({
-					// 			delta: 1
-					// 		})
-					// 	})
-					// }
 					this.setData({
 						dataList: res.data
 					})
@@ -447,8 +426,6 @@ Page({
 	checkMoney() {
 		// 判断购物金是否小于等于商品总价且小于等于可用余额
 		if (this.data.shoppingMoney <= this.data.shoppingMoneyData.amount) {
-			console.log('this.data.shoppingMoney', this.data.shoppingMoney)
-			console.log('this.data.totalPrice', this.data.totalPrice)
 			if (this.data.shoppingMoney <= this.data.totalPrice) {
 				return true
 			} else {
@@ -510,5 +487,21 @@ Page({
 		wx.navigateBack({
 			delta: 1
 		})
+	},
+	closeRemark() {
+		this.setData({
+			remarkShow: false
+		})
+	},
+	remarkChange() {
+		this.setData({
+			remarkShow: true
+		})
+	},
+	remarkSure() {
+		this.setData({
+			newRemark: this.data.remark
+		})
+		this.closeRemark()
 	}
 })

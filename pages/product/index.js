@@ -25,7 +25,6 @@ Page({
 		}
 	},
 	onLoad: function () {
-		console.log('load')
 		Promise.resolve()
 			.then(() => this.getTypes(0))
 			.then(() => this.getSecondThirdType())
@@ -34,7 +33,6 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onShow: function () {
-		console.log('show')
 		if (wx.getStorageSync('activeSortId')) {
 			Promise.resolve()
 				.then(() => this.getTypes(0))

@@ -175,7 +175,6 @@ Page({
 		}
 	},
 	addCartOrPerchase(event, data) {
-		console.log(event, data)
 		const _this = this
 		const params = {
 			checked: 1,
@@ -219,10 +218,9 @@ Page({
 									wx.showToast({
 										title: '加入购物车成功',
 										icon: 'none',
+										duration: 2000,
 										success() {
-											setTimeout(() => {
-												_this.getCartDotsNum()
-											}, 2000)
+											_this.getCartDotsNum()
 										}
 									})
 								}

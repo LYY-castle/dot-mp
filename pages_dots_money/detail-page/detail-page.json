@@ -1,9 +1,0 @@
-{
-  "usingComponents": {
-    "van-cell": "@vant/weapp/cell/index",
-    "van-empty": "@vant/weapp/empty/index",
-    "van-divider": "@vant/weapp/divider/index",
-    "van-image": "@vant/weapp/image/index",
-    "van-tag": "@vant/weapp/tag/index"
-  }
-}

@@ -100,12 +100,11 @@ Page({
 										if (res.success) {
 											wx.showToast({
 												title: '编辑成功',
+												duration: 2000,
 												success() {
-													setTimeout(function () {
-														wx.navigateBack({
-															delta: 1
-														})
-													}, 1000)
+													wx.navigateBack({
+														delta: 1
+													})
 												}
 											})
 										}
@@ -118,12 +117,11 @@ Page({
 										if (res.success) {
 											wx.showToast({
 												title: '新增成功',
+												duration: 2000,
 												success() {
-													setTimeout(function () {
-														wx.navigateBack({
-															delta: 1
-														})
-													}, 1000)
+													wx.navigateBack({
+														delta: 1
+													})
 												}
 											})
 										}
@@ -198,12 +196,11 @@ Page({
 							if (res.success) {
 								wx.showToast({
 									title: '删除成功',
+									duration: 2000,
 									success() {
-										setTimeout(function () {
-											wx.navigateBack({
-												delta: 1
-											})
-										}, 1000)
+										wx.navigateBack({
+											delta: 1
+										})
 									}
 								})
 							}

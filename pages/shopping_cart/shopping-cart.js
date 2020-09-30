@@ -151,7 +151,7 @@ Page({
 						bottomLineShow: true
 					})
 				}
-				this.getTotalPrice(resultArr, this.data.shoppingCartList)
+				this.getTotalPrice(resultArr, this.data.shoppingCartListEffective)
 			}
 		})
 	},
@@ -163,16 +163,16 @@ Page({
 		const detail = event.detail
 		this.setData({
 			result: detail,
-			all: detail.length === this.data.shoppingCartList.length
+			all: detail.length === this.data.shoppingCartListEffective.length
 		})
-		const idArr = this.data.shoppingCartList.map((item) => {
+		const idArr = this.data.shoppingCartListEffective.map((item) => {
 			return String(item.id)
 		})
 		const optionId = idArr.concat(detail).filter(function (v, i, arr) {
 			return arr.indexOf(v) === arr.lastIndexOf(v)
 		})
 		if (!this.data.deleteButtonShow) {
-			this.getTotalPrice(this.data.result, this.data.shoppingCartList)
+			this.getTotalPrice(this.data.result, this.data.shoppingCartListEffective)
 		}
 	},
 	itemChange(e) {
@@ -266,10 +266,28 @@ Page({
 			})
 			.then((res) => {
 				if (this.data.result.length < Number(res.data.val)) {
-					wx.setStorageSync('perchaseByCart', true)
-					wx.navigateTo({
-						url: '/pages_product/perchase/perchase'
+					const flagArr = []
+					this.data.shoppingCartListEffective.forEach((shop) => {
+						this.data.result.forEach((result) => {
+							if (Number(result) === shop.id) {
+								flagArr.push(shop)
+							}
+						})
 					})
+					const flag = flagArr.every((item) => {
+						return item.product.productNumber > 0
+					})
+					if (flag) {
+						wx.setStorageSync('perchaseByCart', true)
+						wx.navigateTo({
+							url: '/pages_product/perchase/perchase'
+						})
+					} else {
+						wx.showToast({
+							title: '请移除已售空商品',
+							icon: 'none'
+						})
+					}
 				} else {
 					wx.showToast({
 						title: '商品数量超出结算上限',
@@ -443,7 +461,7 @@ Page({
 				if (res.confirm) {
 					let ids = []
 					_this.data.shoppingCartList.map((shop) => {
-						if (!shop.goods.isOnSale || !shop.goods.goodsNumber) {
+						if (!shop.goods.isOnSale) {
 							ids.push(shop.id)
 						}
 					})
