@@ -349,3 +349,54 @@ Page {
 .placeholder-style {
   z-index: 0 !important;
 }
+
+.container .goodContent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 12px;
+}
+
+.container .goodContent .goodItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  display: block;
+  width: 49%;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+
+
+.container .goodContent .goodItem .imgContent {
+  height: auto;
+  text-align: center;
+  background: linear-gradient(to bottom, rgba(254, 254, 254, 0.6), rgba(243, 243, 243, 0.1));
+  display: flex;
+  align-items: center;
+  font-size: 0;
+  position: relative;
+}
+
+.container .goodContent .goodItem .imgContent van-image {
+  width: 100%;
+}
+
+
+.container .goodContent .goodItem .textContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+  background: #fff;
+  padding: 10px;
+  color: #333333;
+}
+
+.textHeight {
+  height: calc(100% - 180px);
+}

@@ -1,13 +1,13 @@
 <!--pages/product/search/search.wxml-->
 <view class="container">
 	<van-sticky>
-		<van-search value="{{ searchValue }}" use-action-slot bind:change="change"
-		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search" background="#fff" clearable="{{false}}" >
-			<view slot="action" bind:tap="search" class="searchColor" wx:if="{{historyListShow}}">搜索</view>
+		<van-search background="#fff" value="{{ searchValue }}" use-action-slot  bind:change="change"
+		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search"  clearable="{{false}}" >
+			<view slot="action" bind:tap="search" wx:if="{{historyListShow}}">搜索</view>
 		</van-search>
 	</van-sticky>
 	<view wx:if="{{!historyListShow}}">
-		<view class="goodContent" wx:if="{{productList.length>0}}">
+		<view class="goodContent m-t-10" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
 				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.isOnSale&&item.goodsNumber===0}}">已售空</view>
@@ -15,7 +15,7 @@
 				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
 				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
 			</view>
-			<view class="textContent">
+			<view class="textHeight textContent">
 					<view class="fz-14 m-b-5">
 						<text
 					wx:if="{{item.label.length>0}}"
@@ -25,7 +25,6 @@
 					wx:key="labelIndex">{{labelItem}}</text>
 					{{item.name}}
 					</view>
-					<view class="fz-12 m-b-5 c-gray">{{ item.goodsBrief }}</view>
 					<view class="minPrice fz-12">
 						￥
 						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>

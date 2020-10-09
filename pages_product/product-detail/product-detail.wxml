@@ -20,7 +20,6 @@
         <view class="originPrice">￥{{goods.marketPrice}}</view>
       </view>
       <view class="fz-14 m-b-5">{{goods.name}}</view>
-      <view class="fz-12 m-t-5 c-gray">{{ goods.goodsBrief }}</view>
     </view>
     <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
       <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>

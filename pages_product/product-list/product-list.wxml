@@ -6,7 +6,7 @@
 <view class="container">
 	<van-sticky>
 		<van-search value="{{ searchValue }}" use-action-slot bind:change="change"
-		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search" background="#fff" clearable="{{false}}" >
+		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search" background="#eee" clearable="{{false}}" >
 			<view slot="action" bind:tap="search" class="searchColor" wx:if="{{historyListShow}}">搜索</view>
 		</van-search>
 	</van-sticky>
@@ -19,7 +19,7 @@
 				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
 				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
 			</view>
-			<view class="textContent">
+			<view class="textHeight textContent">
 				<view class="fz-14 m-b-5">
 				<text
 				wx:if="{{item.label.length>0}}"
@@ -28,7 +28,6 @@
 					wx:for-item="labelItem"
 					wx:key="labelIndex">{{labelItem}}</text>
 				{{item.name}}</view>
-					<view class="fz-12 m-b-5 c-gray">{{ item.goodsBrief }}</view>
 					<view class="minPrice fz-12">
 						￥
 						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>

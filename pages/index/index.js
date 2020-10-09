@@ -61,13 +61,13 @@ Page({
 						item.isPromote = false
 					}
 					let labelArr = []
-					if (item.label === '') {
+					if (item.keywords === '') {
 						labelArr = []
 					} else {
-						if (item.label.indexOf(',')) {
-							labelArr = item.label.split(',')
+						if (item.keywords.indexOf(',') !== -1) {
+							labelArr = item.keywords.split(',')
 						} else {
-							labelArr = [item.label]
+							labelArr = [item.keywords]
 						}
 					}
 					item.label = labelArr
