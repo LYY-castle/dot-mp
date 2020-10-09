@@ -2,13 +2,10 @@
 .container {
   background: #eee;
   padding-bottom: 50px;
-  height: 100%;
-  overflow: hidden;
-  overflow-y: scroll;
 }
 
 .bigBox {
-  margin: 0 10px;
+  margin: 0 10px 20px 10px;
 }
 
 .bottom-button1 {
@@ -43,22 +40,21 @@
 
 }
 
-bottom-button2 .right {
+.bottom-button2 .right {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 
 }
 
-bottom-button2 .right .step {
+.bottom-button2 .right .step {
   margin-left: 8px;
   margin-right: 5px;
 }
 
-.goodContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.container .goodContent {
+  flex-wrap: nowrap;
+  margin: 0;
 }
 
 .address {

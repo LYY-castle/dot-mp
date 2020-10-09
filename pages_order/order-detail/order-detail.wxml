@@ -6,7 +6,11 @@
 		{{statusMap[orderInfo.orderStatus].text}}</view>
 		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10 fz-12">
 			需付款:<text class="m-r-10 fz-16 bold c-red">￥{{orderInfo.actualPrice}}</text>
-			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish" class="fz-16 bold m-l-5"/></view>
+			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish" class="fz-16 bold m-l-5" bind:change="onTimeChange" use-slot format="mm">
+				<text class="item" wx:if="{{timeData.minutes >= 14}}">{{ timeData.minutes }}分钟</text>
+				<text class="item" wx:else>{{ timeData.minutes }}分{{ timeData.seconds }}秒</text>
+				</van-count-down>
+			</view>
 		<view wx:if="{{orderInfo.orderStatus===100}}" class="m-t-10">
 			<van-button bindtap="goPay" round class="payButton" color="#fff" size="small">去支付</van-button>
 		</view>
@@ -17,7 +21,7 @@
 			wx:for="{{ orderInfo.orderGoods }}"
 			wx:key="index"
 		>
-			<view class="flex-start-start">
+			<view class="flex-start-start" bindtap="gotoDetail" data-goods-id="{{item.goodsId}}">
 				<van-image
 					src="{{ item.listPicUrl }}"
 					width="80px"
@@ -25,7 +29,7 @@
 					fit="cover"
 				></van-image>
 				<view class="m-l-10" style="text-align: left">
-					<view class="fz-14 black">{{ item.goodsName }}</view>
+					<view class="fz-14 black">{{ item.name }}</view>
 					<view class="guige m-t-5" wx:if="{{item.goodsSpecificationNameValue}}">{{
 						item.goodsSpecificationNameValue
 					}}</view>
@@ -35,7 +39,7 @@
 					</view>
 				</view>
 			</view>
-			<view>￥{{ item.retailPrice * item.number }}</view>
+			<view class="m-l-20">￥{{ item.retailPrice * 100 * item.number / 100 }}</view>
 		</view>
 		<van-divider />
 		<view class="flex-between m-b-10">商品总额<text>￥{{orderInfo.goodsPrice}}</text></view>
@@ -74,8 +78,6 @@
 					<view class="black">{{logisticsInfo.shippingTime}}</view>
 				</view>
 			</view>
-
-
 		</view>
 		<view class="border p-10 m-10 ">
 			<view>订单信息</view>

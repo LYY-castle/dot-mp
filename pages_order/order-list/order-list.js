@@ -1,5 +1,6 @@
 import http from '../../utils/request.js'
 import tool from '../../utils/mixin.js'
+import util from '../../utils/util.js'
 import constantCfg from '../../config/constant'
 const moment = require('../../utils/moment.min.js')
 Page({
@@ -174,6 +175,11 @@ Page({
 							item.orderGoods.forEach((good) => {
 								item.totalNum += good.number
 							})
+							if (item.orderGoods.length === 1) {
+								item.orderGoods.forEach((good) => {
+									good.name = util.ellipsis(good.goodsName, 30)
+								})
+							}
 						})
 						if (res.page.pageNo === 1) {
 							this.setData({

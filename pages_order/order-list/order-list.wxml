@@ -18,7 +18,7 @@
 				<view wx:if="{{order.orderGoods.length===1}}" class="flex-start-start">
 					<van-image src="{{order.orderGoods[0].listPicUrl}}" alt width="80px" height="80px" fit="cover" class="m-r-5"/>
 					<view class="m-l-10">
-						<view>{{order.orderGoods[0].goodsName}}</view>
+						<view class="fz-14">{{order.orderGoods[0].name}}</view>
 						<view class="guige m-t-10" wx:if="{{order.orderGoods[0].goodsSpecificationNameValue}}">{{order.orderGoods[0].goodsSpecificationNameValue}}</view>
 					</view>
 				</view>

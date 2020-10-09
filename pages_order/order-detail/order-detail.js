@@ -11,6 +11,7 @@ Page({
 		orderId: null,
 		productId: null,
 		time: null,
+		timeData: null,
 		payment: null,
 		dialogShow: false,
 		statusMap: {
@@ -100,35 +101,41 @@ Page({
 			.then((res) => {
 				if (res.success) {
 					if (res.data.orderStatus === 100) {
-						let body = ''
-						const time =
+						let time =
 							new Date(res.data.createAt.replace(/-/g, '/')).getTime() +
-							15 * 60 * 1000 -
+							16 * 60 * 1000 -
 							new Date().getTime()
-						res.data.orderGoods.forEach((good) => {
-							body += good.goodsName
-						})
-						body = util.ellipsis(body, 29)
 						this.setData({
-							time,
-							payment: {
-								id: res.data.id,
-								openid: wx.getStorageSync('openId'),
-								outTradeNo: res.data.orderNo,
-								totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
-								body,
-								tradeType: 'JSAPI'
-							}
+							time
 						})
 					}
-					this.setData({
-						orderInfo: res.data
+					let body = ''
+					res.data.orderGoods.forEach((good) => {
+						body += good.goodsName
+						good.name = util.ellipsis(good.goodsName, 30)
 					})
-					if (this.data.orderInfo.orderStatus === 300) {
+					body = util.ellipsis(body, 29)
+					this.setData({
+						orderInfo: res.data,
+						payment: {
+							id: res.data.id,
+							openid: wx.getStorageSync('openId'),
+							outTradeNo: res.data.orderNo,
+							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
+							body,
+							tradeType: 'JSAPI'
+						}
+					})
+					if (res.data.orderStatus === 300) {
 						this.getOrderExpress()
 					}
 				}
 			})
+	},
+	onTimeChange(e) {
+		this.setData({
+			timeData: e.detail
+		})
 	},
 	timeFinish() {
 		this.getOrderDetail()
@@ -197,6 +204,20 @@ Page({
 						})
 					}
 				})
+		})
+	},
+	gotoDetail(e) {
+		const pathParams = {
+			productId: e.currentTarget.dataset.goodsId
+		}
+		wx.navigateTo({
+			url: '/pages_product/product-detail/product-detail',
+			success: function (res) {
+				// 通过eventChannel向被打开页面传送数据
+				res.eventChannel.emit('acceptDataFromOpenerPage', {
+					data: pathParams
+				})
+			}
 		})
 	},
 	copy(e) {

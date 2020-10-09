@@ -47,42 +47,6 @@
         </view>
       </view>
     </van-checkbox-group>
-    <!-- 已售空宝贝 -->
-    <!-- <view class="border disabled-content p-t-10 p-r-10 m-10" wx:if="{{}}">
-      <view class="flex-between p-l-10">
-        <view class="bold">已售空宝贝({{hasSaleOutCount}})</view>
-      </view>
-      <view class="flex-start" wx:for="{{shoppingCartList}}" wx:key="index" wx:for-item="item" wx:if="{{item.product.productNumber===0&&item.goods.isOnSale}}">
-        <view class="right-content">
-          <view bindtap="gotoGoodDetail" data-option="{{item}}" class="img-content">
-            <view class="hasNoGoodsOrSaleOut" wx:if="{{item.goods.isOnSale&&item.product.productNumber===0}}">
-              已售空
-            </view>
-            <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
-            <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
-          </view>
-          <view class="m-l-10" style="width:100%">
-            <view class="fz-14">{{item.goods.name}}</view>
-            <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}" wx:if="{{item.goodsSpecificationNameValue}}">
-              {{item.goodsSpecificationNameValue}}
-              <van-icon name="arrow-down" size="10" />
-            </view>
-            <view>
-              <view wx:if="{{item.goods.isPromote}}">
-                <view class="c-red fz-16 bold left flex-between">
-                  ￥{{item.product.promotePrice}}
-                </view>
-              </view>
-              <view wx:else>
-                <view class="c-red fz-16 bold left flex-between">
-                  ￥{{item.product.retailPrice}}
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view> -->
     <!-- 失效宝贝 -->
     <view class="border disabled-content p-t-10 p-r-10 m-10" wx:if="{{disabledCount > 0}}">
       <view class="flex-between p-l-10">
