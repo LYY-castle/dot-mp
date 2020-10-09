@@ -4,8 +4,8 @@
 			<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
 		</van-sidebar>
 	<view class="productsContent">
-			<view wx:for="{{secondTypes}}" wx:for-item="second" wx:key="index" wx:if="{{secondTypes.length>0}}">
-				<view class="fz-12 bold">{{second.name}}</view>
+			<view wx:for="{{secondTypes}}" wx:for-item="second" wx:key="index" wx:if="{{secondTypes.length>0}}" class="m-t-8">
+				<view class="fz-14 bold">{{second.name}}</view>
 				<van-divider />
 				<view class="goodTypes">
 					<view wx:for="{{second.children}}" wx:key="thirdIdx" wx:for-item="third" class="productItem" data-option="{{third}}" bindtap="goToProductsListPageById">
@@ -20,7 +20,7 @@
 			</view>
 		</view>
 		<van-empty image="{{empty}}" description="正在为您寻找更多商品" class="fz-12" wx:if="{{secondTypes.length===0}}"></van-empty>
-		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">更多商品，敬请期待</van-divider>
+		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">更多分类，敬请期待</van-divider>
 		<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 	</view>
 </view>
