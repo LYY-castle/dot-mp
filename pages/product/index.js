@@ -8,6 +8,12 @@ Page({
 	 */
 	data: {
 		empty: '/static/img/empty.png',
+		indicatorDots: false,
+		vertical: false,
+		autoplay: true,
+		interval: 3000,
+		duration: 500,
+		activeImages: null,
 		activeKey: 0,
 		activeId: null,
 		bottomLineShow: false,
@@ -28,16 +34,6 @@ Page({
 		Promise.resolve()
 			.then(() => this.getTypes(0))
 			.then(() => this.getSecondThirdType())
-	},
-	/**
-	 * 生命周期函数--监听页面加载
-	 */
-	onShow: function () {
-		if (wx.getStorageSync('activeSortId')) {
-			Promise.resolve()
-				.then(() => this.getTypes(0))
-				.then(() => this.getSecondThirdType())
-		}
 	},
 	/**
 	 * 页面上拉触底事件的处理函数
@@ -67,7 +63,8 @@ Page({
 			activeKey,
 			bottomLineShow: false,
 			loadingShow: true,
-			secondTypes: null
+			secondTypes: null,
+			activeImages: this.data.firstTypes[activeKey].imgUrl
 		})
 		Promise.resolve().then(() => this.getSecondThirdType())
 	},
@@ -85,25 +82,20 @@ Page({
 		return new Promise((resolve) => {
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {
-					if (val === 0) {
-						this.setData({
-							firstTypes: res.data
-						})
-						if (wx.getStorageSync('activeSortId')) {
-							this.data.firstTypes.forEach((item, index) => {
-								if (item.id === wx.getStorageSync('activeSortId')) {
-									this.setData({
-										activeKey: index
-									})
-									wx.removeStorageSync('activeSortId')
-								}
-							})
-						} else {
-							this.setData({
-								activeKey: 0
-							})
+					res.data.forEach((option) => {
+						if (option.imgUrl) {
+							if (option.imgUrl.indexOf(';')) {
+								option.imgUrl = option.imgUrl.split(';')
+							} else {
+								option.imgUrl = [option.imgUrl]
+							}
 						}
-					}
+					})
+					this.setData({
+						firstTypes: res.data,
+						activeKey: 0,
+						activeImages: res.data[0].imgUrl ? res.data[0].imgUrl : null
+					})
 					resolve()
 				}
 			})
@@ -118,11 +110,13 @@ Page({
 				}
 			})
 			.then((res) => {
-				this.setData({
-					secondTypes: res.data[0].children,
-					bottomLineShow: true,
-					loadingShow: false
-				})
+				if (res.success) {
+					this.setData({
+						secondTypes: res.data[0].children,
+						bottomLineShow: true,
+						loadingShow: false
+					})
+				}
 			})
 	},
 	// 四个按钮点击事件 self购买 share分享案例
@@ -216,7 +210,6 @@ Page({
 							productList: this.data.productList.concat(products)
 						})
 					}
-
 					resolve()
 				}
 			})
@@ -225,12 +218,15 @@ Page({
 	// 根据三级分类跳转到商品列表页面
 	goToProductsListPageById(e) {
 		const option = e.currentTarget.dataset.option
+		const activeFirstOption = this.data.firstTypes[this.data.activeKey]
 		wx.navigateTo({
 			url:
-				'/pages_product/product-list/product-list?id=' +
+				'/pages_product/product-list/product-list?firstPath=' +
+				activeFirstOption.idPath +
+				'&thirdId=' +
 				option.id +
 				'&name=' +
-				option.name
+				activeFirstOption.name
 		})
 	}
 })

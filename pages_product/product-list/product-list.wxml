@@ -4,13 +4,12 @@
   />
 </page-meta>
 <view class="container">
-	<van-sticky>
-		<van-search value="{{ searchValue }}" use-action-slot bind:change="change"
-		bind:search="search" bind:focus="focus" shape="round" placeholder="搜索商品" bind:search="search" background="#eee" clearable="{{false}}" >
-			<view slot="action" bind:tap="search" class="searchColor" wx:if="{{historyListShow}}">搜索</view>
-		</van-search>
+	<van-sticky wx:if="{{thirdData}}">
+		<van-tabs bind:change="onTabChange" active="{{activeTab}}" fixed="{{true}}" title-active-color="rgba(249, 173, 8, 1)" color="rgba(249, 173, 8, 1)" animated="{{true}}" ellipsis="{{false}}" line-height="0" line-width="0">
+			<van-tab wx:for="{{thirdData}}" wx:for-item="tab" wx:key="tabIndex" title="{{tab.name}}" name="{{tab.id}}"></van-tab>
+	  </van-tabs>
 	</van-sticky>
-	<view class="goodContent" wx:if="{{productList.length>0}}">
+	<view class="goodContent m-t-10" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
 				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.isOnSale && item.goodsNumber === 0}}">

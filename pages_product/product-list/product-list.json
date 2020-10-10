@@ -7,7 +7,9 @@
     "van-empty": "@vant/weapp/empty/index",
     "van-tag": "@vant/weapp/tag/index",
     "van-divider": "@vant/weapp/divider/index",
-    "van-loading": "@vant/weapp/loading/index"
+    "van-loading": "@vant/weapp/loading/index",
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index"
   },
   "onReachBottomDistance": 0,
   "enablePullDownRefresh": true

@@ -114,3 +114,10 @@ page {
   color: #F7BD4F !important;
   border-color: #F7BD4F !important;
 }
+.my-swipe{
+  background:#eee;
+}
+swiper {
+  height: 100px !important;
+  text-align:center;
+}

@@ -1,7 +1,7 @@
-import tool from '../../utils/mixin.js'
-import util from '../../utils/util.js'
+import tool from '../../utils/mixin'
+import util from '../../utils/util'
 import constantCfg from '../../config/constant'
-
+import http from '../../utils/request.js'
 Page({
 	data: {
 		nbTitle: '',
@@ -11,20 +11,51 @@ Page({
 		productList: null,
 		productSorts: null,
 		loadingShow: true,
-		sortsImages: [
-			'/static/img/product-01.png',
-			'/static/img/product-02.png',
-			'/static/img/product-03.png',
-			'/static/img/product-04.png'
-		],
-		pageNo: 1
+		pageNo: 1,
+		firstId: null,
+		thirdId: null,
+		thirdData: null,
+		activeTab: null,
+		api: {
+			getTree: {
+				url: '/categories/tree',
+				method: 'get'
+			}
+		}
 	},
 	onLoad(options) {
 		this.setData({
-			productCategoryId: options.id,
+			firstPath: options.firstPath,
 			nbTitle: options.name
 		})
-		this.getProductList()
+		if (options.thirdId) {
+			this.setData({
+				activeTab: Number(options.thirdId)
+			})
+		}
+		Promise.resolve()
+			.then(() => this.getProductSorts())
+			.then(() => {
+				if (this.data.thirdData) {
+					if (!options.thirdId) {
+						this.setData({
+							activeTab: this.data.thirdData[0].id
+						})
+					}
+					let params = {
+						categoryId: this.data.activeTab,
+						pageNo: 1,
+						pageSize: 10,
+						isOnSale: 1
+					}
+					this.getProductList(params)
+				} else {
+					this.setData({
+						productList: [],
+						loadingShow: false
+					})
+				}
+			})
 	},
 	// 搜索栏聚焦事件
 	focus() {
@@ -32,16 +63,22 @@ Page({
 			url: '/pages_product/search/search'
 		})
 	},
+	onTabChange(e) {
+		this.setData({
+			activeTab: e.detail.name
+		})
+		let params = {
+			categoryId: this.data.activeTab,
+			pageNo: 1,
+			pageSize: 10,
+			isOnSale: 1
+		}
+		this.getProductList(params)
+	},
 	// 获取特惠产品的列表
-	getProductList() {
+	getProductList(params) {
 		let productDetailObj = {}
 		return new Promise((resolve) => {
-			let params = {
-				categoryId: this.data.productCategoryId,
-				pageNo: this.data.pageNo,
-				pageSize: 10,
-				isOnSale: 1
-			}
 			tool.getProductList(params).then(async (res) => {
 				let products = []
 				if (res.success) {
@@ -110,18 +147,17 @@ Page({
 			})
 		})
 	},
-	// 获取商品分类列表
+	// 获取分类列表
 	getProductSorts() {
 		return new Promise((resolve) => {
 			const params = {
-				parentId: 0,
-				pageSize: 100,
-				isEnable: 1
+				idPath: this.data.firstPath,
+				level: 3
 			}
-			tool.getProductSorts(params).then((res) => {
+			http.wxRequest({ ...this.data.api.getTree, params }).then((res) => {
 				if (res.success) {
 					this.setData({
-						productSorts: res.data
+						thirdData: res.data
 					})
 					resolve()
 				}
@@ -153,7 +189,13 @@ Page({
 				loadingShow: true,
 				pageNo: this.data.pageNo + 1
 			})
-			this.getProductList()
+			let params = {
+				categoryId: this.data.activeTab,
+				pageNo: this.data.pageNo,
+				pageSize: 10,
+				isOnSale: 1
+			}
+			this.getProductList(params)
 		}
 	},
 	// 下拉刷新
@@ -161,7 +203,13 @@ Page({
 		this.setData({
 			pageNo: 1
 		})
-		this.getProductList()
+		let params = {
+			categoryId: this.data.activeTab,
+			pageNo: this.data.pageNo,
+			pageSize: 10,
+			isOnSale: 1
+		}
+		this.getProductList(params)
 		wx.stopPullDownRefresh()
 	},
 	/**

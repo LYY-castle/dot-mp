@@ -134,10 +134,13 @@ Page({
 		})
 	},
 	gotoProductList(event) {
-		const sortId = event.currentTarget.dataset.item.id
-		wx.setStorageSync('activeSortId', sortId)
-		wx.switchTab({
-			url: '/pages/product/index'
+		const option = event.currentTarget.dataset.item
+		wx.navigateTo({
+			url:
+				'/pages_product/product-list/product-list?firstPath=' +
+				option.idPath +
+				'&name=' +
+				option.name
 		})
 	},
 	gotoDetail(e) {

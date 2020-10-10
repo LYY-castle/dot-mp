@@ -1,9 +1,17 @@
 <!--pages/product/product-list/product-list.wxml-->
 <view class="container">
-		<van-sidebar active-key="{{ activeKey }}" class="user-sideBar" bind:change="firstChange">
-			<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" />
+		<van-sidebar active-key="{{ activeKey }}" class="user-sideBar">
+			<van-sidebar-item wx:for="{{firstTypes}}" wx:for-item="type" wx:key="id" title="{{type.name}}" bind:click="firstChange"/>
 		</van-sidebar>
 	<view class="productsContent">
+		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" wx:if="{{activeImages}}">
+      <block wx:for="{{activeImages}}" wx:key="imgIndex">
+        <swiper-item>
+          <van-image src="{{item}}" height="100%" width="100%" fit="widthFix" wx:if="{{item}}"></van-image>
+          <van-image alt height="100%" width="100%" fit="widthFix" wx:else use-loading-slot />
+        </swiper-item>
+      </block>
+    </swiper>
 			<view wx:for="{{secondTypes}}" wx:for-item="second" wx:key="index" wx:if="{{secondTypes.length>0}}" class="m-t-8">
 				<view class="fz-14 bold">{{second.name}}</view>
 				<van-divider />
