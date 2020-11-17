@@ -71,10 +71,10 @@ Page({
 	// 获取产品列表 0 一级,其他是二级
 	getTypes(val) {
 		let params = {
-			scope: 'all'
+			scope: 'all',
+			enable: 1
 		}
 		if (val === 0) {
-			params.isEnable = 1
 			params.parentId = 0
 		} else {
 			params.parentId = this.data.firstTypes[this.data.activeKey].id
