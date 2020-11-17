@@ -80,7 +80,7 @@ Component({
 
 			if (!option.disabled) {
 				if (option.activeGoodsSpecificationNameValue) {
-					this.data.selectNameValueArr.splice(parentIndex, 1, '')
+					return
 				} else {
 					this.data.selectNameValueArr[parentIndex] =
 						option.goodsSpecificationValue
