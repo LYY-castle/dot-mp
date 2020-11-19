@@ -1,7 +1,5 @@
-let env = {}
-// develop 开发版
-if (__wxConfig.envVersion === 'develop') {
-	env = {
+const envConf = {
+	develop: {
 		mode: 'dev',
 		DEBUG: false,
 		VCONSOLE: true,
@@ -12,11 +10,8 @@ if (__wxConfig.envVersion === 'develop') {
 			apiKey: '1qjAllYQPTEsk46RbY0xc000018708',
 			agentID: 1000000030
 		}
-	}
-}
-// trial 体验版
-if (__wxConfig.envVersion === 'trial') {
-	env = {
+	},
+	trial: {
 		mode: 'dev',
 		DEBUG: false,
 		VCONSOLE: true,
@@ -27,11 +22,8 @@ if (__wxConfig.envVersion === 'trial') {
 			apiKey: '1qjAllYQPTEsk46RbY0xc000018708',
 			agentID: 1000000030
 		}
-	}
-}
-// release 正式版
-if (__wxConfig.envVersion === 'release') {
-	env = {
+	},
+	release: {
 		mode: 'prod',
 		DEBUG: false,
 		VCONSOLE: false,
@@ -46,5 +38,5 @@ if (__wxConfig.envVersion === 'release') {
 }
 
 module.exports = {
-	env
+	env: envConf[__wxConfig.envVersion]
 }
