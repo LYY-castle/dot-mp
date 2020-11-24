@@ -18,8 +18,8 @@
 				<view class="goodTypes">
 					<view wx:for="{{second.children}}" wx:key="thirdIdx" wx:for-item="third" class="productItem" data-option="{{third}}" bindtap="goToProductsListPageById">
 						<van-image
-						width="90%"
-						height="60"
+						width="60%"
+						height="50"
 						fit="contain"
 						src="{{third.iconUrl}}"
 					/>
