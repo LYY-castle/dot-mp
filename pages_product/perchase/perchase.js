@@ -258,6 +258,8 @@ Page({
 		if (this.data.cartPerchase) {
 			this.data.dataList.forEach((list) => {
 				const obj = {
+					platformGoodsId: list.goods.platformGoodsId,
+					platformType: list.goods.platformType,
 					goodsId: list.goods.id,
 					goodsName: list.goods.name,
 					goodsSpecificationIds: list.goodsSpecificationIds,
@@ -274,6 +276,8 @@ Page({
 		} else {
 			orderGoods = [
 				{
+					platformGoodsId: this.data.goods.platformGoodsId,
+					platformType: this.data.goods.platformType,
 					goodsId: this.data.goods.id,
 					goodsName: this.data.goods.name,
 					goodsSpecificationIds: this.data.product.goodsSpecificationIds,
@@ -324,12 +328,12 @@ Page({
 					}
 					body = util.ellipsis(body, 29)
 					this.setData({
-						actualPrice: res.data.actualPrice,
+						actualPrice: res.data[0].actualPrice,
 						payment: {
-							id: res.data.id,
+							id: res.data[0].id,
 							openid: wx.getStorageSync('openId'),
-							outTradeNo: res.data.orderNo,
-							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
+							outTradeNo: res.data[0].orderNo,
+							totalFee: res.data[0].actualPrice * 100, // 微信支付单位为分.
 							body,
 							tradeType: 'JSAPI'
 						}
@@ -373,6 +377,7 @@ Page({
 	// 拉起微信支付
 	confirm() {
 		const _this = this
+		console.log(this.data.payment)
 		if (this.data.payment.totalFee > 0) {
 			http
 				.wxRequest({

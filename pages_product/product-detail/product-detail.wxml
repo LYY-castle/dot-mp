@@ -24,8 +24,8 @@
     <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
       <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
       <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
-        <view class="title">{{ content.categoryAttributeName}}</view>
-        <view class="description">{{ content.goodsAttributeVal }}</view>
+        <view class="title">{{ content.name}}</view>
+        <view class="description">{{ content.val }}</view>
       </view>
     </view>
     <view class="product">
