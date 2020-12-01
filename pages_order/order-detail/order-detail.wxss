@@ -1,48 +1,46 @@
 /* pages/mine/order/order-detail/order-detail.wxss */
 .container {
-  background: linear-gradient(to bottom, #f9ae08 10%, #eee 30%);
-  padding-bottom: 50px;
-
+	background: linear-gradient(to bottom, #f9ae08 10%, #eee 30%);
+	padding-bottom: 50px;
 }
 
 .buttonStyle {
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	width: 80%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .logistics-user-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .container-title {
-  width: 100%;
-  display: flex;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(229, 229, 229, 1);
-  justify-content: space-between;
-  align-items: center;
-
+	width: 100%;
+	display: flex;
+	padding: 10px 0;
+	border-bottom: 1px solid rgba(229, 229, 229, 1);
+	justify-content: space-between;
+	align-items: center;
 }
 
 .order-no {
-  color: #969799;
+	color: #969799;
 }
 
 .topContentText {
-  text-align: center;
-  color: #fff;
-  font-size: 12;
+	text-align: center;
+	color: #fff;
+	font-size: 12;
 }
 
 .van-count-down {
-  color: #fff !important;
+	color: #fff !important;
 }
 
 .payButton .van-button__text {
-  color: red;
+	color: red;
 }

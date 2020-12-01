@@ -18,7 +18,7 @@ Page({
 		],
 		pageNo: 1
 	},
-	onShow() {
+	onLoad() {
 		Promise.resolve()
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())

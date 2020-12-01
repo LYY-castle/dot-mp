@@ -9,7 +9,9 @@
     "van-icon": "@vant/weapp/icon/index",
     "van-goods-action": "@vant/weapp/goods-action/index",
     "van-goods-action-button": "@vant/weapp/goods-action-button/index",
-    "van-dialog": "@vant/weapp/dialog/index"
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-steps": "@vant/weapp/steps/index",
+    "van-popup": "@vant/weapp/popup/index"
   },
   "navigationBarTitleText": "订单详情"
 }

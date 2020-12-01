@@ -152,5 +152,8 @@ Page({
 		wx.navigateTo({
 			url: option.path
 		})
+	},
+	handleContact(e) {
+		console.log(e.detail)
 	}
 })

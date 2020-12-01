@@ -13,13 +13,13 @@ Page({
 		shoppingMoney: null, // 使用购物金的金额
 		shoppingAccountId: null, // 购物金账户id
 		selectMoney: false, //是否使用购物金
-		actualPrice: null, // 使用优惠后实际需要支付的金额
+		actualPrice: null, // 实际商品总价加上运费减去使用优惠后实际需要支付的金额
 		dialogShow: false,
 		product: null,
 		goods: null,
 		dataList: null,
 		payment: null,
-		totalPrice: null,
+		totalPrice: null, // 商品总价
 		order: null,
 		textareaHeight: { minHeight: 20 },
 		pathParams: {},
@@ -29,6 +29,7 @@ Page({
 		cartIds: null,
 		cartPerchase: false,
 		disabledShow: false,
+		shippingFee: 0,
 		api: {
 			addOrder: {
 				url: '/orders',
@@ -60,6 +61,11 @@ Page({
 			getShoppingMoney: {
 				url: '/user-shopping-accounts',
 				method: 'get'
+			},
+			// 获取商品运费
+			getFee: {
+				url: '/goods/freight',
+				method: 'post'
 			}
 		}
 	},
@@ -67,18 +73,22 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
 				cartPerchase: true
 			})
-			this.getListDataByCartIds()
+			Promise.resolve()
+				.then(() => this.getListDataByCartIds())
+				.then(() => this.getMyaddress())
+				.then(() => this.getGoodsFee())
 		} else {
-			this.getProduct()
+			Promise.resolve()
+				.then(() => this.getProduct())
+				.then(() => this.getMyaddress())
+				.then(() => this.getGoodsFee())
 		}
-		this.getMyaddress()
-		this.getShoppingMoney()
 	},
-
 	getProduct() {
 		return new Promise((resolve) => {
 			http
@@ -104,19 +114,20 @@ Page({
 						} else {
 							res.data.goods.isPromote = false
 						}
-						const count = wx.getStorageSync('activeProductNumber')
+						let totalCount = wx.getStorageSync('activeProductNumber')
 							? wx.getStorageSync('activeProductNumber')
 							: 1
-						const totalPrice = res.data.goods.isPromote
-							? (Math.round(res.data.product.promotePrice * 100) * count) / 100
-							: (Math.round(res.data.product.retailPrice * 100) * count) / 100
-
+						let totalPrice = res.data.goods.isPromote
+							? (Math.round(res.data.product.promotePrice * 100) * totalCount) /
+							  100
+							: (Math.round(res.data.product.retailPrice * 100) * totalCount) /
+							  100
 						this.setData({
-							product: res.data.product,
-							goods: res.data.goods,
-							totalCount: count,
+							totalCount,
 							totalPrice,
-							actualPrice: totalPrice
+							actualPrice: totalPrice,
+							product: res.data.product,
+							goods: res.data.goods
 						})
 						resolve()
 					}
@@ -126,92 +137,157 @@ Page({
 	calculation() {
 		let totalCount = 0
 		let totalPrice = 0
-		for (let i = 0; i < this.data.dataList.length; i++) {
-			totalCount += this.data.dataList[i].number
-			if (this.data.dataList[i].goods.isPromote) {
-				totalPrice +=
-					(Math.round(this.data.dataList[i].product.promotePrice * 100) *
-						this.data.dataList[i].number) /
-					100
-			} else {
-				totalPrice +=
-					(Math.round(this.data.dataList[i].product.retailPrice * 100) *
-						this.data.dataList[i].number) /
-					100
+		if (this.data.cartPerchase) {
+			for (let i = 0; i < this.data.dataList.length; i++) {
+				totalCount += this.data.dataList[i].number
+				if (this.data.dataList[i].goods.isPromote) {
+					totalPrice +=
+						(Math.round(this.data.dataList[i].product.promotePrice * 100) *
+							this.data.dataList[i].number) /
+						100
+				} else {
+					totalPrice +=
+						(Math.round(this.data.dataList[i].product.retailPrice * 100) *
+							this.data.dataList[i].number) /
+						100
+				}
 			}
+		} else {
+			totalCount = wx.getStorageSync('activeProductNumber')
+				? wx.getStorageSync('activeProductNumber')
+				: 1
+			totalPrice = this.data.goods.isPromote
+				? (Math.round(this.data.product.promotePrice * 100) * totalCount) / 100
+				: (Math.round(this.data.product.retailPrice * 100) * totalCount) / 100
 		}
 		totalPrice = Math.round(totalPrice * 100) / 100
 		this.setData({
 			totalCount,
-			totalPrice,
-			actualPrice: totalPrice
+			totalPrice: totalPrice,
+			actualPrice: (totalPrice * 100 + this.data.shippingFee * 100) / 100
 		})
 	},
 	getListDataByCartIds() {
-		http
-			.wxRequest({
-				...this.data.api.getProductByCart,
-				params: {
-					scope: 'all',
-					checked: 1,
-					excludeDisabled: 1
-				}
-			})
-			.then((res) => {
-				if (res.success) {
-					res.data.forEach((item) => {
-						if (
-							item.goods.isPromote &&
-							tool.isInDurationTime(
-								item.goods.promoteStart,
-								item.goods.promoteEnd
-							)
-						) {
-							item.goods.isPromote = true
-						} else {
-							item.goods.isPromote = false
-						}
-					})
-					const flag = res.data.every((list) => {
-						return list.product.productNumber !== 0 && list.goods.isOnSale !== 0
-					})
-					if (!flag) {
-						this.setData({
-							disabledShow: true
-						})
+		return new Promise((resolve) => {
+			http
+				.wxRequest({
+					...this.data.api.getProductByCart,
+					params: {
+						scope: 'all',
+						checked: 1,
+						excludeDisabled: 1
 					}
-					this.setData({
-						dataList: res.data
-					})
-					this.calculation()
-				}
-			})
-	},
-	getMyaddress() {
-		const params = {
-			userId: wx.getStorageSync('userId')
-		}
-		http.wxRequest({ ...this.data.api.getMyAddress, params }).then((res) => {
-			if (res.success) {
-				if (wx.getStorageSync('activeAddressId')) {
-					res.data.forEach((item) => {
-						if (item.id === wx.getStorageSync('activeAddressId')) {
+				})
+				.then((res) => {
+					if (res.success) {
+						res.data.forEach((item) => {
+							if (
+								item.goods.isPromote &&
+								tool.isInDurationTime(
+									item.goods.promoteStart,
+									item.goods.promoteEnd
+								)
+							) {
+								item.goods.isPromote = true
+							} else {
+								item.goods.isPromote = false
+							}
+						})
+						const flag = res.data.every((list) => {
+							return (
+								list.product.productNumber !== 0 && list.goods.isOnSale !== 0
+							)
+						})
+						if (!flag) {
 							this.setData({
-								order: item
+								disabledShow: true
 							})
 						}
-					})
-				} else {
-					if (res.data.length > 0) {
 						this.setData({
-							order: res.data[0]
+							dataList: res.data
+						})
+						this.calculation()
+						resolve()
+					}
+				})
+		})
+	},
+	getMyaddress() {
+		return new Promise((resolve) => {
+			const params = {
+				userId: wx.getStorageSync('userId')
+			}
+			http.wxRequest({ ...this.data.api.getMyAddress, params }).then((res) => {
+				if (res.success) {
+					if (wx.getStorageSync('activeAddressId')) {
+						res.data.forEach((item) => {
+							if (item.id === wx.getStorageSync('activeAddressId')) {
+								this.setData({
+									order: item
+								})
+							}
 						})
 					} else {
-						this.setData({
-							order: null
-						})
+						if (res.data.length > 0) {
+							this.setData({
+								order: res.data[0]
+							})
+						} else {
+							this.setData({
+								order: null
+							})
+						}
 					}
+					resolve()
 				}
+			})
+		})
+	},
+	// 获取商品运费
+	getGoodsFee() {
+		return new Promise((resolve) => {
+			let params = {
+				provinceName: this.data.order.provinceName,
+				cityName: this.data.order.cityName,
+				districtName: this.data.order.districtName,
+				address: this.data.order.address,
+				goodsFreightModels: []
+			}
+			if (this.data.cartPerchase) {
+				this.data.dataList.forEach((list) => {
+					const obj = {
+						platformGoodsId: list.goods.platformGoodsId,
+						platformType: list.goods.platformType,
+						goodsNum: list.number,
+						goodsId: list.goods.id
+					}
+					params.goodsFreightModels.push(obj)
+				})
+			} else {
+				params.goodsFreightModels[0] = {
+					platformGoodsId: this.data.goods.platformGoodsId,
+					platformType: this.data.goods.platformType,
+					goodsId: this.data.goods.id,
+					goodsNum: 1
+				}
+			}
+			if (this.data.order.provinceName) {
+				http
+					.wxRequest({
+						...this.data.api.getFee,
+						params
+					})
+					.then((res) => {
+						if (res.success) {
+							this.setData({
+								shippingFee: res.data
+							})
+							this.calculation()
+							resolve()
+						}
+					})
+			} else {
+				resolve()
 			}
 		})
 	},
@@ -319,21 +395,26 @@ Page({
 			.then((res) => {
 				if (res.success) {
 					let body = ''
+					let actualPrice = 0
 					if (this.data.cartPerchase) {
 						this.data.dataList.forEach((list) => {
 							body += list.goods.name
 						})
+						res.data.forEach((pri) => {
+							actualPrice += pri.actualPrice * 100
+						})
+						actualPrice = actualPrice / 100
 					} else {
 						body = this.data.goods.name
+						actualPrice = res.data[0].actualPrice
 					}
 					body = util.ellipsis(body, 29)
 					this.setData({
-						actualPrice: res.data[0].actualPrice,
+						actualPrice: actualPrice,
 						payment: {
-							id: res.data[0].id,
 							openid: wx.getStorageSync('openId'),
-							outTradeNo: res.data[0].orderNo,
-							totalFee: res.data[0].actualPrice * 100, // 微信支付单位为分.
+							outTradeNo: res.data[0].mainOrderNo,
+							totalFee: actualPrice * 100, // 微信支付单位为分.
 							body,
 							tradeType: 'JSAPI'
 						}
@@ -364,8 +445,7 @@ Page({
 		})
 			.then(() => {
 				wx.navigateTo({
-					url:
-						'/pages_order/order-detail/order-detail?src=' + this.data.payment.id
+					url: '/pages_order/order-list/order-list'
 				})
 			})
 			.catch(() => {
@@ -397,9 +477,7 @@ Page({
 						...wechatParams,
 						success(res) {
 							wx.navigateTo({
-								url:
-									'/pages_order/order-detail/order-detail?src=' +
-									_this.data.payment.id
+								url: '/pages_order/order-list/order-list'
 							})
 						}
 					})
@@ -431,11 +509,14 @@ Page({
 	checkMoney() {
 		// 判断购物金是否小于等于商品总价且小于等于可用余额
 		if (this.data.shoppingMoney <= this.data.shoppingMoneyData.amount) {
-			if (this.data.shoppingMoney <= this.data.totalPrice) {
+			if (
+				this.data.shoppingMoney <=
+				this.data.totalPrice + this.data.shippingFee
+			) {
 				return true
 			} else {
 				wx.showToast({
-					title: '购物金超出商品总额',
+					title: '购物金超出待付总额',
 					icon: 'none'
 				})
 				return false
@@ -448,39 +529,19 @@ Page({
 			return false
 		}
 	},
-	numberChange(e) {
-		const count = e.detail
-		const price = this.data.goods.isPromote
-			? (Math.round(this.data.product.promotePrice * 100) * count) / 100
-			: (Math.round(this.data.product.retailPrice * 100) * count) / 100
-
-		if (this.data.selectMoney && this.data.shoppingMoney > 0) {
-			this.setData({
-				totalCount: count,
-				totalPrice: price,
-				actualPrice: price - this.data.shoppingMoney
-			})
-		} else {
-			this.setData({
-				totalCount: count,
-				totalPrice: price,
-				actualPrice: price
-			})
-		}
-		wx.setStorageSync('activeProductNumber', count)
-	},
 	shoppingMoneyChange(e) {
 		const money = Number(e.detail)
 		const flag = this.checkMoney()
+		console.log(money, flag)
 		if (flag) {
-			const actualPrice = this.data.totalPrice - money
+			const actualPrice = this.data.totalPrice + this.data.shippingFee - money
 			this.setData({
 				actualPrice
 			})
 		} else {
 			this.setData({
 				shoppingMoney: 0,
-				actualPrice: this.data.totalPrice
+				actualPrice: this.data.totalPrice + this.data.shippingFee
 			})
 		}
 	},

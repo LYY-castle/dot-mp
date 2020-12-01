@@ -1,98 +1,94 @@
 /* pages/product/perchase/perchase.wxss */
 .container {
-  background: #eee;
-  padding-bottom: 50px;
+	background: #eee;
+	padding-bottom: 50px;
 }
 
 .bigBox {
-  margin: 0 10px 20px 10px;
+	margin: 0 10px 20px 10px;
 }
 
 .bottom-button1 {
-  margin-top: 6px;
-  width: 100%;
-  display: flex;
-  justify-content: flex-between;
-  align-items: center;
-  font-size: 12px;
-
+	margin-top: 6px;
+	width: 100%;
+	display: flex;
+	justify-content: flex-between;
+	align-items: center;
+	font-size: 12px;
 }
 
 .bottom-button1 .right {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .bottom-button1 .right .step {
-  margin-left: 8px;
-  margin-right: 5px;
+	margin-left: 8px;
+	margin-right: 5px;
 }
 
 .bottom-button2 {
-  margin-top: 6px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-
+	margin-top: 6px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 12px;
 }
 
 .bottom-button2 .right {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .bottom-button2 .right .step {
-  margin-left: 8px;
-  margin-right: 5px;
+	margin-left: 8px;
+	margin-right: 5px;
 }
 
 .container .goodContent {
-  flex-wrap: nowrap;
-  margin: 0;
+	flex-wrap: nowrap;
+	margin: 0;
 }
 
 .address {
-  display: flex;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 .addressIcon {
-  width: 60px;
-  margin-left: 10px;
+	width: 60px;
+	margin-left: 10px;
 }
 
 .bottom-text {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 12px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	font-size: 12px;
+	margin-top: 10px;
 }
 
 .text-content {
-  width: 31%;
-  text-align: right;
-  font-size: 14px;
+	width: 31%;
+	text-align: right;
+	font-size: 14px;
 }
 
 .van-field__label {
-  text-align: right;
-  color: #000 !important;
+	text-align: right;
+	color: #000 !important;
 }
 
 .popStyle {
-  padding: 30px;
+	padding: 30px;
 }
 
 .remarkText {
-  width: 69%;
-  text-align: left;
-  margin-left: 10px;
-  color: rgba(0, 0, 0, .6);
-
+	width: 69%;
+	text-align: left;
+	margin-left: 10px;
+	color: rgba(0, 0, 0, 0.6);
 }

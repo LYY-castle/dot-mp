@@ -6,16 +6,16 @@
       </van-tab>
 	  </van-tabs>
 	</van-sticky>
-	<view wx:if="{{orderList.length > 0}}" wx:for="{{orderList}}" wx:for-item="order" wx:key="index" bindtap="orderDetail" data-option="{{order.id}}" class="m-10 p-10 border ">
+	<view wx:if="{{orderList.length > 0}}" wx:for="{{orderList}}" wx:for-item="order" wx:key="index"  class="m-10 p-10 border ">
 		<view class="flex-between">
 				<text class="fz-13 description">{{ order.createAt }}</text>
 				<text class="fz-13" >{{statusMap[order.orderStatus].text}}</text>
 			</view>
-			<view class="container-title m-t-10">
-				<view class="imgList" wx:if="{{order.orderGoods.length>1}}">
+			<view class="container-title m-t-10" >
+				<view class="imgList" wx:if="{{order.orderGoods.length>1}}" bindtap="orderDetail" data-option="{{order.id}}">
 					<van-image wx:for="{{order.orderGoods}}" wx:key="imgIndex" wx:for-item="image" src="{{image.listPicUrl}}" alt width="80px" height="80px" fit="cover" class="m-r-5"/>
 				</view>
-				<view wx:if="{{order.orderGoods.length===1}}" class="flex-start-start">
+				<view wx:if="{{order.orderGoods.length===1}}" class="flex-start-start" bindtap="orderDetail" data-option="{{order.id}}">
 					<van-image src="{{order.orderGoods[0].listPicUrl}}" alt width="80px" height="80px" fit="cover" class="m-r-5"/>
 					<view class="m-l-10">
 						<view class="fz-14">{{order.orderGoods[0].name}}</view>
@@ -30,6 +30,12 @@
 						<text wx:if="{{order.orderStatus===101||order.orderStatus===102}}">应付款</text>
 						:￥{{ order.actualPrice }}
 					</view>
+				</view>
+				<view wx:if="{{order.orderStatus===300}}" class="flex-between-end m-t-10">
+					<van-button plain hairline size="small" color="#f9ae08" bind:click="ensureOrder" data-option="{{order.id}}">确认收货</van-button>
+				</view>
+				<view wx:if="{{order.orderStatus===400||order.orderStatus===600}}" class="flex-between-end m-t-10">
+					<van-button plain hairline size="small" color="rgba(0,0,0,.6)" bind:click="deleteOrder" data-option="{{order.id}}">删除订单</van-button>
 				</view>
 			</view>
 	</view>

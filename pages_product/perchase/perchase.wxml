@@ -35,18 +35,26 @@
 					<view class="c-gray" style="text-align:right">x{{totalCount}}</view>
 				</view>
 			</view>
-			<view class="flex-between">
+			<!-- <view class="flex-between">
 				<view class="text-content">购买数量</view>
 				<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/>
-			</view>
+			</view> -->
+
 			<view class="flex-between m-t-10 m-b-10" bindtap="remarkChange">
-				<view class="text-content">订单备注</view>
+				<view class="text-content">备注</view>
 				<view class="remarkText">{{newRemark!==''?newRemark:'选填'}}</view>
 			</view>
+			<view class="flex-between">
+					<view class="text-content">商品总价</view>
+					<view>￥{{totalPrice * 100 / 100}}</view>
+				</view>
+				<view wx:if="{{shippingFee}}" class="flex-between m-t-10">
+					<view class="text-content">运费</view>
+					<view>￥{{shippingFee}}</view>
+				</view>
 			<view class="bottom-text">
-				<text class="c-gray">共{{ totalCount }}件</text>
 				<text class="m-l-10">小计:</text>
-				<text class="minPrice">￥{{totalPrice * 100 / 100}}</text>
+				<text class="minPrice">￥{{(totalPrice * 100 + shippingFee*100)/100}}</text>
 			</view>
 		</view>
 			<view class="m-t-10 border p-10 fz-12" wx:if="{{cartPerchase}}" wx:for="{{dataList}}" wx:key="index" wx:for-item="list">
@@ -58,6 +66,7 @@
 							<view class="guige m-t-10" wx:if="{{list.goodsSpecificationNameValue}}">{{ list.goodsSpecificationNameValue }}</view>
 						</view>
 					</view>
+
 					<view class="m-l-10">
 						<view>￥{{list.goods.isPromote?list.product.promotePrice:list.product.retailPrice}}</view>
 						<view class="c-gray" style="text-align:right">x{{list.number}}</view>
@@ -66,13 +75,21 @@
 			</view>
 			<view wx:if="{{cartPerchase}}" class="m-t-10 border p-10 fz-12">
 			<view class="flex-between m-t-10 m-b-10" bindtap="remarkChange">
-				<view class="text-content">订单备注</view>
+				<view class="text-content">备注</view>
 				<view class="remarkText">{{newRemark!==''?newRemark:'选填'}}</view>
 			</view>
+			<view class="flex-between">
+					<view class="text-content">商品总价</view>
+					<view>￥{{totalPrice * 100 / 100}}</view>
+				</view>
+				<view wx:if="{{shippingFee}}" class="flex-between m-t-10">
+					<view class="text-content">运费</view>
+					<view>￥{{shippingFee}}</view>
+				</view>
 			<view class="bottom-text">
-				<text class="c-gray">共{{ totalCount }}件</text>
+
 				<text class="m-l-10">小计:</text>
-				<text class="minPrice">￥{{ totalPrice * 100 / 100 }}</text>
+				<text class="minPrice">￥{{ (totalPrice * 100  + shippingFee * 100)/ 100}}</text>
 			</view>
 			</view>
 			<view class="border m-t-10 p-10 fz-12" wx:if="{{shoppingMoneyData&&!shoppingMoneyData.status}}">
@@ -110,7 +127,7 @@
 <view class="popStyle">
 	<view class="m-b-20">
 		<van-field
-				label="订单备注"
+				label="备注"
         type="textarea"
 				autosize="{{true}}"
 				model:value="{{ remark }}"

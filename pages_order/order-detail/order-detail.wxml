@@ -3,7 +3,8 @@
 	<view class="p-t-20 topContentText">
 		<view class="flex-center">
 			<van-icon name="clock-o" wx:if="{{orderInfo.orderStatus===100}}" class="m-r-5"/>
-		{{statusMap[orderInfo.orderStatus].text}}</view>
+			<text bindtap="openPop">{{statusMap[orderInfo.orderStatus].text}} ></text>
+	</view>
 		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10 fz-12">
 			需付款:<text class="m-r-10 fz-16 bold c-red">￥{{orderInfo.actualPrice}}</text>
 			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish" class="fz-16 bold m-l-5" bind:change="onTimeChange" use-slot format="mm">
@@ -43,8 +44,8 @@
 		</view>
 		<van-divider />
 		<view class="flex-between m-b-10">商品总额<text>￥{{orderInfo.goodsPrice}}</text></view>
+		<view class="flex-between m-b-10 c-gray" wx:if="{{orderInfo.shippingFee}}">运费<text>+￥{{orderInfo.shippingFee}}</text></view>
 		<view class="flex-between m-b-10 c-gray" wx:if="{{orderInfo.shoppingMoney}}">购物金抵扣<text class="c-red">-￥{{orderInfo.shoppingMoney}}</text></view>
-		<!-- <view class="flex-between m-b-10 c-gray">运费<text>+12</text></view> -->
 		<van-divider />
 		<view class="flex-between-end m-b-10">
 			<text wx:if="{{orderInfo.orderStatus>=200}}">实</text>
@@ -73,10 +74,6 @@
 					<text class="left-width c-gray">快递公司</text>
 					<view class="black">{{logisticsInfo.shipperName}}</view>
 				</view>
-				<view class="flex-start-start m-t-10 fz-12" >
-					<text class="left-width c-gray">发货时间</text>
-					<view class="black">{{logisticsInfo.shippingTime}}</view>
-				</view>
 			</view>
 		</view>
 		<view class="border p-10 m-10 ">
@@ -87,11 +84,18 @@
 			<view class="c-gray fz-12 m-t-10" wx:if="{{orderInfo.payTime}}"><text class="left-width">支付时间</text><text class="black">{{orderInfo.payTime}}</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width" wx:if="{{orderInfo.remark}}">订单备注</text><text class="black">{{orderInfo.remark}}</text></view>
 		</view>
-		<van-goods-action wx:if="{{orderInfo.orderStatus===100}}">
-			<van-goods-action-button text="取消订单" plain color="rgba(0,0,0,.6)" bind:click="cancelPay"/>
-			<van-goods-action-button text="去支付" bind:click="goPay"/>
+		<view >
+
+		</view>
+		<van-goods-action>
+			<!-- <van-goods-action-button plain color="rgba(0,0,0,.6)" wx:if="{{orderInfo.orderStatus>=301}}" text="申请售后" open-type="contact" bind:contact="handleContact"/> -->
+			<van-goods-action-button text="取消订单" plain color="rgba(0,0,0,.6)" bind:click="cancelPay" wx:if="{{orderInfo.orderStatus===100}}"/>
+			<van-goods-action-button text="去支付" bind:click="goPay" wx:if="{{orderInfo.orderStatus===100}}"/>
 		</van-goods-action>
-			<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm">
+			<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm" >
 			</van-dialog>
 			<van-dialog id="van-dialog" />
+			<van-popup show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
+				<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160"/>
+			</van-popup>
 </view>

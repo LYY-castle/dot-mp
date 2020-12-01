@@ -14,38 +14,26 @@ Page({
 		timeData: null,
 		payment: null,
 		dialogShow: false,
+		popShow: false,
+		steps: [],
 		statusMap: {
 			100: {
-				text: '待支付',
-				color: 'rgba(249, 173, 8, 1)'
-			},
-			101: {
-				text: '已取消',
-				color: 'rgba(101, 101, 101, 1)'
-			},
-			102: {
-				text: '已取消',
-				color: 'rgba(101, 101, 101, 1)'
+				text: '待付款'
 			},
 			200: {
-				text: '待发货',
-				color: '#722ed1'
+				text: '待发货'
 			},
 			300: {
-				text: '已发货',
-				color: '#f5222d'
-			},
-			301: {
-				text: '已收货',
-				color: '#f5222d'
-			},
-			302: {
-				text: '已收货',
-				color: '#f5222d'
+				text: '待收货'
 			},
 			400: {
-				text: '已完成',
-				color: '#f5222d'
+				text: '交易完成'
+			},
+			500: {
+				text: '售后中'
+			},
+			600: {
+				text: '交易关闭'
 			}
 		},
 
@@ -64,9 +52,8 @@ Page({
 				url: '/orders',
 				method: 'put'
 			},
-			// /order-express
 			getOrderExpress: {
-				url: '/order-express',
+				url: '/orders/{id}/order-express',
 				method: 'get'
 			}
 		}
@@ -126,7 +113,7 @@ Page({
 							tradeType: 'JSAPI'
 						}
 					})
-					if (res.data.orderStatus === 300) {
+					if (res.data.orderStatus >= 300 && res.data.orderStatus !== 600) {
 						this.getOrderExpress()
 					}
 				}
@@ -189,7 +176,7 @@ Page({
 					...this.data.api.cancelOrder,
 					params: {
 						id: this.data.orderInfo.id,
-						orderStatus: '101'
+						orderStatus: '600'
 					}
 				})
 				.then((res) => {
@@ -235,16 +222,45 @@ Page({
 		http
 			.wxRequest({
 				...this.data.api.getOrderExpress,
-				params: {
-					orderId: this.data.orderInfo.id
-				}
+				urlReplacements: [
+					{ substr: '{id}', replacement: this.data.orderInfo.id }
+				]
 			})
 			.then((res) => {
 				if (res.success) {
+					let express = []
+					res.data.traces = JSON.parse(res.data.traces)
+					if (res.data.traces) {
+						res.data.traces.forEach((tr) => {
+							let obj = {
+								text: tr.content,
+								desc: tr.msgTime
+							}
+							express.push(obj)
+						})
+					}
 					this.setData({
-						logisticsInfo: res.data[0]
+						logisticsInfo: res.data,
+						steps: express
 					})
 				}
 			})
+	},
+	openPop() {
+		if (this.data.steps.length > 0) {
+			this.setData({
+				popShow: true
+			})
+		} else {
+			wx.showToast({
+				title: '暂无物流信息',
+				icon: 'none'
+			})
+		}
+	},
+	closePop() {
+		this.setData({
+			popShow: false
+		})
 	}
 })
