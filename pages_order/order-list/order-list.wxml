@@ -27,7 +27,6 @@
 					<view>
 						<text wx:if="{{order.orderStatus>=200}}">实付款</text>
 						<text wx:if="{{order.orderStatus===100}}">需付款</text>
-						<text wx:if="{{order.orderStatus===101||order.orderStatus===102}}">应付款</text>
 						:￥{{ order.actualPrice }}
 					</view>
 				</view>

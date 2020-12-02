@@ -50,7 +50,6 @@
 		<view class="flex-between-end m-b-10">
 			<text wx:if="{{orderInfo.orderStatus>=200}}">实</text>
 			<text wx:if="{{orderInfo.orderStatus===100}}">需</text>
-			<text wx:if="{{orderInfo.orderStatus===101||orderInfo.orderStatus===102}}">应</text>
 			付款<text class="bold fz-14">￥{{orderInfo.actualPrice}}</text>
 		</view>
 	</view>
@@ -88,7 +87,7 @@
 
 		</view>
 		<van-goods-action>
-			<!-- <van-goods-action-button plain color="rgba(0,0,0,.6)" wx:if="{{orderInfo.orderStatus>=301}}" text="申请售后" open-type="contact" bind:contact="handleContact"/> -->
+			<!-- <van-goods-action-button plain color="rgba(0,0,0,.6)" wx:if="{{orderInfo.orderStatus===400}}" text="申请售后" open-type="contact" bind:contact="handleContact"/> -->
 			<van-goods-action-button text="取消订单" plain color="rgba(0,0,0,.6)" bind:click="cancelPay" wx:if="{{orderInfo.orderStatus===100}}"/>
 			<van-goods-action-button text="去支付" bind:click="goPay" wx:if="{{orderInfo.orderStatus===100}}"/>
 		</van-goods-action>
