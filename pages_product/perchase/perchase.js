@@ -421,9 +421,7 @@ Page({
 					})
 					if (this.data.payment.totalFee === 0) {
 						wx.navigateTo({
-							url:
-								'/pages_order/order-detail/order-detail?src=' +
-								this.data.payment.id
+							url: '/pages_order/order-list/order-list'
 						})
 					} else {
 						this.setData({

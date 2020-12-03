@@ -16,6 +16,8 @@ Page({
 		dialogShow: false,
 		popShow: false,
 		steps: [],
+		afterSale: '',
+		afsStatus: null,
 		statusMap: {
 			100: {
 				text: '待付款'
@@ -36,7 +38,30 @@ Page({
 				text: '交易关闭'
 			}
 		},
-
+		// 申请 20:审核 30:收货 40:处理 50:待用户确认 60:完成 70:取消
+		afterSaleStatus: {
+			10: {
+				text: '申请中'
+			},
+			20: {
+				text: '审核中'
+			},
+			30: {
+				text: '收货'
+			},
+			40: {
+				text: '处理中'
+			},
+			50: {
+				text: '待用户确认'
+			},
+			60: {
+				text: '完成'
+			},
+			70: {
+				text: '取消'
+			}
+		},
 		api: {
 			getOrderById: {
 				url: '/orders/{id}',
@@ -55,6 +80,16 @@ Page({
 			getOrderExpress: {
 				url: '/orders/{id}/order-express',
 				method: 'get'
+			},
+			// 售后状态
+			updateAfterSale: {
+				url: '/after-sales',
+				method: 'get'
+			},
+			// 确认完成售后
+			ensureAfs: {
+				url: '/after-sales',
+				method: 'put'
 			}
 		}
 	},
@@ -96,6 +131,14 @@ Page({
 							time
 						})
 					}
+					let afterSale = ''
+					if (res.data.orderStatus === 200) {
+						afterSale = '退货'
+					} else if (res.data.orderStatus === 300) {
+						afterSale = '拒收/退货退款'
+					} else if (res.data.orderStatus === 400) {
+						afterSale = '申请售后'
+					}
 					let body = ''
 					res.data.orderGoods.forEach((good) => {
 						body += good.goodsName
@@ -103,18 +146,26 @@ Page({
 					})
 					body = util.ellipsis(body, 29)
 					this.setData({
+						afterSale,
 						orderInfo: res.data,
 						payment: {
 							id: res.data.id,
 							openid: wx.getStorageSync('openId'),
-							outTradeNo: res.data.orderNo,
+							outTradeNo: res.data.mainOrderNo,
 							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
 							body,
 							tradeType: 'JSAPI'
 						}
 					})
-					if (res.data.orderStatus >= 300 && res.data.orderStatus !== 600) {
+					if (
+						res.data.orderStatus === 300 ||
+						res.data.orderStatus === 400 ||
+						res.data.orderStatus === 500
+					) {
 						this.getOrderExpress()
+						if (res.data.orderStatus === 500) {
+							this.getAfterSaleStatus()
+						}
 					}
 				}
 			})
@@ -218,6 +269,26 @@ Page({
 			}
 		})
 	},
+	// 获取售后状态
+	getAfterSaleStatus() {
+		const params = {
+			scope: 'all',
+			orderId: this.data.orderInfo.id
+		}
+		http
+			.wxRequest({
+				...this.data.api.updateAfterSale,
+				params
+			})
+			.then((res) => {
+				if (res.success) {
+					this.setData({
+						afsStatus: res.data[0].afsStatus
+					})
+					console.log(res.data[0].afsStatus)
+				}
+			})
+	},
 	getOrderExpress() {
 		http
 			.wxRequest({
@@ -229,8 +300,8 @@ Page({
 			.then((res) => {
 				if (res.success) {
 					let express = []
-					res.data.traces = JSON.parse(res.data.traces)
 					if (res.data.traces) {
+						res.data.traces = JSON.parse(res.data.traces)
 						res.data.traces.forEach((tr) => {
 							let obj = {
 								text: tr.content,
@@ -246,6 +317,22 @@ Page({
 				}
 			})
 	},
+	// 申请售后
+	handleContact() {
+		http
+			.wxRequest({
+				...this.data.api.cancelOrder,
+				params: {
+					id: this.data.orderInfo.id,
+					orderStatus: '500'
+				}
+			})
+			.then((res) => {
+				if (res.success) {
+					this.getOrderDetail()
+				}
+			})
+	},
 	openPop() {
 		if (this.data.steps.length > 0) {
 			this.setData({
@@ -257,6 +344,32 @@ Page({
 				icon: 'none'
 			})
 		}
+	},
+	// 填写退货信息
+	fillAfsMsg() {},
+	// 确认完成售后
+	finishAfs() {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			afsStatus: 60
+		}
+		http.wxRequest({ ...this.data.ensureAfs, params }).then((res) => {
+			if (res.success) {
+				this.getOrderDetail()
+			}
+		})
+	},
+	// 取消售后
+	cancelAfs() {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			afsStatus: 70
+		}
+		http.wxRequest({ ...this.data.ensureAfs, params }).then((res) => {
+			if (res.success) {
+				this.getOrderDetail()
+			}
+		})
 	},
 	closePop() {
 		this.setData({

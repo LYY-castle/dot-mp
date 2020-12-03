@@ -76,7 +76,13 @@
 			</view>
 		</view>
 		<view class="border p-10 m-10 ">
-			<view>订单信息</view>
+			<view class="flex-between">
+				<view>订单信息</view>
+				<van-tag type="warning" wx:if="{{afsStatus!==30||afsStatus!==50}}">{{afterSaleStatus[afsStatus].text}}</van-tag>
+				<!-- <van-button size="small"  bind:click="fillAfsMsg">填写退货信息</van-button>
+				<van-button size="small" bind:click="finishAfs">确认完成售后</van-button>
+				<van-button size="small" bind:click="cancelAfs">取消售后</van-button> -->
+			</view>
 			<van-divider />
 			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{orderInfo.orderNo}}">复制</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width">下单时间</text><text class="black">{{orderInfo.createAt}}</text></view>
@@ -87,7 +93,7 @@
 
 		</view>
 		<van-goods-action>
-			<!-- <van-goods-action-button plain color="rgba(0,0,0,.6)" wx:if="{{orderInfo.orderStatus===400}}" text="申请售后" open-type="contact" bind:contact="handleContact"/> -->
+			<van-goods-action-button plain color="rgba(0,0,0,.6)" wx:if="{{orderInfo.orderStatus===200||orderInfo.orderStatus===300||orderInfo.orderStatus===400}}" text="{{afterSale}}" open-type="contact" bind:contact="handleContact"/>
 			<van-goods-action-button text="取消订单" plain color="rgba(0,0,0,.6)" bind:click="cancelPay" wx:if="{{orderInfo.orderStatus===100}}"/>
 			<van-goods-action-button text="去支付" bind:click="goPay" wx:if="{{orderInfo.orderStatus===100}}"/>
 		</van-goods-action>
