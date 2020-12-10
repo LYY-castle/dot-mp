@@ -44,12 +44,6 @@ Page({
 		// wx.navigateBack({
 		// 	delta: 1
 		// })
-		// if (wx.getStorageSync('activeAddressId')) {
-		// 	wx.removeStorageSync('activeAddressId')
-		// }
-		// if (wx.getStorageSync('addAddress')) {
-		// 	wx.removeStorageSync('addAddress')
-		// }
 	},
 
 	/**
@@ -63,11 +57,6 @@ Page({
 			this.getMyAddressList()
 		}
 	},
-
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {},
 	// 获取当前用户的收货地址
 	getMyAddressList() {
 		const params = {
@@ -121,7 +110,7 @@ Page({
 			wx.getStorageSync('addAddress')
 		) {
 			wx.setStorageSync('activeAddressId', option.id)
-			wx.navigateTo({
+			wx.redirectTo({
 				url: '/pages_product/perchase/perchase'
 			})
 		}

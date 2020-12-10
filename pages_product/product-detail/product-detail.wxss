@@ -1,113 +1,113 @@
 .container {
-  background: #f9f9f9;
+	background: #f9f9f9;
 }
 
 .cardContent {
-  margin: 10px;
-  padding: 10px;
-  background: #fff;
-  border-radius: 10px;
+	margin: 10px;
+	padding: 10px;
+	background: #fff;
+	border-radius: 10px;
 }
 
 .cardDetail {
-  padding: 20px 20px 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	padding: 20px 20px 0 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .price-container {
-  padding: 20px;
-  font-size: 13px;
-  display: flex;
+	padding: 20px;
+	font-size: 13px;
+	display: flex;
 }
 
 .price-container .price-title {
-  font-size: 15px;
-  font-weight: 800;
+	font-size: 15px;
+	font-weight: 800;
 }
 
 .p_img {
-  width: 80%;
+	width: 80%;
 }
 
 .product {
-  background: #fff;
-  padding: 10px 0 50px 0;
-  margin-top: 10px;
+	background: #fff;
+	padding: 10px 0 50px 0;
+	margin-top: 10px;
 }
 .title {
-  font-size: 14px;
-  width:80px;
+	font-size: 14px;
+	width: 40%;
 }
 
 .product .description {
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 12px;
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 12px;
 }
 
 .product .richImg {
-  display: block;
-  width:100%;
+	display: block;
+	width: 100%;
 }
 
 .allprice {
-  text-align: left;
-  font-size: 13px;
-  color: rgba(0, 0, 0, 0.5);
+	text-align: left;
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.5);
 }
 
 .left {
-  width: 100%;
+	width: 100%;
 }
 
 .left .top {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .time-limit {
-  color: #d65454;
+	color: #d65454;
 }
 
 swiper {
-  height: 375px !important;
-  text-align:center;
+	height: 375px !important;
+	text-align: center;
 }
 
 van-button {
-  width: 100%;
+	width: 100%;
 }
 
 .popContent {
-  box-sizing: border-box;
-  padding: 100px 20px 50px 20px;
-  height: 450px;
-  position: relative;
+	box-sizing: border-box;
+	padding: 100px 20px 50px 20px;
+	height: 450px;
+	position: relative;
 }
 
 .popContent .goods {
-  width: 100;
-  padding: 20px 20px 0 20px;
-  background: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
+	width: 100;
+	padding: 20px 20px 0 20px;
+	background: #fff;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .popContent .content {
-  height: 100%;
-  overflow: hidden;
-  overflow-y: scroll;
+	height: 100%;
+	overflow: hidden;
+	overflow-y: scroll;
 }
 
 .popContent .buttonGroup {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
 }
 
 .specificationItem {
-  display: inline-block;
-  margin: 5px;
+	display: inline-block;
+	margin: 5px;
 }

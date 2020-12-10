@@ -30,7 +30,7 @@
 					<view class="minPrice fz-12">
 						￥
 						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
-						<text class="originPrice">￥{{ item.marketPrice }}</text>
+						<text class="originPrice" wx:if="{{item.isPromote? item.promotePrice<item.marketPrice : item.retailPrice<item.marketPrice}}">￥{{ item.marketPrice }}</text>
 					</view>
 			</view>
 		</view>

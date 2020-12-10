@@ -105,6 +105,11 @@ Page({
 		})
 		Promise.resolve().then(() => this.getOrderList())
 	},
+	onUnload: function () {
+		wx.switchTab({
+			url: '/pages/mine/mine'
+		})
+	},
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */

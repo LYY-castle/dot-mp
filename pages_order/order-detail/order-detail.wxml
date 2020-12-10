@@ -3,7 +3,7 @@
 	<view class="p-t-20 topContentText">
 		<view class="flex-center">
 			<van-icon name="clock-o" wx:if="{{orderInfo.orderStatus===100}}" class="m-r-5"/>
-			<text bindtap="openPop">{{statusMap[orderInfo.orderStatus].text}} ></text>
+			<text>{{statusMap[orderInfo.orderStatus].text}}</text>
 	</view>
 		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10 fz-12">
 			需付款:<text class="m-r-10 fz-16 bold c-red">￥{{orderInfo.actualPrice}}</text>
@@ -54,7 +54,12 @@
 		</view>
 	</view>
 		<view class="border p-10 m-10 ">
-			<view>配送信息</view>
+			<view class="flex-between">
+				<view>
+					配送信息
+				</view>
+				<van-button bindtap="openPop" size="small" wx:if="{{logisticsInfo}}">查看物流</van-button>
+			</view>
 			<van-divider />
 			<view class="flex-start-start fz-12">
 				<text class="left-width c-gray">收货信息</text>

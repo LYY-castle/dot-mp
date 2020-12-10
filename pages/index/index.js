@@ -121,7 +121,8 @@ Page({
 			const params = {
 				parentId: 0,
 				pageSize: 100,
-				enable: 1
+				enable: 1,
+				isShowHome: 1
 			}
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {

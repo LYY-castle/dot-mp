@@ -50,10 +50,6 @@
           </view>
 
         </view>
-        <view class="flex-between m-t-10 m-b-10">
-          数量
-          <van-stepper value="{{ number }}" min="1" max="{{activeProductNumber}}" disable-input="{{false}}" bind:change="changeNumber" />
-        </view>
       </view>
       <view class="buttonGroup">
         <van-button round block="{{true}}" class="buttonItem" color="#f9ae08" bind:click="_operate">确定</van-button>

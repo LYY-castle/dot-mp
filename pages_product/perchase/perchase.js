@@ -72,7 +72,7 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
-	onLoad: function (options) {
+	onShow: function (options) {
 		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
@@ -89,6 +89,26 @@ Page({
 				.then(() => this.getGoodsFee())
 		}
 	},
+	// onUnload: function () {
+	// 	if (this.data.cartPerchase) {
+	// 		wx.redirectTo({
+	// 			url: '/pages/shopping_cart/shopping-cart'
+	// 		})
+	// 	} else {
+	// 		const pathParams = {
+	// 			productId: this.data.goods.id
+	// 		}
+	// 		wx.redirectTo({
+	// 			url: '/pages_product/product-detail/product-detail',
+	// 			success: function (res) {
+	// 				// 通过eventChannel向被打开页面传送数据
+	// 				res.eventChannel.emit('acceptDataFromOpenerPage', {
+	// 					data: pathParams
+	// 				})
+	// 			}
+	// 		})
+	// 	}
+	// },
 	getProduct() {
 		return new Promise((resolve) => {
 			http
@@ -455,7 +475,6 @@ Page({
 	// 拉起微信支付
 	confirm() {
 		const _this = this
-		console.log(this.data.payment)
 		if (this.data.payment.totalFee > 0) {
 			http
 				.wxRequest({
@@ -474,6 +493,11 @@ Page({
 					wx.requestPayment({
 						...wechatParams,
 						success(res) {
+							wx.navigateTo({
+								url: '/pages_order/order-list/order-list'
+							})
+						},
+						fail(res) {
 							wx.navigateTo({
 								url: '/pages_order/order-list/order-list'
 							})

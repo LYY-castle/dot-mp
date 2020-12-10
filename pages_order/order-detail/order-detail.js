@@ -18,6 +18,10 @@ Page({
 		steps: [],
 		afterSale: '',
 		afsStatus: null,
+		jdAfsShow: false,
+		packageDesc: null,
+		questionDesc: '',
+		textareaHeight: { minHeight: 50 },
 		statusMap: {
 			100: {
 				text: '待付款'
@@ -90,6 +94,11 @@ Page({
 			ensureAfs: {
 				url: '/after-sales',
 				method: 'put'
+			},
+			// 京东平台确认收货后发起售后申请
+			jdAfs: {
+				url: '/after-sales/jd-apply',
+				method: 'post'
 			}
 		}
 	},
@@ -150,6 +159,7 @@ Page({
 						orderInfo: res.data,
 						payment: {
 							id: res.data.id,
+							orderNo: res.data.orderNo,
 							openid: wx.getStorageSync('openId'),
 							outTradeNo: res.data.mainOrderNo,
 							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
@@ -317,6 +327,7 @@ Page({
 				}
 			})
 	},
+
 	// 申请售后
 	handleContact() {
 		http
@@ -332,6 +343,46 @@ Page({
 					this.getOrderDetail()
 				}
 			})
+	},
+	// 京东平台收到货之后申请售后
+	jdAfs() {
+		this.setData({
+			jdAfsShow: true
+		})
+	},
+	ensureAfsByJd() {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			packageDesc: this.data.packageDesc,
+			questionDesc: this.data.questionDesc
+		}
+		http.wxRequest({ ...this.data.api.jdAfs, params }).then((res) => {
+			if (res.success) {
+				http
+					.wxRequest({
+						...this.data.api.cancelOrder,
+						params: {
+							id: this.data.orderInfo.id,
+							orderStatus: '500'
+						}
+					})
+					.then((res) => {
+						if (res.success) {
+							this.getOrderDetail()
+						}
+					})
+			}
+		})
+	},
+	onChange(event) {
+		this.setData({
+			packageDesc: event.detail
+		})
+	},
+	onClose() {
+		this.setData({
+			jdAfsShow: false
+		})
 	},
 	openPop() {
 		if (this.data.steps.length > 0) {

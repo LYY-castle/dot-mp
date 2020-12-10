@@ -44,3 +44,16 @@
 .payButton .van-button__text {
 	color: red;
 }
+
+.contentField {
+	background-color: #fff;
+}
+
+.contentField .inputClass {
+	margin: 10px 0;
+	display: block;
+	background-color: #eee;
+}
+.contentField .inputClass .van-cell {
+	background: transparent;
+}

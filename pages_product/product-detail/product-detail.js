@@ -90,14 +90,11 @@ Page({
 	 * 用户点击右上角分享
 	 */
 	onShareAppMessage: function () {
-		// return {
-		// 	title: this.data.product.name,
-		// 	query: wx.getStorageSync('code'),
-		// 	path:
-		// 		'/pages_product/product-detail/product-detail?src=' +
-		// 		this.data.productId,
-		// 	imageUrl: this.data.product.image[0] || ''
-		// }
+		return {
+			path:
+				'/pages_product/product-detail/product-detail?src=' +
+				this.data.productId
+		}
 	},
 	getProductDetail() {
 		return new Promise((resolve) => {
@@ -220,6 +217,7 @@ Page({
 										icon: 'none',
 										duration: 2000,
 										success() {
+											wx.removeStorageSync('activeProductNumber')
 											_this.getCartDotsNum()
 										}
 									})

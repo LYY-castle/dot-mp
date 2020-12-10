@@ -9,7 +9,7 @@ Page({
 		height: 250, //高度
 		max_width: 400,
 		max_height: 400,
-		quality: 0.5,
+		quality: 0.1,
 		disable_rotate: true, //是否禁用旋转
 		disable_ratio: true, //锁定比例
 		limit_move: false //是否限制移动
