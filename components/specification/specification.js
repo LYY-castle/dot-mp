@@ -60,12 +60,17 @@ Component({
 			type: Array,
 			value: []
 		}
+		// se: {
+		// 	type: Array,
+		// 	value: []
+		// }
 	},
 
 	/**
 	 * 组件的初始数据
 	 */
 	data: {
+		selectOption: [],
 		disabledNameValue: []
 	},
 
@@ -80,143 +85,81 @@ Component({
 		},
 		// 选中规格
 		selectSpecification(e) {
-			const option = e.currentTarget.dataset.option
-			const parentIndex = e.currentTarget.dataset.parent
-			const childIndex = e.currentTarget.dataset.child
-			let goodsSpecificationIds = []
-			let goodsSpecificationNameValue = []
-			let disabledNameValue = []
-			let activeProductNumber = 0
-			if (!option.disabled) {
-				if (option.activeGoodsSpecificationNameValue) {
-					// 如果当前点击的规格名已经被选中过就不做操作
-					return
-				} else {
-					// 如果当前点击的规格名未被选中过就放进选中的规格数组中
-					this.data.selectNameValueArr[parentIndex] =
-						option.goodsSpecificationValue
-				}
-				// for (let p = 0; p < this.data.products.length; p++) {
-				// 	if (
-				// 		this.data.products[p].goodsSpecificationNameValue.indexOf(
-				// 			option.goodsSpecificationValue
-				// 		) !== -1
-				// 	) {
-				// 		activeProductNumber += this.data.products[p].productNumber
-				// 		if(this.data.products[p].productNumber===0){
-
-				// 		}
-				// 	}
-				// }
-
-				this.data.products.forEach((pro) => {
-					if (
-						pro.goodsSpecificationNameValue.indexOf(
-							option.goodsSpecificationValue
-						) !== -1
-					) {
-						activeProductNumber += pro.productNumber
+			let option = {
+				parent: e.currentTarget.dataset.parent,
+				child: e.currentTarget.dataset.child,
+				goodsSpecificationValue:
+					e.currentTarget.dataset.option.goodsSpecificationValue,
+				goodsSpecificationPicUrl:
+					e.currentTarget.dataset.goodsSpecificationPicUrl,
+				disabled: false
+			}
+			this.data.selectOption[option.parent] = option
+			this.setData({
+				se: this.data.selectOption
+			})
+			this.data.selectOption.forEach((se) => {})
+			if (
+				this.data.selectOption.length === this.data.specificationResults.length
+			) {
+				let selStr = ''
+				for (let i = 0; i < this.data.selectOption.length; i++) {
+					if (i > 0) {
+						selStr += ';' + this.data.selectOption[i].goodsSpecificationValue
+					} else {
+						selStr += this.data.selectOption[i].goodsSpecificationValue
 					}
-					this.data.selectNameValueArr.forEach((selectName) => {
-						if (
-							pro.goodsSpecificationNameValue.indexOf(selectName) !== -1 &&
-							pro.productNumber === 0
-						) {
-							const disabledArr = pro.goodsSpecificationNameValue.split(';')
-							disabledArr.forEach((disabledName) => {
-								if (disabledName !== option.goodsSpecificationValue) {
-									disabledNameValue.push(disabledName)
-								}
-							})
-						}
-					})
-				})
-
-				disabledNameValue = Array.from(new Set(disabledNameValue))
-				this.setData({
-					disabledNameValue,
-					activeProductNumber
-				})
-				if (this.data.disabledNameValue.length > 0) {
-					this.data.disabledNameValue.forEach((val) => {
-						this.data.specificationResults.forEach((option) => {
-							option.goodsSpecificationResults.forEach((item) => {
-								if (item.goodsSpecificationValue === val) {
-									item.disabled = true
-								} else {
-									if (item.disabled) {
-										delete item.disabled
+				}
+				for (let j = 0; j < this.data.products.length; j++) {
+					if (this.data.products[j].goodsSpecificationNameValue === selStr) {
+						this.data.activeProductNumber = this.data.products[j].productNumber
+						this.data.activePic = this.data.products[j].pictureUrl
+						this.data.activePrice = this.data.goods.isPromote
+							? this.data.products[j].promotePrice
+							: this.data.products[j].retailPrice
+					}
+				}
+			} else {
+				for (let i = 0; i < this.data.selectOption.length; i++) {
+					for (let j = 0; j < this.data.products.length; j++) {
+						if (this.data.products[j].productNumber === 0) {
+							if (
+								this.data.products[j].goodsSpecificationNameValue.indexOf(
+									this.data.selectOption[i].na
+								)
+							) {
+								for (
+									let k = 0;
+									k < this.data.specificationResults.length;
+									k++
+								) {
+									if (i !== k) {
+										this.data.specificationResults[
+											k
+										].goodsSpecificationResults.forEach((res) => {
+											res.disabled = true
+										})
 									}
 								}
-							})
-						})
-					})
-				} else {
-					this.data.specificationResults.forEach((option) => {
-						option.goodsSpecificationResults.forEach((item) => {
-							if (item.disabled) {
-								delete item.disabled
 							}
-						})
-					})
-				}
-				// 给选中的同类规格加一个active标志,其他同类去除active标志
-				this.data.specificationResults[
-					parentIndex
-				].goodsSpecificationResults.forEach((item, index) => {
-					if (index === childIndex) {
-						item.activeGoodsSpecificationNameValue =
-							option.goodsSpecificationValue
-					} else {
-						if (item.activeGoodsSpecificationNameValue) {
-							delete item.activeGoodsSpecificationNameValue
+						}
+						if (
+							this.data.products[j].goodsSpecificationNameValue.indexOf(
+								this.data.selectOption[i].na
+							) !== -1
+						) {
+							this.data.activeProductNumber += this.data.products[
+								j
+							].productNumber
 						}
 					}
-				})
-				this.setData({
-					specificationResults: this.data.specificationResults,
-					selectNameValueArr: this.data.selectNameValueArr
-				})
-
-				// 遍历得出当前选中的不同类的规格名
-				this.data.specificationResults.forEach((option) => {
-					option.goodsSpecificationResults.forEach((item) => {
-						if (item.activeGoodsSpecificationNameValue) {
-							goodsSpecificationNameValue.push(item.goodsSpecificationValue)
-							goodsSpecificationIds.push(item.goodsSpecificationId)
-						}
-					})
-				})
-				// 当规格种类和选中的规格种类数量相同时确定一个产品
-				if (
-					goodsSpecificationNameValue.length ===
-					this.data.specificationResults.length
-				) {
-					this.data.products.forEach((pro) => {
-						if (pro.goodsSpecificationIds === goodsSpecificationIds.join('_')) {
-							this.setData({
-								activePic: pro.pictureUrl
-									? pro.pictureUrl
-									: this.data.goods.listPicUrl, // 产品图
-								activeProductNumber: pro.productNumber, //库存
-								activePrice:
-									this.data.goods.isPromote &&
-									tool.isInDurationTime(
-										this.data.goods.promoteStart,
-										this.data.goods.promoteEnd
-									)
-										? pro.promotePrice
-										: pro.retailPrice,
-								productId: pro.id
-							})
-						}
-					})
-					this.setData({
-						goodsSpecificationIds: goodsSpecificationIds.join('_'),
-						goodsSpecificationNameValue: goodsSpecificationNameValue.join(';')
-					})
 				}
 			}
+			this.setData({
+				activeProductNumber: this.data.activeProductNumber,
+				activePic: this.data.activePic,
+				activePrice: this.data.activePrice
+			})
 		},
 		// 数量修改
 		changeNumber(e) {

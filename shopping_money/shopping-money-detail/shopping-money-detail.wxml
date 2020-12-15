@@ -1,0 +1,67 @@
+<!--shopping_money/shopping-money-detail/shopping-money-detail.wxml-->
+<view class="container">
+	<view class="top">
+		<view class="moneyContent">
+			<view>
+				<view class="fz-13 c-gray">总购物金(元)</view>
+				<view class="m-t-15">
+					<text class="fz-30 bold">19909.</text>
+					<text class="bold">00</text>
+				</view>
+			</view>
+			<view>
+				<view class="fz-13 c-gray">可提现购物金(元)
+					<van-icon name="question-o" />
+				</view>
+				<view class="m-t-15">
+					<text class="fz-30 bold">45.</text>
+					<text class="bold">90</text>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="buttonContent">
+		<view class="btn"><van-button block="{{true}}">解绑</van-button></view>
+		<view class="btn"><van-button  block="{{true}}" color="#FDC865">提现</van-button></view>
+	</view>
+	<view class="listContent">
+		<van-sticky>
+			<van-tabs
+				animated="{{ true }}"
+				active="{{ active }}"
+				bind:change="onChange"
+				border="{{ false }}"
+				title-active-color="rgba(249, 173, 8, 1)"
+				color="rgba(249, 173, 8, 1)"
+			>
+				<van-tab title="使用记录" name="1"> </van-tab>
+				<van-tab title="提现记录" name="2"></van-tab>
+				<van-tab title="充值记录" name="3"></van-tab>
+			</van-tabs>
+		</van-sticky>
+
+		<view wx:if="{{ listData.length > 0 }}">
+			<view
+				class="list"
+				wx:for="{{ listData }}"
+				wx:key="index"
+				wx:for-item="item"
+			>
+				<view>
+					{{
+						active === '1'
+							? item.name
+							: active === '2'
+							? '购物金提现'
+							: '购物金充值'
+					}}
+					<view>{{ item.time }}</view>
+				</view>
+				<view>
+					<text>{{ active === '3' ? '+' : '-' }}</text>
+					￥{{ item.money }}</view
+				>
+			</view>
+		</view>
+	</view>
+</view>

@@ -5,7 +5,9 @@
     "pages/mine/mine",
     "pages/shopping_cart/shopping-cart",
     "components/specification/specification",
-    "components/navigator/navigator"
+    "components/navigator/navigator",
+    "shopping_money/shopping-money-detail/shopping-money-detail",
+    "shopping_money/withdrawal-list/withdrawal-list"
   ],
   "subpackages": [
     {

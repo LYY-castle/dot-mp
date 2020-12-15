@@ -6,99 +6,118 @@
 @import '/static/scss/_useful_class.min.wxss';
 
 .popContent {
-  box-sizing: border-box;
-  padding: 100px 20px 50px 20px;
-  height: 450px;
-  position: relative;
+	box-sizing: border-box;
+	padding: 100px 20px 50px 20px;
+	height: 450px;
+	position: relative;
 }
 
 .popContent .goods {
-  width: 100;
-  padding: 20px 20px 0 20px;
-  background: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
+	width: 100;
+	padding: 20px 20px 0 20px;
+	background: #fff;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .popContent .content {
-  height: 100%;
-  overflow: hidden;
-  overflow-y: scroll;
-  font-size: 12px;
+	height: 100%;
+	overflow: hidden;
+	overflow-y: scroll;
+	font-size: 12px;
 }
 
 .popContent .buttonGroup {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
 }
 
 .speciGroup {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	margin-bottom: 10px;
 }
 
 .van-icon-success:before {
-  content: '三片' !important;
+	content: '三片' !important;
 }
 
 .tagContent {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  justify-items: center;
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	justify-items: center;
 }
 
 .imgstyle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-right: 5px;
 }
 
 .valueStyle {
-  height: 100%;
+	height: 100%;
 }
-
-.disabledSpecificationItem {
-  opacity: 0.6;
-  text-decoration: line-through;
+.normal {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 3px 5px;
+	margin: 10px 10px 10px 0;
+	border: 1px solid #aaa;
+}
+.active {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 3px 5px;
+	margin: 10px 10px 10px 0;
+	border: 1px solid red;
+}
+.disabled {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 3px 5px;
+	margin: 10px 10px 10px 0;
+	border: 1px solid #aaa;
+	opacity: 0.6;
+	text-decoration: line-through;
 }
 
 .radioItem {
-  position: relative;
-  background: #eee !important;
-  padding: 2px 5px;
-  margin-right: 10px;
+	position: relative;
+	background: #eee !important;
+	padding: 2px 5px;
+	margin-right: 10px;
 }
 
 .iconItem {
-  display: block;
-  width: 100%;
-  height: 100%;
-  position: absolute;
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
 }
 
 .van-radio__icon-wrap {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 
 .van-radio__label {
-  position: absolute;
-  z-index: 1;
-
+	position: absolute;
+	z-index: 1;
 }
 
 .van-radio__icon {
-  width: 61px;
-  height: 20px;
-  position: absolute;
-  font-size: 0px;
-
+	width: 61px;
+	height: 20px;
+	position: absolute;
+	font-size: 0px;
 }

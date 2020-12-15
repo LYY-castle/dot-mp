@@ -155,5 +155,10 @@ Page({
 	},
 	handleContact(e) {
 		console.log(e.detail)
+	},
+	gotoShoppingMoneyDetail() {
+		wx.navigateTo({
+			url: '/shopping_money/shopping-money-detail/shopping-money-detail'
+		})
 	}
 })

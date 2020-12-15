@@ -24,6 +24,8 @@
     icon="{{shoppingMoneyIcon}}"
     wx:if="{{shoppingMoneyData}}"
     value="{{shoppingMoneyData.amount}}"
+    is-link
+    bind:click="gotoShoppingMoneyDetail"
   >
   <view slot="title">
     <view class="van-cell-text">我的购物金</view>
