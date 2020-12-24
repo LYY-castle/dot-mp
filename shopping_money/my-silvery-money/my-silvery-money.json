@@ -1,11 +1,7 @@
 {
   "usingComponents": {
-    "van-button": "@vant/weapp/button/index",
-    "van-sticky": "@vant/weapp/sticky/index",
     "van-icon": "@vant/weapp/icon/index",
-    "van-dialog": "@vant/weapp/dialog/index",
     "van-notice-bar": "@vant/weapp/notice-bar/index",
-    "van-popup": "@vant/weapp/popup/index",
     "van-empty": "@vant/weapp/empty/index",
     "van-divider": "@vant/weapp/divider/index",
     "van-loading": "@vant/weapp/loading/index"

@@ -1,0 +1,83 @@
+<!--shopping_money/withdrawal_list/withdrawal-list.wxml-->
+<view class="container">
+  <form catchsubmit="withdrawal" class="form">
+  <view class="m-t-10">
+    <van-field
+      label="提现"
+      readonly="{{true}}"
+      border="{{false}}"
+		/>
+    <van-field
+      type="digit"
+			model:value="{{ userInfo.totalAmount }}"
+			placeholder="可提{{shoppingMoneyData.canWithdrawAmount}}元"
+      border="{{ false }}"
+      use-button-slot
+      name="totalAmount"
+    >
+    <van-button slot="button" size="small" custom-style="color: #F9AE08;border:none" plain bindtap="withdrawalAll" >全部</van-button>
+  </van-field>
+  </view>
+  <view class="m-t-10">
+    <van-field label="银行卡号" placeholder="请输入银行卡号" model:value="{{userInfo.bankAccount}}"
+    name="bankAccount"/>
+    <van-field label="持卡人" placeholder="请输入持卡人姓名"
+    model:value="{{userInfo.name}}"
+    name="name"/>
+    <van-field label="开户行" model:value="{{userInfo.openingBank}}"
+    name="openingBank"/>
+    <van-field label="身份证" placeholder="请输入持卡人身份证号" model:value="{{userInfo.idCard}}"
+    name="idCard"/>
+    <van-field
+    label="手机号"
+    placeholder="请输入银行绑定手机号"
+    model:value="{{userInfo.phone}}"
+    name="phone"
+    type="tel"
+    label="手机号"
+    placeholder="请输入手机号"/>
+  </view>
+  <view class="m-t-10 imageBackGround p-b-10">
+    <van-field label="上传身份证" readonly="{{true}}" border="{{false}}"/>
+    <view class="flex-around">
+      <view class="avatarContent" bindtap="getFrontImage">
+        <van-image
+            src="{{frontImage}}"
+            width="150px"
+            height="100px"
+            fit="contain"
+            wx:if="{{frontImage}}"
+
+          />
+        <van-image
+              src="{{front}}"
+              width="150px"
+              height="100px"
+               fit="contain"
+              wx:else />
+        <view class="c-gray fz-12 m-t-10">点击上传带头像的一面</view>
+      </view>
+      <view class="avatarContent" bindtap="getBackImage">
+        <van-image
+              src="{{backImage}}"
+              width="150px"
+              height="100px"
+              fit="contain"
+              wx:if="{{backImage}}"
+            />
+          <van-image src="{{back}}" width="150px" height="100px" fit="contain" wx:else />
+          <view class="c-gray fz-12 m-t-10">点击上传带国徽的一面</view>
+      </view>
+    </view>
+  </view>
+  <view class="imageBackGround p-10 m-t-10">
+    <view class="m-b-10 fz-15">提现须知</view>
+    <view class="c-666 fz-13">1.您正在申请提现，此操作不可撤销，平台将在三个工作日内及时进行处理。</view>
+    <view class="c-666 fz-13">2.请按照要求提交填写提现所需的资料信息，同时请您注意确认提现信息是否正确，金小点平台保证将保密您的相关信息，并不会将其用作它途。</view>
+    <view class="c-666 fz-13">3.如有问题请联系客户进行咨询。</view>
+  </view>
+  <view class="withdrawalButton">
+  <van-button block="{{true}}" custom-style="background:#DDDDDD;color: #F9AE08;border:none;" form-type="submit">确认转出</van-button>
+  </view>
+  </form>
+</view>

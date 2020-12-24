@@ -23,7 +23,7 @@ Component({
 		// 当前选中的库存
 		activeProductNumber: {
 			type: Number,
-			value: null
+			value: 0
 		},
 		// 选中的规格字符串
 		goodsSpecificationNameValue: {
@@ -71,7 +71,9 @@ Component({
 	 */
 	data: {
 		selectOption: [],
-		disabledNameValue: []
+		disabledNameValue: [],
+		productId: null,
+		goodsSpecificationId: null
 	},
 
 	/**
@@ -85,81 +87,96 @@ Component({
 		},
 		// 选中规格
 		selectSpecification(e) {
-			let option = {
-				parent: e.currentTarget.dataset.parent,
-				child: e.currentTarget.dataset.child,
-				goodsSpecificationValue:
-					e.currentTarget.dataset.option.goodsSpecificationValue,
-				goodsSpecificationPicUrl:
-					e.currentTarget.dataset.goodsSpecificationPicUrl,
-				disabled: false
-			}
-			this.data.selectOption[option.parent] = option
-			this.setData({
-				se: this.data.selectOption
-			})
-			this.data.selectOption.forEach((se) => {})
-			if (
-				this.data.selectOption.length === this.data.specificationResults.length
-			) {
+			if (!e.currentTarget.dataset.disabled) {
+				let option = {
+					parent: e.currentTarget.dataset.parent,
+					child: e.currentTarget.dataset.child,
+					goodsSpecificationId:
+						e.currentTarget.dataset.option.goodsSpecificationId,
+					goodsSpecificationValue:
+						e.currentTarget.dataset.option.goodsSpecificationValue,
+					goodsSpecificationPicUrl:
+						e.currentTarget.dataset.option.goodsSpecificationPicUrl
+				}
+				console.log(e)
+				let totalNum = 0 // 计算当前选中的总数量
+				let currentPic = ''
+				let currentPrice = this.data.activePrice
 				let selStr = ''
-				for (let i = 0; i < this.data.selectOption.length; i++) {
-					if (i > 0) {
-						selStr += ';' + this.data.selectOption[i].goodsSpecificationValue
-					} else {
-						selStr += this.data.selectOption[i].goodsSpecificationValue
-					}
-				}
-				for (let j = 0; j < this.data.products.length; j++) {
-					if (this.data.products[j].goodsSpecificationNameValue === selStr) {
-						this.data.activeProductNumber = this.data.products[j].productNumber
-						this.data.activePic = this.data.products[j].pictureUrl
-						this.data.activePrice = this.data.goods.isPromote
-							? this.data.products[j].promotePrice
-							: this.data.products[j].retailPrice
-					}
-				}
-			} else {
-				for (let i = 0; i < this.data.selectOption.length; i++) {
-					for (let j = 0; j < this.data.products.length; j++) {
-						if (this.data.products[j].productNumber === 0) {
-							if (
-								this.data.products[j].goodsSpecificationNameValue.indexOf(
-									this.data.selectOption[i].na
-								)
-							) {
-								for (
-									let k = 0;
-									k < this.data.specificationResults.length;
-									k++
+				this.data.selectOption[option.parent] = option
+				this.setData({
+					selectOption: this.data.selectOption
+				})
+				// 如果规格选择成功确定一个产品
+				if (
+					this.data.selectOption.length ===
+					this.data.specificationResults.length
+				) {
+					for (let i = 0; i < this.data.selectOption.length; i++) {
+						if (i > 0) {
+							selStr += ';' + this.data.selectOption[i].goodsSpecificationValue
+						} else {
+							selStr += this.data.selectOption[i].goodsSpecificationValue
+						}
+						this.data.specificationResults[i].goodsSpecificationResults.forEach(
+							(res) => {
+								res.active = false
+								if (
+									res.goodsSpecificationValue ===
+									this.data.selectOption[i].goodsSpecificationValue
 								) {
-									if (i !== k) {
-										this.data.specificationResults[
-											k
-										].goodsSpecificationResults.forEach((res) => {
-											res.disabled = true
-										})
-									}
+									res.active = true
 								}
 							}
-						}
-						if (
-							this.data.products[j].goodsSpecificationNameValue.indexOf(
-								this.data.selectOption[i].na
-							) !== -1
-						) {
-							this.data.activeProductNumber += this.data.products[
+						)
+					}
+					for (let j = 0; j < this.data.products.length; j++) {
+						if (this.data.products[j].goodsSpecificationNameValue === selStr) {
+							this.data.goodsSpecificationId = this.data.products[
 								j
-							].productNumber
+							].goodsSpecificationIds
+							totalNum = this.data.products[j].productNumber
+							currentPic = this.data.products[j].pictureUrl
+							currentPrice = this.data.goods.isPromote
+								? this.data.products[j].promotePrice
+								: this.data.products[j].retailPrice
+							this.data.productId = this.data.products[j].id
 						}
 					}
+				} else {
+					// 选择部分规格，未全选完成
+					this.data.specificationResults[
+						option.parent
+					].goodsSpecificationResults.forEach((res) => {
+						res.active = false
+						if (
+							res.goodsSpecificationValue ===
+							this.data.selectOption[option.parent].goodsSpecificationValue
+						) {
+							res.active = true
+						}
+					})
+					this.data.products.forEach((pro) => {
+						if (
+							pro.goodsSpecificationNameValue.indexOf(
+								option.goodsSpecificationValue
+							) !== -1 &&
+							pro.productNumber > 0
+						) {
+							totalNum += pro.productNumber
+						}
+					})
 				}
+				this.setData({
+					activeProductNumber: totalNum,
+					activePic: currentPic ? currentPic : this.data.activePic,
+					activePrice: currentPrice,
+					specificationResults: this.data.specificationResults,
+					goodsSpecificationNameValue: selStr,
+					productId: this.data.productId,
+					goodsSpecificationIds: this.data.goodsSpecificationId
+				})
 			}
-			this.setData({
-				activeProductNumber: this.data.activeProductNumber,
-				activePic: this.data.activePic,
-				activePrice: this.data.activePrice
-			})
 		},
 		// 数量修改
 		changeNumber(e) {
@@ -175,24 +192,33 @@ Component({
 			}
 		},
 		_operate() {
-			const flag = this.data.specificationResults.every((option) => {
-				return option.goodsSpecificationResults.some((item) => {
-					return item.activeGoodsSpecificationNameValue
-				})
-			})
+			let flag = false
+			if (
+				this.data.selectOption.length === this.data.specificationResults.length
+			) {
+				flag = true
+			}
 			if (flag) {
-				const obj = {
-					params: {
-						activePic: this.data.activePic,
-						goodsSpecificationIds: this.data.goodsSpecificationIds,
-						goodsSpecificationNameValue: this.data.goodsSpecificationNameValue,
-						number: this.data.number,
-						productId: this.data.productId,
-						retailPrice: this.data.activePrice
-					},
-					operateType: this.data.operateType
+				if (this.data.activeProductNumber > 0) {
+					const obj = {
+						params: {
+							activePic: this.data.activePic,
+							goodsSpecificationIds: this.data.goodsSpecificationIds,
+							goodsSpecificationNameValue: this.data
+								.goodsSpecificationNameValue,
+							number: this.data.number,
+							productId: this.data.productId,
+							retailPrice: this.data.activePrice
+						},
+						operateType: this.data.operateType
+					}
+					this.triggerEvent('operate', obj)
+				} else {
+					wx.showToast({
+						title: '暂时无货',
+						icon: 'none'
+					})
 				}
-				this.triggerEvent('operate', obj)
 			} else {
 				wx.showToast({
 					title: '请完善规格信息',

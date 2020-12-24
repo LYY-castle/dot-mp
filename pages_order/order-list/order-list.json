@@ -15,6 +15,5 @@
     "van-sticky": "@vant/weapp/sticky/index"
   },
   "navigationBarTitleText": "我的订单",
-  "onReachBottomDistance": 0,
   "enablePullDownRefresh": true
 }

@@ -20,9 +20,9 @@ App({
 					if (res.success) {
 						wx.setStorageSync('openId', res.data.weixinOpenid)
 						wx.setStorageSync('userId', res.data.id)
-						wx.reLaunch({
-							url: '/pages/index/index'
-						})
+						// wx.reLaunch({
+						// 	url: '/pages/index/index'
+						// })
 					} else {
 						console.log('请求失败', res)
 					}

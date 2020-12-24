@@ -398,7 +398,7 @@ Page({
 						res.data.specificationResults.forEach((speci) => {
 							speci.goodsSpecificationResults.forEach((speciItem) => {
 								if (name === speciItem.goodsSpecificationValue) {
-									speciItem.activeGoodsSpecificationNameValue = name
+									speciItem.active = true
 								}
 							})
 						})
@@ -429,7 +429,6 @@ Page({
 						products: res.data.products,
 						specificationResults: res.data.specificationResults,
 						goodsSpecificationNameValue: option.goodsSpecificationNameValue,
-
 						activePic: option.listPicUrl,
 						activePrice:
 							option.goods.isPromote &&

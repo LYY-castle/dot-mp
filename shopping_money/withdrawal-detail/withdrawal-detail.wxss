@@ -1,0 +1,24 @@
+/* shopping_money/withdrawal_list/withdrawal-list.wxss */
+.allButton{
+  color: #F9AE08;
+  border:none;
+}
+.imageBackGround{
+  background: #ffffff;
+}
+/* .avatarContent {
+  height: 200px;
+  background: #fff;
+  text-align: center
+} */
+.withdrawalButton{
+  width:60%;
+  text-align: center;
+  margin: 20px auto;
+}
+.active{
+  color: rgba(203, 154, 85, 1)
+}
+.c-666{
+  color: #666666;
+}

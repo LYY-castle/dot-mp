@@ -41,11 +41,12 @@ Page({
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {
-		if (!this.data.bottomLineShow) {
+		if (!this.data.bottomLineShow && !this.data.loadingShow) {
 			this.setData({
 				loadingShow: true,
 				pageNo: this.data.pageNo + 1
 			})
+			console.log('触发加载事件,第', this.data.pageNo + '页面')
 			this.getProductList()
 		}
 	},

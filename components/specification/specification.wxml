@@ -21,30 +21,37 @@
 				>
 				<view class="c-gray">库存{{ activeProductNumber }}件</view>
 				<view>
-					<view wx:if="{{ selectOption.length > 0 }}" class="flex-start"
-						>已选:
-						<view
-							wx:for="{{ selectOption }}"
-							wx:key="selectIndex"
-							wx:for-item="selectItem"
-						>
-							<text wx:if="{{ selectIndex > 0 }}">,</text>
-							{{ selectItem.goodsSpecificationValue }}
-						</view>
-					</view>
-					<view wx:else class="flex-start"
-						>请选择:
-						<view
-							wx:for="{{ specificationResults }}"
-							wx:key="index"
-							wx:for-item="name"
-							class="flex-start"
-						>
+					<view wx:if="{{ goodsSpecificationNameValue }}"
+						>已选:{{ goodsSpecificationNameValue }}</view
+					>
+					<view wx:else>
+						<view wx:if="{{ selectOption.length > 0 }}" class="flex-start"
+							>已选:
 							<view
-								wx:if="{{ index > 0 && index < specificationResults.length }}"
-								>,</view
+								wx:if="{{ selectOption.length > 0 }}"
+								wx:for="{{ selectOption }}"
+								wx:key="selectIndex"
+								wx:for-index="selectIndex"
+								wx:for-item="selectItem"
 							>
-							{{ name.specificationName }}
+								<text wx:if="{{ selectIndex > 0 }}">,</text>
+								{{ selectItem.goodsSpecificationValue }}
+							</view>
+						</view>
+						<view wx:else class="flex-start" wx:else
+							>请选择:
+							<view
+								wx:for="{{ specificationResults }}"
+								wx:key="index"
+								wx:for-item="name"
+								class="flex-start"
+							>
+								<view
+									wx:if="{{ index > 0 && index < specificationResults.length }}"
+									>,</view
+								>
+								{{ name.specificationName }}
+							</view>
 						</view>
 					</view>
 				</view>
@@ -65,11 +72,11 @@
 						wx:for-item="specificationItem"
 					>
 						<view
-							class="{{ specificationItem.activeClass }}"
 							bindtap="selectSpecification"
 							data-option="{{ specificationItem }}"
 							data-parent="{{ index }}"
 							data-child="{{ index2 }}"
+							class="{{ specificationItem.active ? 'active' : 'normal' }}"
 						>
 							<van-image
 								src="{{ specificationItem.goodsSpecificationPicUrl }}"
@@ -94,7 +101,7 @@
 				class="buttonItem"
 				color="#f9ae08"
 				bind:click="_operate"
-				>确定</van-button
+				>{{ activeProductNumber > 0 ? '确定' : '暂时无货' }}</van-button
 			>
 		</view>
 	</view>

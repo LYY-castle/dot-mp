@@ -1,67 +1,93 @@
 <!--shopping_money/shopping-money-detail/shopping-money-detail.wxml-->
+<page-meta
+>
+  <navigation-bar
+    title="{{nbTitle}}"
+    front-color="{{nbFrontColor}}"
+    background-color="{{nbBackgroundColor}}"
+  />
+</page-meta>
 <view class="container">
+	<van-notice-bar
+		text="用金点购物，免提现手续费，不扣税得工资。"
+		color="#F9AE08"
+		mode="closeable"
+		background="#ffffff"
+		custom-class="fz-12"
+	>
+	<van-icon slot="left-icon" name="{{leftIcon}}" size="18px" class="m-r-12"/>
+	<van-icon name="{{rightIcon}}" slot="right-icon" size="20x"/>
+	</van-notice-bar>
 	<view class="top">
+		<view class="totalMoney c-white">
+			<view>总购物金(元)</view>
+			<view class="m-t-10">
+					<text class="fz-36 bold">{{shoppingMoneyData.amount[0]}}.</text>
+					<text class="bold">{{shoppingMoneyData.amount[1]?shoppingMoneyData.amount[1]:'00'}}</text>
+			</view>
+		</view>
 		<view class="moneyContent">
-			<view>
-				<view class="fz-13 c-gray">总购物金(元)</view>
-				<view class="m-t-15">
-					<text class="fz-30 bold">19909.</text>
-					<text class="bold">00</text>
+			<view class="leftMoney" bindtap="goMygoldenOrMysilvery" data-type="golden">
+				<view class="fz-13 c-gray">
+					金点(元)
+					<van-icon name="question-o" />
+				</view>
+				<view class="m-t-10">
+					<text class="fz-30 bold">{{shoppingMoneyData.canWithdrawAmount[0]}}.</text>
+					<text class="bold">{{shoppingMoneyData.canWithdrawAmount[1]?shoppingMoneyData.canWithdrawAmount[1]:'00'}}</text>
 				</view>
 			</view>
-			<view>
-				<view class="fz-13 c-gray">可提现购物金(元)
+			<view class="rightMoney" bindtap="goMygoldenOrMysilvery" data-type="silvery">
+				<view class="fz-13 c-gray">银点(元)
 					<van-icon name="question-o" />
 				</view>
 				<view class="m-t-15">
-					<text class="fz-30 bold">45.</text>
-					<text class="bold">90</text>
+					<text class="fz-30 bold">{{shoppingMoneyData.cannotWithdrawAmount[0]}}.</text>
+					<text class="bold">{{shoppingMoneyData.cannotWithdrawAmount[1]?shoppingMoneyData.cannotWithdrawAmount[1]:'00'}}</text>
 				</view>
 			</view>
 		</view>
 	</view>
-	<view class="buttonContent">
-		<view class="btn"><van-button block="{{true}}">解绑</van-button></view>
-		<view class="btn"><van-button  block="{{true}}" color="#FDC865">提现</van-button></view>
-	</view>
 	<view class="listContent">
 		<van-sticky>
-			<van-tabs
-				animated="{{ true }}"
-				active="{{ active }}"
-				bind:change="onChange"
-				border="{{ false }}"
-				title-active-color="rgba(249, 173, 8, 1)"
-				color="rgba(249, 173, 8, 1)"
-			>
-				<van-tab title="使用记录" name="1"> </van-tab>
-				<van-tab title="提现记录" name="2"></van-tab>
-				<van-tab title="充值记录" name="3"></van-tab>
-			</van-tabs>
+			<view class="p-10 bg-color-white">
+			<van-button plain="{{true}}" color="#F9AE08FF" size="small"  bindtap="handleBottomShow">{{recordText}}<van-icon name="{{bottomShow?'arrow-up':'arrow-down'}}" color="#F9AE08FF" class="m-l-10"/></van-button>
+			</view>
 		</van-sticky>
-
-		<view wx:if="{{ listData.length > 0 }}">
+		<view class="m-t-10 listGroup">
 			<view
+				wx:if="{{ listData.length > 0 }}"
 				class="list"
 				wx:for="{{ listData }}"
 				wx:key="index"
 				wx:for-item="item"
 			>
-				<view>
+				<view class="c-666 fz-12">
 					{{
-						active === '1'
-							? item.name
-							: active === '2'
-							? '购物金提现'
-							: '购物金充值'
+						item.amountType===0?'金点':'银点'
 					}}
-					<view>{{ item.time }}</view>
+					<view>{{ item.operateAt }}</view>
 				</view>
-				<view>
-					<text>{{ active === '3' ? '+' : '-' }}</text>
-					￥{{ item.money }}</view
+				<view class="c-999 fz-12">
+					<text>{{ operateType === 0||operateType===2||operateType===5  ? '-' : '+' }}</text>
+					￥{{ item.amount }}</view
 				>
 			</view>
+			<view wx:if="{{listData.length===0}}">
+				<van-empty description="暂无数据" />
+			</view>
 		</view>
+		<van-popup
+		show="{{ bottomShow }}"
+		bind:close="onClose"
+		position="bottom"
+		custom-style="height: 150px"
+		>
+				<view class="buttons">
+					<view class="{{item.text===recordText?'buttonItem m-b-10 activeColor':'buttonItem m-b-10 normalColor'}}" wx:for="{{recordList}}" bindtap="selectList" data-option="{{item}}">{{item.text}}</view>
+				</view>
+		</van-popup>
 	</view>
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 </view>

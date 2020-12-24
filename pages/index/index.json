@@ -10,6 +10,5 @@
     "van-loading": "@vant/weapp/loading/index",
     "van-icon": "@vant/weapp/icon/index"
   },
-  "onReachBottomDistance": 0,
   "enablePullDownRefresh": true
 }

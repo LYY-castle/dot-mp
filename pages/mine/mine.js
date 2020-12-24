@@ -157,8 +157,10 @@ Page({
 		console.log(e.detail)
 	},
 	gotoShoppingMoneyDetail() {
-		wx.navigateTo({
-			url: '/shopping_money/shopping-money-detail/shopping-money-detail'
-		})
+		if (this.data.shoppingMoneyData && !this.data.shoppingMoneyData.status) {
+			wx.navigateTo({
+				url: '/shopping_money/shopping-money-detail/shopping-money-detail'
+			})
+		}
 	}
 })

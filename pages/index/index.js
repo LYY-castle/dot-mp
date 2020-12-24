@@ -5,6 +5,9 @@ import constantCfg from '../../config/constant'
 
 Page({
 	data: {
+		nbTitle: '金小点',
+		nbFrontColor: '#000000',
+		nbBackgroundColor: 'FDC865',
 		bottomLineShow: false,
 		empty: '/static/img/empty.png',
 		productList: null,
@@ -176,7 +179,9 @@ Page({
 		this.setData({
 			pageNo: 1
 		})
-		this.getProductList()
+		Promise.resolve()
+			.then(() => this.getProductSorts())
+			.then(() => this.getProductList())
 		wx.stopPullDownRefresh()
 	},
 	/**

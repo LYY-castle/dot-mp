@@ -1,49 +1,89 @@
 /* shopping_money/shopping-money-detail/shopping-money-detail.wxss */
-.top{
-  background: linear-gradient(90deg, #FEC87D, #FDC852);
-  height:160px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 10px;
+.container {
+	width: 100%;
+	height: auto;
 }
-.moneyContent{
-  width: 95%;
-  display: flex;
-  justify-content: space-around;
-  padding:10px;
-  border-radius: 10px 10px 0 0;
-  text-align: center;
-  background: #fff;
+.top {
+	background: #c59e5d;
+	height: 150px;
+	width: 100%;
+	padding-top: 10px;
+	position: relative;
 }
-.buttonContent{
-  box-sizing: border-box;
-  width: 95%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  background: #fff;
-  border-radius: 0 0 10px 10px;
-  padding:20px 10px 10px 10px;
+.moneyContent {
+	position: absolute;
+	left: 50%;
+	top: 100px;
+	width: 95%;
+	transform: translate(-50%, 0);
+	display: flex;
+	justify-content: space-around;
+	padding: 20px 0;
+	border-radius: 10px;
+	text-align: center;
+	background: #fff;
 }
-.btn{
-  width:45%;
+.leftMoney,
+.rightMoney {
+	display: inline-block;
 }
-.listContent{
-  box-sizing: border-box;
-  width: 95%;
-  height: 100%;
-  margin: 10px auto;
-  border-radius:10px;
-  padding:10px 0;
-  background: #fff;
+.buttonContent {
+	box-sizing: border-box;
+	width: 95%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	background: #fff;
+	border-radius: 0 0 10px 10px;
+	padding: 20px 10px 10px 10px;
 }
-.list{
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding:10px;
-  border-top:1px solid #eee;
+.btn {
+	width: 45%;
+}
+.listContent {
+	width: 95%;
+	margin: 70px auto 10px;
+	border-radius: 10px;
+	padding: 10px 0;
+	background: #fff;
+}
+
+.list {
+	box-sizing: border-box;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	border-top: 1px solid #eee;
+}
+.totalMoney {
+	text-align: center;
+}
+.c-666 {
+	color: #666666;
+}
+.c-999 {
+	color: #999999;
+}
+.buttons {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	align-items: center;
+	background: #fff;
+	padding: 15px;
+}
+.buttonItem {
+	width: 30%;
+	padding: 10px 0;
+	text-align: center;
+}
+.normalColor {
+	background: rgba(246, 246, 246, 1);
+	color: rgba(51, 51, 51, 1);
+}
+.activeColor {
+	color: rgba(249, 174, 8, 1);
+	background: rgba(253, 200, 101, 0.15);
 }

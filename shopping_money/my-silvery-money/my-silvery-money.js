@@ -1,4 +1,4 @@
-// shopping_money/shopping-money-detail/shopping-money-detail.js
+// shopping_money/my-silvery-money/my-silvery-money.js
 import http from '../../utils/request'
 Page({
 	/**
@@ -6,29 +6,16 @@ Page({
 	 */
 	data: {
 		shoppingMoneyData: {},
-		total: 399,
-		withdrawalMoney: 20,
-		nbTitle: '我的购物金',
+		nbTitle: '我的银点',
 		nbFrontColor: '#ffffff',
 		nbBackgroundColor: '#C59E5D',
-		bottomShow: false,
+		listData: [],
+		pageNo: 1,
+		pageSize: 10,
+		amountType: 1,
+		operateType: 1,
 		bottomLineShow: false,
 		loadingShow: false,
-		leftIcon: '/static/img/voice.png',
-		rightIcon: '/static/img/close.png',
-		recordText: '使用记录',
-		operateType: 0,
-		recordList: [
-			{ text: '使用记录', id: 0 },
-			{ text: '充值记录', id: 1 },
-			{ text: '提现记录', id: 2 },
-			{ text: '过期记录', id: 5 },
-			{ text: '退款记录', id: 6 },
-			{ text: '返佣记录', id: 7 }
-		],
-		listData: [],
-		pageSize: 15,
-		pageNo: 1,
 		api: {
 			getShoppingMoney: {
 				url: '/user-shopping-accounts',
@@ -58,16 +45,6 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {},
-
-	/**
-	 * 生命周期函数--监听页面隐藏
-	 */
-	onHide: function () {},
-
-	/**
-	 * 生命周期函数--监听页面卸载
-	 */
-	onUnload: function () {},
 	getShoppingMoney() {
 		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
 			if (res.success) {
@@ -78,6 +55,7 @@ Page({
 				res.data.cannotWithdrawAmount = String(
 					res.data.cannotWithdrawAmount
 				).split('.')
+
 				this.setData({
 					shoppingMoneyData: res.data
 				})
@@ -88,6 +66,7 @@ Page({
 	getLogs() {
 		const params = {
 			operateType: this.data.operateType,
+			amountType: this.data.amountType,
 			shoppingAccountId: this.data.shoppingMoneyData.id,
 			pageSize: this.data.pageSize,
 			pageNo: this.data.pageNo
@@ -117,50 +96,20 @@ Page({
 			}
 		})
 	},
-	handleBottomShow() {
-		this.data.bottomShow = !this.data.bottomShow
-		this.setData({
-			bottomShow: this.data.bottomShow
-		})
-	},
-	onClose() {
-		this.setData({ bottomShow: false })
-	},
-	goMygoldenOrMysilvery(e) {
-		const type = e.currentTarget.dataset.type
-		if (type === 'golden') {
-			wx.navigateTo({
-				url: '/shopping_money/my-golden-money/my-golden-money'
-			})
-		} else if (type === 'silvery') {
-			wx.navigateTo({
-				url: '/shopping_money/my-silvery-money/my-silvery-money'
-			})
-		}
-	},
-	selectList(e) {
-		const option = e.currentTarget.dataset.option
-		this.setData({
-			recordText: option.text,
-			operateType: option.id,
-			pageNo: 1,
-			bottomShow: false
-		})
-		this.getLogs()
-		wx.pageScrollTo({
-			scrollTop: 0
-		})
-	},
+	/**
+	 * 生命周期函数--监听页面隐藏
+	 */
+	onHide: function () {},
+
+	/**
+	 * 生命周期函数--监听页面卸载
+	 */
+	onUnload: function () {},
+
 	/**
 	 * 页面相关事件处理函数--监听用户下拉动作
 	 */
-	onPullDownRefresh: function () {
-		this.setData({
-			pageNo: 1
-		})
-		this.getShoppingMoney()
-		wx.stopPullDownRefresh()
-	},
+	onPullDownRefresh: function () {},
 
 	/**
 	 * 页面上拉触底事件的处理函数
@@ -177,5 +126,10 @@ Page({
 			})
 			this.getLogs()
 		}
-	}
+	},
+
+	/**
+	 * 用户点击右上角分享
+	 */
+	onShareAppMessage: function () {}
 })

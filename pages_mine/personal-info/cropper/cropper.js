@@ -113,7 +113,7 @@ Page({
 				url:
 					env.env.VUE_APP_BASE_URL +
 					'/system/minio/' +
-					constantCfg.minio.bucketName, //仅为示例，非真实的接口地址
+					constantCfg.minio.bucketName,
 				filePath: obj.url,
 				name: 'file',
 				header,

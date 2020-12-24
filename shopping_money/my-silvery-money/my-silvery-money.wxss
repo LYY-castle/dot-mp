@@ -1,0 +1,51 @@
+/* shopping_money/my-silvery-money/my-silvery-money.wxss */
+.container {
+	width: 100%;
+}
+.top {
+	background: #c59e5d;
+	height: 70px;
+	width: 100%;
+	padding-top: 10px;
+	position: relative;
+}
+.moneyContent {
+	position: absolute;
+	left: 50%;
+	top: 20px;
+	width: 95%;
+	transform: translate(-50%, 0);
+	display: flex;
+	justify-content: space-around;
+	padding: 20px 0;
+	border-radius: 10px;
+	text-align: center;
+	background: #fff;
+}
+.leftMoney,
+.rightMoney {
+	display: inline-block;
+}
+.listContent {
+	width: 95%;
+	height: 70%;
+	margin: 70px auto 10px;
+	border-radius: 10px;
+	padding: 10px 0;
+	background: #fff;
+}
+.list {
+	box-sizing: border-box;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	border-top: 1px solid #eee;
+}
+.c-333 {
+	color: #333333;
+}
+.c-999 {
+	color: #999999;
+}

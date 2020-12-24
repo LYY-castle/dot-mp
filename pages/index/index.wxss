@@ -1,37 +1,36 @@
-.container {}
+.container {
+}
 
 .container .text-align-center {
-  text-align: center;
-  font-size: 12px;
-  padding: 0 0 10px 0;
-  background: #eee;
+	text-align: center;
+	font-size: 12px;
+	padding: 0 0 10px 0;
+	background: #eee;
 }
 
 .container .sort {
-  margin: 0 12px;
-  padding: 10px 10px;
-  background: #fff;
-  border-radius: 7px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-  font-weight: 800;
-  font-size: 12px;
+	margin: 0 12px;
+	padding: 10px 10px;
+	background: #fff;
+	border-radius: 7px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	text-align: center;
+	font-weight: 800;
+	font-size: 12px;
 }
 
 .container .sort .sortItem {
-  width: 20%;
-  text-align: center;
+	width: 20%;
+	text-align: center;
 }
 
-
-
 .container .scroll-view_H {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 .backTop {
-  background: #fff;
+	background: #fff;
 }

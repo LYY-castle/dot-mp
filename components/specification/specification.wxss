@@ -68,7 +68,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	padding: 3px 5px;
-	margin: 10px 10px 10px 0;
+	margin: 5px 10px 5px 0;
 	border: 1px solid #aaa;
 }
 .active {
@@ -76,7 +76,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	padding: 3px 5px;
-	margin: 10px 10px 10px 0;
+	margin: 5px 10px 5px 0;
 	border: 1px solid red;
 }
 .disabled {
@@ -84,7 +84,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	padding: 3px 5px;
-	margin: 10px 10px 10px 0;
+	margin: 5px 10px 5px 0;
 	border: 1px solid #aaa;
 	opacity: 0.6;
 	text-decoration: line-through;

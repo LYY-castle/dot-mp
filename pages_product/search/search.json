@@ -9,6 +9,5 @@
     "van-divider": "@vant/weapp/divider/index",
     "van-loading": "@vant/weapp/loading/index"
   },
-  "onReachBottomDistance": 0,
   "enablePullDownRefresh": true
 }

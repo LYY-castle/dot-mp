@@ -74,7 +74,6 @@
     "miniprogram": {
       "list": [
         {
-          "id": 0,
           "name": "pages/index/index",
           "pathName": "pages/index/index",
           "query": "",
@@ -83,6 +82,25 @@
         {
           "name": "pages/mine/mine",
           "pathName": "pages/mine/mine",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "shopping_money/my-golden-money/my-golden-money",
+          "pathName": "shopping_money/my-golden-money/my-golden-money",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "shopping_money/shopping-money-detail/shopping-money-detail",
+          "pathName": "shopping_money/shopping-money-detail/shopping-money-detail",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "shopping_money/withdrawal-detail/withdrawal-detail",
+          "pathName": "shopping_money/withdrawal-detail/withdrawal-detail",
+          "query": "",
           "scene": null
         }
       ]

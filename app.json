@@ -7,7 +7,9 @@
     "components/specification/specification",
     "components/navigator/navigator",
     "shopping_money/shopping-money-detail/shopping-money-detail",
-    "shopping_money/withdrawal-list/withdrawal-list"
+    "shopping_money/withdrawal-detail/withdrawal-detail",
+    "shopping_money/my-golden-money/my-golden-money",
+    "shopping_money/my-silvery-money/my-silvery-money"
   ],
   "subpackages": [
     {
