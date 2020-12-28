@@ -21,7 +21,13 @@ Page({
 		],
 		pageNo: 1
 	},
+
 	onLoad() {
+		Promise.resolve()
+			.then(() => this.getProductSorts())
+			.then(() => this.getProductList())
+	},
+	onShow() {
 		Promise.resolve()
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())

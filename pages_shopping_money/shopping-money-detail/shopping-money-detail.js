@@ -14,6 +14,8 @@ Page({
 		bottomShow: false,
 		bottomLineShow: false,
 		loadingShow: false,
+		aboutGolden: false,
+		aboutSilvery: false,
 		leftIcon: '/static/img/voice.png',
 		rightIcon: '/static/img/close.png',
 		recordText: '使用记录',
@@ -22,9 +24,12 @@ Page({
 			{ text: '使用记录', id: 0 },
 			{ text: '充值记录', id: 1 },
 			{ text: '提现记录', id: 2 },
+			{ text: '服务费记录', id: 3 },
+			{ text: '返点记录', id: 4 },
 			{ text: '过期记录', id: 5 },
 			{ text: '退款记录', id: 6 },
-			{ text: '返佣记录', id: 7 }
+			{ text: '返佣记录', id: 7 },
+			{ text: '扣点记录', id: 9 }
 		],
 		listData: [],
 		pageSize: 15,
@@ -85,6 +90,31 @@ Page({
 			}
 		})
 	},
+	showGoldenIntroduce() {
+		//
+		this.setData({
+			aboutGolden: true
+		})
+	},
+	showSilveryIntroduce() {
+		// wx.showModal({
+		// 	title: '关于银点',
+		// 	content:
+		// 		'',
+		// 	showCancel: false,
+		// 	confirmText: '知道了',
+		// 	success(res) {
+		// 		if (res.confirm) {
+		// 			console.log('用户点击确定')
+		// 		} else if (res.cancel) {
+		// 			console.log('用户点击取消')
+		// 		}
+		// 	}
+		// })
+		this.setData({
+			aboutSilvery: true
+		})
+	},
 	getLogs() {
 		const params = {
 			operateType: this.data.operateType,
@@ -94,6 +124,9 @@ Page({
 		}
 		http.wxRequest({ ...this.data.api.getLogs, params }).then((res) => {
 			if (res.success) {
+				res.data.forEach((list) => {
+					list.amount = Math.abs(list.amount)
+				})
 				if (params.pageNo === 1) {
 					this.setData({
 						listData: res.data,
@@ -124,17 +157,17 @@ Page({
 		})
 	},
 	onClose() {
-		this.setData({ bottomShow: false })
+		this.setData({ bottomShow: false, aboutGolden: false, aboutSilvery: false })
 	},
 	goMygoldenOrMysilvery(e) {
 		const type = e.currentTarget.dataset.type
 		if (type === 'golden') {
 			wx.navigateTo({
-				url: '/shopping_money/my-golden-money/my-golden-money'
+				url: '/pages_shopping_money/my-golden-money/my-golden-money'
 			})
 		} else if (type === 'silvery') {
 			wx.navigateTo({
-				url: '/shopping_money/my-silvery-money/my-silvery-money'
+				url: '/pages_shopping_money/my-silvery-money/my-silvery-money'
 			})
 		}
 	},

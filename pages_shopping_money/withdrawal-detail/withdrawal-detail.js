@@ -125,11 +125,11 @@ Page({
 	},
 	withdrawal(e) {
 		const option = e.detail.value
-		console.log(option)
+		const _this = this
 		if (option.totalAmount) {
 			if (
 				Number(option.totalAmount) <=
-				this.data.shoppingMoneyData.canWithdrawAmount
+				_this.data.shoppingMoneyData.canWithdrawAmount
 			) {
 				if (option.bankAccount) {
 					if (isBankCard(option.bankAccount)) {
@@ -138,50 +138,84 @@ Page({
 								if (isIDNumber(option.idCard)) {
 									if (option.phone) {
 										if (isMobile(option.phone)) {
-											if (this.data.frontImage && this.data.backImage) {
+											if (_this.data.frontImage && _this.data.backImage) {
 												const fee = Number(
 													(
 														(option.totalAmount *
 															100 *
-															this.data.shoppingMoneyData.company
+															_this.data.shoppingMoneyData.company
 																.extractFeePercent) /
 														10000
 													).toFixed(2)
 												)
 												let actualAmount = 0
 												if (
-													this.data.shoppingMoneyData.canWithdrawAmount * 100 -
-														this.data.userInfo.totalAmount * 100 >=
+													_this.data.shoppingMoneyData.canWithdrawAmount * 100 -
+														_this.data.userInfo.totalAmount * 100 >=
 													fee * 100
 												) {
-													actualAmount = this.data.userInfo.totalAmount
+													actualAmount = _this.data.userInfo.totalAmount
 												} else {
 													let difference =
-														this.data.shoppingMoneyData.canWithdrawAmount *
+														_this.data.shoppingMoneyData.canWithdrawAmount *
 															100 -
-														this.data.userInfo.totalAmount * 100 -
+														_this.data.userInfo.totalAmount * 100 -
 														fee * 100
 													actualAmount =
-														(this.data.userInfo.totalAmount * 100 +
+														(_this.data.userInfo.totalAmount * 100 +
 															difference) /
 														100
 												}
 												const params = {
 													...option,
 													userId: wx.getStorageSync('userId'),
-													idCardFront: this.data.idCardFront,
-													idCardReverse: this.data.idCardReverse,
-													poundage: fee,
-													actualAmount
+													idCardFront: _this.data.idCardFront,
+													idCardReverse: _this.data.idCardReverse,
+													poundage: fee
 												}
-												console.log(params)
-												http
-													.wxRequest({ ...this.data.api.withdrawals, params })
-													.then((res) => {
-														if (res.success) {
-															console.log('提交成功')
+												wx.showModal({
+													title: '提示',
+													content:
+														'本次提现需要扣除平台手续费' +
+														_this.data.shoppingMoneyData.company
+															.extractFeePercent +
+														'%，去购物可免于手续费，请认真考虑哦。',
+													cancelText: '继续提现',
+													confirmText: '去购物',
+													confirmColor: '#F9AE08',
+													cancelColor: '#F9AE08',
+													success(res) {
+														if (res.confirm) {
+															wx.switchTab({
+																url: '/pages/index/index'
+															})
+														} else if (res.cancel) {
+															http
+																.wxRequest({
+																	..._this.data.api.withdrawals,
+																	params
+																})
+																.then((res) => {
+																	if (res.success) {
+																		wx.showToast({
+																			title: '提交成功',
+																			icon: 'none',
+																			success() {
+																				wx.navigateBack({
+																					delta: 1
+																				})
+																			}
+																		})
+																	} else {
+																		wx.showToast({
+																			title: res.message,
+																			icon: 'none'
+																		})
+																	}
+																})
 														}
-													})
+													}
+												})
 											} else {
 												if (this.data.frontImage) {
 													wx.showToast({
@@ -192,6 +226,12 @@ Page({
 												if (this.data.backImage) {
 													wx.showToast({
 														title: '请上传身份证正面照片',
+														icon: 'none'
+													})
+												}
+												if (!this.data.frontImage && !this.data.backImage) {
+													wx.showToast({
+														title: '请上传身份证正反面照片',
 														icon: 'none'
 													})
 												}

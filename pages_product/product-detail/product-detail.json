@@ -11,6 +11,7 @@
     "van-tag": "@vant/weapp/tag/index",
     "van-stepper": "@vant/weapp/stepper/index",
     "specification": "/components/specification/specification",
-    "v-navigator": "/components/navigator/navigator"
+    "v-navigator": "/components/navigator/navigator",
+    "van-icon": "@vant/weapp/icon/index"
   }
 }

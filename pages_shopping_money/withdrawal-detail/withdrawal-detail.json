@@ -2,7 +2,8 @@
   "usingComponents": {
     "van-field": "@vant/weapp/field/index",
     "van-button": "@vant/weapp/button/index",
-    "van-image": "@vant/weapp/image/index"
+    "van-image": "@vant/weapp/image/index",
+    "van-notice-bar": "@vant/weapp/notice-bar/index"
   },
   "navigationBarTitleText": "提现"
 }

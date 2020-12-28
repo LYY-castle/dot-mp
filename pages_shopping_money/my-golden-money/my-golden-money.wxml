@@ -11,11 +11,6 @@
 <view class="container">
   	<view class="top">
 		<view class="moneyContent">
-			<!-- res.data.amount = String(res.data.amount).split('.')
-				res.data.canWithdrawAmount = String(res.data.canWithdrawAmount).split(
-					'.'
-				)
-				res.data.cannotWithdrawAmount -->
 			<view class="moneyItem" >
 				<view class="fz-13 c-gray">
 					可提现(元)
@@ -37,7 +32,7 @@
 			<view class="moneyItem" >
 				<view class="fz-13 c-gray">提现中(元)
 				</view>
-				<view class="m-t-15 bold">
+				<view class="m-t-10 bold">
 					<text class="fz-20 ">{{shoppingMoneyData.auditAmount[0]}}.</text>
 					<text class="fz-12">{{shoppingMoneyData.auditAmount[1]?shoppingMoneyData.auditAmount[1]:'00'}}</text>
 				</view>
@@ -50,7 +45,7 @@
       1.可直接用于平台购物，免提现手续费。
     </view>
     <view class="p-b-10 p-l-10 p-r-10 c-gray">
-      2.可提现到银行卡，平台收取3%手续费。
+      2.可提现到银行卡，平台收取{{fee}}%手续费。
     </view>
   </view>
   <view class="withdrawalButton" bindtap="goWithdrawal">提现</view>

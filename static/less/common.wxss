@@ -403,3 +403,6 @@ Page {
 .bg-color-white {
 	background: #fff;
 }
+.c-color-yellow {
+	color: #f9ae08;
+}

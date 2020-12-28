@@ -77,7 +77,7 @@
           "name": "pages/index/index",
           "pathName": "pages/index/index",
           "query": "",
-          "scene": null
+          "scene": 1007
         },
         {
           "name": "pages/mine/mine",
@@ -86,21 +86,21 @@
           "scene": null
         },
         {
-          "name": "shopping_money/my-golden-money/my-golden-money",
-          "pathName": "shopping_money/my-golden-money/my-golden-money",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "shopping_money/shopping-money-detail/shopping-money-detail",
-          "pathName": "shopping_money/shopping-money-detail/shopping-money-detail",
-          "query": "",
-          "scene": null
-        },
-        {
           "name": "shopping_money/withdrawal-detail/withdrawal-detail",
           "pathName": "shopping_money/withdrawal-detail/withdrawal-detail",
           "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages_product/product-detail/product-detail",
+          "pathName": "pages_product/product-detail/product-detail",
+          "query": "userId=1&productId=1176",
+          "scene": null
+        },
+        {
+          "name": "pages_product/product-detail/product-detail",
+          "pathName": "pages_product/product-detail/product-detail",
+          "query": "userId=1&src=1176",
           "scene": null
         }
       ]

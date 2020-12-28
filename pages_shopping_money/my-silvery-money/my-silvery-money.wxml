@@ -13,7 +13,6 @@
 			<view class="leftMoney">
 				<view class="fz-13 c-gray">
 					可用银点(元)
-					<van-icon name="question-o" />
 				</view>
 				<view class="m-t-10">
 					<text class="fz-20 ">{{shoppingMoneyData.cannotWithdrawAmount[0]}}.</text>
@@ -22,11 +21,10 @@
 			</view>
 			<view class="rightMoney">
 				<view class="fz-13 c-gray">已用银点(元)
-					<van-icon name="question-o" />
 				</view>
-				<view class="m-t-15">
-					<text class="fz-20 ">{{shoppingMoneyData.canWithdrawAmount[0]}}.</text>
-					<text class="fz-12">{{shoppingMoneyData.canWithdrawAmount[1]?shoppingMoneyData.canWithdrawAmount[1]:'00'}}</text>
+				<view class="m-t-10">
+					<text class="fz-20 ">{{shoppingMoneyData.cannotWithdrawUsedAmount[0]}}.</text>
+					<text class="fz-12">{{shoppingMoneyData.cannotWithdrawUsedAmount[1]?shoppingMoneyData.cannotWithdrawUsedAmount[1]:'00'}}</text>
 				</view>
 			</view>
 		</view>

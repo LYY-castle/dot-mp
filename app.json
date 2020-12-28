@@ -6,10 +6,10 @@
     "pages/shopping_cart/shopping-cart",
     "components/specification/specification",
     "components/navigator/navigator",
-    "shopping_money/shopping-money-detail/shopping-money-detail",
-    "shopping_money/withdrawal-detail/withdrawal-detail",
-    "shopping_money/my-golden-money/my-golden-money",
-    "shopping_money/my-silvery-money/my-silvery-money"
+    "pages_shopping_money/shopping-money-detail/shopping-money-detail",
+    "pages_shopping_money/withdrawal-detail/withdrawal-detail",
+    "pages_shopping_money/my-golden-money/my-golden-money",
+    "pages_shopping_money/my-silvery-money/my-silvery-money"
   ],
   "subpackages": [
     {
@@ -89,5 +89,6 @@
       }
     ]
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "debug": true
 }

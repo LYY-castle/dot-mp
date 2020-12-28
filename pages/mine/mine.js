@@ -159,7 +159,7 @@ Page({
 	gotoShoppingMoneyDetail() {
 		if (this.data.shoppingMoneyData && !this.data.shoppingMoneyData.status) {
 			wx.navigateTo({
-				url: '/shopping_money/shopping-money-detail/shopping-money-detail'
+				url: '/pages_shopping_money/shopping-money-detail/shopping-money-detail'
 			})
 		}
 	}

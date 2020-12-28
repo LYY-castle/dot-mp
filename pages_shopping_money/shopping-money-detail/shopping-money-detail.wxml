@@ -27,21 +27,21 @@
 			</view>
 		</view>
 		<view class="moneyContent">
-			<view class="leftMoney" bindtap="goMygoldenOrMysilvery" data-type="golden">
-				<view class="fz-13 c-gray">
+			<view class="leftMoney" >
+				<view class="fz-13 c-gray flex-center">
 					金点(元)
-					<van-icon name="question-o" />
+					<van-icon name="question-o" size="18px" class="m-l-5" bindtap="showGoldenIntroduce"/>
 				</view>
-				<view class="m-t-10">
+				<view class="m-t-10" bindtap="goMygoldenOrMysilvery" data-type="golden">
 					<text class="fz-30 bold">{{shoppingMoneyData.canWithdrawAmount[0]}}.</text>
 					<text class="bold">{{shoppingMoneyData.canWithdrawAmount[1]?shoppingMoneyData.canWithdrawAmount[1]:'00'}}</text>
 				</view>
 			</view>
-			<view class="rightMoney" bindtap="goMygoldenOrMysilvery" data-type="silvery">
-				<view class="fz-13 c-gray">银点(元)
-					<van-icon name="question-o" />
+			<view class="rightMoney" >
+				<view class="fz-13 c-gray flex-center">银点(元)
+					<van-icon name="question-o" size="18px" class="m-l-5" bindtap="showSilveryIntroduce"/>
 				</view>
-				<view class="m-t-15">
+				<view class="m-t-15" bindtap="goMygoldenOrMysilvery" data-type="silvery">
 					<text class="fz-30 bold">{{shoppingMoneyData.cannotWithdrawAmount[0]}}.</text>
 					<text class="bold">{{shoppingMoneyData.cannotWithdrawAmount[1]?shoppingMoneyData.cannotWithdrawAmount[1]:'00'}}</text>
 				</view>
@@ -69,7 +69,7 @@
 					<view>{{ item.operateAt }}</view>
 				</view>
 				<view class="c-999 fz-12">
-					<text>{{ operateType === 0||operateType===2||operateType===5  ? '-' : '+' }}</text>
+					<text>{{ operateType === 0||operateType===2||operateType===3||operateType===5||operateType===9  ? '-' : '+' }}</text>
 					￥{{ item.amount }}</view
 				>
 			</view>
@@ -81,13 +81,40 @@
 		show="{{ bottomShow }}"
 		bind:close="onClose"
 		position="bottom"
-		custom-style="height: 150px"
+		custom-style="height: 200px"
 		>
 				<view class="buttons">
 					<view class="{{item.text===recordText?'buttonItem m-b-10 activeColor':'buttonItem m-b-10 normalColor'}}" wx:for="{{recordList}}" bindtap="selectList" data-option="{{item}}">{{item.text}}</view>
 				</view>
 		</van-popup>
 	</view>
+	<van-dialog
+  use-slot
+  title="关于金点"
+  show="{{ aboutGolden }}"
+	bind:close="onClose"
+	confirmButtonText="知道了"
+>
+  <view class="p-10 c-666 fz-13">
+		<view>1.金点可在金小点平台进行正常的购物消费使用，具备提现功能，无有效期限制。</view>
+		<view class="m-t-5">2.金点和人民币的兑换比例是1：1，即1金点相当于人民币1元。</view>
+		<view class="m-t-5">3.更多问题联系客服咨询。</view>
+	</view>
+</van-dialog>
+<van-dialog
+  use-slot
+  title="关于金点"
+  show="{{ aboutSilvery }}"
+	bind:close="onClose"
+	confirmButtonText="知道了"
+>
+  <view class="p-10 c-666 fz-13">
+		<view>1.银点可在金小点平台进行正常的购物消费使用，不能进行提现。</view>
+		<view class="m-t-5">2.通过公司直接充值或返点获得的银点，有效期1年，逾期自动作废（如若交易在使用银点有效期之外发生退款，该部分银点不予退还）</view>
+		<view class="m-t-5">3.银点和人民币兑换比例是1：1，即1银点相当于人民币1元。</view>
+		<view class="m-t-5">4.更多问题联系客服咨询。</view>
+	</view>
+</van-dialog>
 	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
 	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 </view>

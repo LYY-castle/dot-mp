@@ -32,9 +32,7 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
-	onLoad: function (options) {
-		this.getShoppingMoney()
-	},
+	onLoad: function (options) {},
 
 	/**
 	 * 生命周期函数--监听页面初次渲染完成
@@ -44,18 +42,18 @@ Page({
 	/**
 	 * 生命周期函数--监听页面显示
 	 */
-	onShow: function () {},
+	onShow: function () {
+		this.getShoppingMoney()
+	},
 	getShoppingMoney() {
 		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
 			if (res.success) {
-				res.data.amount = String(res.data.amount).split('.')
-				res.data.canWithdrawAmount = String(res.data.canWithdrawAmount).split(
-					'.'
-				)
 				res.data.cannotWithdrawAmount = String(
 					res.data.cannotWithdrawAmount
 				).split('.')
-
+				res.data.cannotWithdrawUsedAmount = String(
+					res.data.cannotWithdrawUsedAmount
+				).split('.')
 				this.setData({
 					shoppingMoneyData: res.data
 				})
@@ -109,8 +107,13 @@ Page({
 	/**
 	 * 页面相关事件处理函数--监听用户下拉动作
 	 */
-	onPullDownRefresh: function () {},
-
+	onPullDownRefresh: function () {
+		this.setData({
+			pageNo: 1
+		})
+		this.getShoppingMoney()
+		wx.stopPullDownRefresh()
+	},
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */
