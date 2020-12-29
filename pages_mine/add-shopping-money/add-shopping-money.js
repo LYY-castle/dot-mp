@@ -39,8 +39,9 @@ Page({
 	},
 	// 获取手机验证码
 	getCode() {
-		console.log('发送')
-		this.validatorCode()
+		if (!this.data.send) {
+			this.validatorCode()
+		}
 	},
 	validatorCode() {
 		return new Promise((resolve) => {

@@ -3,6 +3,9 @@ import { isMobile, isIDNumber, isBankCard } from '../../utils/validate'
 import env from '../../config/env.config'
 import constantCfg from '../../config/constant'
 import http from '../../utils/request'
+import utils from '../../utils/util'
+import tool from '../../utils/mixin'
+import bankInfo from '../../utils/bankInfo'
 Page({
 	/**
 	 * 页面的初始数据
@@ -13,6 +16,7 @@ Page({
 		frontImage: null,
 		idCardReverse: null,
 		idCardFront: null,
+		bankName: null,
 		front: '/static/img/front.png',
 		back: '/static/img/back.png',
 		userInfo: {},
@@ -24,6 +28,10 @@ Page({
 			getShoppingMoney: {
 				url: '/user-shopping-accounts',
 				method: 'get'
+			},
+			getLastData: {
+				url: '/withdrawals/last',
+				method: 'get'
 			}
 		}
 	},
@@ -32,6 +40,7 @@ Page({
 	 */
 	onLoad: function (options) {
 		this.getShoppingMoney()
+		this.getLastData()
 	},
 
 	/**
@@ -57,6 +66,74 @@ Page({
 		this.data.userInfo.totalAmount = this.data.shoppingMoneyData.canWithdrawAmount
 		this.setData({
 			userInfo: this.data.userInfo
+		})
+	},
+	getLastData() {
+		http
+			.wxRequest({
+				...this.data.api.getLastData,
+				params: { userId: wx.getStorageSync('userId') }
+			})
+			.then((res) => {
+				if (res.success) {
+					if (res.data) {
+						this.data.userInfo.idCard = res.data.idCard
+						this.data.userInfo.bankAccount = res.data.bankAccount
+						this.data.userInfo.openingBank = res.data.openingBank
+						this.data.userInfo.bankName = res.data.bankName
+						this.data.userInfo.phone = res.data.phone
+						this.data.userInfo.name = res.data.name
+						this.setData({
+							idCardReverse: res.data.idCardReverse,
+							idCardFront: res.data.idCardFront,
+							userInfo: this.data.userInfo
+						})
+						const viewFrontParam = {
+							bucketName: constantCfg.minio.bucketName,
+							fileName: res.data.idCardFront
+						}
+						const viewBackParam = {
+							bucketName: constantCfg.minio.bucketName,
+							fileName: res.data.idCardReverse
+						}
+						tool.review(viewFrontParam).then((result) => {
+							this.setData({
+								frontImage: result.data
+							})
+						})
+						tool.review(viewBackParam).then((result) => {
+							this.setData({
+								backImage: result.data
+							})
+						})
+					}
+					console.log(res.data)
+				}
+			})
+	},
+	// 自动识别银行名称
+	bankAccountChange(e) {
+		const _this = this
+		wx.request({
+			url:
+				'https://ccdcapi.alipay.com/validateAndCacheCardInfo.json?_input_charset=utf-8&cardNo=' +
+				e.detail.value +
+				'&cardBinCheck=true',
+			success: function (res) {
+				console.log(res.data.bank)
+				const bankData = bankInfo.bankcardList
+				for (let i = 0; i < bankData.length; i++) {
+					if (res.data.bank === bankData[i].bankCode) {
+						_this.data.userInfo = { ..._this.data.userInfo }
+						_this.data.userInfo.bankName = bankData[i].bankName
+						_this.setData({
+							userInfo: _this.data.userInfo
+						})
+						break
+					}
+				}
+				console.log(_this.data.userInfo)
+			}
 		})
 	},
 	getFrontImage() {
@@ -295,7 +372,10 @@ Page({
 	/**
 	 * 生命周期函数--监听页面显示
 	 */
-	onShow: function () {},
+	onShow: function () {
+		this.getShoppingMoney()
+		this.getLastData()
+	},
 
 	/**
 	 * 生命周期函数--监听页面隐藏

@@ -1,21 +1,31 @@
-<page-meta
+<!-- <page-meta
 >
   <navigation-bar
     title="{{nbTitle}}"
     front-color="{{nbFrontColor}}"
     background-color="{{nbBackgroundColor}}"
   />
-</page-meta>
+</page-meta> -->
 <view class="container">
-	<van-sticky>
-		<van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
-	</van-sticky>
-	<view class="sort m-b-10">
-    <view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" bindtap="gotoProductList" data-item="{{sort}}" class="sortItem">
-      <van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
-      <view>{{sort.name}}</view>
-    </view>
+<view class="custom-bar b-color-yellow" style="height:{{navHeight}}px">
+	<view class="custom-bar__wrapper" style="margin-top:{{searchMarginTop}}px; height: {{searchHeight}}px;width: {{searchWidth}}px" >
+		<view class="bold">金小点</view>
+    <van-search bind:focus="focus" shape="round" background="#FDC865" placeholder="搜索商品" class="m-l-10"/>
   </view>
+</view>
+	<!-- <van-sticky> -->
+		<view class="sort m-b-10" style="margin-top: {{navHeight+10}}px">
+		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts">
+						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem">
+							<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
+							<view>{{sort.name}}</view>
+						</view>
+					</swiper-item>
+    </swiper>
+  </view>
+
+	<!-- </van-sticky> -->
 	<view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
 	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">

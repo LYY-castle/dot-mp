@@ -2,17 +2,29 @@ import tool from '../../utils/mixin'
 import qseBaoUtil from '../../utils/qsebao'
 import util from '../../utils/util'
 import constantCfg from '../../config/constant'
-
+const app = getApp()
 Page({
 	data: {
 		nbTitle: '金小点',
 		nbFrontColor: '#000000',
-		nbBackgroundColor: 'FDC865',
+		nbBackgroundColor: '#FDC865',
 		bottomLineShow: false,
 		empty: '/static/img/empty.png',
 		productList: null,
 		productSorts: null,
+		productSortsArr: [],
 		loadingShow: false,
+		indicatorDots: true,
+		NumbersItem: 10,
+		vertical: false,
+		autoplay: true,
+		interval: 3000,
+		duration: 500,
+		navHeight: '',
+		searchMarginTop: 0, // 搜索框上边距
+		searchWidth: 0, // 搜索框宽度
+		searchHeight: 0, // 搜索框高度
+		menuButtonInfo: wx.getMenuButtonBoundingClientRect(),
 		sortsImages: [
 			'/static/img/product-01.png',
 			'/static/img/product-02.png',
@@ -23,6 +35,19 @@ Page({
 	},
 
 	onLoad() {
+		const { top, width, height, right } = this.data.menuButtonInfo
+		wx.getSystemInfo({
+			success: (res) => {
+				const { statusBarHeight } = res
+				const margin = top - statusBarHeight
+				this.setData({
+					navHeight: height + statusBarHeight + margin * 2,
+					searchMarginTop: statusBarHeight + margin, // 状态栏 + 胶囊按钮边距
+					searchHeight: height, // 与胶囊按钮同高
+					searchWidth: right - width // 胶囊按钮右边坐标 - 胶囊按钮宽度 = 按钮左边可使用宽度
+				})
+			}
+		})
 		Promise.resolve()
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
@@ -135,8 +160,30 @@ Page({
 			}
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {
+					let currentData1 = res.data.concat(res.data)
+					let currentData2 = res.data.concat(res.data)
+					let currentData = currentData1.concat(currentData2)
+					console.log(currentData)
+					let num = currentData.length / 10
+					if (num > 1) {
+						for (let i = 0; i < num; i++) {
+							this.data.productSortsArr[i] = []
+							let arr = []
+							for (let j = 10 * i; j < currentData.length; j++) {
+								arr.push(currentData[j])
+								if (arr.length === 10) {
+									break
+								}
+							}
+							this.data.productSortsArr[i] = arr
+						}
+					} else {
+						this.data.productSortsArr[0] = []
+						this.data.productSortsArr[0] = currentData
+					}
+					console.log(this.data.productSortsArr)
 					this.setData({
-						productSorts: res.data
+						productSortsArr: this.data.productSortsArr
 					})
 					resolve()
 				}

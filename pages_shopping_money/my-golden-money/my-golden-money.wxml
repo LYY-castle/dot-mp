@@ -1,14 +1,20 @@
 <!--shopping_money/my-golden-money/my-golden-money.wxml-->
 <!--shopping_money/shopping-money-detail/shopping-money-detail.wxml-->
-<page-meta
+<!-- <page-meta
 >
   <navigation-bar
     title="{{nbTitle}}"
     front-color="{{nbFrontColor}}"
     background-color="{{nbBackgroundColor}}"
   />
-</page-meta>
-<view class="container">
+</page-meta> -->
+<view class="container" style="padding-top:{{navHeight}}px;">
+	<view class="custom-bar b-color-golden" style="height:{{navHeight}}px">
+		<view class="custom-bar__wrapper" style="margin-top:{{searchMarginTop}}px; height: {{searchHeight}}px;width: {{searchWidth}}px" >
+			<van-icon name="arrow-left" size="22px" bindtap="goBack" color="#ffffff"/>
+			<view class="bold c-white m-l-10">我的金点</view>
+		</view>
+	</view>
   	<view class="top">
 		<view class="moneyContent">
 			<view class="moneyItem" >

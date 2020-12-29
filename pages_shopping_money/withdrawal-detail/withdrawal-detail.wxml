@@ -25,7 +25,9 @@
   </view>
   <view class="m-t-10">
     <van-field label="银行卡号" placeholder="请输入银行卡号" model:value="{{userInfo.bankAccount}}"
-    name="bankAccount"/>
+    name="bankAccount" bind:blur="bankAccountChange"/>
+    <van-field label="银行名称" placeholder="自动识别" model:value="{{userInfo.bankName}}"
+    name="bankName"/>
     <van-field label="持卡人" placeholder="请输入持卡人姓名"
     model:value="{{userInfo.name}}"
     name="name"/>

@@ -10,5 +10,6 @@
     "van-divider": "@vant/weapp/divider/index",
     "van-loading": "@vant/weapp/loading/index"
   },
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "navigationStyle": "custom"
 }

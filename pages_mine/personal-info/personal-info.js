@@ -102,20 +102,22 @@ Page({
 							this.setData({
 								userInfo: res.data
 							})
-							if (res.data.avatar.indexOf('https') === -1) {
-								const viewParam = {
-									bucketName: constantCfg.minio.bucketName,
-									fileName: this.data.userInfo.avatar
-								}
-								tool.review(viewParam).then((result) => {
-									this.setData({
-										receiveAvatar: result.data
+							if (res.data.avatar) {
+								if (res.data.avatar.indexOf('https') === -1) {
+									const viewParam = {
+										bucketName: constantCfg.minio.bucketName,
+										fileName: this.data.userInfo.avatar
+									}
+									tool.review(viewParam).then((result) => {
+										this.setData({
+											receiveAvatar: result.data
+										})
 									})
-								})
-							} else {
-								this.setData({
-									receiveAvatar: res.data.avatar
-								})
+								} else {
+									this.setData({
+										receiveAvatar: res.data.avatar
+									})
+								}
 							}
 						}
 					} else {

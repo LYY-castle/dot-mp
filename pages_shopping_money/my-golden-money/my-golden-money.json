@@ -8,5 +8,6 @@
     "van-dialog": "@vant/weapp/dialog/index",
     "van-notice-bar": "@vant/weapp/notice-bar/index",
     "van-popup": "@vant/weapp/popup/index"
-  }
+  },
+  "navigationStyle": "custom"
 }

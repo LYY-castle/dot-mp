@@ -45,8 +45,8 @@
   <van-goods-action>
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
-    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" text="加入购物车" color="#f9ae08" bind:click="onClickButton" data-option="cart" />
-    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" color="#ee0a24" text="立即购买" bind:click="onClickButton" data-option="perchase" />
+    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
+    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
     <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.isOnSale&&goods.goodsNumber===0}}" />
     <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{!goods.isOnSale}}" />
   </van-goods-action>

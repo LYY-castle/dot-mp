@@ -4,11 +4,14 @@
 	height: auto;
 }
 .top {
-	background: #c59e5d;
-	height: 150px;
+	box-sizing: border-box;
+	background: linear-gradient(to right, #c59e5d, #e0c48a);
+	height: 160px;
 	width: 100%;
 	padding-top: 10px;
 	position: relative;
+	border-radius: 0 0 200% 200%/0 1600% 100% 100%;
+	border-top: none;
 }
 .moneyContent {
 	position: absolute;

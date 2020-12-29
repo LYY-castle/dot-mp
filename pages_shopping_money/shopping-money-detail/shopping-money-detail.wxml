@@ -1,14 +1,12 @@
 <!--shopping_money/shopping-money-detail/shopping-money-detail.wxml-->
-<page-meta
->
-  <navigation-bar
-    title="{{nbTitle}}"
-    front-color="{{nbFrontColor}}"
-    background-color="{{nbBackgroundColor}}"
-  />
-</page-meta>
-<view class="container">
-	<van-notice-bar
+<view class="container" style="padding-top:{{navHeight}}px;">
+	<view class="custom-bar b-color-golden" style="height:{{navHeight}}px">
+		<view class="custom-bar__wrapper" style="margin-top:{{searchMarginTop}}px; height: {{searchHeight}}px;width: {{searchWidth}}px" >
+			<van-icon name="arrow-left" size="22px" bindtap="goBack" color="#ffffff"/>
+			<view class="bold c-white m-l-10">我的购物金</view>
+		</view>
+	</view>
+	<!-- <van-notice-bar
 		text="用金点购物，免提现手续费，不扣税得工资。"
 		color="#F9AE08"
 		mode="closeable"
@@ -17,7 +15,7 @@
 	>
 	<van-icon slot="left-icon" name="{{leftIcon}}" size="18px" class="m-r-12"/>
 	<van-icon name="{{rightIcon}}" slot="right-icon" size="20x"/>
-	</van-notice-bar>
+	</van-notice-bar> -->
 	<view class="top">
 		<view class="totalMoney c-white">
 			<view>总购物金(元)</view>
@@ -41,7 +39,7 @@
 				<view class="fz-13 c-gray flex-center">银点(元)
 					<van-icon name="question-o" size="18px" class="m-l-5" bindtap="showSilveryIntroduce"/>
 				</view>
-				<view class="m-t-15" bindtap="goMygoldenOrMysilvery" data-type="silvery">
+				<view class="m-t-10" bindtap="goMygoldenOrMysilvery" data-type="silvery">
 					<text class="fz-30 bold">{{shoppingMoneyData.cannotWithdrawAmount[0]}}.</text>
 					<text class="bold">{{shoppingMoneyData.cannotWithdrawAmount[1]?shoppingMoneyData.cannotWithdrawAmount[1]:'00'}}</text>
 				</view>

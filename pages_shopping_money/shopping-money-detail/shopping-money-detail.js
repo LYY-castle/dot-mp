@@ -1,5 +1,6 @@
 // shopping_money/shopping-money-detail/shopping-money-detail.js
 import http from '../../utils/request'
+const app = getApp()
 Page({
 	/**
 	 * 页面的初始数据
@@ -20,11 +21,16 @@ Page({
 		rightIcon: '/static/img/close.png',
 		recordText: '使用记录',
 		operateType: 0,
+		navHeight: '',
+		searchMarginTop: 0, // 搜索框上边距
+		searchWidth: 0, // 搜索框宽度
+		searchHeight: 0, // 搜索框高度
+		menuButtonInfo: wx.getMenuButtonBoundingClientRect(),
 		recordList: [
 			{ text: '使用记录', id: 0 },
 			{ text: '充值记录', id: 1 },
 			{ text: '提现记录', id: 2 },
-			{ text: '服务费记录', id: 3 },
+			{ text: '手续费记录', id: 3 },
 			{ text: '返点记录', id: 4 },
 			{ text: '过期记录', id: 5 },
 			{ text: '退款记录', id: 6 },
@@ -51,6 +57,19 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		const { top, width, height, right } = this.data.menuButtonInfo
+		wx.getSystemInfo({
+			success: (res) => {
+				const { statusBarHeight } = res
+				const margin = top - statusBarHeight
+				this.setData({
+					navHeight: height + statusBarHeight + margin * 2,
+					searchMarginTop: statusBarHeight + margin, // 状态栏 + 胶囊按钮边距
+					searchHeight: height, // 与胶囊按钮同高
+					searchWidth: right - width // 胶囊按钮右边坐标 - 胶囊按钮宽度 = 按钮左边可使用宽度
+				})
+			}
+		})
 		this.getShoppingMoney()
 	},
 
@@ -91,28 +110,18 @@ Page({
 		})
 	},
 	showGoldenIntroduce() {
-		//
 		this.setData({
 			aboutGolden: true
 		})
 	},
 	showSilveryIntroduce() {
-		// wx.showModal({
-		// 	title: '关于银点',
-		// 	content:
-		// 		'',
-		// 	showCancel: false,
-		// 	confirmText: '知道了',
-		// 	success(res) {
-		// 		if (res.confirm) {
-		// 			console.log('用户点击确定')
-		// 		} else if (res.cancel) {
-		// 			console.log('用户点击取消')
-		// 		}
-		// 	}
-		// })
 		this.setData({
 			aboutSilvery: true
+		})
+	},
+	goBack() {
+		wx.navigateBack({
+			delte: 1
 		})
 	},
 	getLogs() {

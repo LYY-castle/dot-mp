@@ -397,12 +397,32 @@ Page {
 	color: #333333;
 }
 
-.textHeight {
-	height: calc(100% - 180px);
-}
 .bg-color-white {
 	background: #fff;
 }
 .c-color-yellow {
 	color: #f9ae08;
+}
+.b-color-yellow{
+	background:#fdc865
+}
+.b-color-golden{
+	background:linear-gradient(to right, #C59E5D, #E0C48A)
+}
+view {
+	box-sizing: border-box;
+}
+.custom-bar {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 999;
+}
+
+.custom-bar__wrapper {
+	padding: 0 10px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }

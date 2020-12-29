@@ -77,21 +77,23 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
-						if (res.data.avatar.indexOf('https') === -1) {
-							const viewParam = {
-								bucketName: constantCfg.minio.bucketName,
-								fileName: res.data.avatar
-							}
-							tool.review(viewParam).then((result) => {
-								res.data.avatar = result.data
+						if (res.data.avatar) {
+							if (res.data.avatar.indexOf('https') === -1) {
+								const viewParam = {
+									bucketName: constantCfg.minio.bucketName,
+									fileName: res.data.avatar
+								}
+								tool.review(viewParam).then((result) => {
+									res.data.avatar = result.data
+									this.setData({
+										userInfo: res.data
+									})
+								})
+							} else {
 								this.setData({
 									userInfo: res.data
 								})
-							})
-						} else {
-							this.setData({
-								userInfo: res.data
-							})
+							}
 						}
 						resolve()
 					}

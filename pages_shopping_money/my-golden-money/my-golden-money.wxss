@@ -6,11 +6,13 @@
 	overflow-y: scroll;
 }
 .top {
-	background: #c59e5d;
+	background: linear-gradient(to right, #c59e5d, #e0c48a);
 	height: 70px;
 	width: 100%;
 	padding-top: 10px;
 	position: relative;
+	border-radius: 0 0 200% 200%/0 700% 100% 100%;
+	border-top: none;
 }
 .moneyContent {
 	position: absolute;
@@ -31,18 +33,18 @@
 .intrduceContent {
 	width: 95%;
 	margin: 52px auto 10px;
-  border-radius: 10px;
+	border-radius: 10px;
 	background: #fff;
 }
 .intrduceTitle {
-  border:1px solid #eee;
-  padding:10px;
+	border: 1px solid #eee;
+	padding: 10px;
 }
-.withdrawalButton{
-  padding:10px 0;
-  width:60%;
-  text-align: center;
-  margin: 20px auto;
-  background: rgba(221, 221, 221, .5);
-  color: rgba(203, 154, 85, 1);
+.withdrawalButton {
+	padding: 10px 0;
+	width: 60%;
+	text-align: center;
+	margin: 20px auto;
+	background: rgba(221, 221, 221, 0.5);
+	color: rgba(203, 154, 85, 1);
 }
