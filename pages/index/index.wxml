@@ -13,7 +13,7 @@
   </view>
 </view>
 	<!-- <van-sticky> -->
-		<view class="sort m-b-10" style="margin-top: {{navHeight+10}}px">
+		<view class="sort" style="margin-top: {{navHeight+10}}px">
 		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
 					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts">
 						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
@@ -24,13 +24,15 @@
     </swiper>
   </view>
 	<!-- </van-sticky> -->
-	<view class="titleContent border" wx:if="{{productList.length>0}}">年货干果</view>
+	<view class="titleContent m-t-15 m-b-15" wx:if="{{productList.length>0}}">
+		<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>
+	</view>
 	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
 				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.goodsNumber===0}}">已售空</view>
-				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
-				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
+				<van-image src="{{item.listPicUrl}}" alt width="160px" height="160px" fit="contain" wx:if="{{item.listPicUrl !== ''}}" />
+				<van-image alt width="160px" height="160px" fit="contain" wx:else use-loading-slot />
 			</view>
 			<view class="textHeight textContent">
 					<view class="fz-14 m-b-5">

@@ -15,6 +15,7 @@ page {
 }
 
 .container .productsContent {
+  box-sizing: border-box;
   display: inline-block;
   width: calc(100% - 86px);
 	background: #fff;

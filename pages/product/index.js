@@ -72,7 +72,7 @@ Page({
 		let params = {
 			scope: 'all',
 			enable: 1,
-			isShowHome: 1
+			sorts: 'sortNo,asc'
 		}
 		if (val === 0) {
 			params.parentId = 0

@@ -31,6 +31,7 @@ Page({
 			'/static/img/product-03.png',
 			'/static/img/product-04.png'
 		],
+		titleImg: '/static/img/title.png',
 		pageNo: 1
 	},
 
@@ -154,9 +155,10 @@ Page({
 		return new Promise((resolve) => {
 			const params = {
 				parentId: 0,
-				pageSize: 100,
+				scope: 'all',
 				enable: 1,
-				isShowHome: 1
+				isShowHome: 1,
+				sorts: 'sortNo,asc'
 			}
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {

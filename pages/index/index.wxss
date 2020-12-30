@@ -11,11 +11,12 @@
 .container .sort {
 	height: 160px;
 	margin: 0 12px;
-	padding: 10px 10px 0 10px;
 	background: #fff;
 	border-radius: 7px;
 }
 .sortContent {
+	box-sizing: border-box;
+	padding: 10px 0;
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
@@ -41,10 +42,6 @@ swiper {
 	height: 100% !important;
 	text-align: center;
 }
-view {
-	box-sizing: border-box;
-	overflow: hidden;
-}
 .searchContent {
 	width: 100%;
 }
@@ -53,11 +50,6 @@ view {
 	width: 100% !important;
 }
 .titleContent {
-	background: #fdc865;
 	text-align: center;
-	width: 95%;
 	margin: 0 auto;
-	margin-bottom: 10px;
-	padding: 10px;
-	color: #ffffff;
 }

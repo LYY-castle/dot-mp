@@ -5,7 +5,9 @@ Page {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
-
+view{
+	box-sizing: border-box;
+}
 .container {
 	font-family: 'Avenir', Helvetica, Arial, sans-serif;
 	margin: 0 auto;
@@ -403,14 +405,11 @@ Page {
 .c-color-yellow {
 	color: #f9ae08;
 }
-.b-color-yellow{
-	background:#fdc865
+.b-color-yellow {
+	background:linear-gradient(to right, #FEC87D, #FDC852);
 }
-.b-color-golden{
-	background:linear-gradient(to right, #C59E5D, #E0C48A)
-}
-view {
-	box-sizing: border-box;
+.b-color-golden {
+	background: linear-gradient(to right, #c59e5d, #e0c48a);
 }
 .custom-bar {
 	position: fixed;
@@ -421,6 +420,7 @@ view {
 }
 
 .custom-bar__wrapper {
+	box-sizing: border-box;
 	padding: 0 10px;
 	display: flex;
 	justify-content: flex-start;
