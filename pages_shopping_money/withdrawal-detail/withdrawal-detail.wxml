@@ -3,7 +3,7 @@
   <van-notice-bar
   left-icon="volume-o"
   scrollable="{{ false }}"
-  text="请确保提现信息填写正确,否则将影响正常提现。"
+  text="请确保提现信息填写正确，否则将影响正常提现。"
 />
   <form catchsubmit="withdrawal" class="form">
   <view class="m-t-10">

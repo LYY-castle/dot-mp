@@ -1,5 +1,4 @@
 const moment = require('moment.min.js')
-const bankList = require('bankInfo.js')
 const formatTime = (date) => {
 	const year = date.getFullYear()
 	const month = date.getMonth() + 1
@@ -95,42 +94,10 @@ function ellipsis(value, vlength = 25) {
 	}
 	return value
 }
-// 根据银行卡号获取银行name
-function getBankInfoByCardNo(cardNo) {
-	console.log('cardNo===', cardNo)
-	return new Promise((resolve) => {
-		const bankData = bankList.default.bankcardList
-		const len = bankData.length
-		let bankcard = null
-		let patterns = null
-		let pattern = null
-		let info = null
-		for (let i = 0; i < len; i++) {
-			bankcard = bankData[i]
-			patterns = bankcard.patterns
-			for (let j = 0, jLen = patterns.length; j < jLen; j++) {
-				pattern = patterns[j]
-				const reg = pattern.reg
-				if (reg.test(cardNo)) {
-					info = bankcard
-				} else {
-				}
-				if (info) {
-					break
-				}
-			}
-			if (info) {
-				resolve(info)
-				break
-			}
-		}
-	})
-}
 module.exports = {
 	formatTime,
 	getStartTime,
 	getEndTime,
 	getCurrentPageUrl,
-	ellipsis,
-	getBankInfoByCardNo
+	ellipsis
 }

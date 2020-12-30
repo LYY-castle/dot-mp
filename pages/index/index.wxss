@@ -15,12 +15,12 @@
 	background: #fff;
 	border-radius: 7px;
 }
-.sortContent{
+.sortContent {
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
 }
-.sortItem{
+.sortItem {
 	width: 20%;
 	font-size: 12px;
 	text-align: center;
@@ -45,8 +45,19 @@ view {
 	box-sizing: border-box;
 	overflow: hidden;
 }
-
-
-.van-search{
-	padding: 0!important;
+.searchContent {
+	width: 100%;
+}
+.van-search {
+	padding: 0 !important;
+	width: 100% !important;
+}
+.titleContent {
+	background: #fdc865;
+	text-align: center;
+	width: 95%;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	padding: 10px;
+	color: #ffffff;
 }

@@ -14,7 +14,7 @@ Page({
 		productSorts: null,
 		productSortsArr: [],
 		loadingShow: false,
-		indicatorDots: true,
+		indicatorDots: false,
 		NumbersItem: 10,
 		vertical: false,
 		autoplay: true,
@@ -160,12 +160,12 @@ Page({
 			}
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {
-					let currentData1 = res.data.concat(res.data)
-					let currentData2 = res.data.concat(res.data)
-					let currentData = currentData1.concat(currentData2)
-					console.log(currentData)
+					let currentData = res.data
 					let num = currentData.length / 10
 					if (num > 1) {
+						this.setData({
+							indicatorDots: true
+						})
 						for (let i = 0; i < num; i++) {
 							this.data.productSortsArr[i] = []
 							let arr = []
@@ -181,7 +181,6 @@ Page({
 						this.data.productSortsArr[0] = []
 						this.data.productSortsArr[0] = currentData
 					}
-					console.log(this.data.productSortsArr)
 					this.setData({
 						productSortsArr: this.data.productSortsArr
 					})

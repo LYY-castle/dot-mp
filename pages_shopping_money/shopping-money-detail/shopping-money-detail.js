@@ -31,11 +31,11 @@ Page({
 			{ text: '充值记录', id: 1 },
 			{ text: '提现记录', id: 2 },
 			{ text: '手续费记录', id: 3 },
-			{ text: '返点记录', id: 4 },
+			// { text: '返点记录', id: 4 },
 			{ text: '过期记录', id: 5 },
-			{ text: '退款记录', id: 6 },
-			{ text: '返佣记录', id: 7 },
-			{ text: '扣点记录', id: 9 }
+			{ text: '退款记录', id: 6 }
+			// { text: '返佣记录', id: 7 },
+			// { text: '扣点记录', id: 9 }
 		],
 		listData: [],
 		pageSize: 15,

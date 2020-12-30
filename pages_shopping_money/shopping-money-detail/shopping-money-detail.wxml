@@ -101,14 +101,14 @@
 </van-dialog>
 <van-dialog
   use-slot
-  title="关于金点"
+  title="关于银点"
   show="{{ aboutSilvery }}"
 	bind:close="onClose"
 	confirmButtonText="知道了"
 >
   <view class="p-10 c-666 fz-13">
 		<view>1.银点可在金小点平台进行正常的购物消费使用，不能进行提现。</view>
-		<view class="m-t-5">2.通过公司直接充值或返点获得的银点，有效期1年，逾期自动作废（如若交易在使用银点有效期之外发生退款，该部分银点不予退还）</view>
+		<view class="m-t-5">2.通过公司直接充值获得的银点，有效期1年，逾期自动作废（如若交易在使用银点有效期之外发生退款，该部分银点不予退还）</view>
 		<view class="m-t-5">3.银点和人民币兑换比例是1：1，即1银点相当于人民币1元。</view>
 		<view class="m-t-5">4.更多问题联系客服咨询。</view>
 	</view>

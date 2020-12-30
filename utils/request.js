@@ -49,9 +49,6 @@ function getSuccess(res) {
 
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 	let header = {}
-	// wx.showLoading({
-	// 	title: '请稍后'
-	// })
 	if (wx.getStorageSync('authorization')) {
 		header = {
 			authorization: wx.getStorageSync('authorization')
