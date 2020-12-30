@@ -17,15 +17,20 @@
           <text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>
           <text wx:if="{{specificationResults.length>0}}">起</text>
         </view>
-        <view class="originPrice">￥{{goods.marketPrice}}</view>
+        <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice<goods.marketPrice : goods.retailPrice<goods.marketPrice}}">￥{{goods.marketPrice}}</view>
       </view>
       <view class="fz-14 m-b-5">{{goods.name}}</view>
+      <!-- <view class="flex-start fz-14" wx:if="{{goods.isRebate&&shoppingMoneyData}}">
+      <van-icon name="{{rebateIcon}}" class="m-r-10"/>
+      <text class="c-gray">自买或分享赚佣金</text>
+      <text class="c-color-yellow bold">￥{{goods.rebateAmount}}</text>
+    </view> -->
     </view>
     <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
       <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
       <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
-        <view class="title">{{ content.categoryAttributeName}}</view>
-        <view class="description">{{ content.goodsAttributeVal }}</view>
+        <view class="title">{{ content.name}}</view>
+        <view class="description">{{ content.val }}</view>
       </view>
     </view>
     <view class="product">
@@ -40,8 +45,8 @@
   <van-goods-action>
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
-    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" text="加入购物车" color="#f9ae08" bind:click="onClickButton" data-option="cart" />
-    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" color="#ee0a24" text="立即购买" bind:click="onClickButton" data-option="perchase" />
+    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
+    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
     <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.isOnSale&&goods.goodsNumber===0}}" />
     <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{!goods.isOnSale}}" />
   </van-goods-action>

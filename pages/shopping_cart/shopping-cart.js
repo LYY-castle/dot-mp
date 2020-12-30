@@ -155,10 +155,6 @@ Page({
 			}
 		})
 	},
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {},
 	onChange(event) {
 		const detail = event.detail
 		this.setData({
@@ -402,7 +398,7 @@ Page({
 						res.data.specificationResults.forEach((speci) => {
 							speci.goodsSpecificationResults.forEach((speciItem) => {
 								if (name === speciItem.goodsSpecificationValue) {
-									speciItem.activeGoodsSpecificationNameValue = name
+									speciItem.active = true
 								}
 							})
 						})
@@ -433,7 +429,6 @@ Page({
 						products: res.data.products,
 						specificationResults: res.data.specificationResults,
 						goodsSpecificationNameValue: option.goodsSpecificationNameValue,
-
 						activePic: option.listPicUrl,
 						activePrice:
 							option.goods.isPromote &&

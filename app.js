@@ -20,8 +20,12 @@ App({
 					if (res.success) {
 						wx.setStorageSync('openId', res.data.weixinOpenid)
 						wx.setStorageSync('userId', res.data.id)
+						let url = '/' + options.path
+						if (options.query) {
+							url += '?' + this.queryString(options.query)
+						}
 						wx.reLaunch({
-							url: '/pages/index/index'
+							url
 						})
 					} else {
 						console.log('请求失败', res)
@@ -47,8 +51,26 @@ App({
 			}
 		})
 	},
+	queryString(json) {
+		if (!json) return ''
+		return this.cleanArray(
+			Object.keys(json).map((key) => {
+				if (json[key] === undefined) return ''
+				return encodeURIComponent(key) + '=' + encodeURIComponent(json[key])
+			})
+		).join('&')
+	},
+	cleanArray(actual) {
+		const newArray = []
+		for (let i = 0; i < actual.length; i++) {
+			if (actual[i]) {
+				newArray.push(actual[i])
+			}
+		}
+		return newArray
+	},
 	getLaunchOptionsSync: function (option) {
-		console.log(option)
+		console.log(option, '111111')
 	},
 
 	globalData: {

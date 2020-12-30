@@ -91,7 +91,7 @@
   <view class="text-align-center" wx:if="{{shoppingCartList.length===0}}">
     <van-button plain color="#000" bind:click="goHome">去逛逛</van-button>
   </view>
-  <van-submit-bar wx:if="{{!deleteButtonShow&&shoppingCartList.length>0}}" price="{{ totalPrice }}" button-text="结算" disabled="{{result.length===0}}" bind:submit="onClickButton" tip="{{ true }}">
+  <van-submit-bar wx:if="{{!deleteButtonShow&&shoppingCartList.length>0}}" price="{{ totalPrice }}" button-text="结算" disabled="{{result.length===0}}" bind:submit="onClickButton" tip="{{ true }}" button-class="submitButton">
     <van-checkbox value="{{ all }}" bind:change="selectAll" checked-color="#ee0a24">
       全选
     </van-checkbox>

@@ -35,7 +35,7 @@ Page({
 				code: '200'
 			},
 			{
-				name: '已发货',
+				name: '待收货',
 				code: '300'
 			}
 		],
@@ -56,32 +56,36 @@ Page({
 			getOrderById: {
 				url: '/orders/{id}',
 				method: 'get'
+			},
+			// 确认收货
+			ensure: {
+				url: '/orders',
+				method: 'put'
+			},
+			// 删除订单
+			delete: {
+				url: '/orders/{id}',
+				method: 'delete'
 			}
 		},
 		statusMap: {
 			100: {
 				text: '待付款'
 			},
-			101: {
-				text: '已取消'
-			},
-			102: {
-				text: '已取消'
-			},
 			200: {
 				text: '待发货'
 			},
 			300: {
-				text: '已发货'
-			},
-			301: {
-				text: '已收货'
-			},
-			302: {
-				text: '已收货'
+				text: '待收货'
 			},
 			400: {
-				text: '已完成'
+				text: '交易完成'
+			},
+			500: {
+				text: '售后中'
+			},
+			600: {
+				text: '交易关闭'
 			}
 		}
 	},
@@ -100,6 +104,11 @@ Page({
 			}
 		})
 		Promise.resolve().then(() => this.getOrderList())
+	},
+	onUnload: function () {
+		wx.switchTab({
+			url: '/pages/mine/mine'
+		})
 	},
 	/**
 	 * 页面上拉触底事件的处理函数
@@ -210,6 +219,52 @@ Page({
 		const orderId = val.currentTarget.dataset.option
 		wx.navigateTo({
 			url: '/pages_order/order-detail/order-detail?src=' + orderId
+		})
+	},
+	// 确认收货
+	ensureOrder(e) {
+		const params = {
+			id: e.currentTarget.dataset.option,
+			orderStatus: 400
+		}
+		const _this = this
+		wx.showModal({
+			title: '确认收货？',
+			success(res) {
+				if (res.confirm) {
+					http.wxRequest({ ..._this.data.api.ensure, params }).then((res) => {
+						if (res.success) {
+							_this.getOrderList()
+						}
+					})
+				} else if (res.cancel) {
+					console.log('用户点击取消')
+				}
+			}
+		})
+	},
+	deleteOrder(e) {
+		const id = e.currentTarget.dataset.option
+		const _this = this
+		wx.showModal({
+			title: '删除订单？',
+			content: '订单记录将不存在',
+			success(res) {
+				if (res.confirm) {
+					http
+						.wxRequest({
+							..._this.data.api.delete,
+							urlReplacements: [{ substr: '{id}', replacement: id }]
+						})
+						.then((res) => {
+							if (res.success) {
+								_this.getOrderList()
+							}
+						})
+				} else if (res.cancel) {
+					console.log('用户点击取消')
+				}
+			}
 		})
 	},
 	// 下拉

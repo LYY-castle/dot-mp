@@ -55,7 +55,6 @@ Page({
 	 * 用户点击右上角分享
 	 */
 	onShareAppMessage: function () {},
-
 	// 产品种类切换
 	firstChange(event) {
 		const activeKey = event.detail
@@ -72,7 +71,8 @@ Page({
 	getTypes(val) {
 		let params = {
 			scope: 'all',
-			enable: 1
+			enable: 1,
+			sorts: 'sortNo,asc'
 		}
 		if (val === 0) {
 			params.parentId = 0

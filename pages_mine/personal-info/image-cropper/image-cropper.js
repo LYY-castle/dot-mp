@@ -25,11 +25,11 @@ Component({
 		 */
 		min_width: {
 			type: Number,
-			value: 100
+			value: 50
 		},
 		min_height: {
 			type: Number,
-			value: 100
+			value: 50
 		},
 		/**
 		 * 裁剪框最大尺寸

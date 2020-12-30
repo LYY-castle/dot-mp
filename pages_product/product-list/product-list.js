@@ -12,7 +12,7 @@ Page({
 		productSorts: null,
 		loadingShow: true,
 		pageNo: 1,
-		firstId: null,
+		firstPath: null,
 		thirdId: null,
 		thirdData: null,
 		activeTab: null,
@@ -65,7 +65,8 @@ Page({
 	},
 	onTabChange(e) {
 		this.setData({
-			activeTab: e.detail.name
+			activeTab: e.detail.name,
+			thirdId: e.detail.name
 		})
 		let params = {
 			categoryId: this.data.activeTab,
@@ -215,5 +216,23 @@ Page({
 	/**
 	 * 用户点击右上角分享
 	 */
-	onShareAppMessage: function () {}
+	onShareAppMessage: function () {
+		let path = ''
+		if (this.data.thirdId) {
+			path =
+				'/pages_product/product-list/product-list?firstPath=' +
+				this.data.firstPath +
+				'&thirdId=' +
+				this.data.thirdId +
+				'&name=' +
+				this.data.nbTitle
+		} else {
+			path =
+				'/pages_product/product-list/product-list?firstPath=' +
+				this.data.firstPath +
+				'&name=' +
+				this.data.nbTitle
+		}
+		return { path }
+	}
 })

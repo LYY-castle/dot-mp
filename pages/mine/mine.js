@@ -77,21 +77,23 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
-						if (res.data.avatar.indexOf('https') === -1) {
-							const viewParam = {
-								bucketName: constantCfg.minio.bucketName,
-								fileName: res.data.avatar
-							}
-							tool.review(viewParam).then((result) => {
-								res.data.avatar = result.data
+						if (res.data.avatar) {
+							if (res.data.avatar.indexOf('https') === -1) {
+								const viewParam = {
+									bucketName: constantCfg.minio.bucketName,
+									fileName: res.data.avatar
+								}
+								tool.review(viewParam).then((result) => {
+									res.data.avatar = result.data
+									this.setData({
+										userInfo: res.data
+									})
+								})
+							} else {
 								this.setData({
 									userInfo: res.data
 								})
-							})
-						} else {
-							this.setData({
-								userInfo: res.data
-							})
+							}
 						}
 						resolve()
 					}
@@ -152,5 +154,15 @@ Page({
 		wx.navigateTo({
 			url: option.path
 		})
+	},
+	handleContact(e) {
+		console.log(e.detail)
+	},
+	gotoShoppingMoneyDetail() {
+		if (this.data.shoppingMoneyData && !this.data.shoppingMoneyData.status) {
+			wx.navigateTo({
+				url: '/pages_shopping_money/shopping-money-detail/shopping-money-detail'
+			})
+		}
 	}
 })

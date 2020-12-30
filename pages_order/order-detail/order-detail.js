@@ -14,41 +14,58 @@ Page({
 		timeData: null,
 		payment: null,
 		dialogShow: false,
+		popShow: false,
+		steps: [],
+		afterSale: '',
+		afsStatus: null,
+		jdAfsShow: false,
+		packageDesc: null,
+		questionDesc: '',
+		textareaHeight: { minHeight: 50 },
 		statusMap: {
 			100: {
-				text: '待支付',
-				color: 'rgba(249, 173, 8, 1)'
-			},
-			101: {
-				text: '已取消',
-				color: 'rgba(101, 101, 101, 1)'
-			},
-			102: {
-				text: '已取消',
-				color: 'rgba(101, 101, 101, 1)'
+				text: '待付款'
 			},
 			200: {
-				text: '待发货',
-				color: '#722ed1'
+				text: '待发货'
 			},
 			300: {
-				text: '已发货',
-				color: '#f5222d'
-			},
-			301: {
-				text: '已收货',
-				color: '#f5222d'
-			},
-			302: {
-				text: '已收货',
-				color: '#f5222d'
+				text: '待收货'
 			},
 			400: {
-				text: '已完成',
-				color: '#f5222d'
+				text: '交易完成'
+			},
+			500: {
+				text: '售后中'
+			},
+			600: {
+				text: '交易关闭'
 			}
 		},
-
+		// 申请 20:审核 30:收货 40:处理 50:待用户确认 60:完成 70:取消
+		afterSaleStatus: {
+			10: {
+				text: '申请中'
+			},
+			20: {
+				text: '审核中'
+			},
+			30: {
+				text: '收货'
+			},
+			40: {
+				text: '处理中'
+			},
+			50: {
+				text: '待用户确认'
+			},
+			60: {
+				text: '完成'
+			},
+			70: {
+				text: '取消'
+			}
+		},
 		api: {
 			getOrderById: {
 				url: '/orders/{id}',
@@ -64,10 +81,24 @@ Page({
 				url: '/orders',
 				method: 'put'
 			},
-			// /order-express
 			getOrderExpress: {
-				url: '/order-express',
+				url: '/orders/{id}/order-express',
 				method: 'get'
+			},
+			// 售后状态
+			updateAfterSale: {
+				url: '/after-sales',
+				method: 'get'
+			},
+			// 确认完成售后
+			ensureAfs: {
+				url: '/after-sales',
+				method: 'put'
+			},
+			// 京东平台确认收货后发起售后申请
+			jdAfs: {
+				url: '/after-sales/jd-apply',
+				method: 'post'
 			}
 		}
 	},
@@ -109,6 +140,14 @@ Page({
 							time
 						})
 					}
+					let afterSale = ''
+					if (res.data.orderStatus === 200) {
+						afterSale = '退货'
+					} else if (res.data.orderStatus === 300) {
+						afterSale = '拒收/退货退款'
+					} else if (res.data.orderStatus === 400) {
+						afterSale = '申请售后'
+					}
 					let body = ''
 					res.data.orderGoods.forEach((good) => {
 						body += good.goodsName
@@ -116,18 +155,27 @@ Page({
 					})
 					body = util.ellipsis(body, 29)
 					this.setData({
+						afterSale,
 						orderInfo: res.data,
 						payment: {
 							id: res.data.id,
+							orderNo: res.data.orderNo,
 							openid: wx.getStorageSync('openId'),
-							outTradeNo: res.data.orderNo,
+							outTradeNo: res.data.mainOrderNo,
 							totalFee: res.data.actualPrice * 100, // 微信支付单位为分.
 							body,
 							tradeType: 'JSAPI'
 						}
 					})
-					if (res.data.orderStatus === 300) {
+					if (
+						res.data.orderStatus === 300 ||
+						res.data.orderStatus === 400 ||
+						res.data.orderStatus === 500
+					) {
 						this.getOrderExpress()
+						if (res.data.orderStatus === 500) {
+							this.getAfterSaleStatus()
+						}
 					}
 				}
 			})
@@ -189,7 +237,7 @@ Page({
 					...this.data.api.cancelOrder,
 					params: {
 						id: this.data.orderInfo.id,
-						orderStatus: '101'
+						orderStatus: '600'
 					}
 				})
 				.then((res) => {
@@ -231,20 +279,152 @@ Page({
 			}
 		})
 	},
-	getOrderExpress() {
+	// 获取售后状态
+	getAfterSaleStatus() {
+		const params = {
+			scope: 'all',
+			orderId: this.data.orderInfo.id
+		}
 		http
 			.wxRequest({
-				...this.data.api.getOrderExpress,
-				params: {
-					orderId: this.data.orderInfo.id
-				}
+				...this.data.api.updateAfterSale,
+				params
 			})
 			.then((res) => {
 				if (res.success) {
 					this.setData({
-						logisticsInfo: res.data[0]
+						afsStatus: res.data[0].afsStatus
+					})
+					console.log(res.data[0].afsStatus)
+				}
+			})
+	},
+	getOrderExpress() {
+		http
+			.wxRequest({
+				...this.data.api.getOrderExpress,
+				urlReplacements: [
+					{ substr: '{id}', replacement: this.data.orderInfo.id }
+				]
+			})
+			.then((res) => {
+				if (res.success) {
+					let express = []
+					if (res.data.traces) {
+						res.data.traces = JSON.parse(res.data.traces)
+						res.data.traces.forEach((tr) => {
+							let obj = {
+								text: tr.content,
+								desc: tr.msgTime
+							}
+							express.push(obj)
+						})
+					}
+					this.setData({
+						logisticsInfo: res.data,
+						steps: express
 					})
 				}
 			})
+	},
+
+	// 申请售后
+	handleContact() {
+		http
+			.wxRequest({
+				...this.data.api.cancelOrder,
+				params: {
+					id: this.data.orderInfo.id,
+					orderStatus: '500'
+				}
+			})
+			.then((res) => {
+				if (res.success) {
+					this.getOrderDetail()
+				}
+			})
+	},
+	// 京东平台收到货之后申请售后
+	jdAfs() {
+		this.setData({
+			jdAfsShow: true
+		})
+	},
+	ensureAfsByJd() {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			packageDesc: this.data.packageDesc,
+			questionDesc: this.data.questionDesc
+		}
+		http.wxRequest({ ...this.data.api.jdAfs, params }).then((res) => {
+			if (res.success) {
+				http
+					.wxRequest({
+						...this.data.api.cancelOrder,
+						params: {
+							id: this.data.orderInfo.id,
+							orderStatus: '500'
+						}
+					})
+					.then((res) => {
+						if (res.success) {
+							this.getOrderDetail()
+						}
+					})
+			}
+		})
+	},
+	onChange(event) {
+		this.setData({
+			packageDesc: event.detail
+		})
+	},
+	onClose() {
+		this.setData({
+			jdAfsShow: false
+		})
+	},
+	openPop() {
+		if (this.data.steps.length > 0) {
+			this.setData({
+				popShow: true
+			})
+		} else {
+			wx.showToast({
+				title: '暂无物流信息',
+				icon: 'none'
+			})
+		}
+	},
+	// 填写退货信息
+	fillAfsMsg() {},
+	// 确认完成售后
+	finishAfs() {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			afsStatus: 60
+		}
+		http.wxRequest({ ...this.data.ensureAfs, params }).then((res) => {
+			if (res.success) {
+				this.getOrderDetail()
+			}
+		})
+	},
+	// 取消售后
+	cancelAfs() {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			afsStatus: 70
+		}
+		http.wxRequest({ ...this.data.ensureAfs, params }).then((res) => {
+			if (res.success) {
+				this.getOrderDetail()
+			}
+		})
+	},
+	closePop() {
+		this.setData({
+			popShow: false
+		})
 	}
 })

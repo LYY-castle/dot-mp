@@ -1,29 +1,27 @@
 /* pages/mine/address/add-address/add-address.wxss */
 .container {
-  background: #eee;
+	background: #eee;
 }
 .boxContent {
-    margin-top: 10px;
-    background: #fff;
-    padding: 10px;
+	margin-top: 10px;
+	background: #fff;
+	padding: 10px;
 }
-.contentField{
-      padding:16px;
-      margin: 10px 0;
-      background-color: #fff;
+.contentField {
+	padding: 16px;
+	margin: 10px 0;
+	background-color: #fff;
 }
 
-.contentField
-.inputClass{
-  margin:10px 0;
-  display: block;
-  background-color:#eee;
+.contentField .inputClass {
+	margin: 10px 0;
+	display: block;
+	background-color: #eee;
 }
-.contentField
-.inputClass .van-cell{
-  background:transparent;
+.contentField .inputClass .van-cell {
+	background: transparent;
 }
-.blockButton{
-  display: block;
-  margin-top: 10px;
+.blockButton {
+	display: block;
+	margin-top: 10px;
 }

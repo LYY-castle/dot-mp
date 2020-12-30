@@ -37,7 +37,7 @@ function getSuccess(res) {
 			wx.setStorageSync('authorization', res.header.Authorization)
 		}
 		if (res.data.success) {
-			wx.hideLoading()
+			// wx.hideLoading()
 		} else {
 			wx.showToast({
 				title: res.data.message,
@@ -49,9 +49,6 @@ function getSuccess(res) {
 
 function wxRequest({ url, method = 'get', params = {}, urlReplacements = [] }) {
 	let header = {}
-	wx.showLoading({
-		title: '请稍后'
-	})
 	if (wx.getStorageSync('authorization')) {
 		header = {
 			authorization: wx.getStorageSync('authorization')

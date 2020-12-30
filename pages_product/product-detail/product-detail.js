@@ -30,6 +30,8 @@ Page({
 		goodsGalleries: null, // 轮播图
 		specificationId: null,
 		operateType: null,
+		shoppingMoneyData: null,
+		rebateIcon: '/static/img/rebate.png',
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -48,6 +50,10 @@ Page({
 			config: {
 				url: '/configs/code/{code}',
 				method: 'get'
+			},
+			getShoppingMoney: {
+				url: '/user-shopping-accounts',
+				method: 'get'
 			}
 		}
 	},
@@ -61,10 +67,12 @@ Page({
 		wx.removeStorageSync('activeProductNumber')
 		const _this = this
 		if (options.src) {
+			console.log('分享得到的连接', options)
 			this.setData({
 				productId: options.src
 			})
 			_this.getProductDetail()
+			_this.getShoppingMoney()
 			_this.getCartDotsNum()
 		} else {
 			const eventChannel = this.getOpenerEventChannel()
@@ -75,6 +83,7 @@ Page({
 				})
 				_this.getProductDetail()
 				_this.getCartDotsNum()
+				_this.getShoppingMoney()
 			})
 		}
 	},
@@ -90,15 +99,20 @@ Page({
 	 * 用户点击右上角分享
 	 */
 	onShareAppMessage: function () {
-		// return {
-		// 	title: this.data.product.name,
-		// 	query: wx.getStorageSync('code'),
-		// 	path:
-		// 		'/pages_product/product-detail/product-detail?src=' +
-		// 		this.data.productId,
-		// 	imageUrl: this.data.product.image[0] || ''
-		// }
+		wx.showShareMenu({
+			withShareTicket: true,
+			menus: ['shareAppMessage', 'shareTimeline']
+		})
+		return {
+			withShareTicket: true,
+			path:
+				'/pages_product/product-detail/product-detail?src=' +
+				this.data.productId +
+				'&shareId=' +
+				wx.getStorageSync('userId')
+		}
 	},
+
 	getProductDetail() {
 		return new Promise((resolve) => {
 			http
@@ -152,6 +166,21 @@ Page({
 						})
 					}
 				})
+		})
+	},
+	getShoppingMoney() {
+		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
+			if (res.success) {
+				if (res.data) {
+					this.setData({
+						shoppingMoneyData: res.data
+					})
+				} else {
+					this.setData({
+						shoppingMoneyData: null
+					})
+				}
+			}
 		})
 	},
 	buyCard() {
@@ -220,6 +249,7 @@ Page({
 										icon: 'none',
 										duration: 2000,
 										success() {
+											wx.removeStorageSync('activeProductNumber')
 											_this.getCartDotsNum()
 										}
 									})

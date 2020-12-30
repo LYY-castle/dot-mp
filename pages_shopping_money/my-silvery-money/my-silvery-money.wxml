@@ -1,0 +1,64 @@
+<!--shopping_money/my-silvery-money/my-silvery-money.wxml-->
+<!-- <page-meta
+>
+  <navigation-bar
+    title="{{nbTitle}}"
+    front-color="{{nbFrontColor}}"
+    background-color="{{nbBackgroundColor}}"
+  />
+</page-meta> -->
+<view class="container" style="padding-top:{{navHeight}}px;">
+	<view class="custom-bar b-color-golden" style="height:{{navHeight}}px">
+		<view class="custom-bar__wrapper" style="margin-top:{{searchMarginTop}}px; height: {{searchHeight}}px;width: {{searchWidth}}px" >
+			<van-icon name="arrow-left" size="22px" bindtap="goBack" color="#ffffff"/>
+			<view class="bold c-white m-l-10">我的银点</view>
+		</view>
+	</view>
+  	<view class="top">
+		<view class="moneyContent">
+			<view class="leftMoney">
+				<view class="fz-13 c-gray">
+					可用银点(元)
+				</view>
+				<view class="m-t-10">
+					<text class="fz-20 ">{{shoppingMoneyData.cannotWithdrawAmount[0]}}.</text>
+					<text class="fz-12">{{shoppingMoneyData.cannotWithdrawAmount[1]?shoppingMoneyData.cannotWithdrawAmount[1]:'00'}}</text>
+				</view>
+			</view>
+			<view class="rightMoney">
+				<view class="fz-13 c-gray">已用银点(元)
+				</view>
+				<view class="m-t-10">
+					<text class="fz-20 ">{{shoppingMoneyData.cannotWithdrawUsedAmount[0]}}.</text>
+					<text class="fz-12">{{shoppingMoneyData.cannotWithdrawUsedAmount[1]?shoppingMoneyData.cannotWithdrawUsedAmount[1]:'00'}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="listContent">
+		<view class="m-l-10 m-b-10 c-333">充值记录</view>
+		<view class="listGroup">
+			<view
+				class="list"
+				wx:for="{{ listData }}"
+				wx:key="index"
+				wx:for-item="item"
+				wx:if="{{ listData.length > 0 }}"
+			>
+				<view>
+					<view class="m-b-5 fz-13 c-333">{{item.name}}</view>
+					<view class="c-gray fz-12">{{ item.operateAt }}</view>
+				</view>
+				<view class="c-999">
+					+￥{{ item.amount }}</view
+				>
+			</view>
+			<view wx:if="{{listData.length===0}}">
+				<van-empty description="暂无数据" />
+			</view>
+		</view>
+	</view>
+	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">我是有底线的</van-divider>
+	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
+</view>
+

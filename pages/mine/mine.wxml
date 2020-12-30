@@ -24,16 +24,17 @@
     icon="{{shoppingMoneyIcon}}"
     wx:if="{{shoppingMoneyData}}"
     value="{{shoppingMoneyData.amount}}"
+    is-link
+    bind:click="gotoShoppingMoneyDetail"
   >
   <view slot="title">
     <view class="van-cell-text">我的购物金</view>
     <van-tag type="danger" wx:if="{{shoppingMoneyData.status}}">禁用</van-tag>
   </view>
-
-
 </van-cell>
   <van-button icon="plus" plain block="{{true}}" wx:if="{{!shoppingMoneyData}}" bind:click="addShopingMoney">绑定购物金账号</van-button>
   <van-button icon="exchange" plain block="{{true}}" wx:if="{{shoppingMoneyData}}" bind:click="deleteShopingMoney">解绑购物金账号</van-button>
+   <van-button icon="service-o" block="{{true}}" open-type="contact" bind:contact="handleContact">联系客服</van-button>
   </view>
   <van-dialog id="van-dialog" />
 </view>

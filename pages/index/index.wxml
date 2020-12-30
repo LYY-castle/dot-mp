@@ -1,20 +1,38 @@
+<!-- <page-meta
+>
+  <navigation-bar
+    title="{{nbTitle}}"
+    front-color="{{nbFrontColor}}"
+    background-color="{{nbBackgroundColor}}"
+  />
+</page-meta> -->
 <view class="container">
-	<van-sticky>
-		<van-search bind:focus="focus" shape="round" background="#eee" placeholder="搜索商品" />
-	</van-sticky>
-	<view class="sort m-b-10">
-    <view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" bindtap="gotoProductList" data-item="{{sort}}" class="sortItem">
-      <van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
-      <view>{{sort.name}}</view>
-    </view>
+<view class="custom-bar b-color-yellow" style="height:{{navHeight}}px">
+	<view class="custom-bar__wrapper" style="margin-top:{{searchMarginTop}}px; height: {{searchHeight}}px;width: {{searchWidth}}px" >
+    <van-search bind:focus="focus" shape="round" background="#FDC865" placeholder="搜索商品" class="searchContent"/>
   </view>
-	<view class="text-align-center" wx:if="{{productList.length>0}}">超值特惠</view>
+</view>
+	<!-- <van-sticky> -->
+		<view class="sort" style="margin-top: {{navHeight+10}}px">
+		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts">
+						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
+							<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
+							<view>{{sort.name}}</view>
+						</view>
+					</swiper-item>
+    </swiper>
+  </view>
+	<!-- </van-sticky> -->
+	<view class="titleContent m-t-15 m-b-15" wx:if="{{productList.length>0}}">
+		<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>
+	</view>
 	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
 			<view class="imgContent">
 				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.goodsNumber===0}}">已售空</view>
-				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
-				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
+				<van-image src="{{item.listPicUrl}}" alt width="160px" height="160px" fit="contain" wx:if="{{item.listPicUrl !== ''}}" />
+				<van-image alt width="160px" height="160px" fit="contain" wx:else use-loading-slot />
 			</view>
 			<view class="textHeight textContent">
 					<view class="fz-14 m-b-5">
@@ -28,7 +46,7 @@
 					<view class="minPrice fz-12">
 						￥
 						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
-						<text class="originPrice">￥{{ item.marketPrice }}</text>
+						<text class="originPrice" wx:if="{{item.isPromote? item.promotePrice<item.marketPrice : item.retailPrice<item.marketPrice}}">￥{{ item.marketPrice }}</text>
 					</view>
 			</view>
 		</view>

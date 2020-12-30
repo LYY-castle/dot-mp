@@ -1,81 +1,83 @@
 /* pages_shopping_cart/shopping-cart.wxss */
 .container {
-  position: relative;
-  /* padding-bottom: 50px; */
+	position: relative;
+	/* padding-bottom: 50px; */
 }
 
 .loginButton {
-  display: block;
-  margin: 0 10px;
+	display: block;
+	margin: 0 10px;
 }
 
 .van-checkbox {
-  background: #fff;
-  padding: 10px;
+	background: #fff;
+	padding: 10px;
 }
 
 .van-checkbox__label {
-  width: 100%;
-
+	width: 100%;
 }
 
 .van-submit-bar__bar {
-  padding: 0 10px 0 0 !important;
+	padding: 0 10px 0 0 !important;
 }
 
 .main-content {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  margin: 10px;
-  border-radius: 7px;
-  padding: 10px 10px 10px 0;
+	display: flex;
+	align-items: center;
+	background: #fff;
+	margin: 10px;
+	border-radius: 7px;
+	padding: 10px 10px 10px 0;
 }
 
 .right-content {
-  width: 100%;
-  display: flex;
+	width: 100%;
+	display: flex;
 }
 
-
 .left {
-  text-align: left;
+	text-align: left;
 }
 
 .manage {
-  text-align: right;
-  background: #fff;
-  padding-top: 5px;
-  padding-right: 10px;
+	text-align: right;
+	background: #fff;
+	padding-top: 5px;
+	padding-right: 10px;
 }
 
 .deleteContent {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  z-index: 99;
-  display: flex;
-  justify-content: space-between;
-  justify-items: center;
-  padding: 10px 10px 10px 0;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: #fff;
+	z-index: 99;
+	display: flex;
+	justify-content: space-between;
+	justify-items: center;
+	padding: 10px 10px 10px 0;
 }
 
 .van-image {
-  background: #eee;
+	background: #eee;
 }
 
 .bg-white {
-  background: #fff;
+	background: #fff;
 }
 
 .img-content {
-  position: relative;
+	position: relative;
 }
 
 .clearText {
-  text-align: right;
-  color: #f9ae08;
-  font-size: 14px;
+	text-align: right;
+	color: #f9ae08;
+	font-size: 14px;
+}
+.submitButton {
+	background: #f8be50 !important;
+	border: none !important;
 }
