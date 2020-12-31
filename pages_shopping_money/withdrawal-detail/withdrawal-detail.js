@@ -6,6 +6,8 @@ import http from '../../utils/request'
 import utils from '../../utils/util'
 import tool from '../../utils/mixin'
 import bankInfo from '../../utils/bankInfo'
+var list = []
+const city = require('../../utils/city.js') //根据自己的文件目录选择路径
 Page({
 	/**
 	 * 页面的初始数据
@@ -20,6 +22,10 @@ Page({
 		front: '/static/img/front.png',
 		back: '/static/img/back.png',
 		userInfo: {},
+		addressStr: null,
+		multiIndex: [0, 0],
+		multiArray: city.multiArray, //引入city.js中定义的数组
+		objectMultiArray: city.objectMultiArray,
 		api: {
 			withdrawals: {
 				url: '/withdrawals',
@@ -83,10 +89,14 @@ Page({
 						this.data.userInfo.bankName = res.data.bankName
 						this.data.userInfo.phone = res.data.phone
 						this.data.userInfo.name = res.data.name
+						this.data.addressStr = res.data.openingProvince
+							? res.data.openingProvince + '/' + res.data.openingCity
+							: null
 						this.setData({
 							idCardReverse: res.data.idCardReverse,
 							idCardFront: res.data.idCardFront,
-							userInfo: this.data.userInfo
+							userInfo: this.data.userInfo,
+							addressStr: this.data.addressStr
 						})
 						const viewFrontParam = {
 							bucketName: constantCfg.minio.bucketName,
@@ -210,137 +220,128 @@ Page({
 			) {
 				if (option.bankAccount) {
 					if (isBankCard(option.bankAccount)) {
-						if (option.name) {
-							if (option.idCard) {
-								if (isIDNumber(option.idCard)) {
-									if (option.phone) {
-										if (isMobile(option.phone)) {
-											if (_this.data.frontImage && _this.data.backImage) {
-												const fee = Number(
-													(
-														(option.totalAmount *
-															100 *
-															_this.data.shoppingMoneyData.company
-																.extractFeePercent) /
-														10000
-													).toFixed(2)
-												)
-												let actualAmount = 0
-												if (
-													_this.data.shoppingMoneyData.canWithdrawAmount * 100 -
-														_this.data.userInfo.totalAmount * 100 >=
-													fee * 100
-												) {
-													actualAmount = _this.data.userInfo.totalAmount
-												} else {
-													let difference =
-														_this.data.shoppingMoneyData.canWithdrawAmount *
-															100 -
-														_this.data.userInfo.totalAmount * 100 -
-														fee * 100
-													actualAmount =
-														(_this.data.userInfo.totalAmount * 100 +
-															difference) /
-														100
-												}
-												const params = {
-													...option,
-													userId: wx.getStorageSync('userId'),
-													idCardFront: _this.data.idCardFront,
-													idCardReverse: _this.data.idCardReverse,
-													poundage: fee
-												}
-												wx.showModal({
-													title: '提示',
-													content:
-														'本次提现需要扣除平台手续费' +
-														_this.data.shoppingMoneyData.company
-															.extractFeePercent +
-														'%，去购物可免于手续费，请认真考虑哦。',
-													cancelText: '继续提现',
-													confirmText: '去购物',
-													confirmColor: '#F9AE08',
-													cancelColor: '#F9AE08',
-													success(res) {
-														if (res.confirm) {
-															wx.switchTab({
-																url: '/pages/index/index'
-															})
-														} else if (res.cancel) {
-															http
-																.wxRequest({
-																	..._this.data.api.withdrawals,
-																	params
-																})
-																.then((res) => {
-																	if (res.success) {
-																		wx.showToast({
-																			title: '提交成功',
-																			icon: 'none',
-																			success() {
-																				wx.navigateBack({
-																					delta: 1
-																				})
-																			}
-																		})
-																	} else {
-																		wx.showToast({
-																			title: res.message,
-																			icon: 'none'
-																		})
-																	}
-																})
-														}
+						if (this.data.addressStr) {
+							if (option.name) {
+								if (option.idCard) {
+									if (isIDNumber(option.idCard)) {
+										if (option.phone) {
+											if (isMobile(option.phone)) {
+												if (_this.data.frontImage && _this.data.backImage) {
+													const fee = Number(
+														(
+															(option.totalAmount *
+																100 *
+																_this.data.shoppingMoneyData.company
+																	.extractFeePercent) /
+															10000
+														).toFixed(2)
+													)
+													const params = {
+														...option,
+														userId: wx.getStorageSync('userId'),
+														idCardFront: _this.data.idCardFront,
+														idCardReverse: _this.data.idCardReverse,
+														poundage: fee,
+														openingProvince: this.data.addressStr.split('/')[0],
+														openingCity: this.data.addressStr.split('/')[1]
 													}
-												})
+													wx.showModal({
+														title: '提示',
+														content:
+															'本次提现需要扣除平台手续费' +
+															_this.data.shoppingMoneyData.company
+																.extractFeePercent +
+															'%，去购物可免于手续费，请认真考虑哦。',
+														cancelText: '继续提现',
+														confirmText: '去购物',
+														confirmColor: '#F9AE08',
+														cancelColor: '#F9AE08',
+														success(res) {
+															if (res.confirm) {
+																wx.switchTab({
+																	url: '/pages/index/index'
+																})
+															} else if (res.cancel) {
+																http
+																	.wxRequest({
+																		..._this.data.api.withdrawals,
+																		params
+																	})
+																	.then((res) => {
+																		if (res.success) {
+																			wx.showToast({
+																				title: '提交成功',
+																				icon: 'none',
+																				success() {
+																					wx.navigateBack({
+																						delta: 1
+																					})
+																				}
+																			})
+																		} else {
+																			wx.showToast({
+																				title: res.message,
+																				icon: 'none'
+																			})
+																		}
+																	})
+															}
+														}
+													})
+												} else {
+													if (this.data.frontImage) {
+														wx.showToast({
+															title: '请上传身份证反面照片',
+															icon: 'none'
+														})
+													}
+													if (this.data.backImage) {
+														wx.showToast({
+															title: '请上传身份证正面照片',
+															icon: 'none'
+														})
+													}
+													if (!this.data.frontImage && !this.data.backImage) {
+														wx.showToast({
+															title: '请上传身份证正反面照片',
+															icon: 'none'
+														})
+													}
+												}
 											} else {
-												if (this.data.frontImage) {
-													wx.showToast({
-														title: '请上传身份证反面照片',
-														icon: 'none'
-													})
-												}
-												if (this.data.backImage) {
-													wx.showToast({
-														title: '请上传身份证正面照片',
-														icon: 'none'
-													})
-												}
-												if (!this.data.frontImage && !this.data.backImage) {
-													wx.showToast({
-														title: '请上传身份证正反面照片',
-														icon: 'none'
-													})
-												}
+												wx.showToast({
+													title: '手机号格式错误',
+													icon: 'none'
+												})
 											}
 										} else {
 											wx.showToast({
-												title: '手机号格式错误',
+												title: '请输入手机号',
 												icon: 'none'
 											})
 										}
 									} else {
 										wx.showToast({
-											title: '请输入手机号',
+											title: '身份证号格式错误',
 											icon: 'none'
 										})
 									}
 								} else {
 									wx.showToast({
-										title: '身份证号格式错误',
+										title: '请输入身份证号',
 										icon: 'none'
 									})
 								}
 							} else {
 								wx.showToast({
-									title: '请输入身份证号',
+									title: '请输入持卡人姓名',
 									icon: 'none'
 								})
 							}
 						} else {
 							wx.showToast({
-								title: '请输入持卡人姓名',
-								icon: 'none'
+								title: '请选择开户行',
+								icon: none
 							})
 						}
 					} else {
@@ -368,7 +369,37 @@ Page({
 			})
 		}
 	},
-
+	bindMultiPickerChange: function (e) {
+		const str =
+			this.data.multiArray[0][e.detail.value[0]] +
+			'/' +
+			this.data.multiArray[1][e.detail.value[1]]
+		this.setData({
+			multiIndex: [e.detail.value[0], e.detail.value[1]],
+			addressStr: str
+		})
+	},
+	bindMultiPickerColumnChange: function (e) {
+		console.log('bindMultiPickerColumnChange=====', e)
+		switch (e.detail.column) {
+			case 0:
+				list = []
+				for (var i = 0; i < this.data.objectMultiArray.length; i++) {
+					if (
+						this.data.objectMultiArray[i].parid ==
+						this.data.objectMultiArray[e.detail.value].regid
+					) {
+						list.push(this.data.objectMultiArray[i].regname)
+					}
+				}
+				this.data.multiArray = [this.data.multiArray[0], list]
+				this.data.multiIndex = [e.detail.value, 0]
+				this.setData({
+					multiArray: this.data.multiArray,
+					multiIndex: this.data.multiIndex
+				})
+		}
+	},
 	/**
 	 * 生命周期函数--监听页面显示
 	 */

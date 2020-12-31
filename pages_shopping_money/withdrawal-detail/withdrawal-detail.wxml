@@ -28,6 +28,12 @@
     name="bankAccount" bind:blur="bankAccountChange"/>
     <van-field label="银行名称" placeholder="自动识别" model:value="{{userInfo.bankName}}"
     name="bankName"/>
+    <picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+      <van-field label="开户地区" readonly="{{true}}"
+          is-link="{{true}}"
+          name="addressStr"
+          value="{{ addressStr }}"/>
+    </picker>
     <van-field label="持卡人" placeholder="请输入持卡人姓名"
     model:value="{{userInfo.name}}"
     name="name"/>
