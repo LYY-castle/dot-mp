@@ -6,7 +6,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		orderInfo: {},
+		active: 0,
 		logisticsInfo: null,
 		orderId: null,
 		productId: null,
@@ -15,6 +15,7 @@ Page({
 		payment: null,
 		dialogShow: false,
 		popShow: false,
+		orderInfo: {},
 		steps: [],
 		afterSale: '',
 		afsStatus: null,
@@ -22,6 +23,7 @@ Page({
 		packageDesc: null,
 		questionDesc: '',
 		textareaHeight: { minHeight: 50 },
+		// 订单状态
 		statusMap: {
 			100: {
 				text: '待付款'
@@ -81,6 +83,7 @@ Page({
 				url: '/orders',
 				method: 'put'
 			},
+			// 获取物流进度
 			getOrderExpress: {
 				url: '/orders/{id}/order-express',
 				method: 'get'
@@ -152,7 +155,10 @@ Page({
 					res.data.orderGoods.forEach((good) => {
 						body += good.goodsName
 						good.name = util.ellipsis(good.goodsName, 30)
+						good.total =
+							(Math.round(good.retailPrice * 100) * good.number) / 100
 					})
+					console.log(res.data)
 					body = util.ellipsis(body, 29)
 					this.setData({
 						afterSale,
@@ -167,15 +173,8 @@ Page({
 							tradeType: 'JSAPI'
 						}
 					})
-					if (
-						res.data.orderStatus === 300 ||
-						res.data.orderStatus === 400 ||
-						res.data.orderStatus === 500
-					) {
-						this.getOrderExpress()
-						if (res.data.orderStatus === 500) {
-							this.getAfterSaleStatus()
-						}
+					if (res.data.orderStatus === 500) {
+						this.getAfterSaleStatus()
 					}
 				}
 			})
@@ -292,10 +291,11 @@ Page({
 			})
 			.then((res) => {
 				if (res.success) {
-					this.setData({
-						afsStatus: res.data[0].afsStatus
-					})
-					console.log(res.data[0].afsStatus)
+					if (res.data.length > 0) {
+						this.setData({
+							afsStatus: res.data[0].afsStatus
+						})
+					}
 				}
 			})
 	},
@@ -310,7 +310,7 @@ Page({
 			.then((res) => {
 				if (res.success) {
 					let express = []
-					if (res.data.traces) {
+					if (res.data) {
 						res.data.traces = JSON.parse(res.data.traces)
 						res.data.traces.forEach((tr) => {
 							let obj = {
@@ -319,15 +319,20 @@ Page({
 							}
 							express.push(obj)
 						})
+						this.setData({
+							popShow: true,
+							logisticsInfo: res.data,
+							steps: express
+						})
+					} else {
+						wx.showToast({
+							title: '暂无物流信息',
+							icon: 'none'
+						})
 					}
-					this.setData({
-						logisticsInfo: res.data,
-						steps: express
-					})
 				}
 			})
 	},
-
 	// 申请售后
 	handleContact() {
 		http
@@ -385,15 +390,14 @@ Page({
 		})
 	},
 	openPop() {
-		if (this.data.steps.length > 0) {
-			this.setData({
-				popShow: true
+		if (this.data.orderInfo.hasChildOrder) {
+			wx.navigateTo({
+				url:
+					'/pages_order/child-order-detail/child-order-detail?src=' +
+					this.data.orderId
 			})
 		} else {
-			wx.showToast({
-				title: '暂无物流信息',
-				icon: 'none'
-			})
+			this.getOrderExpress()
 		}
 	},
 	// 填写退货信息

@@ -10,6 +10,7 @@ Page({
 		nbFrontColor: '#ffffff',
 		nbBackgroundColor: '#C59E5D',
 		listData: [],
+		expireSoonMoney: null,
 		pageNo: 1,
 		pageSize: 10,
 		amountType: 1,
@@ -29,6 +30,10 @@ Page({
 			// 获取购物金相关记录
 			getLogs: {
 				url: '/shopping-account-operate-logs',
+				method: 'get'
+			},
+			getExpireSoon: {
+				url: '/shopping-accounts/amount/expire-soon',
 				method: 'get'
 			}
 		}
@@ -63,6 +68,7 @@ Page({
 	 */
 	onShow: function () {
 		this.getShoppingMoney()
+		this.getExpireSoon()
 	},
 	getShoppingMoney() {
 		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
@@ -113,6 +119,15 @@ Page({
 			}
 		})
 	},
+	getExpireSoon() {
+		http.wxRequest({ ...this.data.api.getExpireSoon }).then((res) => {
+			if (res.success) {
+				this.setData({
+					expireSoonMoney: res.data ? String(res.data).split('.') : [0]
+				})
+			}
+		})
+	},
 	goBack() {
 		wx.navigateBack({
 			delte: 1
@@ -136,6 +151,7 @@ Page({
 			pageNo: 1
 		})
 		this.getShoppingMoney()
+		this.getExpireSoon()
 		wx.stopPullDownRefresh()
 	},
 	/**

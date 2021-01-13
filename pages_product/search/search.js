@@ -2,7 +2,6 @@ import http from '../../utils/request'
 import tool from '../../utils/mixin'
 import util from '../../utils/util'
 import constantCfg from '../../config/constant'
-
 Page({
 	/**
 	 * 页面的初始数据
@@ -37,6 +36,7 @@ Page({
 			historyList: list
 		})
 	},
+
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */

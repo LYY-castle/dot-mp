@@ -1,0 +1,7 @@
+/* pages_order/child-order-detail/child-order-detail.wxss */
+.overScroll{
+  width:100%;
+  display: flex;
+  overflow: hidden;
+  overflow-x: scroll;
+}

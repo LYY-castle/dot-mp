@@ -17,8 +17,6 @@ Page({
 		loadingShow: false,
 		aboutGolden: false,
 		aboutSilvery: false,
-		leftIcon: '/static/img/voice.png',
-		rightIcon: '/static/img/close.png',
 		recordText: '使用记录',
 		operateType: 0,
 		navHeight: '',

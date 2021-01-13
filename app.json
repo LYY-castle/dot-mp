@@ -37,7 +37,8 @@
       "root": "pages_order",
       "pages": [
         "order-list/order-list",
-        "order-detail/order-detail"
+        "order-detail/order-detail",
+        "child-order-detail/child-order-detail"
       ]
     }
   ],

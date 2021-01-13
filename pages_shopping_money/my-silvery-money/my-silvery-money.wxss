@@ -24,8 +24,7 @@
 	text-align: center;
 	background: #fff;
 }
-.leftMoney,
-.rightMoney {
+.moneyItem {
 	display: inline-block;
 }
 .listContent {

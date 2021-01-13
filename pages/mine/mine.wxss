@@ -32,3 +32,12 @@
 .item image {
   display: block;
 }
+.forbiden{
+  display: inline-block;
+  color:#fff;
+  font-size: 12px;
+  background:rgb(236, 68, 68);
+  padding: 0px 10px;
+  margin-left: 5px;
+  border-radius: 5px;
+}

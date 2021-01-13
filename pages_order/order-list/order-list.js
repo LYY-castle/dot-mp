@@ -115,31 +115,33 @@ Page({
 	 */
 	onReachBottom: function () {
 		if (!this.data.bottomLineShow && !this.data.loadingShow) {
-			const pageNo = this.data.pageNo + 1
 			this.setData({
-				pageNo,
+				pageNo: this.data.pageNo + 1,
 				loadingShow: true
 			})
-			if (this.data.orderStatus === 0) {
-				this.setData({
-					params: {
-						pageNo,
-						pageSize: this.data.pageSize,
-						userId: wx.getStorageSync('userId')
-					}
-				})
-			} else {
-				this.setData({
-					params: {
-						pageNo,
-						pageSize: this.data.pageSize,
-						userId: wx.getStorageSync('userId'),
-						orderStatus: this.data.orderStatus
-					}
-				})
-			}
-			this.getOrderList()
+			this.refresh()
 		}
+	},
+	refresh() {
+		if (this.data.orderStatus === 0) {
+			this.setData({
+				params: {
+					pageNo: this.data.pageNo,
+					pageSize: this.data.pageSize,
+					userId: wx.getStorageSync('userId')
+				}
+			})
+		} else {
+			this.setData({
+				params: {
+					pageNo: this.data.pageNo,
+					pageSize: this.data.pageSize,
+					userId: wx.getStorageSync('userId'),
+					orderStatus: this.data.orderStatus
+				}
+			})
+		}
+		this.getOrderList()
 	},
 	getOrderListByType(e) {
 		this.setData({
@@ -216,9 +218,11 @@ Page({
 		})
 	},
 	orderDetail(val) {
-		const orderId = val.currentTarget.dataset.option
+		// 没有子订单
+		const option = val.currentTarget.dataset.option
+		console.log(option)
 		wx.navigateTo({
-			url: '/pages_order/order-detail/order-detail?src=' + orderId
+			url: '/pages_order/order-detail/order-detail?src=' + option.id
 		})
 	},
 	// 确认收货
@@ -269,6 +273,11 @@ Page({
 	},
 	// 下拉
 	onPullDownRefresh() {
+		this.setData({
+			pageNo: 1,
+			loadingShow: true
+		})
+		this.refresh()
 		wx.stopPullDownRefresh()
 	}
 })

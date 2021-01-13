@@ -12,10 +12,10 @@
 				<text class="fz-13" >{{statusMap[order.orderStatus].text}}</text>
 			</view>
 			<view class="container-title m-t-10" >
-				<view class="imgList" wx:if="{{order.orderGoods.length>1}}" bindtap="orderDetail" data-option="{{order.id}}">
+				<view class="imgList" wx:if="{{order.orderGoods.length>1}}" bindtap="orderDetail" data-option="{{order}}">
 					<van-image wx:for="{{order.orderGoods}}" wx:key="imgIndex" wx:for-item="image" src="{{image.listPicUrl}}" alt width="80px" height="80px" fit="cover" class="m-r-5"/>
 				</view>
-				<view wx:if="{{order.orderGoods.length===1}}" class="flex-start-start" bindtap="orderDetail" data-option="{{order.id}}">
+				<view wx:if="{{order.orderGoods.length===1}}" class="flex-start-start" bindtap="orderDetail" data-option="{{order}}">
 					<van-image src="{{order.orderGoods[0].listPicUrl}}" alt width="80px" height="80px" fit="cover" class="m-r-5"/>
 					<view class="m-l-10">
 						<view class="fz-14">{{order.orderGoods[0].name}}</view>

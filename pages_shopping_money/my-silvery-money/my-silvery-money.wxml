@@ -16,7 +16,7 @@
 	</view>
   	<view class="top">
 		<view class="moneyContent">
-			<view class="leftMoney">
+			<view class="moneyItem">
 				<view class="fz-13 c-gray">
 					可用银点(元)
 				</view>
@@ -25,12 +25,20 @@
 					<text class="fz-12">{{shoppingMoneyData.cannotWithdrawAmount[1]?shoppingMoneyData.cannotWithdrawAmount[1]:'00'}}</text>
 				</view>
 			</view>
-			<view class="rightMoney">
+			<view class="moneyItem">
 				<view class="fz-13 c-gray">已用银点(元)
 				</view>
 				<view class="m-t-10">
 					<text class="fz-20 ">{{shoppingMoneyData.cannotWithdrawUsedAmount[0]}}.</text>
 					<text class="fz-12">{{shoppingMoneyData.cannotWithdrawUsedAmount[1]?shoppingMoneyData.cannotWithdrawUsedAmount[1]:'00'}}</text>
+				</view>
+			</view>
+			<view class="moneyItem">
+				<view class="fz-13 c-gray">本月到期(元)
+				</view>
+				<view class="m-t-10">
+					<text class="fz-20 ">{{expireSoonMoney[0]}}.</text>
+					<text class="fz-12">{{expireSoonMoney[1]?expireSoonMoney[1]:'00'}}</text>
 				</view>
 			</view>
 		</view>
