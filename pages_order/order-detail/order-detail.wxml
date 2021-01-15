@@ -74,9 +74,9 @@
 			<view class="flex-between">
 				<view>订单信息</view>
 				<van-tag type="warning" wx:if="{{afsStatus}}">{{afterSaleStatus[afsStatus].text}}</van-tag>
-				<!-- <van-button size="small"  bind:click="fillAfsMsg">填写退货信息</van-button>
-				<van-button size="small" bind:click="finishAfs">确认完成售后</van-button>
-				<van-button size="small" bind:click="cancelAfs">取消售后</van-button> -->
+				<!-- <van-button size="small"  bind:click="fillAfsMsg">填写退货信息</van-button> -->
+				<!-- <van-button size="small" bind:click="finishAfs" wx:if="{{orderInfo.orderStatus===500}}">确认完成售后</van-button>
+				<van-button size="small" bind:click="cancelAfs" wx:if="{{orderInfo.orderStatus===500}}">取消售后</van-button> -->
 			</view>
 			<van-divider />
 			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{orderInfo.orderNo}}">复制</text></view>

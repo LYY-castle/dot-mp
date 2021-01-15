@@ -119,6 +119,11 @@ Page({
 		const orderId = option.currentTarget.dataset.id
 		this.getOrderExpress(orderId)
 	},
+	closePop() {
+		this.setData({
+			popShow: false
+		})
+	},
 	copy(e) {
 		const text = e.currentTarget.dataset.text
 		wx.setClipboardData({

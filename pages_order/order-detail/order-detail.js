@@ -408,7 +408,7 @@ Page({
 			orderId: this.data.orderInfo.id,
 			afsStatus: 60
 		}
-		http.wxRequest({ ...this.data.ensureAfs, params }).then((res) => {
+		http.wxRequest({ ...this.data.api.ensureAfs, params }).then((res) => {
 			if (res.success) {
 				this.getOrderDetail()
 			}
@@ -420,7 +420,7 @@ Page({
 			orderId: this.data.orderInfo.id,
 			afsStatus: 70
 		}
-		http.wxRequest({ ...this.data.ensureAfs, params }).then((res) => {
+		http.wxRequest({ ...this.data.api.ensureAfs, params }).then((res) => {
 			if (res.success) {
 				this.getOrderDetail()
 			}
