@@ -311,14 +311,16 @@ Page({
 				if (res.success) {
 					let express = []
 					if (res.data) {
-						res.data.traces = JSON.parse(res.data.traces)
-						res.data.traces.forEach((tr) => {
-							let obj = {
-								text: tr.content,
-								desc: tr.msgTime
-							}
-							express.push(obj)
-						})
+						res.data.traces = res.data.traces ? JSON.parse(res.data.traces) : []
+						if (res.data.traces.length > 0) {
+							res.data.traces.forEach((tr) => {
+								let obj = {
+									text: tr.content,
+									desc: tr.msgTime
+								}
+								express.push(obj)
+							})
+						}
 						this.setData({
 							popShow: true,
 							logisticsInfo: res.data,

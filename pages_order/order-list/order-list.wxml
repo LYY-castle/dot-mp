@@ -30,7 +30,7 @@
 						:￥{{ order.actualPrice }}
 					</view>
 				</view>
-				<view wx:if="{{order.orderStatus===300}}" class="flex-between-end m-t-10">
+				<view wx:if="{{order.orderStatus===300||(order.orderStatus===500&&order.shippingStatus)}}" class="flex-between-end m-t-10">
 					<van-button plain hairline size="small" color="#f9ae08" bind:click="ensureOrder" data-option="{{order.id}}">确认收货</van-button>
 				</view>
 				<view wx:if="{{order.orderStatus===400||order.orderStatus===600}}" class="flex-between-end m-t-10">
