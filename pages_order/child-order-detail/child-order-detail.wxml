@@ -35,11 +35,11 @@
 	<van-popup show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
 				<!-- 已发货 -->
 			<view wx:if="{{logisticsInfo}}" class="p-l-15">
-				<view class="flex-start-start m-t-10 fz-12" >
+				<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.shipperName}}">
 					<text class="left-width c-gray">快递公司</text>
 					<view class="black">{{logisticsInfo.shipperName}}</view>
 				</view>
-				<view class="flex-start-start m-t-10 fz-12" >
+				<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.shipperName}}">
 					<text class="left-width c-gray">运单号</text>
 					<view class="black">{{logisticsInfo.logisticCode}} <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{logisticsInfo.logisticCode}}">复制</text></view>
 				</view>

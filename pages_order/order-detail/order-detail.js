@@ -78,7 +78,7 @@ Page({
 				url: '/payment/wx/order',
 				method: 'post'
 			},
-			// 取消订单
+			// 取消订单/未收到货申请售后
 			cancelOrder: {
 				url: '/orders',
 				method: 'put'
@@ -88,7 +88,7 @@ Page({
 				url: '/orders/{id}/order-express',
 				method: 'get'
 			},
-			// 售后状态
+			// 获取售后状态
 			updateAfterSale: {
 				url: '/after-sales',
 				method: 'get'
@@ -334,20 +334,23 @@ Page({
 			})
 	},
 	// 申请售后
-	handleContact() {
-		http
-			.wxRequest({
-				...this.data.api.cancelOrder,
-				params: {
-					id: this.data.orderInfo.id,
-					orderStatus: '500'
-				}
-			})
-			.then((res) => {
-				if (res.success) {
-					this.getOrderDetail()
-				}
-			})
+	handleContact(option) {
+		const object = option.currentTarget.dataset.option
+		if (object) {
+			http
+				.wxRequest({
+					...this.data.api.cancelOrder,
+					params: {
+						id: object.id,
+						orderStatus: '500'
+					}
+				})
+				.then((res) => {
+					if (res.success) {
+						this.getOrderDetail()
+					}
+				})
+		}
 	},
 	// 京东平台收到货之后申请售后
 	jdAfs() {

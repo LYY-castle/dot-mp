@@ -43,16 +43,12 @@
 			<van-icon name="delete" bindtap="clearHistoryList" wx:if="{{historyList.length > 0}}" />
 		</view>
 		<view class="searchItemContent" wx:if="{{historyList.length > 0}}">
-			<van-tag
-				round
-				wx:for="{{historyList}}"
+			<view wx:for="{{historyList}}"
 				wx:for-item="list"
 				wx:key="listIndex"
-				class="m-r-5 m-t-5"
+				class="m-r-5 m-t-5 text_ellipsis"
 				data-item="{{list}}"
-				bindtap="selectList"
-				>{{ list }}</van-tag
-			>
+				bindtap="selectList">{{list}}</view>
 		</view>
 		<van-empty description="暂无搜索记录" wx:else></van-empty>
 	</view>

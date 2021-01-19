@@ -5,7 +5,7 @@ Page {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
-view{
+view {
 	box-sizing: border-box;
 }
 .container {
@@ -406,7 +406,7 @@ view{
 	color: #f9ae08;
 }
 .b-color-yellow {
-	background:linear-gradient(to right, #FEC87D, #FDC852);
+	background: linear-gradient(to right, #fec87d, #fdc852);
 }
 .b-color-golden {
 	background: linear-gradient(to right, #c59e5d, #e0c48a);
@@ -425,4 +425,15 @@ view{
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+}
+.text_ellipsis {
+	padding:3px 10px;
+	border-radius: 10px;
+	background:#ccc;
+	font-size: 12px;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp:1;
+	overflow:hidden;
+	text-overflow: ellipsis;
 }

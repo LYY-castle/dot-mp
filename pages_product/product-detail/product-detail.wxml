@@ -19,7 +19,7 @@
         </view>
         <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice<goods.marketPrice : goods.retailPrice<goods.marketPrice}}">￥{{goods.marketPrice}}</view>
       </view>
-      <view class="fz-14 m-b-5">{{goods.name}}</view>
+      <text class="fz-14 m-b-5" user-select="{{true}}">{{goods.name}}</text>
       <!-- <view class="flex-start fz-14" wx:if="{{goods.isRebate&&shoppingMoneyData}}">
       <van-icon name="{{rebateIcon}}" class="m-r-10"/>
       <text class="c-gray">自买或分享赚佣金</text>
