@@ -75,6 +75,9 @@ Page({
 			isOnSale: 1
 		}
 		this.getProductList(params)
+		wx.pageScrollTo({
+			scrollTop: 0
+		})
 	},
 	// 获取特惠产品的列表
 	getProductList(params) {

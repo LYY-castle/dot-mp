@@ -108,7 +108,7 @@
 				/>
 			</view>
 	</view>
-	<van-submit-bar price="{{actualPrice * 100}}" color="#f9ae08" tip="{{ true }}" button-text="提交" bind:submit="onSubmit" safe-area-inset-bottom>
+	<van-submit-bar price="{{actualPrice * 100}}" color="#f9ae08" tip="{{ true }}" button-text="提交" bind:submit="onSubmit" disabled="{{disabledBtn}}" safe-area-inset-bottom>
 		<view class="text-color-ccc">
 			<tex>共{{ totalCount }}件</tex>
 		</view>

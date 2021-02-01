@@ -217,10 +217,10 @@ Page({
 				})
 		})
 	},
+	// 查看订单详情
 	orderDetail(val) {
 		// 没有子订单
 		const option = val.currentTarget.dataset.option
-		console.log(option)
 		wx.navigateTo({
 			url: '/pages_order/order-detail/order-detail?src=' + option.id
 		})
@@ -247,6 +247,7 @@ Page({
 			}
 		})
 	},
+	// 删除订单
 	deleteOrder(e) {
 		const id = e.currentTarget.dataset.option
 		const _this = this
@@ -262,7 +263,11 @@ Page({
 						})
 						.then((res) => {
 							if (res.success) {
-								_this.getOrderList()
+								_this.setData({
+									pageNo: 1,
+									loadingShow: true
+								})
+								_this.refresh()
 							}
 						})
 				} else if (res.cancel) {

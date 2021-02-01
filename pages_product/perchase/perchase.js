@@ -7,6 +7,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		disabledBtn: false,
 		remarkShow: false,
 		money: null, // 购物金
 		shoppingMoneyData: null,
@@ -325,6 +326,14 @@ Page({
 	},
 	// 生成订单
 	onSubmit() {
+		this.setData({
+			disabledBtn: true
+		})
+		setTimeout(() => {
+			this.setData({
+				disabledBtn: false
+			})
+		}, 3000)
 		if (this.data.order) {
 			if (this.data.selectMoney) {
 				if (this.data.shoppingMoney > 0) {

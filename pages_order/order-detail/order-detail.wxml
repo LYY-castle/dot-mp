@@ -49,13 +49,8 @@
 		<view class="flex-between m-b-10 c-gray" wx:if="{{orderInfo.shippingFee}}">运费<text>+￥{{orderInfo.shippingFee}}</text></view>
 		<view class="flex-between m-b-10 c-gray" wx:if="{{orderInfo.shoppingMoney}}">购物金抵扣<text class="c-red">-￥{{orderInfo.shoppingMoney}}</text></view>
 		<van-divider />
-		<view class="flex-between m-b-10">
-			<view>
-				<van-button size="small" wx:if="{{orderInfo.orderStatus===200||orderInfo.orderStatus===300}}" open-type="contact" bind:contact="handleContact" data-option="{{orderInfo}}">{{afterSale}}</van-button>
-			</view>
-			<view class="lex-between-end">
+		<view class="flex-between-end m-b-10">
 			{{orderInfo.orderStatus>=200?'实':orderInfo.orderStatus===100?'需':''}}付款<text class="bold fz-14">￥{{orderInfo.actualPrice}}</text>
-			</view>
 		</view>
 	</view>
 		<view class="border p-10 m-10 ">
@@ -79,9 +74,10 @@
 			<view class="flex-between">
 				<view>订单信息</view>
 				<van-tag type="warning" wx:if="{{afsStatus}}">{{afterSaleStatus[afsStatus].text}}</van-tag>
-				<!-- <van-button size="small"  bind:click="fillAfsMsg">填写退货信息</van-button> -->
-				<!-- <van-button size="small" bind:click="finishAfs" wx:if="{{orderInfo.orderStatus===500}}">确认完成售后</van-button>
-				<van-button size="small" bind:click="cancelAfs" wx:if="{{orderInfo.orderStatus===500}}">取消售后</van-button> -->
+				<van-button size="small" wx:if="{{orderInfo.orderStatus===200||orderInfo.orderStatus===300}}" open-type="contact" bind:contact="handleContact" data-option="{{orderInfo}}">{{afterSale}}</van-button>
+				<van-button size="small"  bind:click="jdAfs" wx:if="{{orderInfo.orderStatus===400&&orderInfo.platformType===2}}">退货</van-button>
+				<van-button size="small" bind:click="finishAfs" wx:if="{{orderInfo.orderStatus===500&&orderInfo.platformType===2}}">确认完成售后</van-button>
+				<van-button size="small" bind:click="cancelAfs" wx:if="{{orderInfo.orderStatus===500&&orderInfo.platformType===2}}">取消售后</van-button>
 			</view>
 			<van-divider />
 			<view class="c-gray fz-12"><text class="left-width">订单编号</text><text class="black">{{orderInfo.orderNo}}</text> <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{orderInfo.orderNo}}">复制</text></view>
@@ -94,7 +90,6 @@
 		<view class="m-10">
 			<van-button plain block="{{true}}" round="{{true}}" color="rgba(0,0,0,.6)" bind:click="cancelPay" wx:if="{{orderInfo.orderStatus===100}}">取消订单</van-button>
 		</view>
-
 			<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm" >
 			</van-dialog>
 			<van-dialog id="van-dialog" />
@@ -111,5 +106,29 @@
 				</view>
 			</view>
 				<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160"/>
+			</van-popup>
+			<van-popup show="{{ jdAfsShow }}" bind:close="closejdAfs" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
+				<!-- 退货信息填写 -->
+			<form catchsubmit="applyByJd">
+				 <van-cell title="包装" use-label-slot>
+					 	<van-radio-group value="{{ packageDesc }}" bind:change="onPackageChange" slot="label">
+						<view class="flex-start-center">
+							<van-radio  wx:for="{{packageList}}" name="{{item.id}}" class="van-radio-self">{{item.text}}</van-radio>
+						</view>
+					</van-radio-group>
+				 </van-cell>
+
+				<van-field
+					label="备注"
+					name="questionDesc"
+					type="textarea"
+					autosize="{{textareaHeight}}"
+					show-confirm-bar="{{false}}"
+					model:value="{{ questionDesc }}"
+					placeholder="请输入备注"
+					border="{{ false }}"
+				/>
+				<van-button block="{{true}}" color="#f9ae08" form-type="submit" class="blockButton">提交</van-button>
+			</form>
 			</van-popup>
 </view>

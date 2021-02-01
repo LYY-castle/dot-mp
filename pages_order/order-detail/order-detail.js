@@ -20,7 +20,7 @@ Page({
 		afterSale: '',
 		afsStatus: null,
 		jdAfsShow: false,
-		packageDesc: null,
+		packageDesc: 0,
 		questionDesc: '',
 		textareaHeight: { minHeight: 50 },
 		// 订单状态
@@ -68,6 +68,20 @@ Page({
 				text: '取消'
 			}
 		},
+		packageList: [
+			{
+				id: 0,
+				text: '无包装'
+			},
+			{
+				id: 10,
+				text: '包装完整'
+			},
+			{
+				id: 20,
+				text: '包装破损'
+			}
+		],
 		api: {
 			getOrderById: {
 				url: '/orders/{id}',
@@ -335,7 +349,7 @@ Page({
 				}
 			})
 	},
-	// 申请售后
+	// 未发货申请售后/已发货申请售后
 	handleContact(option) {
 		const object = option.currentTarget.dataset.option
 		if (object) {
@@ -354,10 +368,39 @@ Page({
 				})
 		}
 	},
+
 	// 京东平台收到货之后申请售后
 	jdAfs() {
 		this.setData({
 			jdAfsShow: true
+		})
+	},
+	closejdAfs() {
+		this.setData({
+			jdAfsShow: false
+		})
+	},
+	onPackageChange(option) {
+		const obj = Number(option.detail)
+		this.setData({
+			packageDesc: obj
+		})
+		console.log(obj)
+	},
+	// 京东平台收到货之后申请售后
+	applyByJd(val) {
+		const params = {
+			orderId: this.data.orderInfo.id,
+			packageDesc: this.data.packageDesc,
+			questionDesc: val.detail.value.questionDesc
+		}
+		http.wxRequest({ ...this.data.api.jdAfs, params }).then((res) => {
+			if (res.success) {
+				this.setData({
+					jdAfsShow: false
+				})
+				this.getOrderDetail()
+			}
 		})
 	},
 	ensureAfsByJd() {
@@ -384,16 +427,6 @@ Page({
 			}
 		})
 	},
-	onChange(event) {
-		this.setData({
-			packageDesc: event.detail
-		})
-	},
-	onClose() {
-		this.setData({
-			jdAfsShow: false
-		})
-	},
 	openPop() {
 		if (this.data.orderInfo.hasChildOrder) {
 			wx.navigateTo({
@@ -405,8 +438,6 @@ Page({
 			this.getOrderExpress()
 		}
 	},
-	// 填写退货信息
-	fillAfsMsg() {},
 	// 确认完成售后
 	finishAfs() {
 		const params = {

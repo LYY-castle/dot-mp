@@ -63,4 +63,9 @@
 	position: fixed;
 	bottom:50px;
 	right:0;
+	z-index: 9;
+}
+.flex-start-center .van-radio-self{
+	display: inline-block!important;
+	margin-right:5px;
 }
