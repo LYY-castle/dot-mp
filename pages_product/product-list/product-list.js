@@ -156,7 +156,8 @@ Page({
 		return new Promise((resolve) => {
 			const params = {
 				idPath: this.data.firstPath,
-				level: 3
+				level: 3,
+				enable: 1
 			}
 			http.wxRequest({ ...this.data.api.getTree, params }).then((res) => {
 				if (res.success) {

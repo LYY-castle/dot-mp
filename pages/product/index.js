@@ -106,7 +106,8 @@ Page({
 			.wxRequest({
 				...this.data.api.getTree,
 				params: {
-					idPath: this.data.firstTypes[this.data.activeKey].idPath
+					idPath: this.data.firstTypes[this.data.activeKey].idPath,
+					enable: 1
 				}
 			})
 			.then((res) => {

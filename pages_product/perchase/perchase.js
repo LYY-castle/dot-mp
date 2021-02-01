@@ -74,6 +74,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onShow: function (options) {
+		this.disabledBtn = false
 		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
@@ -267,32 +268,32 @@ Page({
 	// 获取商品运费
 	getGoodsFee() {
 		return new Promise((resolve) => {
-			let params = {
-				provinceName: this.data.order.provinceName,
-				cityName: this.data.order.cityName,
-				districtName: this.data.order.districtName,
-				address: this.data.order.address,
-				goodsFreightModels: []
-			}
-			if (this.data.cartPerchase) {
-				this.data.dataList.forEach((list) => {
-					const obj = {
-						platformGoodsId: list.goods.platformGoodsId,
-						platformType: list.goods.platformType,
-						goodsNum: list.number,
-						goodsId: list.goods.id
-					}
-					params.goodsFreightModels.push(obj)
-				})
-			} else {
-				params.goodsFreightModels[0] = {
-					platformGoodsId: this.data.goods.platformGoodsId,
-					platformType: this.data.goods.platformType,
-					goodsId: this.data.goods.id,
-					goodsNum: 1
+			if (this.data.order && this.data.order.provinceName) {
+				let params = {
+					provinceName: this.data.order.provinceName,
+					cityName: this.data.order.cityName,
+					districtName: this.data.order.districtName,
+					address: this.data.order.address,
+					goodsFreightModels: []
 				}
-			}
-			if (this.data.order.provinceName) {
+				if (this.data.cartPerchase) {
+					this.data.dataList.forEach((list) => {
+						const obj = {
+							platformGoodsId: list.goods.platformGoodsId,
+							platformType: list.goods.platformType,
+							goodsNum: list.number,
+							goodsId: list.goods.id
+						}
+						params.goodsFreightModels.push(obj)
+					})
+				} else {
+					params.goodsFreightModels[0] = {
+						platformGoodsId: this.data.goods.platformGoodsId,
+						platformType: this.data.goods.platformType,
+						goodsId: this.data.goods.id,
+						goodsNum: 1
+					}
+				}
 				http
 					.wxRequest({
 						...this.data.api.getFee,
@@ -329,11 +330,6 @@ Page({
 		this.setData({
 			disabledBtn: true
 		})
-		setTimeout(() => {
-			this.setData({
-				disabledBtn: false
-			})
-		}, 3000)
 		if (this.data.order) {
 			if (this.data.selectMoney) {
 				if (this.data.shoppingMoney > 0) {
@@ -457,6 +453,10 @@ Page({
 							dialogShow: true
 						})
 					}
+				} else {
+					this.setData({
+						disabledBtn: fase
+					})
 				}
 			})
 	},
