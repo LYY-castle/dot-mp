@@ -74,7 +74,12 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onShow: function (options) {
-		this.disabledBtn = false
+		this.pageInit()
+	},
+	pageInit() {
+		this.setData({
+			disabledBtn: false
+		})
 		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
@@ -91,26 +96,6 @@ Page({
 				.then(() => this.getGoodsFee())
 		}
 	},
-	// onUnload: function () {
-	// 	if (this.data.cartPerchase) {
-	// 		wx.redirectTo({
-	// 			url: '/pages/shopping_cart/shopping-cart'
-	// 		})
-	// 	} else {
-	// 		const pathParams = {
-	// 			productId: this.data.goods.id
-	// 		}
-	// 		wx.redirectTo({
-	// 			url: '/pages_product/product-detail/product-detail',
-	// 			success: function (res) {
-	// 				// 通过eventChannel向被打开页面传送数据
-	// 				res.eventChannel.emit('acceptDataFromOpenerPage', {
-	// 					data: pathParams
-	// 				})
-	// 			}
-	// 		})
-	// 	}
-	// },
 	getProduct() {
 		return new Promise((resolve) => {
 			http
@@ -454,9 +439,7 @@ Page({
 						})
 					}
 				} else {
-					this.setData({
-						disabledBtn: fase
-					})
+					this.pageInit()
 				}
 			})
 	},
