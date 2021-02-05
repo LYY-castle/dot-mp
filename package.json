@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"@vant/weapp": "1.4.1",
+		"@vant/weapp": "1.4.4",
 		"address-parse": "^1.2.0",
 		"crypto-js": "^4.0.0",
 		"js-md5": "^0.7.3",
