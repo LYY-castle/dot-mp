@@ -156,6 +156,7 @@ Page({
 		return new Promise((resolve) => {
 			const params = {
 				idPath: this.data.firstPath,
+				isAdmin: true,
 				level: 3,
 				enable: 1
 			}
