@@ -1,4 +1,3 @@
-// pages_shopping_cart/shopping-cart.js
 import http from '../../utils/request'
 import util from '../../utils/util'
 import tool from '../../utils/mixin'
@@ -104,9 +103,9 @@ Page({
 		}
 		http.wxRequest({ ...this.data.api.getCart, params }).then((res) => {
 			if (res.success) {
-				let resultArr = []
-				let disabledCount = 0
-				let shoppingCartListEffective = []
+				let resultArr = [],
+					disabledCount = 0,
+					shoppingCartListEffective = []
 				res.data.forEach((item) => {
 					if (!item.goods.isOnSale) {
 						disabledCount += 1
@@ -164,9 +163,6 @@ Page({
 		const idArr = this.data.shoppingCartListEffective.map((item) => {
 			return String(item.id)
 		})
-		const optionId = idArr.concat(detail).filter(function (v, i, arr) {
-			return arr.indexOf(v) === arr.lastIndexOf(v)
-		})
 		if (!this.data.deleteButtonShow) {
 			this.getTotalPrice(this.data.result, this.data.shoppingCartListEffective)
 		}
@@ -222,12 +218,12 @@ Page({
 		}
 	},
 	addCount(event) {
-		const option = event.currentTarget.dataset.option
-		const params = {
-			id: option.id,
-			productId: option.product.id,
-			number: event.detail
-		}
+		const option = event.currentTarget.dataset.option,
+			params = {
+				id: option.id,
+				productId: option.product.id,
+				number: event.detail
+			}
 		http.wxRequest({ ...this.data.api.updateCart, params }).then((res) => {
 			if (res.success) {
 				this.getShoppingOrderList()

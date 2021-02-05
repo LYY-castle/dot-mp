@@ -171,10 +171,10 @@ Page({
 		})
 	},
 	gotoDetail(e) {
-		const option = e.currentTarget.dataset.option
-		const pathParams = {
-			productId: option.id
-		}
+		const option = e.currentTarget.dataset.option,
+			pathParams = {
+				productId: option.id
+			}
 		wx.navigateTo({
 			url: '/pages_product/product-detail/product-detail',
 			success: function (res) {
@@ -195,13 +195,12 @@ Page({
 				loadingShow: true,
 				pageNo: this.data.pageNo + 1
 			})
-			let params = {
+			this.getProductList({
 				categoryId: this.data.activeTab,
 				pageNo: this.data.pageNo,
 				pageSize: 10,
 				isOnSale: 1
-			}
-			this.getProductList(params)
+			})
 		}
 	},
 	// 下拉刷新
@@ -209,13 +208,12 @@ Page({
 		this.setData({
 			pageNo: 1
 		})
-		let params = {
+		this.getProductList({
 			categoryId: this.data.activeTab,
 			pageNo: this.data.pageNo,
 			pageSize: 10,
 			isOnSale: 1
-		}
-		this.getProductList(params)
+		})
 		wx.stopPullDownRefresh()
 	},
 	/**
