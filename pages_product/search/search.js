@@ -46,7 +46,6 @@ Page({
 				loadingShow: true,
 				pageNo: this.data.pageNo + 1
 			})
-			console.log('触发加载事件,第', this.data.pageNo + '页面')
 			this.getProductList()
 		}
 	},

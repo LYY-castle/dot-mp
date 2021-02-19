@@ -111,7 +111,6 @@ Page({
 		const _this = this
 		_this.getMyAddressList()
 		if (_this.data.options.src) {
-			console.log('分享得到的连接', _this.data.options)
 			this.setData({
 				productId: _this.data.options.src
 			})

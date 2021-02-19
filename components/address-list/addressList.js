@@ -33,7 +33,6 @@ Component({
 			})
 		},
 		selectAddress(option) {
-			console.log(option)
 			const addressId = option.currentTarget.dataset.option.id
 			wx.setStorageSync('activeAddressId', addressId)
 			this.triggerEvent('selectAddressItem')

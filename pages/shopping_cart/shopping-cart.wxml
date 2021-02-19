@@ -31,7 +31,6 @@
           </view>
           <view class="m-l-10" style="width:100%">
             <view class="fz-14">{{item.goods.name}}</view>
-            状态{{item.goods.isPlaceAnOrder===0}}
             <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}" wx:if="{{item.goodsSpecificationNameValue}}">
               {{item.goodsSpecificationNameValue}}
               <van-icon name="arrow-down" size="10" />

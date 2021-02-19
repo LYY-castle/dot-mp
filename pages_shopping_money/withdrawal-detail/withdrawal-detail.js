@@ -117,7 +117,6 @@ Page({
 							})
 						})
 					}
-					console.log(res.data)
 				}
 			})
 	},
@@ -130,7 +129,6 @@ Page({
 				e.detail.value +
 				'&cardBinCheck=true',
 			success: function (res) {
-				console.log(res.data.bank)
 				const bankData = bankInfo.bankcardList
 				for (let i = 0; i < bankData.length; i++) {
 					if (res.data.bank === bankData[i].bankCode) {
@@ -142,7 +140,6 @@ Page({
 						break
 					}
 				}
-				console.log(_this.data.userInfo)
 			}
 		})
 	},
@@ -380,7 +377,6 @@ Page({
 		})
 	},
 	bindMultiPickerColumnChange: function (e) {
-		console.log('bindMultiPickerColumnChange=====', e)
 		switch (e.detail.column) {
 			case 0:
 				list = []

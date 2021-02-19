@@ -172,7 +172,6 @@ Page({
 						good.total =
 							(Math.round(good.retailPrice * 100) * good.number) / 100
 					})
-					console.log(res.data)
 					body = util.ellipsis(body, 29)
 					this.setData({
 						afterSale,

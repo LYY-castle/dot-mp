@@ -601,7 +601,6 @@ Page({
 	shoppingMoneyChange(e) {
 		const money = Number(e.detail)
 		const flag = this.checkMoney()
-		console.log(money, flag)
 		if (flag) {
 			const actualPrice = this.data.totalPrice + this.data.shippingFee - money
 			this.setData({

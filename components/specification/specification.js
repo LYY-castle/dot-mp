@@ -98,7 +98,6 @@ Component({
 					goodsSpecificationPicUrl:
 						e.currentTarget.dataset.option.goodsSpecificationPicUrl
 				}
-				console.log(e)
 				let totalNum = 0 // 计算当前选中的总数量
 				let currentPic = ''
 				let currentPrice = this.data.activePrice
