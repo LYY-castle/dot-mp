@@ -31,6 +31,7 @@ Page({
 		cartPerchase: false,
 		disabledShow: false,
 		shippingFee: 0,
+		orderId: null,
 		api: {
 			addOrder: {
 				url: '/orders',
@@ -73,12 +74,16 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
-	onShow: function (options) {
+	onShow: function () {
 		this.pageInit()
 	},
 	pageInit() {
 		this.setData({
-			disabledBtn: false
+			disabledBtn: false,
+			selectMoney: false,
+			shoppingMoney: null,
+			remark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : null,
+			newRemark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : ''
 		})
 		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
@@ -173,6 +178,18 @@ Page({
 			totalPrice: totalPrice,
 			actualPrice: (totalPrice * 100 + this.data.shippingFee * 100) / 100
 		})
+	},
+	numberChange(option) {
+		const num = option.detail
+		if (num > this.data.product.productNumber) {
+			wx.showToast({
+				title: '超出库存',
+				icon: 'none'
+			})
+		} else {
+			wx.setStorageSync('activeProductNumber', num)
+		}
+		this.calculation()
 	},
 	getListDataByCartIds() {
 		return new Promise((resolve) => {
@@ -312,24 +329,55 @@ Page({
 	},
 	// 生成订单
 	onSubmit() {
-		this.setData({
-			disabledBtn: true
-		})
-		if (this.data.order) {
-			if (this.data.selectMoney) {
-				if (this.data.shoppingMoney > 0) {
-					const flag = this.checkMoney()
+		const _this = this
+
+		if (_this.data.order) {
+			// 用户有购物金账户
+			if (_this.data.shoppingAccountId) {
+				if (_this.data.shoppingMoney > 0) {
+					const flag = _this.checkMoney()
 					if (flag) {
-						this.addOrder()
+						if (
+							this.data.shoppingMoney <
+							this.data.totalPrice + this.data.shippingFee
+						) {
+							wx.showModal({
+								title: '请确认',
+								content: '确认不使用全部购物金抵消订单金额？',
+								success(res) {
+									if (res.confirm) {
+										_this.setData({
+											disabledBtn: true
+										})
+										_this.addOrder()
+									} else {
+										console.log('取消')
+									}
+								}
+							})
+						} else {
+							_this.setData({
+								disabledBtn: true
+							})
+							_this.addOrder()
+						}
 					}
 				} else {
-					wx.showToast({
-						title: '请填写需要使用的购物金',
-						icon: 'none'
+					wx.showModal({
+						title: '请确认',
+						content: '确认不使用购物金？',
+						success(res) {
+							if (res.confirm) {
+								_this.addOrder()
+							} else {
+								console.log('取消')
+							}
+						}
 					})
 				}
 			} else {
-				this.addOrder()
+				// 用户没有购物金账户
+				_this.addOrder()
 			}
 		} else {
 			wx.showToast({
@@ -421,6 +469,7 @@ Page({
 					body = util.ellipsis(body, 29)
 					this.setData({
 						actualPrice: actualPrice,
+						orderId: res.data[0].id,
 						payment: {
 							openid: wx.getStorageSync('openId'),
 							outTradeNo: res.data[0].mainOrderNo,
@@ -431,7 +480,9 @@ Page({
 					})
 					if (this.data.payment.totalFee === 0) {
 						wx.navigateTo({
-							url: '/pages_order/order-list/order-list'
+							url:
+								'/pages_product/perchase-success/perchase-success?src=' +
+								this.data.orderId
 						})
 					} else {
 						this.setData({
@@ -467,7 +518,7 @@ Page({
 	// 拉起微信支付
 	confirm() {
 		const _this = this
-		if (this.data.payment.totalFee > 0) {
+		if (_this.data.payment.totalFee > 0) {
 			http
 				.wxRequest({
 					..._this.data.api.payment,
@@ -486,12 +537,16 @@ Page({
 						...wechatParams,
 						success(res) {
 							wx.navigateTo({
-								url: '/pages_order/order-list/order-list'
+								url:
+									'/pages_product/perchase-success/perchase-success?src=' +
+									_this.data.orderId
 							})
 						},
 						fail(res) {
 							wx.navigateTo({
-								url: '/pages_order/order-list/order-list'
+								url:
+									'/pages_product/perchase-success/perchase-success?src=' +
+									_this.data.orderId
 							})
 						}
 					})
@@ -524,16 +579,16 @@ Page({
 		// 判断购物金是否小于等于商品总价且小于等于可用余额
 		if (this.data.shoppingMoney <= this.data.shoppingMoneyData.amount) {
 			if (
-				this.data.shoppingMoney <=
+				this.data.shoppingMoney >
 				this.data.totalPrice + this.data.shippingFee
 			) {
-				return true
-			} else {
 				wx.showToast({
 					title: '购物金超出待付总额',
 					icon: 'none'
 				})
 				return false
+			} else {
+				return true
 			}
 		} else {
 			wx.showToast({
@@ -579,8 +634,13 @@ Page({
 		})
 	},
 	remarkSure() {
+		if (this.data.remark) {
+			wx.setStorageSync('remark', this.data.remark)
+		} else {
+			wx.removeStorageSync('remark')
+		}
 		this.setData({
-			newRemark: this.data.remark
+			newRemark: this.data.remark ? this.data.remark : ''
 		})
 		this.closeRemark()
 	}

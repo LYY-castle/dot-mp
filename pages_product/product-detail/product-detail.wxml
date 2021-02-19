@@ -17,7 +17,7 @@
           <text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>
           <text wx:if="{{specificationResults.length>0}}">起</text>
         </view>
-        <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice<goods.marketPrice : goods.retailPrice<goods.marketPrice}}">￥{{goods.marketPrice}}</view>
+        <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice < goods.marketPrice : goods.retailPrice < goods.marketPrice}}">￥{{goods.marketPrice}}</view>
       </view>
       <text class="fz-14 m-b-5" user-select="{{true}}">{{goods.name}}</text>
       <!-- <view class="flex-start fz-14" wx:if="{{goods.isRebate&&shoppingMoneyData}}">
@@ -26,6 +26,24 @@
       <text class="c-color-yellow bold">￥{{goods.rebateAmount}}</text>
     </view> -->
     </view>
+     <view class="border p-10 m-10" wx:if="{{goods.platformType===2}}">
+       <view class="flex-between-start m-t-10" bindtap="openAddressPop">
+        <view class="flex-start-start">
+          <text class="fz-14 bold">送至</text>
+          <view class="fz-12 m-l-10">
+            <view class="flex-start-start">
+              <van-icon name="location-o" class="m-r-5 fz-14" color="#ee0a24" />
+              <view wx:if="{{addressListData.length>0}}" >
+                {{activeAddressItem.provinceName}}{{activeAddressItem.cityName}}{{activeAddressItem.districtName}}{{activeAddressItem.address}}
+              </view>
+              <view wx:if="{{addressListData.length===0}}">广东省深圳市南山区</view>
+            </view>
+            <view class="bold m-t-5">{{jdSku.stockStateDesc}}</view>
+          </view>
+        </view>
+        <van-icon name="ellipsis" />
+      </view>
+     </view>
     <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
       <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
       <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
@@ -41,13 +59,14 @@
       <van-empty description="暂无描述信息" wx:else />
     </view>
   </view>
+  <address-list addressShow="{{addressShow}}" addressListData="{{addressListData}}" bind:selectAddressItem="selectAddressItem"></address-list>
   <specification perchaseShow="{{perchaseShow}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
   <van-goods-action>
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
-    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
-    <van-goods-action-button wx:if="{{goods.goodsNumber>0&&goods.isOnSale}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.isOnSale&&goods.goodsNumber===0}}" />
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.platformType!==2?goods.isOnSale&&goods.goodsNumber===0:!jdSku.isPlaceAnOrder}}" />
     <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{!goods.isOnSale}}" />
   </van-goods-action>
 </view>

@@ -33,6 +33,11 @@ Page({
 		productId: null,
 		cartId: null,
 		cartCount: 0,
+		activeAddressItem: null,
+		jdSku: null,
+		addressListData: [],
+		addressShow: false,
+		searchIsHasProductArr: [],
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -68,6 +73,14 @@ Page({
 			config: {
 				url: '/configs/code/{code}',
 				method: 'get'
+			},
+			getAddressList: {
+				url: '/user-address',
+				method: 'get'
+			},
+			hasProduct: {
+				url: '/jd-goods/inventory',
+				method: 'post'
 			}
 		}
 	},
@@ -75,8 +88,9 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-		wx.removeStorageSync('activeAddressId')
 		wx.removeStorageSync('addAddress')
+		wx.removeStorageSync('remark')
+		this.getMyAddressList()
 		this.getShoppingOrderList()
 	},
 	// 下拉
@@ -96,17 +110,20 @@ Page({
 		}
 	},
 	getShoppingOrderList() {
+		const searchIsHasProductArr = []
 		const params = {
 			pageNo: this.data.pageNo,
 			pageSize: this.data.pageSize,
 			userId: wx.getStorageSync('userId')
 		}
-		http.wxRequest({ ...this.data.api.getCart, params }).then((res) => {
+		http.wxRequest({ ...this.data.api.getCart, params }).then(async (res) => {
 			if (res.success) {
 				let resultArr = [],
 					disabledCount = 0,
 					shoppingCartListEffective = []
+
 				res.data.forEach((item) => {
+					item.goods.name = util.ellipsis(item.goods.name, 30)
 					if (!item.goods.isOnSale) {
 						disabledCount += 1
 					} else {
@@ -127,6 +144,14 @@ Page({
 						resultArr.push(String(item.id))
 					}
 				})
+				shoppingCartListEffective.forEach((item) => {
+					if (item.goods.platformType === 2) {
+						searchIsHasProductArr.push(item)
+						this.setData({
+							searchIsHasProductArr
+						})
+					}
+				})
 				this.setData({
 					cartCount: res.page.totalCount,
 					shoppingCartListEffective,
@@ -134,6 +159,7 @@ Page({
 					result: resultArr,
 					all: resultArr.length === shoppingCartListEffective.length
 				})
+
 				if (params.pageNo === 1) {
 					this.setData({
 						loadingShow: false,
@@ -150,9 +176,120 @@ Page({
 						bottomLineShow: true
 					})
 				}
+
 				this.getTotalPrice(resultArr, this.data.shoppingCartListEffective)
+				if (this.data.searchIsHasProductArr.length > 0) {
+					this.isHasProduct()
+				}
 			}
 		})
+	},
+	// 获取当前用户的收货地址
+	getMyAddressList() {
+		const params = {
+			userId: wx.getStorageSync('userId'),
+			pageSize: 100,
+			pageNo: 1
+		}
+		const activeAddressId = wx.getStorageSync('activeAddressId')
+		http.wxRequest({ ...this.data.api.getAddressList, params }).then((res) => {
+			if (res.success) {
+				if (res.data.length > 0) {
+					res.data.forEach((item) => {
+						item.bigName = item.name.substring(0, 1)
+					})
+					if (params.pageNo === 1) {
+						this.setData({
+							addressListData: res.data
+						})
+					} else {
+						this.setData({
+							addressListData: this.data.res.data.concat(res.data)
+						})
+					}
+					if (activeAddressId) {
+						res.data.forEach((item) => {
+							if (item.id === activeAddressId) {
+								this.setData({
+									activeAddressItem: item
+								})
+							}
+						})
+					} else {
+						this.setData({
+							activeAddressItem: res.data[0]
+						})
+					}
+				}
+			}
+		})
+	},
+	// 判断当前地址下是否有货
+	isHasProduct() {
+		let goodsInventoryNumModels = []
+		this.data.searchIsHasProductArr.forEach((arr) => {
+			goodsInventoryNumModels.push({
+				num: arr.number,
+				skuId: arr.goods.platformGoodsId
+			})
+		})
+		const params = {
+			provinceName: this.data.activeAddressItem
+				? this.data.activeAddressItem.provinceName
+				: '广东省',
+			cityName: this.data.activeAddressItem
+				? this.data.activeAddressItem.cityName
+				: '深圳市',
+			districtName: this.data.activeAddressItem
+				? this.data.activeAddressItem.districtName
+				: '南山区',
+			address: this.data.activeAddressItem
+				? this.data.activeAddressItem.address
+				: 0,
+			goodsInventoryNumModels
+		}
+		return new Promise((resovle) => {
+			http.wxRequest({ ...this.data.api.hasProduct, params }).then((res) => {
+				if (res.success) {
+					res.data.forEach((result) => {
+						this.data.shoppingCartListEffective.forEach((eff) => {
+							if (eff.goods.platformGoodsId === String(result.skuId)) {
+								eff.goods.isPlaceAnOrder = result.isPlaceAnOrder
+							}
+						})
+					})
+					this.setData({
+						shoppingCartListEffective: this.data.shoppingCartListEffective
+					})
+					resovle()
+				}
+			})
+		})
+	},
+	openAddressPop() {
+		if (this.data.addressListData.length > 0) {
+			this.setData({
+				addressShow: true
+			})
+		} else {
+			wx.showToast({
+				title: '收货地址列表为空',
+				icon: 'none',
+				duration: 2000,
+				success() {
+					wx.navigateTo({
+						url: '/pages_address/add-address/add-address'
+					})
+				}
+			})
+		}
+	},
+	selectAddressItem() {
+		this.setData({
+			addressShow: false
+		})
+		this.getMyAddressList()
+		this.getShoppingOrderList()
 	},
 	onChange(event) {
 		const detail = event.detail
@@ -266,10 +403,13 @@ Page({
 							}
 						})
 					})
-					const flag = flagArr.every((item) => {
-						return item.product.productNumber > 0
+					const flag = flagArr.some((item) => {
+						return item.goods.platformType !== 2
+							? item.product.productNumber === 0
+							: item.goods.isPlaceAnOrder === 0
 					})
-					if (flag) {
+
+					if (!flag) {
 						wx.setStorageSync('perchaseByCart', true)
 						wx.navigateTo({
 							url: '/pages_product/perchase/perchase'

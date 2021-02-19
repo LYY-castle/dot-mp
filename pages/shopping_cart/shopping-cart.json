@@ -12,7 +12,8 @@
     "van-tag": "@vant/weapp/tag/index",
     "van-icon": "@vant/weapp/icon/index",
     "specification": "/components/specification/specification",
-    "van-sticky": "@vant/weapp/sticky/index"
+    "van-sticky": "@vant/weapp/sticky/index",
+    "address-list": "/components/address-list/addressList"
   },
   "navigationBarTitleText": ""
 }

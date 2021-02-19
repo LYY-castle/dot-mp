@@ -1,0 +1,20 @@
+<!--pages_product/perchase-success/perchase-success.wxml-->
+<page-meta>
+    <navigation-bar
+      title="{{nbTitle}}"
+    />
+  </page-meta>
+<view>
+  <view class="text-align-center b-color-yellow p-t-40 p-b-40" wx:if="{{order}}">
+    <van-icon name="passed" size="50" color="#ffffff" wx:if="{{order.payStatus}}"/>
+    <van-icon name="close" size="50" color="#ffffff" wx:if="{{!order.payStatus}}"/>
+    <view class="c-color-white m-t-10" >{{order.payStatus?'支付成功':'支付失败'}}</view>
+  </view>
+  <van-cell title="订单编号" value="{{order.orderNo}}"></van-cell>
+  <van-cell title="下单时间" value="{{order.createAt}}"></van-cell>
+  <van-cell title="订单状态" value="{{statusMap[order.orderStatus].text}}"></van-cell>
+  <view class="flex-between p-20">
+    <van-button round="{{true}}" bindtap="goOrderDetail">订单详情</van-button>
+    <van-button round="{{true}}" bindtap="goHome">继续购物</van-button>
+  </view>
+</view>

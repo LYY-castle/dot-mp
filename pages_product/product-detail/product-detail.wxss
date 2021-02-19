@@ -111,3 +111,9 @@ van-button {
 	display: inline-block;
 	margin: 5px;
 }
+.flex-content {
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}

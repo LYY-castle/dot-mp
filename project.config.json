@@ -92,9 +92,9 @@
           "scene": null
         },
         {
-          "name": "pages_product/product-detail/product-detail",
-          "pathName": "pages_product/product-detail/product-detail",
-          "query": "userId=1&productId=1176",
+          "name": "pages_product/perchase-success/perchase-success",
+          "pathName": "pages_product/perchase-success/perchase-success",
+          "query": "src=337",
           "scene": null
         },
         {

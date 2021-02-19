@@ -1,0 +1,58 @@
+<!--components/address-list/addressList.wxml-->
+<van-popup
+	show="{{ addressShow }}"
+	bind:close="closeAddressPop"
+	round
+	position="bottom"
+	safe-area-inset-bottom="{{ true }}"
+	closeable
+	custom-style="height:80%;overflow:scroll"
+	class="popContent"
+>
+	<view class="m-t-20 text-align-center">配送至</view>
+	<view>
+		<view
+			wx:for="{{ addressListData }}"
+			wx:key="index"
+			class="addressItem"
+			hover-stop-propagation="{{ true }}"
+			wx:if="{{ addressListData.length > 0 }}"
+		>
+			<view class="roundName">{{ item.bigName }}</view>
+			<view
+				class="m-l-10 m-r-20 addressDetail"
+				bindtap="selectAddress"
+				data-option="{{ item }}"
+			>
+				<text class="fz-16">{{ item.name }}</text>
+				<text class="m-l-10">{{ item.mobile }}</text>
+				<van-tag
+					wx:if="{{ item.isDefault }}"
+					round
+					type="danger"
+					class="fz-12 m-l-15 p-l-10 p-r-10"
+					>默认</van-tag
+				>
+				<view class="fz-12 m-t-5"
+					>{{ item.provinceName }}{{ item.cityName }}{{ item.districtName
+					}}{{ item.address }}</view
+				>
+			</view>
+			<van-icon
+				name="edit"
+				bind:click="onEdit"
+				data-option="{{ item.id }}"
+			></van-icon>
+		</view>
+	</view>
+	<view class="buttonGroup">
+		<van-button
+			round
+			block="{{ true }}"
+			class="buttonItem"
+			color="#f9ae08"
+			bind:click="addAddress"
+			>新增地址</van-button
+		>
+	</view>
+</van-popup>

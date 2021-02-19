@@ -8,10 +8,13 @@ Page({
 	data: {
 		indicatorDots: true,
 		perchaseShow: false,
+		addressShow: false,
+		addressListData: [],
 		vertical: false,
 		autoplay: false,
 		interval: 2000,
 		duration: 500,
+		options: null,
 		showContent: true,
 		pageTitle: '',
 		pathParams: null,
@@ -32,6 +35,10 @@ Page({
 		operateType: null,
 		shoppingMoneyData: null,
 		rebateIcon: '/static/img/rebate.png',
+		pageNo: 1,
+		activeAddressItem: null,
+		// 京东平台在指定地址下是否有库存
+		jdSku: null,
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -54,6 +61,14 @@ Page({
 			getShoppingMoney: {
 				url: '/user-shopping-accounts',
 				method: 'get'
+			},
+			getAddressList: {
+				url: '/user-address',
+				method: 'get'
+			},
+			hasProduct: {
+				url: '/jd-goods/inventory',
+				method: 'post'
 			}
 		}
 	},
@@ -61,15 +76,44 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		const _this = this
+		if (options) {
+			_this.setData({
+				options: options
+			})
+		}
 		wx.removeStorageSync('perchaseByCart')
-		wx.removeStorageSync('activeAddressId')
 		wx.removeStorageSync('addAddress')
 		wx.removeStorageSync('activeProductNumber')
-		const _this = this
-		if (options.src) {
-			console.log('分享得到的连接', options)
+		wx.removeStorageSync('remark')
+		_this.getMyAddressList()
+		if (_this.data.options.src) {
 			this.setData({
-				productId: options.src
+				productId: _this.data.options.src
+			})
+			_this.getProductDetail()
+			_this.getShoppingMoney()
+			_this.getCartDotsNum()
+		} else {
+			const eventChannel = this.getOpenerEventChannel()
+			eventChannel.on('acceptDataFromOpenerPage', function (res) {
+				_this.setData({
+					pathParams: res.data,
+					productId: res.data.productId
+				})
+				_this.getProductDetail()
+				_this.getCartDotsNum()
+				_this.getShoppingMoney()
+			})
+		}
+	},
+	onShow: function () {
+		const _this = this
+		_this.getMyAddressList()
+		if (_this.data.options.src) {
+			console.log('分享得到的连接', _this.data.options)
+			this.setData({
+				productId: _this.data.options.src
 			})
 			_this.getProductDetail()
 			_this.getShoppingMoney()
@@ -112,7 +156,96 @@ Page({
 				wx.getStorageSync('userId')
 		}
 	},
-
+	// 获取当前用户的收货地址
+	getMyAddressList() {
+		const params = {
+			userId: wx.getStorageSync('userId'),
+			pageSize: 100,
+			pageNo: 1
+		}
+		const activeAddressId = wx.getStorageSync('activeAddressId')
+		http.wxRequest({ ...this.data.api.getAddressList, params }).then((res) => {
+			if (res.success) {
+				if (res.data.length > 0) {
+					res.data.forEach((item) => {
+						item.bigName = item.name.substring(0, 1)
+					})
+					if (params.pageNo === 1) {
+						this.setData({
+							addressListData: res.data
+						})
+					} else {
+						this.setData({
+							addressListData: this.data.res.data.concat(res.data)
+						})
+					}
+					if (activeAddressId) {
+						res.data.forEach((item) => {
+							if (item.id === activeAddressId) {
+								this.setData({
+									activeAddressItem: item
+								})
+							}
+						})
+					} else {
+						this.setData({
+							activeAddressItem: res.data[0]
+						})
+					}
+				}
+			}
+		})
+	},
+	// 判断当前地址下是否有货
+	isHasProduct(val) {
+		const params = {
+			provinceName: this.data.activeAddressItem
+				? this.data.activeAddressItem.provinceName
+				: '广东省',
+			cityName: this.data.activeAddressItem
+				? this.data.activeAddressItem.cityName
+				: '深圳市',
+			districtName: this.data.activeAddressItem
+				? this.data.activeAddressItem.districtName
+				: '南山区',
+			address: this.data.activeAddressItem
+				? this.data.activeAddressItem.address
+				: 0,
+			goodsInventoryNumModels: [{ num: 1, skuId: val.goodsSn }]
+		}
+		http.wxRequest({ ...this.data.api.hasProduct, params }).then((res) => {
+			if (res.success) {
+				this.setData({
+					jdSku: res.data[0]
+				})
+			}
+		})
+	},
+	openAddressPop() {
+		if (this.data.addressListData.length > 0) {
+			this.setData({
+				addressShow: true
+			})
+		} else {
+			wx.showToast({
+				title: '收货地址列表为空',
+				icon: 'none',
+				duration: 2000,
+				success() {
+					wx.navigateTo({
+						url: '/pages_address/add-address/add-address'
+					})
+				}
+			})
+		}
+	},
+	selectAddressItem() {
+		this.setData({
+			addressShow: false
+		})
+		this.getMyAddressList()
+		this.getProductDetail()
+	},
 	getProductDetail() {
 		return new Promise((resolve) => {
 			http
@@ -124,6 +257,9 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
+						if (res.data.goods.platformType === 2) {
+							this.isHasProduct(res.data.goods)
+						}
 						if (res.data.goods.goodsDetail) {
 							res.data.goods.goodsDetail = res.data.goods.goodsDetail.replace(
 								/\<img/gi,
@@ -159,6 +295,7 @@ Page({
 								: res.data.goods.retailPrice,
 							activeProductNumber: res.data.goods.goodsNumber
 						})
+
 						resolve()
 					} else {
 						this.setData({

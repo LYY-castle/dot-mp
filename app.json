@@ -19,7 +19,8 @@
         "search/search",
         "product-list/product-list",
         "product-detail/product-detail",
-        "perchase/perchase"
+        "perchase/perchase",
+        "perchase-success/perchase-success"
       ]
     },
     {

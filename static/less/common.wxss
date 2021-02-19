@@ -405,6 +405,9 @@ view {
 .c-color-yellow {
 	color: #f9ae08;
 }
+.c-color-white{
+	color: #ffffff;
+}
 .b-color-yellow {
 	background: linear-gradient(to right, #fec87d, #fdc852);
 }

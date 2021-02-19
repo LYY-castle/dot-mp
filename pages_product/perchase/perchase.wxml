@@ -35,11 +35,10 @@
 					<view class="c-gray" style="text-align:right">x{{totalCount}}</view>
 				</view>
 			</view>
-			<!-- <view class="flex-between">
+			<view class="flex-between">
 				<view class="text-content">购买数量</view>
 				<van-stepper value="{{totalCount}}" min="1" max="{{product.productNumber}}" bind:change="numberChange"/>
-			</view> -->
-
+			</view>
 			<view class="flex-between m-t-10 m-b-10" bindtap="remarkChange">
 				<view class="text-content">备注</view>
 				<view class="remarkText">{{newRemark!==''?newRemark:'选填'}}</view>

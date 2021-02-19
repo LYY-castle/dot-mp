@@ -54,12 +54,19 @@ Page({
 			.then(() => this.getProductList())
 	},
 	onShow() {
-		Promise.resolve()
-			.then(() => this.getProductSorts())
-			.then(() => this.getProductList())
-	},
-	test() {
-		this.getProductSorts()
+		const { top, width, height, right } = this.data.menuButtonInfo
+		wx.getSystemInfo({
+			success: (res) => {
+				const { statusBarHeight } = res
+				const margin = top - statusBarHeight
+				this.setData({
+					navHeight: height + statusBarHeight + margin * 2,
+					searchMarginTop: statusBarHeight + margin, // 状态栏 + 胶囊按钮边距
+					searchHeight: height, // 与胶囊按钮同高
+					searchWidth: right - width // 胶囊按钮右边坐标 - 胶囊按钮宽度 = 按钮左边可使用宽度
+				})
+			}
+		})
 	},
 	scrollToTop() {
 		wx.pageScrollTo({

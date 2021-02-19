@@ -3,22 +3,35 @@
   <van-sticky>
     <view class="flex-between p-10 bg-white">
       <text class="fz-16 bold">购物车({{cartCount}})</text>
+      <view bindtap="openAddressPop">
+          <view class="fz-14 bold">配送至<van-icon name="location-o" class="m-r-5 fz-14" /></view>
+          <view class="fz-12 m-l-10">
+            <view class="flex-start-start">
+              <view wx:if="{{addressListData.length>0}}" >
+                {{activeAddressItem.provinceName}}{{activeAddressItem.cityName}}{{activeAddressItem.districtName}}{{activeAddressItem.address}}
+              </view>
+              <view wx:if="{{addressListData.length===0}}">广东省深圳市南山区</view>
+            </view>
+            <view class="bold m-t-10">{{jdSku.stockStateDesc}}</view>
+          </view>
+        </view>
       <text bindtap="manage" class="fz-13">{{manage}}</text>
     </view>
   </van-sticky>
-
   <view wx:if="{{shoppingCartList.length > 0}}">
     <van-checkbox-group value="{{ result }}" bind:change="onChange">
       <view class="{{item.product.productNumber===0?'flex-start main-content disabled-content':'flex-start main-content'}}" wx:for="{{shoppingCartListEffective}}" wx:key="index" wx:for-item="item">
     <van-checkbox name="{{item.id}}" class="checkItem" bindtap="itemChange" data-option="{{item}}" checked-color="#ee0a24"></van-checkbox>
         <view class="right-content">
           <view bindtap="gotoGoodDetail" data-option="{{item}}" class="img-content">
-            <view class="hasNoGoodsOrSaleOut" wx:if="{{item.product.productNumber===0}}">已售空</view>
+
+            <view class="hasNoGoodsOrSaleOut" wx:if="{{ item.goods.platformType !== 2?item.product.productNumber===0:item.goods.isPlaceAnOrder===0}}">已售空</view>
             <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
             <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
           </view>
           <view class="m-l-10" style="width:100%">
             <view class="fz-14">{{item.goods.name}}</view>
+            状态{{item.goods.isPlaceAnOrder===0}}
             <view class="guige m-t-5" bindtap="selectGuige" data-option="{{item}}" data-index="{{index}}" wx:if="{{item.goodsSpecificationNameValue}}">
               {{item.goodsSpecificationNameValue}}
               <van-icon name="arrow-down" size="10" />
@@ -102,5 +115,6 @@
     </van-checkbox>
     <van-button size="small" bindtap="deleteCarts" round class="m-r-10">删除</van-button>
   </view>
+  <address-list addressShow="{{addressShow}}" addressListData="{{addressListData}}" bind:selectAddressItem="selectAddressItem"></address-list>
   <specification perchaseShow="{{perchaseShow}}" selectNameValueArr="{{specArray}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
 </view>
