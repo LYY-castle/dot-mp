@@ -66,7 +66,8 @@ Page({
 	onTabChange(e) {
 		this.setData({
 			activeTab: e.detail.name,
-			thirdId: e.detail.name
+			thirdId: e.detail.name,
+			pageNo: 1
 		})
 		let params = {
 			categoryId: this.data.activeTab,
