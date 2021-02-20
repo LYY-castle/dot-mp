@@ -76,7 +76,7 @@ Page({
 		})
 	},
 	goHome() {
-		wx.swichTab({
+		wx.switchTab({
 			url: '/pages/index/index'
 		})
 	},
