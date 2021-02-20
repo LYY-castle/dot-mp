@@ -72,7 +72,7 @@
 		custom-style="height: 200px"
 		>
 				<view class="buttons">
-					<view class="{{item.text===recordText?'buttonItem m-b-10 activeColor':'buttonItem m-b-10 normalColor'}}" wx:for="{{recordList}}" bindtap="selectList" data-option="{{item}}">{{item.text}}</view>
+					<view class="{{item.text===recordText?'buttonItem m-b-10 activeColor':'buttonItem m-b-10 normalColor'}}" wx:for="{{recordList}}" wx:key="btnIndex" bindtap="selectList" data-option="{{item}}">{{item.text}}</view>
 				</view>
 		</van-popup>
 	</view>

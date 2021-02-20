@@ -15,7 +15,7 @@
 	<!-- <van-sticky> -->
 		<view class="sort" style="margin-top: {{navHeight+10}}px">
 		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
-					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts">
+					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
 							<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
 							<view>{{sort.name}}</view>
