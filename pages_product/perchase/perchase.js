@@ -344,14 +344,18 @@ Page({
 							wx.showModal({
 								title: '请确认',
 								content: '确认不使用全部购物金抵消订单金额？',
+								cancelText: '不使用',
+								confirmText: '使用',
 								success(res) {
 									if (res.confirm) {
+										_this.setData({
+											selectMoney: true
+										})
+									} else {
 										_this.setData({
 											disabledBtn: true
 										})
 										_this.addOrder()
-									} else {
-										console.log('取消')
 									}
 								}
 							})
@@ -366,11 +370,15 @@ Page({
 					wx.showModal({
 						title: '请确认',
 						content: '确认不使用购物金？',
+						cancelText: '不使用',
+						confirmText: '使用',
 						success(res) {
 							if (res.confirm) {
-								_this.addOrder()
+								_this.setData({
+									selectMoney: true
+								})
 							} else {
-								console.log('取消')
+								_this.addOrder()
 							}
 						}
 					})

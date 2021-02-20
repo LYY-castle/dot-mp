@@ -104,6 +104,7 @@
 					border="{{ false }}"
 					bind:blur="checkMoney"
 					bind:change="shoppingMoneyChange"
+					focus="{{selectMoney}}"
 				/>
 			</view>
 	</view>

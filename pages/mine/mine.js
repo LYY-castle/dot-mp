@@ -124,8 +124,7 @@ Page({
 		const _this = this
 		Dialog.confirm({
 			title: '确认解绑',
-			message: '解绑后您将无法使用购物金购买商品',
-			asyncClose: true
+			message: '解绑后您将无法使用购物金购买商品'
 		})
 			.then(() => {
 				http
