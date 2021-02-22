@@ -9,7 +9,7 @@
 }
 
 .container .sort {
-	height: 160px;
+	height: 95px;
 	margin: 0 12px;
 	background: #fff;
 	border-radius: 7px;
@@ -18,8 +18,9 @@
 	box-sizing: border-box;
 	padding: 10px 0;
 	width: 100%;
+	overflow-x: scroll;
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: no-wrap;
 }
 .sortItem {
 	width: 20%;
@@ -52,4 +53,10 @@ swiper {
 .titleContent {
 	text-align: center;
 	margin: 0 auto;
+}
+.activity{
+	height: 200px;
+	margin: 0 12px;
+	background: #fff;
+	border-radius: 7px;
 }

@@ -1,19 +1,17 @@
-<!-- <page-meta
->
-  <navigation-bar
-    title="{{nbTitle}}"
-    front-color="{{nbFrontColor}}"
-    background-color="{{nbBackgroundColor}}"
-  />
-</page-meta> -->
 <view class="container">
 <view class="custom-bar b-color-yellow" style="height:{{navHeight}}px">
 	<view class="custom-bar__wrapper" style="margin-top:{{searchMarginTop}}px; height: {{searchHeight}}px;width: {{searchWidth}}px" >
     <van-search bind:focus="focus" shape="round" background="#FDC865" placeholder="搜索商品" class="searchContent"/>
   </view>
 </view>
-	<!-- <van-sticky> -->
-		<view class="sort" style="margin-top: {{navHeight+10}}px">
+	<view class="activity" style="margin-top: {{navHeight+10}}px">
+			<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+					<swiper-item class="activityContent" wx:for="{{activities}}" wx:for-item="activity" wx:key="activityIndex">
+							<van-image src="{{activity.img}}" alt width="40px" height="40px" fit="cover"/>
+					</swiper-item>
+    </swiper>
+	</view>
+		<view class="sort">
 		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
 					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
@@ -23,7 +21,6 @@
 					</swiper-item>
     </swiper>
   </view>
-	<!-- </van-sticky> -->
 	<view class="titleContent m-t-15 m-b-15" wx:if="{{productList.length>0}}">
 		<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>
 	</view>

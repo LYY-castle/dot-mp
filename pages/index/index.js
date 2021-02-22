@@ -32,7 +32,13 @@ Page({
 			'/static/img/product-04.png'
 		],
 		titleImg: '/static/img/title.png',
-		pageNo: 1
+		pageNo: 1,
+		activities: [
+			{ img: '/static/img/product-01.png' },
+			{ img: '/static/img/product-01.png' },
+			{ img: '/static/img/product-01.png' },
+			{ img: '/static/img/product-01.png' }
+		]
 	},
 
 	onLoad() {
@@ -170,7 +176,7 @@ Page({
 			tool.getProductSorts(params).then((res) => {
 				if (res.success) {
 					let currentData = res.data
-					let num = currentData.length / 10
+					let num = currentData.length / 5
 					if (num > 1) {
 						this.setData({
 							indicatorDots: true
@@ -178,9 +184,9 @@ Page({
 						for (let i = 0; i < num; i++) {
 							this.data.productSortsArr[i] = []
 							let arr = []
-							for (let j = 10 * i; j < currentData.length; j++) {
+							for (let j = 5 * i; j < currentData.length; j++) {
 								arr.push(currentData[j])
-								if (arr.length === 10) {
+								if (arr.length === 5) {
 									break
 								}
 							}
