@@ -193,7 +193,9 @@ Component({
 		_operate() {
 			let flag = false
 			if (
-				this.data.selectOption.length === this.data.specificationResults.length
+				this.data.selectOption.length ===
+					this.data.specificationResults.length &&
+				this.data.productId
 			) {
 				flag = true
 			}
