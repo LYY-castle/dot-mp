@@ -59,12 +59,12 @@
   </view>
   <address-list addressShow="{{addressShow}}" addressListData="{{addressListData}}" bind:selectAddressItem="selectAddressItem"></address-list>
   <specification perchaseShow="{{perchaseShow}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
-  <van-goods-action>
+  <van-goods-action wx:if="{{goods}}">
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.platformType!==2?goods.isOnSale&&goods.goodsNumber===0:!jdSku.isPlaceAnOrder}}" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{!goods.isOnSale}}" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{goods.isOnSale===0}}" />
   </van-goods-action>
 </view>
