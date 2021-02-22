@@ -34,10 +34,7 @@ Page({
 		titleImg: '/static/img/title.png',
 		pageNo: 1,
 		activities: [
-			{ img: '/static/img/product-01.png' },
-			{ img: '/static/img/product-01.png' },
-			{ img: '/static/img/product-01.png' },
-			{ img: '/static/img/product-01.png' }
+			{ img: '/static/img/product-01.png', activeCode: 'team-perchase' }
 		]
 	},
 
@@ -228,6 +225,15 @@ Page({
 				})
 			}
 		})
+	},
+	goActivity(option) {
+		console.log(option)
+		const code = option.currentTarget.dataset.item.activeCode
+		if (code === 'team-perchase') {
+			wx.navigateTo({
+				url: '/pages_product/team-perchase/team-perchase'
+			})
+		}
 	},
 	/**
 	 * 页面上拉触底事件的处理函数

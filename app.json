@@ -20,7 +20,8 @@
         "product-list/product-list",
         "product-detail/product-detail",
         "perchase/perchase",
-        "perchase-success/perchase-success"
+        "perchase-success/perchase-success",
+        "team-perchase/team-perchase"
       ]
     },
     {

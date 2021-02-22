@@ -6,12 +6,12 @@
 </view>
 	<view class="activity" style="margin-top: {{navHeight+10}}px">
 			<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
-					<swiper-item class="activityContent" wx:for="{{activities}}" wx:for-item="activity" wx:key="activityIndex">
+					<swiper-item class="activityContent" wx:for="{{activities}}" wx:for-item="activity" wx:key="activityIndex" bindtap="goActivity" data-item="{{activity}}">
 							<van-image src="{{activity.img}}" alt width="40px" height="40px" fit="cover"/>
 					</swiper-item>
     </swiper>
 	</view>
-		<view class="sort">
+		<view class="sort m-t-10">
 		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
 					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">

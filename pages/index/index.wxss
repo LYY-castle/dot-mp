@@ -54,8 +54,8 @@ swiper {
 	text-align: center;
 	margin: 0 auto;
 }
-.activity{
-	height: 200px;
+.activity {
+	height: 150px;
 	margin: 0 12px;
 	background: #fff;
 	border-radius: 7px;
