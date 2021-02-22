@@ -11,7 +11,7 @@ Page({
 		productList: [],
 		bottomLineShow: false,
 		loadingShow: false,
-		page: 1
+		pageNo: 1
 	},
 
 	/**
@@ -27,7 +27,9 @@ Page({
 	/**
 	 * 生命周期函数--监听页面显示
 	 */
-	onShow: function () {},
+	onShow: function () {
+		this.getProductList()
+	},
 	// 获取特惠产品的列表
 	getProductList() {
 		return new Promise((resolve) => {
