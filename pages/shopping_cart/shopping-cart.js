@@ -196,7 +196,6 @@ Page({
 			if (res.success) {
 				if (res.data.length > 0) {
 					res.data.forEach((item) => {
-						item.address = util.ellipsis(item.address, 5)
 						item.bigName = item.name.substring(0, 1)
 					})
 					if (params.pageNo === 1) {
@@ -210,6 +209,7 @@ Page({
 					}
 					if (activeAddressId) {
 						res.data.forEach((item) => {
+							item.address = util.ellipsis(item.address, 5)
 							if (item.id === activeAddressId) {
 								this.setData({
 									activeAddressItem: item
@@ -217,8 +217,10 @@ Page({
 							}
 						})
 					} else {
+						let addressItem = res.data[0]
+						addressItem.address = util.ellipsis(addressItem.address, 5)
 						this.setData({
-							activeAddressItem: res.data[0]
+							activeAddressItem: addressItem
 						})
 					}
 				}
