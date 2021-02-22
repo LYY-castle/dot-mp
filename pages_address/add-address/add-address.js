@@ -75,7 +75,6 @@ Page({
 	},
 	formSubmit(e) {
 		const option = e.detail.value
-		// // 新增
 		const params = {
 			province: Number(this.data.province),
 			city: Number(this.data.city),
@@ -84,7 +83,7 @@ Page({
 			mobile: option.mobile,
 			address: option.address,
 			userId: wx.getStorageSync('userId'),
-			isDefault: option.isDefault ? 1 : 0
+			isDefault: this.data.isDefault ? 1 : 0
 		}
 		if (option.name) {
 			if (option.mobile) {

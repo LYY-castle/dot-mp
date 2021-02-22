@@ -27,20 +27,18 @@
     </view> -->
     </view>
      <view class="border p-10 m-10" wx:if="{{goods.platformType===2}}">
-       <view class="flex-between-start m-t-10" bindtap="openAddressPop">
-        <view class="flex-start-start">
-          <text class="fz-14 bold">送至</text>
-          <view class="fz-12 m-l-10">
-            <view class="flex-start-start">
-              <van-icon name="location-o" class="m-r-5 fz-14" color="#ee0a24" />
+       <view class="flex-between" bindtap="openAddressPop">
+        <view class="flex-start">
+          <text class="fz-12 bold">送至</text>
+          <van-icon name="location-o" class="m-l-10 m-r-5 fz-12" color="#ee0a24" />
+          <view class="fz-12">
               <view wx:if="{{addressListData.length>0}}" >
                 {{activeAddressItem.provinceName}}{{activeAddressItem.cityName}}{{activeAddressItem.districtName}}{{activeAddressItem.address}}
               </view>
               <view wx:if="{{addressListData.length===0}}">广东省深圳市南山区</view>
-            </view>
-            <view class="bold m-t-5">{{jdSku.stockStateDesc}}</view>
           </view>
         </view>
+        <view class="bold fz-12">{{jdSku.stockStateDesc}}</view>
         <van-icon name="ellipsis" />
       </view>
      </view>

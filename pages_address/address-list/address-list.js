@@ -105,10 +105,7 @@ Page({
 	},
 	selectAddress(e) {
 		const option = e.currentTarget.dataset.option
-		if (
-			wx.getStorageSync('activeAddressId') ||
-			wx.getStorageSync('addAddress')
-		) {
+		if (wx.getStorageSync('addAddress')) {
 			wx.setStorageSync('activeAddressId', option.id)
 			wx.redirectTo({
 				url: '/pages_product/perchase/perchase'
