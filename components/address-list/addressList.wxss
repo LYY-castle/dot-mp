@@ -39,3 +39,8 @@
 	width: 90%;
 	transform: translate(-50%, 0);
 }
+.addressContent {
+	height: 90%;
+	padding-bottom: 70px;
+	overflow: scroll;
+}

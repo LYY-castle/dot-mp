@@ -6,11 +6,11 @@
 	position="bottom"
 	safe-area-inset-bottom="{{ true }}"
 	closeable
-	custom-style="height:80%;overflow:scroll"
+	custom-style="height:80%;overflow:hidden"
 	class="popContent"
 >
 	<view class="m-t-20 text-align-center">配送至</view>
-	<view>
+	<view class="addressContent">
 		<view
 			wx:for="{{ addressListData }}"
 			wx:key="index"
