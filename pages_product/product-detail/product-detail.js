@@ -35,10 +35,14 @@ Page({
 		operateType: null,
 		shoppingMoneyData: null,
 		rebateIcon: '/static/img/rebate.png',
+		addPerson: '/static/img/add-person.png',
 		pageNo: 1,
 		activeAddressItem: null,
 		// 京东平台在指定地址下是否有库存
 		jdSku: null,
+		authorization: false, // 授权获取用户手机号，生成购物金账号
+		isGroupPurchase: 0,
+		campaignProductPriceRules: null,
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -69,7 +73,9 @@ Page({
 			hasProduct: {
 				url: '/jd-goods/inventory',
 				method: 'post'
-			}
+			},
+			// 获取活动商品下的正在拼团的列表
+			getTeam: {}
 		}
 	},
 	/**
@@ -82,6 +88,10 @@ Page({
 				options: options
 			})
 		}
+		_this.getMyAddressList()
+	},
+	onShow: function () {
+		const _this = this
 		wx.removeStorageSync('perchaseByCart')
 		wx.removeStorageSync('addAddress')
 		wx.removeStorageSync('activeProductNumber')
@@ -92,7 +102,6 @@ Page({
 				productId: _this.data.options.src
 			})
 			_this.getProductDetail()
-			_this.getShoppingMoney()
 			_this.getCartDotsNum()
 		} else {
 			const eventChannel = this.getOpenerEventChannel()
@@ -103,30 +112,6 @@ Page({
 				})
 				_this.getProductDetail()
 				_this.getCartDotsNum()
-				_this.getShoppingMoney()
-			})
-		}
-	},
-	onShow: function () {
-		const _this = this
-		_this.getMyAddressList()
-		if (_this.data.options.src) {
-			this.setData({
-				productId: _this.data.options.src
-			})
-			_this.getProductDetail()
-			_this.getShoppingMoney()
-			_this.getCartDotsNum()
-		} else {
-			const eventChannel = this.getOpenerEventChannel()
-			eventChannel.on('acceptDataFromOpenerPage', function (res) {
-				_this.setData({
-					pathParams: res.data,
-					productId: res.data.productId
-				})
-				_this.getProductDetail()
-				_this.getCartDotsNum()
-				_this.getShoppingMoney()
 			})
 		}
 	},
@@ -248,6 +233,21 @@ Page({
 		this.getMyAddressList()
 		this.getProductDetail()
 	},
+	// 参与团购的用户需要开通购物金账号
+	getShoppingMoney() {
+		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
+			if (res.success) {
+				if (!res.data) {
+					this.setData({
+						authorization: true
+					})
+				}
+			}
+		})
+	},
+	getphonenumber(e) {
+		console.log(e)
+	},
 	getProductDetail() {
 		return new Promise((resolve) => {
 			http
@@ -259,6 +259,9 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
+						if (res.data.isGroupPurchase) {
+							this.getShoppingMoney()
+						}
 						if (res.data.goods.platformType === 2) {
 							this.isHasProduct(res.data.goods)
 						}
@@ -286,6 +289,8 @@ Page({
 						}
 						this.setData({
 							showContent: true,
+							campaignProductPriceRules: res.data.campaignProductPriceRules,
+							isGroupPurchase: res.data.isGroupPurchase,
 							goods: res.data.goods,
 							products: res.data.products,
 							goodsAttributeResults: res.data.goodsAttributeResults, // 属性
@@ -297,7 +302,6 @@ Page({
 								: res.data.goods.retailPrice,
 							activeProductNumber: res.data.goods.goodsNumber
 						})
-
 						resolve()
 					} else {
 						this.setData({
@@ -305,21 +309,6 @@ Page({
 						})
 					}
 				})
-		})
-	},
-	getShoppingMoney() {
-		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
-			if (res.success) {
-				if (res.data) {
-					this.setData({
-						shoppingMoneyData: res.data
-					})
-				} else {
-					this.setData({
-						shoppingMoneyData: null
-					})
-				}
-			}
 		})
 	},
 	buyCard() {
@@ -406,6 +395,7 @@ Page({
 			wx.navigateTo({
 				url: '/pages_product/perchase/perchase'
 			})
+		} else if (event === 'group_perchase') {
 		}
 	},
 	onClose() {

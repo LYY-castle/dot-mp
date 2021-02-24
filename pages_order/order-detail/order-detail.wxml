@@ -84,6 +84,7 @@
 			<view class="c-gray fz-12 m-t-10"><text class="left-width">下单时间</text><text class="black">{{orderInfo.createAt}}</text></view>
 			<view class="c-gray fz-12 m-t-10" wx:if="{{orderInfo.payTime}}"><text class="left-width">支付时间</text><text class="black">{{orderInfo.payTime}}</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width" wx:if="{{orderInfo.remark}}">订单备注</text><text class="black">{{orderInfo.remark}}</text></view>
+			<view class="c-gray fz-12 m-t-10"><text class="left-width">拼团人员</text><text class="black">{{orderInfo.remark}}</text></view>
 		</view>
 		<view >
 		</view>

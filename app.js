@@ -24,9 +24,13 @@ App({
 						if (options.query) {
 							url += '?' + this.queryString(options.query)
 						}
-						wx.reLaunch({
-							url
-						})
+						if (!res.data.companyId) {
+							console.log('请授权')
+						} else {
+							wx.reLaunch({
+								url
+							})
+						}
 					} else {
 						console.log('请求失败', res)
 					}

@@ -4,15 +4,16 @@
     <van-search bind:focus="focus" shape="round" background="#FDC865" placeholder="搜索商品" class="searchContent"/>
   </view>
 </view>
-	<view class="activity" style="margin-top: {{navHeight+10}}px">
-			<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+		<view style="margin-top: {{navHeight+10}}px">
+			<view class="activity" wx:if="{{activities.length>0}}">
+				<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
 					<swiper-item class="activityContent" wx:for="{{activities}}" wx:for-item="activity" wx:key="activityIndex" bindtap="goActivity" data-item="{{activity}}">
-							<van-image src="{{activity.img}}" alt width="40px" height="40px" fit="cover"/>
+							<van-image src="{{activity.img}}" alt width="100%" height="150px" fit="cover"/>
 					</swiper-item>
-    </swiper>
-	</view>
-		<view class="sort m-t-10">
-		<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+    		</swiper>
+			</view>
+		<view class="sort m-t-10" wx:if="{{productSortsArr.length>0}}">
+			<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
 					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
 							<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
@@ -20,6 +21,7 @@
 						</view>
 					</swiper-item>
     </swiper>
+		</view>
   </view>
 	<view class="titleContent m-t-15 m-b-15" wx:if="{{productList.length>0}}">
 		<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>

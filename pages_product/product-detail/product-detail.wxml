@@ -10,23 +10,57 @@
         </swiper-item>
       </block>
     </swiper>
-    <view class="border p-10 m-10">
+    <view class="bg-color-white p-10 m-t-10">
       <view class="flex-start">
-        <view class="minPrice fz-12">
-          ￥
+        <view class="minPrice fz-12" >
+          <view wx:if="{{!isGroupPurchase}}">
+            ￥
           <text class="fz-20 bold">{{goods.isPromote?goods.promotePrice:goods.retailPrice}}</text>
           <text wx:if="{{specificationResults.length>0}}">起</text>
+          </view>
+          <view wx:if="{{isGroupPurchase}}" >
+            <view wx:for="{{campaignProductPriceRules}}">
+              <text class="fz-16">{{item.minNum}}人团价</text>
+              <text class="fz-18">￥</text>
+              <text class="fz-30 bold">{{item.price}}</text>
+            </view>
+          </view>
         </view>
         <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice < goods.marketPrice : goods.retailPrice < goods.marketPrice}}">￥{{goods.marketPrice}}</view>
       </view>
-      <text class="fz-14 m-b-5" user-select="{{true}}">{{goods.name}}</text>
+      <text class="fz-16 m-b-5" user-select="{{true}}">{{goods.name}}</text>
       <!-- <view class="flex-start fz-14" wx:if="{{goods.isRebate&&shoppingMoneyData}}">
       <van-icon name="{{rebateIcon}}" class="m-r-10"/>
       <text class="c-gray">自买或分享赚佣金</text>
       <text class="c-color-yellow bold">￥{{goods.rebateAmount}}</text>
     </view> -->
     </view>
-     <view class="border p-10 m-10" wx:if="{{goods.platformType===2}}">
+    <view wx:if="{{isGroupPurchase}}">
+      <view class="bg-color-white p-10 m-t-10 flex-start-start">
+        <view>活动</view>
+        <view></view>
+      </view>
+      <view class="bg-color-white p-10 m-t-10" wx:if="{{teams.length>0}}">
+        <view class="flex-between">
+          <text>人正在拼团，可直接参与</text>
+          <view bindtap="lookAllTeam">查看全部 > </view>
+        </view>
+        <view wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="{{team}}" class="flex-between">
+          <van-image src="{{item.img}}" height="100%" fit="heightFix" wx:if="{{item.img}}"></van-image>
+          <van-image src="{{addPerson}}" alt height="100%" fit="heightFix" wx:else />
+          <view class="flex-start">
+            <view>
+              <view>还差
+                <text class="c-red">人</text>
+                拼成</view>
+                <view class="c-gray">剩余天</view>
+            </view>
+            <view>去参团</view>
+          </view>
+        </view>
+      </view>
+    </view>
+     <view class="bg-color-white p-10 m-t-10" wx:if="{{goods.platformType===2}}">
        <view class="flex-between" bindtap="openAddressPop">
         <view class="flex-start">
           <text class="fz-12 bold">送至</text>
@@ -42,7 +76,7 @@
         <van-icon name="ellipsis" />
       </view>
      </view>
-    <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="m-10 p-10 border">
+    <view wx:if="{{goodsAttributeResults && goodsAttributeResults.length > 0}}" class="bg-color-white m-t-10 p-10">
       <van-divider dashed="{{true}}" contentPosition="center">产品参数</van-divider>
       <view wx:for="{{goodsAttributeResults}}" wx:for-item="content" wx:key="index" class="fz-14 flex-start m-b-10">
         <view class="title">{{ content.name}}</view>
@@ -59,12 +93,29 @@
   </view>
   <address-list addressShow="{{addressShow}}" addressListData="{{addressListData}}" bind:selectAddressItem="selectAddressItem"></address-list>
   <specification perchaseShow="{{perchaseShow}}" activePic="{{activePic}}" activePrice="{{activePrice}}" activeProductNumber="{{activeProductNumber}}" goodsSpecificationNameValue="{{goodsSpecificationNameValue}}" specificationResults="{{specificationResults}}" number="{{number}}" goods="{{goods}}" products="{{products}}" operateType="{{operateType}}" bind:operate="operate"></specification>
-  <van-goods-action wx:if="{{goods}}">
+  <van-goods-action wx:if="{{!isGroupPurchase}}">
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" data-option="perchase" wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" data-option="perchase" wx:if="{{goods.isOnSale===0}}" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" />
+    <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" wx:if="{{goods.isOnSale===0}}" />
   </van-goods-action>
+  <van-goods-action wx:if="{{isGroupPurchase}}">
+    <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
+    <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="发起拼单" bind:click="onClickButton" data-option="group_perchase" />
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" />
+  </van-goods-action>
+    <van-dialog
+    use-slot
+    title="授权"
+    show="{{ authorization }}"
+    show-cancel-button="{{false}}"
+    confirm-button-open-type="getPhoneNumber"
+    bind:close="onClose"
+    bind:getphonenumber="getphonenumber"
+  >
+    <view>金小点需要您授权手机号用于拼单返购物金</view>
+  </van-dialog>
 </view>

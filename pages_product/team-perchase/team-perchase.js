@@ -3,6 +3,7 @@ import tool from '../../utils/mixin'
 import qseBaoUtil from '../../utils/qsebao'
 import util from '../../utils/util'
 import constantCfg from '../../config/constant'
+import http from '../../utils/request'
 Page({
 	/**
 	 * 页面的初始数据
@@ -11,7 +12,17 @@ Page({
 		productList: [],
 		bottomLineShow: false,
 		loadingShow: false,
-		pageNo: 1
+		pageNo: 1,
+		api: {
+			activityProduct: {
+				url: '/campaign-products',
+				method: 'get'
+			},
+			getShoppingMoney: {
+				url: '/user-shopping-accounts',
+				method: 'get'
+			}
+		}
 	},
 
 	/**
@@ -30,80 +41,98 @@ Page({
 	onShow: function () {
 		this.getProductList()
 	},
+
 	// 获取特惠产品的列表
 	getProductList() {
 		return new Promise((resolve) => {
 			let params = {
 				pageNo: this.data.pageNo,
 				pageSize: 10,
-				isOnSale: 1
+				campaignId: wx.getStorageSync('fromBannarActivity')
 			}
-			tool.getProductList(params).then((res) => {
-				let productDetailObj = {}
-				let products = []
-				res.data.forEach((item) => {
-					item.name = util.ellipsis(item.name, 20)
-					if (
-						item.isPromote &&
-						tool.isInDurationTime(item.promoteStart, item.promoteEnd)
-					) {
-						item.isPromote = true
-					} else {
-						item.isPromote = false
-					}
-					let labelArr = []
-					if (item.keywords === '') {
-						labelArr = []
-					} else {
-						if (item.keywords.indexOf(',') !== -1) {
-							labelArr = item.keywords.split(',')
+			http
+				.wxRequest({ ...this.data.api.activityProduct, params })
+				.then((res) => {
+					let productDetailObj = {}
+					let products = []
+					res.data.forEach((item) => {
+						item.name = util.ellipsis(item.name, 40)
+						if (
+							item.isPromote &&
+							tool.isInDurationTime(item.promoteStart, item.promoteEnd)
+						) {
+							item.isPromote = true
 						} else {
-							labelArr = [item.keywords]
+							item.isPromote = false
 						}
-					}
-					item.label = labelArr
-					if (constantCfg.productCode.qsebao.includes(item.code)) {
-						const insuranceCode = item.code
-						qseBaoUtil
-							.getProductDetail({
-								insuranceCode
-							})
-							.then((productDetailRes) => {
-								productDetailObj = productDetailRes.data.productDetail
-								// 因为轻松保接口中 type 与原有商品类型 type 冲突.
-								productDetailObj.insurance_type = productDetailObj.type
-								delete productDetailObj.type
+						let labelArr = []
+						if (item.keywords === '') {
+							labelArr = []
+						} else {
+							if (item.keywords.indexOf(',') !== -1) {
+								labelArr = item.keywords.split(',')
+							} else {
+								labelArr = [item.keywords]
+							}
+						}
+						item.label = labelArr
+						if (constantCfg.productCode.qsebao.includes(item.code)) {
+							const insuranceCode = item.code
+							qseBaoUtil
+								.getProductDetail({
+									insuranceCode
+								})
+								.then((productDetailRes) => {
+									productDetailObj = productDetailRes.data.productDetail
+									// 因为轻松保接口中 type 与原有商品类型 type 冲突.
+									productDetailObj.insurance_type = productDetailObj.type
+									delete productDetailObj.type
 
-								products.push(
-									Object.assign({}, item, productDetailRes.data.productDetail)
-								)
-							})
+									products.push(
+										Object.assign({}, item, productDetailRes.data.productDetail)
+									)
+								})
+						} else {
+							products.push(item)
+						}
+					})
+					if (params.pageNo === 1) {
+						this.setData({
+							productList: products,
+							loadingShow: false
+						})
 					} else {
-						products.push(item)
+						this.setData({
+							productList: this.data.productList.concat(products),
+							loadingShow: false
+						})
+					}
+					if (params.pageNo === res.page.totalPage) {
+						this.setData({
+							bottomLineShow: true
+						})
+					} else {
+						this.setData({
+							bottomLineShow: false
+						})
 					}
 				})
-				if (params.pageNo === 1) {
-					this.setData({
-						productList: products,
-						loadingShow: false
-					})
-				} else {
-					this.setData({
-						productList: this.data.productList.concat(products),
-						loadingShow: false
-					})
-				}
-				if (params.pageNo === res.page.totalPage) {
-					this.setData({
-						bottomLineShow: true
-					})
-				} else {
-					this.setData({
-						bottomLineShow: false
-					})
-				}
-			})
 			resolve()
+		})
+	},
+	gotoDetail(e) {
+		const option = e.currentTarget.dataset.option
+		const pathParams = {
+			productId: option.id
+		}
+		wx.navigateTo({
+			url: '/pages_product/product-detail/product-detail',
+			success: function (res) {
+				// 通过eventChannel向被打开页面传送数据
+				res.eventChannel.emit('acceptDataFromOpenerPage', {
+					data: pathParams
+				})
+			}
 		})
 	},
 	/**

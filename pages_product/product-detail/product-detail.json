@@ -13,6 +13,7 @@
     "specification": "/components/specification/specification",
     "address-list": "/components/address-list/addressList",
     "v-navigator": "/components/navigator/navigator",
-    "van-icon": "@vant/weapp/icon/index"
+    "van-icon": "@vant/weapp/icon/index",
+    "van-dialog": "@vant/weapp/dialog/index"
   }
 }

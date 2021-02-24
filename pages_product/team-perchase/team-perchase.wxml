@@ -1,11 +1,22 @@
 <!--pages_product/team-perchase/team-perchase.wxml-->
-<view>
+<view class="container">
 	团购页面
 	<view class="team-perchase_product">
-		<view wx:for="{{ productList }}">
-      <van-image width="80" height="80" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
-      <van-image alt width="80" height="80" fit="cover" wx:else use-loading-slot />
-      <view class="fz-14">{{item.goods.name}}</view>
+		<view wx:for="{{ productList }}" wx:key="productIndex" wx:for-item="item" class="flex-start-start bg-color-white m-b-5" bindtap="gotoDetail" data-option="{{item}}">
+      <view>
+        <van-image width="150px" height="150px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
+        <van-image alt width="150px" height="150px" fit="cover" wx:else use-loading-slot />
+      </view>
+      <view class="fz-14 m-l-5 m-t-10">
+				<text
+					wx:if="{{item.label.length>0}}"
+					class="guige guige-label m-r-3 m-b-5"
+					wx:for="{{item.label}}"
+					wx:for-item="labelItem"
+          wx:key="labelIndex">
+          {{labelItem}}
+        </text>
+					{{item.name}}</view>
     </view>
 	</view>
 </view>

@@ -59,4 +59,5 @@ swiper {
 	margin: 0 12px;
 	background: #fff;
 	border-radius: 7px;
+	overflow: hidden;
 }

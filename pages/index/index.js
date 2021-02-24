@@ -2,6 +2,7 @@ import tool from '../../utils/mixin'
 import qseBaoUtil from '../../utils/qsebao'
 import util from '../../utils/util'
 import constantCfg from '../../config/constant'
+import http from '../../utils/request'
 const app = getApp()
 Page({
 	data: {
@@ -18,7 +19,7 @@ Page({
 		NumbersItem: 10,
 		vertical: false,
 		autoplay: true,
-		interval: 3000,
+		interval: 5000,
 		duration: 500,
 		navHeight: '',
 		searchMarginTop: 0, // 搜索框上边距
@@ -33,9 +34,14 @@ Page({
 		],
 		titleImg: '/static/img/title.png',
 		pageNo: 1,
-		activities: [
-			{ img: '/static/img/product-01.png', activeCode: 'team-perchase' }
-		]
+		activities: [],
+		api: {
+			// 查询活动bannar
+			getBannar: {
+				url: '/campaigns',
+				method: 'get'
+			}
+		}
 	},
 
 	onLoad() {
@@ -53,6 +59,7 @@ Page({
 			}
 		})
 		Promise.resolve()
+			.then(() => this.getBannarList())
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
 	},
@@ -160,6 +167,23 @@ Page({
 			resolve()
 		})
 	},
+	getBannarList() {
+		return new Promise((resolve) => {
+			const params = {
+				pageNo: 1,
+				pageSize: 1000,
+				isAdmin: 0
+			}
+			http.wxRequest({ ...this.data.api.getBannar, params }).then((res) => {
+				if (res.success) {
+					this.setData({
+						activities: res.data
+					})
+					resolve()
+				}
+			})
+		})
+	},
 	// 获取商品分类列表
 	getProductSorts() {
 		return new Promise((resolve) => {
@@ -228,8 +252,9 @@ Page({
 	},
 	goActivity(option) {
 		console.log(option)
-		const code = option.currentTarget.dataset.item.activeCode
-		if (code === 'team-perchase') {
+		const type = option.currentTarget.dataset.item.type
+		wx.setStorageSync('fromBannarActivity', type)
+		if (type === 1) {
 			wx.navigateTo({
 				url: '/pages_product/team-perchase/team-perchase'
 			})
@@ -253,6 +278,7 @@ Page({
 			pageNo: 1
 		})
 		Promise.resolve()
+			.then(() => this.getBannarList())
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
 		wx.stopPullDownRefresh()
