@@ -337,10 +337,7 @@ Page({
 				if (_this.data.shoppingMoney > 0) {
 					const flag = _this.checkMoney()
 					if (flag) {
-						if (
-							this.data.shoppingMoney <
-							this.data.totalPrice + this.data.shippingFee
-						) {
+						if (this.data.shoppingMoney < this.data.shoppingMoneyData.amount) {
 							wx.showModal({
 								title: '请确认',
 								content: '确认不使用全部购物金抵消订单金额？',
