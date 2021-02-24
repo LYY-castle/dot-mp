@@ -19,7 +19,7 @@
           <text wx:if="{{specificationResults.length>0}}">起</text>
           </view>
           <view wx:if="{{isGroupPurchase}}" >
-            <view wx:for="{{campaignProductPriceRules}}">
+            <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex===0}}">
               <text class="fz-16">{{item.minNum}}人团价</text>
               <text class="fz-18">￥</text>
               <text class="fz-30 bold">{{item.price}}</text>
@@ -38,14 +38,22 @@
     <view wx:if="{{isGroupPurchase}}">
       <view class="bg-color-white p-10 m-t-10 flex-start-start">
         <view>活动</view>
-        <view></view>
+        <view class="m-l-20 fz-13">
+          <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex>0}}" class="m-b-10">
+              <van-tag color="#ffe1e1" text-color="#ad0000" class="m-r-15">多拼优惠</van-tag>
+              <text>拼满</text>
+              <text class="bold">{{item.minNum}}</text>
+              <text>人，惊喜价</text>
+              <text class="bold c-red">{{item.price}}</text>元
+            </view>
+        </view>
       </view>
       <view class="bg-color-white p-10 m-t-10" wx:if="{{teams.length>0}}">
         <view class="flex-between">
-          <text>人正在拼团，可直接参与</text>
+          <text>{{teams.length}}人正在拼团，可直接参与</text>
           <view bindtap="lookAllTeam">查看全部 > </view>
         </view>
-        <view wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="{{team}}" class="flex-between">
+        <view wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="{{team}}" class="flex-between m-t-10">
           <van-image src="{{item.img}}" height="100%" fit="heightFix" wx:if="{{item.img}}"></van-image>
           <van-image src="{{addPerson}}" alt height="100%" fit="heightFix" wx:else />
           <view class="flex-start">
@@ -103,8 +111,12 @@
   </van-goods-action>
   <van-goods-action wx:if="{{isGroupPurchase}}">
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
-    <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="发起拼单" bind:click="onClickButton" data-option="group_perchase" />
+      <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex===0}}">
+        <text class="fz-16">{{item.minNum}}人团价</text>
+        <text class="fz-18">￥</text>
+        <text class="fz-30 bold">{{item.price}}</text>
+      </view>
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="去开团" bind:click="onClickButton" data-option="group_perchase" />
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" />
   </van-goods-action>
     <van-dialog

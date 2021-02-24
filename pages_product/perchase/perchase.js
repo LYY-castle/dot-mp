@@ -32,6 +32,8 @@ Page({
 		disabledShow: false,
 		shippingFee: 0,
 		orderId: null,
+		isGroupPurchase: null,
+		priceRules: null,
 		api: {
 			addOrder: {
 				url: '/orders',
@@ -129,17 +131,29 @@ Page({
 						let totalCount = wx.getStorageSync('activeProductNumber')
 							? wx.getStorageSync('activeProductNumber')
 							: 1
-						let totalPrice = res.data.goods.isPromote
-							? (Math.round(res.data.product.promotePrice * 100) * totalCount) /
-							  100
-							: (Math.round(res.data.product.retailPrice * 100) * totalCount) /
-							  100
+						let totalPrice = 0
+						if (res.data.isGroupPurchase) {
+							totalPrice =
+								(Math.round(res.data.campaignProductPriceRules.price * 100) *
+									totalCount) /
+								100
+						} else {
+							totalPrice = res.data.goods.isPromote
+								? (Math.round(res.data.product.promotePrice * 100) *
+										totalCount) /
+								  100
+								: (Math.round(res.data.product.retailPrice * 100) *
+										totalCount) /
+								  100
+						}
 						this.setData({
 							totalCount,
 							totalPrice,
 							actualPrice: totalPrice,
 							product: res.data.product,
-							goods: res.data.goods
+							goods: res.data.goods,
+							isGroupPurchase: res.data.isGroupPurchase,
+							priceRules: res.data.campaignProductPriceRules
 						})
 						resolve()
 					}
@@ -168,9 +182,15 @@ Page({
 			totalCount = wx.getStorageSync('activeProductNumber')
 				? wx.getStorageSync('activeProductNumber')
 				: 1
-			totalPrice = this.data.goods.isPromote
-				? (Math.round(this.data.product.promotePrice * 100) * totalCount) / 100
-				: (Math.round(this.data.product.retailPrice * 100) * totalCount) / 100
+			if (this.data.isGroupPurchase) {
+				totalPrice =
+					(Math.round(this.data.priceRules.price * 100) * totalCount) / 100
+			} else {
+				totalPrice = this.data.goods.isPromote
+					? (Math.round(this.data.product.promotePrice * 100) * totalCount) /
+					  100
+					: (Math.round(this.data.product.retailPrice * 100) * totalCount) / 100
+			}
 		}
 		totalPrice = Math.round(totalPrice * 100) / 100
 		this.setData({
@@ -332,60 +352,64 @@ Page({
 		const _this = this
 
 		if (_this.data.order) {
-			// 用户有购物金账户
-			if (_this.data.shoppingAccountId) {
-				if (_this.data.shoppingMoney > 0) {
-					const flag = _this.checkMoney()
-					if (flag) {
-						if (
-							this.data.shoppingMoney <
-							this.data.totalPrice + this.data.shippingFee
-						) {
-							wx.showModal({
-								title: '请确认',
-								content: '确认不使用全部购物金抵消订单金额？',
-								cancelText: '不使用',
-								confirmText: '使用',
-								success(res) {
-									if (res.confirm) {
-										_this.setData({
-											selectMoney: true
-										})
-									} else {
-										_this.setData({
-											disabledBtn: true
-										})
-										_this.addOrder()
+			if (_this.data.isGroupPurchase) {
+				_this.addOrder()
+			} else {
+				// 用户有购物金账户
+				if (_this.data.shoppingAccountId) {
+					if (_this.data.shoppingMoney > 0) {
+						const flag = _this.checkMoney()
+						// this.data.totalPrice + this.data.shippingFee
+						if (flag) {
+							if (
+								this.data.shoppingMoney < this.data.shoppingMoneyData.amount
+							) {
+								wx.showModal({
+									title: '请确认',
+									content: '确认不使用全部购物金抵消订单金额？',
+									cancelText: '不使用',
+									confirmText: '使用',
+									success(res) {
+										if (res.confirm) {
+											_this.setData({
+												selectMoney: true
+											})
+										} else {
+											_this.setData({
+												disabledBtn: true
+											})
+											_this.addOrder()
+										}
 									}
-								}
-							})
-						} else {
-							_this.setData({
-								disabledBtn: true
-							})
-							_this.addOrder()
-						}
-					}
-				} else {
-					wx.showModal({
-						title: '请确认',
-						content: '确认不使用购物金？',
-						cancelText: '不使用',
-						confirmText: '使用',
-						success(res) {
-							if (res.confirm) {
-								_this.setData({
-									selectMoney: true
 								})
 							} else {
+								_this.setData({
+									disabledBtn: true
+								})
 								_this.addOrder()
 							}
 						}
-					})
+					} else {
+						wx.showModal({
+							title: '请确认',
+							content: '确认不使用购物金？',
+							cancelText: '不使用',
+							confirmText: '使用',
+							success(res) {
+								if (res.confirm) {
+									_this.setData({
+										selectMoney: true
+									})
+								} else {
+									_this.addOrder()
+								}
+							}
+						})
+					}
+				} else {
+					// 用户没有购物金账户
+					_this.addOrder()
 				}
-			} else {
-				// 用户没有购物金账户
-				_this.addOrder()
 			}
 		} else {
 			wx.showToast({
@@ -430,7 +454,9 @@ Page({
 						: this.data.goods.listPicUrl,
 					productId: this.data.product.id,
 					number: this.data.totalCount,
-					retailPrice: this.data.goods.isPromote
+					retailPrice: this.data.isGroupPurchase
+						? this.data.priceRules.price
+						: this.data.goods.isPromote
 						? this.data.product.promotePrice
 						: this.data.product.retailPrice
 				}

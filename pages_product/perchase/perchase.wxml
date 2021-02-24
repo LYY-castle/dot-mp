@@ -31,7 +31,8 @@
 					</view>
 				</view>
 				<view class="m-l-10">
-					<view>￥{{goods.isPromote?product.promotePrice:product.retailPrice}}</view>
+					<view wx:if="{{!isGroupPurchase}}">￥{{goods.isPromote?product.promotePrice:product.retailPrice}}</view>
+					<view wx:if="{{isGroupPurchase}}">￥{{priceRules.price}}</view>
 					<view class="c-gray" style="text-align:right">x{{totalCount}}</view>
 				</view>
 			</view>
@@ -91,7 +92,8 @@
 				<text class="minPrice">￥{{ (totalPrice * 100  + shippingFee * 100)/ 100}}</text>
 			</view>
 			</view>
-			<view class="border m-t-10 p-10 fz-12" wx:if="{{shoppingMoneyData&&!shoppingMoneyData.status}}">
+			{{list.length>0}}{{shoppingMoneyData&&!shoppingMoneyData.status}}{{shoppingMoneyData&&!shoppingMoneyData.status&&isGroupPurchase!==1}}
+			<view class="border m-t-10 p-10 fz-12" wx:if="{{list.length>0?shoppingMoneyData&&!shoppingMoneyData.status:shoppingMoneyData&&!shoppingMoneyData.status&&!isGroupPurchase}}">
 			<van-cell title="使用购物金抵扣">
 				<van-checkbox slot="right-icon" value="{{ selectMoney }}" bind:change="selectMoneyChange"></van-checkbox>
 			</van-cell>

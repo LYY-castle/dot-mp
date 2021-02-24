@@ -43,6 +43,7 @@ Page({
 		authorization: false, // 授权获取用户手机号，生成购物金账号
 		isGroupPurchase: 0,
 		campaignProductPriceRules: null,
+		teams: null,
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -75,7 +76,10 @@ Page({
 				method: 'post'
 			},
 			// 获取活动商品下的正在拼团的列表
-			getTeam: {}
+			getTeamDetail: {
+				url: '/campaign-teams/detail',
+				method: 'get'
+			}
 		}
 	},
 	/**
@@ -88,7 +92,6 @@ Page({
 				options: options
 			})
 		}
-		_this.getMyAddressList()
 	},
 	onShow: function () {
 		const _this = this
@@ -97,12 +100,14 @@ Page({
 		wx.removeStorageSync('activeProductNumber')
 		wx.removeStorageSync('remark')
 		_this.getMyAddressList()
+		_this.getCartDotsNum()
 		if (_this.data.options.src) {
 			this.setData({
 				productId: _this.data.options.src
 			})
-			_this.getProductDetail()
-			_this.getCartDotsNum()
+			Promise.resolve()
+				.then(() => _this.getProductDetail())
+				.then(() => _this.getAllTeams())
 		} else {
 			const eventChannel = this.getOpenerEventChannel()
 			eventChannel.on('acceptDataFromOpenerPage', function (res) {
@@ -110,8 +115,9 @@ Page({
 					pathParams: res.data,
 					productId: res.data.productId
 				})
-				_this.getProductDetail()
-				_this.getCartDotsNum()
+				Promise.resolve()
+					.then(() => _this.getProductDetail())
+					.then(() => _this.getAllTeams())
 			})
 		}
 	},
@@ -311,6 +317,22 @@ Page({
 				})
 		})
 	},
+	getAllTeams() {
+		return new Promise((resolve) => {
+			const params = {
+				isClustering: 0,
+				goodsId: this.data.goods.id
+			}
+			http.wxRequest({ ...this.data.api.getTeamDetail, params }).then((res) => {
+				if (res.success) {
+					this.setData({
+						teams: res.data
+					})
+					resolve()
+				}
+			})
+		})
+	},
 	buyCard() {
 		wx.setStorageSync('activeProductId', this.data.productId)
 		wx.navigateTo({
@@ -390,12 +412,11 @@ Page({
 						})
 					}
 				})
-		} else if (event === 'perchase') {
+		} else if (event === 'perchase' || event === 'group_perchase') {
 			wx.setStorageSync('activeProductId', params.productId)
 			wx.navigateTo({
 				url: '/pages_product/perchase/perchase'
 			})
-		} else if (event === 'group_perchase') {
 		}
 	},
 	onClose() {
