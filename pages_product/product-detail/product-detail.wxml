@@ -29,9 +29,9 @@
      <view class="border p-10 m-10" wx:if="{{goods.platformType===2}}">
        <view class="flex-between" bindtap="openAddressPop">
         <view class="flex-start">
-          <text class="fz-12 bold">送至</text>
-          <van-icon name="location-o" class="m-l-10 m-r-5 fz-12" color="#ee0a24" />
-          <view class="fz-12">
+          <text class="fz-14 bold">送至</text>
+          <van-icon name="location-o" class="m-l-10 m-r-5 fz-14" color="#ee0a24" />
+          <view class="fz-14">
               <view wx:if="{{addressListData.length>0}}" >
                 {{activeAddressItem.provinceName}}{{activeAddressItem.cityName}}{{activeAddressItem.districtName}}{{activeAddressItem.address}}
               </view>
