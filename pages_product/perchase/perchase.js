@@ -359,7 +359,6 @@ Page({
 				if (_this.data.shoppingAccountId) {
 					if (_this.data.shoppingMoney > 0) {
 						const flag = _this.checkMoney()
-						// this.data.totalPrice + this.data.shippingFee
 						if (flag) {
 							if (
 								this.data.shoppingMoney < this.data.shoppingMoneyData.amount
