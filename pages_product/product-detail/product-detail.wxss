@@ -68,12 +68,6 @@
 .time-limit {
 	color: #d65454;
 }
-
-swiper {
-	height: 375px !important;
-	text-align: center;
-}
-
 van-button {
 	width: 100%;
 }
@@ -116,4 +110,25 @@ van-button {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+}
+.teamsStyle {
+	height: 80px;
+}
+.teamsPop {
+	position: relative;
+	height: 350px;
+	padding: 10px;
+	overflow: scroll;
+}
+.closeTeams {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+.swiperContent {
+	height: 375px !important;
+	text-align: center;
+}
+.w-150 {
+	width: 150px;
 }

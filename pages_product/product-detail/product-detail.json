@@ -14,6 +14,7 @@
     "address-list": "/components/address-list/addressList",
     "v-navigator": "/components/navigator/navigator",
     "van-icon": "@vant/weapp/icon/index",
-    "van-dialog": "@vant/weapp/dialog/index"
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-count-down": "@vant/weapp/count-down/index"
   }
 }

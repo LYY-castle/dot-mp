@@ -1,6 +1,8 @@
 import http from '../../utils/request.js'
 import util from '../../utils/util.js'
 import tool from '../../utils/mixin.js'
+const moment = require('../../utils/moment.min.js')
+import env from '../../config/env.config'
 Page({
 	/**
 	 * 页面的初始数据
@@ -36,6 +38,7 @@ Page({
 		shoppingMoneyData: null,
 		rebateIcon: '/static/img/rebate.png',
 		addPerson: '/static/img/add-person.png',
+		defaultPerson: '/static/img/avatar.png',
 		pageNo: 1,
 		activeAddressItem: null,
 		// 京东平台在指定地址下是否有库存
@@ -43,7 +46,15 @@ Page({
 		authorization: false, // 授权获取用户手机号，生成购物金账号
 		isGroupPurchase: 0,
 		campaignProductPriceRules: null,
+		campaign: null,
 		teams: null,
+		teamsShow: false,
+		activity: null,
+		activityTime: null,
+		timeData: {},
+		shareId: null, // 开团发起人
+		shareName: null,
+		teamStatistics: null,
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -79,6 +90,22 @@ Page({
 			getTeamDetail: {
 				url: '/campaign-teams/detail',
 				method: 'get'
+			},
+			activityDetail: {
+				url: '/campaigns/{id}',
+				method: 'get'
+			},
+			updatePhone: {
+				url: '/users/wx-phone',
+				method: 'put'
+			},
+			getShareDetail: {
+				url: '/users',
+				method: 'get'
+			},
+			getTeamStatistics: {
+				url: '/campaign-products/team-statistics',
+				method: 'get'
 			}
 		}
 	},
@@ -87,6 +114,10 @@ Page({
 	 */
 	onLoad: function (options) {
 		const _this = this
+		this.setData({
+			userId: wx.getStorageSync('userId'),
+			shareId: wx.getStorageSync('shareId')
+		})
 		if (options) {
 			_this.setData({
 				options: options
@@ -101,6 +132,10 @@ Page({
 		wx.removeStorageSync('remark')
 		_this.getMyAddressList()
 		_this.getCartDotsNum()
+		if (_this.data.shareId) {
+			// 获取分享人的详情
+			_this.getShareDetail()
+		}
 		if (_this.data.options.src) {
 			this.setData({
 				productId: _this.data.options.src
@@ -108,6 +143,7 @@ Page({
 			Promise.resolve()
 				.then(() => _this.getProductDetail())
 				.then(() => _this.getAllTeams())
+				.then(() => _this.getTeamStatistics())
 		} else {
 			const eventChannel = this.getOpenerEventChannel()
 			eventChannel.on('acceptDataFromOpenerPage', function (res) {
@@ -118,6 +154,7 @@ Page({
 				Promise.resolve()
 					.then(() => _this.getProductDetail())
 					.then(() => _this.getAllTeams())
+					.then(() => _this.getTeamStatistics())
 			})
 		}
 	},
@@ -133,18 +170,29 @@ Page({
 	 * 用户点击右上角分享
 	 */
 	onShareAppMessage: function () {
+		let path =
+			'/pages_product/product-detail/product-detail?src=' + this.data.productId
 		wx.showShareMenu({
 			withShareTicket: true,
 			menus: ['shareAppMessage', 'shareTimeline']
 		})
 		return {
 			withShareTicket: true,
-			path:
-				'/pages_product/product-detail/product-detail?src=' +
-				this.data.productId +
-				'&shareId=' +
-				wx.getStorageSync('userId')
+			title: this.data.goods.name,
+			path: path
 		}
+	},
+	getShareDetail() {
+		const params = {
+			id: wx.getStorageSync('shareId')
+		}
+		http.wxRequest({ ...this.data.api.getShareDetail, params }).then((res) => {
+			if (res.success) {
+				this.setData({
+					shareName: res.data[0].nickname
+				})
+			}
+		})
 	},
 	// 获取当前用户的收货地址
 	getMyAddressList() {
@@ -252,7 +300,33 @@ Page({
 		})
 	},
 	getphonenumber(e) {
-		console.log(e)
+		const _this = this
+		if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
+			// 拒绝授权
+			wx.switchTab({
+				url: '/pages/index/index'
+			})
+		} else {
+			wx.login({
+				success(res) {
+					const params = {
+						wechatCode: res.code,
+						userInfoEncryptedData: e.detail.encryptedData,
+						userInfoIv: e.detail.iv,
+						wechatAppId: env.env.appid
+					}
+					http
+						.wxRequest({ ..._this.data.api.updatePhone, params })
+						.then((res) => {
+							if (res.success) {
+								wx.showToast({
+									title: '购物金账号生成成功，请继续购物'
+								})
+							}
+						})
+				}
+			})
+		}
 	},
 	getProductDetail() {
 		return new Promise((resolve) => {
@@ -265,6 +339,12 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
+						if (res.data.campaign) {
+							this.setData({
+								campaign: res.data.campaign
+							})
+							this.getActivityDetail(res.data.campaign)
+						}
 						if (res.data.isGroupPurchase) {
 							this.getShoppingMoney()
 						}
@@ -325,12 +405,77 @@ Page({
 			}
 			http.wxRequest({ ...this.data.api.getTeamDetail, params }).then((res) => {
 				if (res.success) {
+					res.data.map((team) => {
+						const flag = team.users.every((user) => {
+							return user.id !== this.data.userId
+						})
+						if (flag) {
+							team.buttonShow = true
+						}
+					})
 					this.setData({
 						teams: res.data
 					})
 					resolve()
 				}
 			})
+		})
+	},
+	// 团队统计
+	getTeamStatistics() {
+		return new Promise((resolve) => {
+			const params = {
+				campaignId: this.data.campaign.id,
+				goodsId: this.data.goods.id
+			}
+			http
+				.wxRequest({
+					...this.data.api.getTeamStatistics,
+					params
+				})
+				.then((res) => {
+					if (res.success) {
+						this.setData({
+							teamStatistics: res.data
+						})
+					}
+				})
+		})
+	},
+	lookAllTeam() {
+		this.setData({
+			teamsShow: true
+		})
+	},
+	getActivityDetail(data) {
+		return new Promise((resolve) => {
+			const currentTime = moment()
+			const endTime = moment(data.endTime)
+			if (tool.isInDurationTime(data.startTime, data.endTime)) {
+				this.setData({
+					activityTime: endTime - currentTime
+				})
+			} else {
+				this.setData({
+					activityTime: null
+				})
+			}
+			resolve()
+		})
+	},
+	timeChange(e) {
+		this.setData({
+			timeData: e.detail
+		})
+	},
+	joinTeam(option) {
+		const teamId = option.currentTarget.dataset.team.id
+		wx.setStorageSync('teamId', teamId)
+		this.onClickButton()
+	},
+	closeTeams() {
+		this.setData({
+			teamsShow: false
 		})
 	},
 	buyCard() {
@@ -341,16 +486,22 @@ Page({
 	},
 	// 弹框外按钮操作
 	onClickButton(e) {
-		const option = e.currentTarget.dataset.option
-		this.setData({
-			operateType: option
-		})
+		if (e) {
+			const option = e.currentTarget.dataset.option
+			this.setData({
+				operateType: option
+			})
+		} else {
+			this.setData({
+				operateType: 'perchase'
+			})
+		}
 		if (this.data.specificationResults.length > 0) {
 			this.setData({
 				perchaseShow: true
 			})
 		} else {
-			this.addCartOrPerchase(option, undefined)
+			this.addCartOrPerchase(this.data.operateType, undefined)
 		}
 	},
 	addCartOrPerchase(event, data) {
@@ -444,6 +595,9 @@ Page({
 	},
 	// 下拉
 	onPullDownRefresh() {
+		Promise.resolve()
+			.then(() => _this.getAllTeams())
+			.then(() => _this.getTeamStatistics())
 		wx.stopPullDownRefresh()
 	}
 })

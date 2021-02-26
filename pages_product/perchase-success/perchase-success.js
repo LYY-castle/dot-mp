@@ -1,5 +1,6 @@
 // pages_product/perchase-success/perchase-success.js
 import http from '../../utils/request.js'
+import util from '../../utils/util'
 Page({
 	/**
 	 * 页面的初始数据
@@ -7,6 +8,10 @@ Page({
 	data: {
 		nbTitle: '支付',
 		order: null,
+		team: null,
+		userId: null,
+		addPerson: '/static/img/add-person.png',
+		defaultPerson: '/static/img/avatar.png',
 		statusMap: {
 			100: {
 				text: '待付款'
@@ -31,6 +36,10 @@ Page({
 			getOrderById: {
 				url: '/orders/{id}',
 				method: 'get'
+			},
+			getTeamDetail: {
+				url: '/campaign-teams/detail',
+				method: 'get'
 			}
 		}
 	},
@@ -39,11 +48,16 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		this.setData({
+			userId: wx.getStorageSync('userId')
+		})
 		if (options.src) {
 			this.setData({
 				orderId: options.src
 			})
-			this.getOrderDetail()
+			Promise.resolve()
+				.then(() => this.getOrderDetail())
+				.then(() => this.getTeamDetail())
 		}
 	},
 
@@ -52,23 +66,47 @@ Page({
 	 */
 	onReady: function () {},
 	getOrderDetail() {
-		http
-			.wxRequest({
-				...this.data.api.getOrderById,
-				urlReplacements: [
-					{
-						substr: '{id}',
-						replacement: this.data.orderId
+		return new Promise((resolve) => {
+			http
+				.wxRequest({
+					...this.data.api.getOrderById,
+					urlReplacements: [
+						{
+							substr: '{id}',
+							replacement: this.data.orderId
+						}
+					]
+				})
+				.then((res) => {
+					if (res.success) {
+						this.setData({
+							order: res.data
+						})
+						resolve()
 					}
-				]
-			})
-			.then((res) => {
-				if (res.success) {
-					this.setData({
-						order: res.data
-					})
-				}
-			})
+				})
+		})
+	},
+	getTeamDetail() {
+		return new Promise((resolve) => {
+			const params = {
+				id: this.data.order.campaignTeamId,
+				campaignId: this.data.order.campaignId
+			}
+			http
+				.wxRequest({
+					...this.data.api.getTeamDetail,
+					params
+				})
+				.then((res) => {
+					if (res.success) {
+						this.setData({
+							team: res.data[0]
+						})
+						resolve()
+					}
+				})
+		})
 	},
 	goOrderDetail() {
 		wx.navigateTo({
@@ -98,15 +136,46 @@ Page({
 	/**
 	 * 页面相关事件处理函数--监听用户下拉动作
 	 */
-	onPullDownRefresh: function () {},
+	onPullDownRefresh: function () {
+		Promise.resolve()
+			.then(() => this.getOrderDetail())
+			.then(() => this.getTeamDetail())
+		wx.stopPullDownRefresh()
+	},
 
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */
 	onReachBottom: function () {},
-
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {}
+	// 分享
+	onShareAppMessage() {
+		if (this.data.order.campaignId && this.data.order.campaignTeamId) {
+			wx.showShareMenu({
+				withShareTicket: true,
+				menus: ['shareAppMessage', 'shareTimeline']
+			})
+			let shareId = wx.getStorageSync('userId')
+			let goodsName = util.ellipsis(this.data.order.orderGoods[0].goodsName, 20)
+			let path =
+				'/pages_product/product-detail/product-detail?src=' +
+				this.data.order.orderGoods[0].goodsId +
+				'&shareId=' +
+				shareId +
+				'&campaignId=' +
+				this.data.order.campaignId +
+				'&campaignTeamId=' +
+				this.data.order.campaignTeamId
+			let num = this.data.team.clusteringUserNum - this.data.team.nowUserNum
+			return {
+				withShareTicket: true,
+				title: '【仅剩' + num + '个名额】我正在拼' + goodsName + '快来加入吧！',
+				path: path,
+				imageUrl: this.data.order.orderGoods[0].listPicUrl
+			}
+		} else {
+			wx.hideShareMenu({
+				menus: ['shareAppMessage', 'shareTimeline']
+			})
+		}
+	}
 })

@@ -1,7 +1,7 @@
 <!-- pages/product/product-detail/product-detail.wxml -->
 <view class="container">
   <v-navigator page-name="你当前页面的名字"></v-navigator>
-  <view wx:if="{{showContent}}">
+  <view wx:if="{{showContent}}" class="swiperContent">
     <swiper indicator-dots="{{indicatorDots}}" class="my-swipe" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{goodsGalleries}}" wx:key="imgIndex">
         <swiper-item>
@@ -28,7 +28,7 @@
         </view>
         <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice < goods.marketPrice : goods.retailPrice < goods.marketPrice}}">￥{{goods.marketPrice}}</view>
       </view>
-      <text class="fz-16 m-b-5" user-select="{{true}}">{{goods.name}}</text>
+      <text class="fz-16 m-b-5" user-select="{{true}}" class="flex-start">{{goods.name}}</text>
       <!-- <view class="flex-start fz-14" wx:if="{{goods.isRebate&&shoppingMoneyData}}">
       <van-icon name="{{rebateIcon}}" class="m-r-10"/>
       <text class="c-gray">自买或分享赚佣金</text>
@@ -36,35 +36,58 @@
     </view> -->
     </view>
     <view wx:if="{{isGroupPurchase}}">
-      <view class="bg-color-white p-10 m-t-10 flex-start-start">
-        <view>活动</view>
-        <view class="m-l-20 fz-13">
-          <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex>0}}" class="m-b-10">
-              <van-tag color="#ffe1e1" text-color="#ad0000" class="m-r-15">多拼优惠</van-tag>
-              <text>拼满</text>
+      <view class="bg-color-white p-10 m-t-10 flex-start-start fz-15">
+        <view class="m-r-15">活动</view>
+        <view>
+          <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex>0}}" class="m-b-10 c-color-gray flex-start">
+              <van-tag color="#ffe1e1" text-color="#ad0000">多拼优惠</van-tag>
+              <text class="m-l-15">拼满</text>
               <text class="bold">{{item.minNum}}</text>
               <text>人，惊喜价</text>
               <text class="bold c-red">{{item.price}}</text>元
-            </view>
+          </view>
         </view>
       </view>
       <view class="bg-color-white p-10 m-t-10" wx:if="{{teams.length>0}}">
-        <view class="flex-between">
-          <text>{{teams.length}}人正在拼团，可直接参与</text>
-          <view bindtap="lookAllTeam">查看全部 > </view>
+        <view wx:if="teamStatistics.clusteringNum>0" class="m-b-15">当前已成团人数:
+          <text class="bold fz-16">{{teamStatistics.clusteringNum}}</text>
         </view>
-        <view wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="{{team}}" class="flex-between m-t-10">
-          <van-image src="{{item.img}}" height="100%" fit="heightFix" wx:if="{{item.img}}"></van-image>
-          <van-image src="{{addPerson}}" alt height="100%" fit="heightFix" wx:else />
-          <view class="flex-start">
-            <view>
-              <view>还差
-                <text class="c-red">人</text>
-                拼成</view>
-                <view class="c-gray">剩余天</view>
-            </view>
-            <view>去参团</view>
-          </view>
+        <view class="flex-between fz-16">
+          <text class="c-color-gray">{{teamStatistics.noClusteringNum}}人正在拼团，可直接参与</text>
+          <view bindtap="lookAllTeam" class="fz-14 c-gray" wx:if="{{teams.length>1}}">查看全部 <van-icon name="arrow" /></view>
+        </view>
+        <view class="teamsStyle">
+          <swiper indicator-dots="{{false}}" class="my-swipe" autoplay="{{true}}" interval="{{interval}}" duration="{{duration}}" vertical="{{true}}">
+            <block wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="team">
+              <swiper-item class="flex-between border-top">
+                <view class="flex-start">
+                  <view wx:for="{{team.users}}" wx:key="userIndex" wx:for-item="user" >
+                    <van-image src="{{user.avatar}}" height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2" wx:if="{{user.avatar}}"></van-image>
+                    <van-image src="{{defaultPerson}}" alt height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2" wx:else />
+                  </view>
+                  <van-image src="{{addPerson}}" alt height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
+                </view>
+                <view class="flex-end">
+                  <view class="fz-12 text-align-right p-r-2">
+                    <view class="w-150">还差
+                      <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
+                      拼成
+                    </view>
+                    <view class="c-gray flex-end">剩余
+                      <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange">
+                        <text class="item" wx:if="{{timeData.days}}">{{ timeData.days }}天</text>
+                        <text class="item" wx:if="{{timeData.hours}}">{{ timeData.hours }}时</text>
+                        <text class="item" wx:if="{{timeData.minutes}}">{{ timeData.minutes }}分</text>
+                        <text class="item" >{{ timeData.seconds }}秒</text>
+                      </van-count-down>
+                    </view>
+                  </view>
+
+                  <van-button type="danger" size="small" round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
+                </view>
+              </swiper-item>
+            </block>
+          </swiper>
         </view>
       </view>
     </view>
@@ -105,19 +128,18 @@
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已售空" wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" />
-    <van-goods-action-button class="m-r-10" color="#aaa" text="已下架" wx:if="{{goods.isOnSale===0}}" />
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" class="m-r-15"/>
+    <van-goods-action-button class="m-r-15" color="#aaa" text="已售空" wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}"/>
+    <van-goods-action-button class="m-r-15" color="#aaa" text="已下架" wx:if="{{goods.isOnSale===0}}"/>
   </van-goods-action>
   <van-goods-action wx:if="{{isGroupPurchase}}">
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
-      <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex===0}}">
-        <text class="fz-16">{{item.minNum}}人团价</text>
-        <text class="fz-18">￥</text>
-        <text class="fz-30 bold">{{item.price}}</text>
+      <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex===0}}" class="fz-16 c-red w-100 text-align-right">
+        <text>{{item.minNum}}人团价</text>
+        <text class="bold">￥{{item.price}}</text>
       </view>
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="去开团" bind:click="onClickButton" data-option="group_perchase" />
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" />
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="{{shareId?'加入'+shareName+'的团':'去开团'}}" bind:click="onClickButton" data-option="perchase" class="m-r-15"/>
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" class="m-r-15"/>
   </van-goods-action>
     <van-dialog
     use-slot
@@ -129,5 +151,42 @@
     bind:getphonenumber="getphonenumber"
   >
     <view>金小点需要您授权手机号用于拼单返购物金</view>
+  </van-dialog>
+  <van-dialog
+    use-slot
+    title="正在拼单"
+    show="{{ teamsShow }}"
+    show-cancel-button="{{false}}"
+    showConfirmButton="{{false}}"
+  >
+    <van-icon name="close" class="closeTeams fz-20" bindtap="closeTeams"/>
+    <view class="teamsPop">
+        <view class="flex-between border-top p-t-10" wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="team">
+        <view class="flex-start">
+          <view wx:for="{{team.users}}" wx:key="userIndex" wx:for-item="user" >
+            <van-image src="{{user.avatar}}" height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-2" wx:if="{{user.avatar}}"></van-image>
+            <van-image src="{{defaultPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-2" wx:else />
+          </view>
+          <van-image src="{{addPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-2"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
+        </view>
+        <view class="flex-end">
+          <view class="fz-12 text-align-right p-r-2">
+            <view class="w-150">还差
+              <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
+              拼成
+            </view>
+            <view class="c-gray flex-end">剩余
+              <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange" wx:if="{{activityTime}}">
+                <text class="item" wx:if="{{timeData.days}}">{{ timeData.days }}天</text>
+                <text class="item" wx:if="{{timeData.hours}}">{{ timeData.hours }}时</text>
+                <text class="item" wx:if="{{timeData.minutes}}">{{ timeData.minutes }}分</text>
+                <text class="item" >{{ timeData.seconds }}秒</text>
+              </van-count-down>
+            </view>
+          </view>
+          <van-button type="danger" size="small" round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
+        </view>
+      </view>
+    </view>
   </van-dialog>
 </view>

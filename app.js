@@ -24,13 +24,22 @@ App({
 						if (options.query) {
 							url += '?' + this.queryString(options.query)
 						}
-						if (!res.data.companyId) {
-							console.log('请授权')
-						} else {
-							wx.reLaunch({
-								url
-							})
+
+						if (options.query.shareId) {
+							let flag = options.query.shareId !== String(res.data.id)
+							if (flag) {
+								wx.setStorageSync('shareId', options.query.shareId)
+							}
 						}
+						if (options.query) {
+							wx.setStorageSync('fromBannarActivity', options.query.campaignId)
+						}
+						if (options.query) {
+							wx.setStorageSync('teamId', options.query.campaignTeamId)
+						}
+						wx.reLaunch({
+							url
+						})
 					} else {
 						console.log('请求失败', res)
 					}

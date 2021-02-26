@@ -47,7 +47,6 @@ function getStartTime(timeStr, type) {
 	}
 	return startTime.format('YYYY-MM-DD HH:mm:ss')
 }
-
 // 获取一个时间的结束时间戳.
 function getEndTime(timeStr, type) {
 	const typeArray = ['halfHour', 'hour', 'day', 'week', 'month', 'year']

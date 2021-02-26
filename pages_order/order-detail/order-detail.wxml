@@ -74,7 +74,7 @@
 			<view class="flex-between">
 				<view>订单信息</view>
 				<van-tag type="warning" wx:if="{{afsStatus}}">{{afterSaleStatus[afsStatus].text}}</van-tag>
-				<van-button size="small" wx:if="{{orderInfo.orderStatus===200||orderInfo.orderStatus===300}}" open-type="contact" bind:contact="handleContact" data-option="{{orderInfo}}">{{afterSale}}</van-button>
+				<van-button size="small" wx:if="{{orderInfo.orderStatus===200||orderInfo.orderStatus===300}}" bindtap="handleContact" data-option="{{orderInfo}}" disabled="{{disabledBtn}}">{{afterSale}}</van-button>
 				<van-button size="small"  bind:click="jdAfs" wx:if="{{orderInfo.orderStatus===400&&orderInfo.platformType===2}}">退货</van-button>
 				<van-button size="small" bind:click="finishAfs" wx:if="{{orderInfo.orderStatus===500&&orderInfo.platformType===2}}">确认完成售后</van-button>
 				<van-button size="small" bind:click="cancelAfs" wx:if="{{orderInfo.orderStatus===500&&orderInfo.platformType===2}}">取消售后</van-button>
@@ -84,7 +84,24 @@
 			<view class="c-gray fz-12 m-t-10"><text class="left-width">下单时间</text><text class="black">{{orderInfo.createAt}}</text></view>
 			<view class="c-gray fz-12 m-t-10" wx:if="{{orderInfo.payTime}}"><text class="left-width">支付时间</text><text class="black">{{orderInfo.payTime}}</text></view>
 			<view class="c-gray fz-12 m-t-10"><text class="left-width" wx:if="{{orderInfo.remark}}">订单备注</text><text class="black">{{orderInfo.remark}}</text></view>
-			<view class="c-gray fz-12 m-t-10"><text class="left-width">拼团人员</text><text class="black">{{orderInfo.remark}}</text></view>
+			<view class="c-gray fz-12 m-t-10 flex-start" wx:if="{{team}}">
+				<text class="left-width">拼团人员</text>
+				<view class="flex-between">
+					<view class="flex-center">
+          <view wx:for="{{team.users}}" wx:key="userIndex" wx:for-item="user" wx:for-index="userIndex" class="imgGroup">
+            <van-image src="{{user.avatar}}" height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-5" wx:if="{{user.avatar}}"></van-image>
+            <van-image src="{{defaultPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-5" wx:else />
+          </view>
+          <van-image src="{{addPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-5"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
+        </view>
+				<view class="text-align-cener m-l-20" wx:if="{{team.clusteringUserNum-team.nowUserNum>0}}">
+					<button open-type="share" plain="true" class="shareBtn">
+						<van-icon name="wechat" class="fz-30" color="#1aad19"/>
+						<text>邀请好友</text>
+					</button>
+				</view>
+			</view>
+		</view>
 		</view>
 		<view >
 		</view>
@@ -114,7 +131,7 @@
 				 <van-cell title="包装" use-label-slot>
 					 	<van-radio-group value="{{ packageDesc }}" bind:change="onPackageChange" slot="label">
 						<view class="flex-start-center">
-							<van-radio  wx:for="{{packageList}}" name="{{item.id}}" class="van-radio-self">{{item.text}}</van-radio>
+							<van-radio  wx:for="{{packageList}}" wx:key="pageIndex" name="{{item.id}}" class="van-radio-self">{{item.text}}</van-radio>
 						</view>
 					</van-radio-group>
 				 </van-cell>

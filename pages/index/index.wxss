@@ -35,14 +35,7 @@
 .backTop {
 	background: #fff;
 }
-.my-swipe {
-	width: 100%;
-}
 
-swiper {
-	height: 100% !important;
-	text-align: center;
-}
 .searchContent {
 	width: 100%;
 }
@@ -53,11 +46,18 @@ swiper {
 .titleContent {
 	text-align: center;
 	margin: 0 auto;
+	position:relative;
+}
+.hotProductTitle{
+	position: absolute;
+	left:50%;
+	top:45%;
+	transform: translate(-50%,-50%);
 }
 .activity {
-	height: 150px;
+	height: 134px;
 	margin: 0 12px;
 	background: #fff;
-	border-radius: 7px;
+	border-radius: 10px;
 	overflow: hidden;
 }

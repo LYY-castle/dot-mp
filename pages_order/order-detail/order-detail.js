@@ -14,6 +14,7 @@ Page({
 		timeData: null,
 		payment: null,
 		dialogShow: false,
+		disabledBtn: false,
 		popShow: false,
 		orderInfo: {},
 		steps: [],
@@ -23,6 +24,9 @@ Page({
 		packageDesc: 0,
 		questionDesc: '',
 		textareaHeight: { minHeight: 50 },
+		team: null,
+		addPerson: '/static/img/add-person.png',
+		defaultPerson: '/static/img/avatar.png',
 		// 订单状态
 		statusMap: {
 			100: {
@@ -116,6 +120,10 @@ Page({
 			jdAfs: {
 				url: '/after-sales/jd-apply',
 				method: 'post'
+			},
+			getTeamDetail: {
+				url: '/campaign-teams/detail',
+				method: 'get'
 			}
 		}
 	},
@@ -136,6 +144,9 @@ Page({
 		wx.stopPullDownRefresh()
 	},
 	getOrderDetail() {
+		this.setData({
+			disabledBtn: false
+		})
 		http
 			.wxRequest({
 				...this.data.api.getOrderById,
@@ -159,9 +170,15 @@ Page({
 					}
 					let afterSale = ''
 					if (res.data.orderStatus === 200) {
-						afterSale = '退货'
+						if (res.data.campaignId && res.data.campaignTeamId) {
+							afterSale = '退团'
+						} else {
+							afterSale = '退货'
+						}
 					} else if (res.data.orderStatus === 300) {
-						afterSale = '拒收/退货退款'
+						if (!res.data.campaignId && !res.data.campaignTeamId) {
+							afterSale = '拒收/退货退款'
+						}
 					} else if (res.data.orderStatus === 400) {
 						afterSale = '申请售后'
 					}
@@ -189,8 +206,36 @@ Page({
 					if (res.data.orderStatus === 500) {
 						this.getAfterSaleStatus()
 					}
+					this.getTeamDetail()
 				}
 			})
+	},
+	getTeamDetail() {
+		return new Promise((resolve) => {
+			const params = {
+				id: this.data.orderInfo.campaignTeamId,
+				campaignId: this.data.orderInfo.campaignId
+			}
+			http
+				.wxRequest({
+					...this.data.api.getTeamDetail,
+					params
+				})
+				.then((res) => {
+					if (res.success) {
+						if (res.data.length > 0) {
+							this.setData({
+								team: res.data[0]
+							})
+						} else {
+							this.setData({
+								team: null
+							})
+						}
+						resolve()
+					}
+				})
+		})
 	},
 	onTimeChange(e) {
 		this.setData({
@@ -348,23 +393,53 @@ Page({
 				}
 			})
 	},
+	existTeamFun() {},
 	// 未发货申请售后/已发货申请售后
 	handleContact(option) {
+		this.setData({
+			disabledBtn: true
+		})
+		const _this = this
 		const object = option.currentTarget.dataset.option
-		if (object) {
-			http
-				.wxRequest({
-					...this.data.api.cancelOrder,
-					params: {
-						id: object.id,
-						orderStatus: '500'
-					}
-				})
-				.then((res) => {
-					if (res.success) {
-						this.getOrderDetail()
-					}
-				})
+		if (object.campaignId && object.campaignTeamId) {
+			Dialog.confirm({
+				title: '确认退团？'
+			}).then(() => {
+				http
+					.wxRequest({
+						..._this.data.api.cancelOrder,
+						params: {
+							id: _this.data.orderInfo.id,
+							orderStatus: '600'
+						}
+					})
+					.then((res) => {
+						if (res.success) {
+							wx.showToast({
+								title: '退团成功',
+								success() {
+									_this.getOrderDetail()
+								}
+							})
+						}
+					})
+			})
+		} else {
+			if (object) {
+				http
+					.wxRequest({
+						..._this.data.api.cancelOrder,
+						params: {
+							id: object.id,
+							orderStatus: '500'
+						}
+					})
+					.then((res) => {
+						if (res.success) {
+							_this.getOrderDetail()
+						}
+					})
+			}
 		}
 	},
 
@@ -465,5 +540,39 @@ Page({
 		this.setData({
 			popShow: false
 		})
+	},
+	// 分享
+	onShareAppMessage() {
+		if (this.data.orderInfo.campaignId && this.data.orderInfo.campaignTeamId) {
+			wx.showShareMenu({
+				withShareTicket: true,
+				menus: ['shareAppMessage', 'shareTimeline']
+			})
+			let shareId = wx.getStorageSync('userId')
+			let goodsName = util.ellipsis(
+				this.data.orderInfo.orderGoods[0].goodsName,
+				20
+			)
+			let path =
+				'/pages_product/product-detail/product-detail?src=' +
+				this.data.orderInfo.orderGoods[0].goodsId +
+				'&shareId=' +
+				shareId +
+				'&campaignId=' +
+				this.data.orderInfo.campaignId +
+				'&campaignTeamId=' +
+				this.data.orderInfo.campaignTeamId
+			let num = this.data.team.clusteringUserNum - this.data.team.nowUserNum
+			return {
+				withShareTicket: true,
+				title: '【仅剩' + num + '个名额】我正在拼' + goodsName + '快来加入吧！',
+				path: path,
+				imageUrl: this.data.orderInfo.orderGoods[0].listPicUrl
+			}
+		} else {
+			wx.hideShareMenu({
+				menus: ['shareAppMessage', 'shareTimeline']
+			})
+		}
 	}
 })

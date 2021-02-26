@@ -8,7 +8,7 @@
 			<view class="activity" wx:if="{{activities.length>0}}">
 				<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
 					<swiper-item class="activityContent" wx:for="{{activities}}" wx:for-item="activity" wx:key="activityIndex" bindtap="goActivity" data-item="{{activity}}">
-							<van-image src="{{activity.img}}" alt width="100%" height="150px" fit="cover"/>
+							<van-image src="{{activity.imageUrl}}" alt width="100%" height="135px" fit="cover"/>
 					</swiper-item>
     		</swiper>
 			</view>
@@ -25,6 +25,7 @@
   </view>
 	<view class="titleContent m-t-15 m-b-15" wx:if="{{productList.length>0}}">
 		<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>
+		<text class="hotProductTitle">热销爆品</text>
 	</view>
 	<view class="goodContent" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">

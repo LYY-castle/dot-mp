@@ -13,6 +13,10 @@ Page({
 		bottomLineShow: false,
 		loadingShow: false,
 		pageNo: 1,
+		activity: null,
+		teamBannar: '/static/img/teamBannar.png',
+		teamRule: '/static/img/teamRule.png',
+		teamGood: '/static/img/teamGood.png',
 		api: {
 			activityProduct: {
 				url: '/campaign-products',
@@ -20,6 +24,10 @@ Page({
 			},
 			getShoppingMoney: {
 				url: '/user-shopping-accounts',
+				method: 'get'
+			},
+			activityDetail: {
+				url: '/campaigns/{id}',
 				method: 'get'
 			}
 		}
@@ -39,9 +47,10 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-		this.getProductList()
+		Promise.resolve()
+			.then(() => this.getActivityDetail())
+			.then(() => this.getProductList())
 	},
-
 	// 获取特惠产品的列表
 	getProductList() {
 		return new Promise((resolve) => {
@@ -120,6 +129,24 @@ Page({
 			resolve()
 		})
 	},
+	getActivityDetail() {
+		return new Promise((resolve) => {
+			const id = wx.getStorageSync('fromBannarActivity')
+			http
+				.wxRequest({
+					...this.data.api.activityDetail,
+					urlReplacements: [{ substr: '{id}', replacement: id }]
+				})
+				.then((res) => {
+					if (res.success) {
+						this.setData({
+							activity: res.data
+						})
+						resolve()
+					}
+				})
+		})
+	},
 	gotoDetail(e) {
 		const option = e.currentTarget.dataset.option
 		const pathParams = {
@@ -152,7 +179,10 @@ Page({
 		this.setData({
 			pageNo: 1
 		})
-		Promise.resolve().then(() => this.getProductList())
+
+		Promise.resolve()
+			.then(() => this.getActivityDetail())
+			.then(() => this.getProductList())
 		wx.stopPullDownRefresh()
 	},
 

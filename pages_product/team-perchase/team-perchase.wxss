@@ -1,1 +1,23 @@
 /* pages_product/team-perchase/team-perchase.wxss */
+.team-perchase_product {
+	background: #96151d;
+	padding: 10px;
+}
+.bg-pink {
+	padding: 10px;
+	background: #fff7f2;
+	color: #96151d;
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+.van-image {
+	display: block !important;
+}
+.tag {
+	display: inline-block;
+	background: #e8c496;
+	color: #8b0000;
+	padding: 1px 8px;
+	font-size: 14px;
+	border-radius: 5px;
+}

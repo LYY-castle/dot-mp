@@ -77,6 +77,9 @@ Page({
 				})
 			}
 		})
+		wx.removeStorageSync('fromBannarActivity') // 活动Id
+		wx.removeStorageSync('shareId') // 分享人Id
+		wx.removeStorageSync('teamId') // 团队Id
 	},
 	scrollToTop() {
 		wx.pageScrollTo({
@@ -252,9 +255,9 @@ Page({
 	},
 	goActivity(option) {
 		console.log(option)
-		const type = option.currentTarget.dataset.item.type
-		wx.setStorageSync('fromBannarActivity', type)
-		if (type === 1) {
+		const obj = option.currentTarget.dataset.item
+		wx.setStorageSync('fromBannarActivity', obj.id)
+		if (obj.type === 1) {
 			wx.navigateTo({
 				url: '/pages_product/team-perchase/team-perchase'
 			})

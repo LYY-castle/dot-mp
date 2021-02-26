@@ -1,22 +1,51 @@
 <!--pages_product/team-perchase/team-perchase.wxml-->
 <view class="container">
-	团购页面
-	<view class="team-perchase_product">
-		<view wx:for="{{ productList }}" wx:key="productIndex" wx:for-item="item" class="flex-start-start bg-color-white m-b-5" bindtap="gotoDetail" data-option="{{item}}">
+	<view>
+		<van-image width="100%" src="{{teamBannar}}" fit="widthFix" class="richImage"/>
+	</view>
+	<view class="team-perchase_product" wx:if="{{activity}}">
+		<view class="titleImage">
+			<van-image width="100%" src="{{teamRule}}" fit="widthFix" />
+		</view>
+		<view class="border bg-pink fz-14" >
+			<rich-text nodes="{{activity.description}}"></rich-text>
+		</view>
+		<view class="titleImage">
+			<van-image width="100%" src="{{teamGood}}" fit="widthFix" />
+		</view>
+		<view wx:for="{{ productList }}" wx:key="productIndex" wx:for-item="item" class="border flex-start-start bg-color-white m-t-10" bindtap="gotoDetail" data-option="{{item}}">
       <view>
         <van-image width="150px" height="150px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
         <van-image alt width="150px" height="150px" fit="cover" wx:else use-loading-slot />
       </view>
-      <view class="fz-14 m-l-5 m-t-10">
-				<text
-					wx:if="{{item.label.length>0}}"
-					class="guige guige-label m-r-3 m-b-5"
-					wx:for="{{item.label}}"
-					wx:for-item="labelItem"
-          wx:key="labelIndex">
-          {{labelItem}}
-        </text>
-					{{item.name}}</view>
+      <view class="fz-16 m-l-5 m-t-10 flex-colum-between">
+				<view>
+					<view class="tag border">
+						{{activity.canClusteringUserNum}}人团
+					</view>
+					<view>
+						<text
+						wx:if="{{item.label.length>0}}"
+						class="guige guige-label m-r-3 m-b-5"
+						wx:for="{{item.label}}"
+						wx:for-item="labelItem"
+						wx:key="labelIndex">
+						{{labelItem}}
+					</text>
+						{{item.name}}
+					</view>
+				</view>
+				<view class="flex-between p-r-10 m-t-20">
+					<view class="minPrice fz-12">
+						￥
+						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
+						<text class="originPrice" wx:if="{{item.isPromote? item.promotePrice<item.marketPrice : item.retailPrice<item.marketPrice}}">￥{{ item.marketPrice }}</text>
+					</view>
+					<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
+				</view>
+			</view>
     </view>
+		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">更多商品，敬请期待</van-divider>
+		<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 	</view>
 </view>

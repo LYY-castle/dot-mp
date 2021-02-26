@@ -4,17 +4,53 @@
       title="{{nbTitle}}"
     />
   </page-meta>
-<view>
-  <view class="text-align-center b-color-yellow p-t-40 p-b-40" wx:if="{{order}}">
-    <van-icon name="passed" size="50" color="#ffffff" wx:if="{{order.payStatus}}"/>
-    <van-icon name="close" size="50" color="#ffffff" wx:if="{{!order.payStatus}}"/>
-    <view class="c-color-white m-t-10" >{{order.payStatus?'支付成功':'支付失败'}}</view>
+<view class="container">
+  <view wx:if="{{order}}" class="b-color-yellow p-t-40 p-b-40">
+    <!-- 团购 -->
+    <view wx:if="{{order.campaignTeamId&&order.campaignId}}">
+        <!-- 头像部分 -->
+        <view class="text-align-center m-b-20 c-color-white" wx:if="{{team.clusteringUserNum-team.nowUserNum>0}}">还差{{team.clusteringUserNum-team.nowUserNum}}人成团,赶快邀请好友</view>
+        <view class="text-align-center m-b-20 c-color-white" wx:if="{{team.clusteringUserNum-team.nowUserNum===0}}">已成团</view>
+        <view class="flex-center">
+          <view wx:for="{{team.users}}" wx:key="userIndex" wx:for-item="user" wx:for-index="userIndex" class="imgGroup">
+            <view wx:if="{{userIndex===0}}" class="tag">{{user.id===userId?'我':'团长'}}</view>
+            <van-image src="{{user.avatar}}" height="60px" width="60px" fit="cover" round="{{true}}" class="m-r-5" wx:if="{{user.avatar}}"></van-image>
+            <van-image src="{{defaultPerson}}" alt height="60px" width="60px" fit="cover" round="{{true}}" class="m-r-5" wx:else />
+          </view>
+          <button open-type="share" plain="true" class="shareBtn" wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx">
+            <van-image src="{{addPerson}}" width="60px" height="60px" fit="cover" ></van-image>
+          </button>
+        </view>
+    </view>
+    <!-- 非团购 -->
+    <view class="text-align-center" wx:else>
+      <van-icon name="passed" size="50" color="#ffffff" wx:if="{{order.payStatus}}"/>
+      <van-icon name="close" size="50" color="#ffffff" wx:if="{{!order.payStatus}}"/>
+      <view class="c-color-white m-t-10" >{{order.payStatus?'支付成功':'支付失败'}}</view>
+    </view>
   </view>
-  <van-cell title="订单编号" value="{{order.orderNo}}"></van-cell>
-  <van-cell title="下单时间" value="{{order.createAt}}"></van-cell>
-  <van-cell title="订单状态" value="{{statusMap[order.orderStatus].text}}"></van-cell>
+  <!-- 商品详情 -->
+        <view wx:for="{{ order.orderGoods }}" wx:key="productIndex" wx:for-item="item" class="border flex-start-start bg-color-white m-t-10 m-b-10">
+          <view>
+            <van-image width="100px" height="100px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
+            <van-image alt width="100px" height="100px" fit="cover" wx:else use-loading-slot />
+          </view>
+          <view class="fz-16 m-l-5 m-t-20">
+            {{item.goodsName}}
+            <view class="m-t-5 fz-12 flex-between p-r-10">
+              <text class="c-gray">数量：{{ item.number }}</text>
+              <text class="c-gray">单价：￥{{ item.retailPrice }}</text>
+              <text>总价：￥{{ order.actualPrice }}</text>
+            </view>
+          </view>
+        </view>
+        <van-cell title="订单编号" value="{{order.orderNo}}"></van-cell>
+        <van-cell title="下单时间" value="{{order.createAt}}"></van-cell>
+        <van-cell title="支付状态" value="{{order.payStatus?'支付成功':'支付失败'}}" wx:if="{{order.campaignTeamId&&order.campaignId}}"></van-cell>
+        <van-cell title="订单状态" value="{{statusMap[order.orderStatus].text}}"></van-cell>
   <view class="flex-between p-20">
     <van-button round="{{true}}" bindtap="goOrderDetail">订单详情</van-button>
     <van-button round="{{true}}" bindtap="goHome">继续购物</van-button>
   </view>
 </view>
+

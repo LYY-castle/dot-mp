@@ -34,6 +34,7 @@ Page({
 		orderId: null,
 		isGroupPurchase: null,
 		priceRules: null,
+		teamObj: null, // 开团团队详情
 		api: {
 			addOrder: {
 				url: '/orders',
@@ -70,6 +71,16 @@ Page({
 			getFee: {
 				url: '/goods/freight',
 				method: 'post'
+			},
+			// 开团
+			createTeam: {
+				url: '/campaign-teams',
+				method: 'post'
+			},
+			// 加入拼团
+			joinTeam: {
+				url: '/campaign-team-details/join',
+				method: 'post'
 			}
 		}
 	},
@@ -87,7 +98,10 @@ Page({
 			remark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : null,
 			newRemark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : ''
 		})
-		this.getShoppingMoney()
+		const activityId = wx.getStorageSync('fromBannarActivity')
+		if (!activityId) {
+			this.getShoppingMoney()
+		}
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
 				cartPerchase: true
@@ -350,10 +364,33 @@ Page({
 	// 生成订单
 	onSubmit() {
 		const _this = this
-
 		if (_this.data.order) {
+			// 团购
 			if (_this.data.isGroupPurchase) {
-				_this.addOrder()
+				const activityId = wx.getStorageSync('fromBannarActivity')
+				const teamId = wx.getStorageSync('teamId')
+				// 如果是开团
+				if (!teamId) {
+					let params = {
+						goodsId: _this.data.goods.id,
+						productId: _this.data.product.id,
+						campaignId: activityId,
+						clusteringUserNum: 3
+					}
+					http
+						.wxRequest({ ..._this.data.api.createTeam, params })
+						.then((res) => {
+							if (res.success) {
+								this.setData({
+									teamObj: res.data
+								})
+								_this.addOrder()
+							}
+						})
+				} else {
+					// 参与别人的团
+					_this.addOrder()
+				}
 			} else {
 				// 用户有购物金账户
 				if (_this.data.shoppingAccountId) {
@@ -407,6 +444,7 @@ Page({
 					}
 				} else {
 					// 用户没有购物金账户
+
 					_this.addOrder()
 				}
 			}
@@ -419,7 +457,10 @@ Page({
 	},
 	// 封装生成订单函数
 	addOrder() {
+		const activityId = wx.getStorageSync('fromBannarActivity')
+		const teamId = wx.getStorageSync('teamId')
 		let orderGoods = []
+		// 封装入参
 		if (this.data.cartPerchase) {
 			this.data.dataList.forEach((list) => {
 				const obj = {
@@ -473,6 +514,13 @@ Page({
 			createBy: wx.getStorageSync('userId'),
 			goodsPrice: this.data.totalPrice,
 			orderGoods
+		}
+		if (!teamId) {
+			params.campaignId = this.data.teamObj.campaignId
+			params.campaignTeamId = this.data.teamObj.id
+		} else {
+			params.campaignId = activityId
+			params.campaignTeamId = teamId
 		}
 		if (this.data.selectMoney) {
 			params.shoppingAccountId = this.data.shoppingAccountId

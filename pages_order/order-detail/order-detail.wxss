@@ -57,15 +57,23 @@
 .contentField .inputClass .van-cell {
 	background: transparent;
 }
-.service{
-	width:50px;
+.service {
+	width: 50px;
 	height: 50px;
 	position: fixed;
-	bottom:50px;
-	right:0;
+	bottom: 50px;
+	right: 0;
 	z-index: 9;
 }
-.flex-start-center .van-radio-self{
-	display: inline-block!important;
-	margin-right:5px;
+.flex-start-center .van-radio-self {
+	display: inline-block !important;
+	margin-right: 5px;
+}
+.shareBtn {
+	padding: 0;
+	border: none !important;
+	text-align: center;
+	font-size: 14px;
+	display: flex;
+	flex-direction: column;
 }
