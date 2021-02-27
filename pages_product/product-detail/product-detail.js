@@ -55,6 +55,7 @@ Page({
 		shareId: null, // 开团发起人
 		shareName: null,
 		teamStatistics: null,
+		currentShareCampaignTeam: null,
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -114,7 +115,7 @@ Page({
 	 */
 	onLoad: function (options) {
 		const _this = this
-		this.setData({
+		_this.setData({
 			userId: wx.getStorageSync('userId'),
 			shareId: wx.getStorageSync('shareId')
 		})
@@ -126,6 +127,10 @@ Page({
 	},
 	onShow: function () {
 		const _this = this
+		_this.setData({
+			userId: wx.getStorageSync('userId'),
+			shareId: wx.getStorageSync('shareId')
+		})
 		wx.removeStorageSync('perchaseByCart')
 		wx.removeStorageSync('addAddress')
 		wx.removeStorageSync('activeProductNumber')
@@ -134,7 +139,9 @@ Page({
 		_this.getCartDotsNum()
 		if (_this.data.shareId) {
 			// 获取分享人的详情
-			_this.getShareDetail()
+			Promise.resolve()
+				.then(() => _this.getShareDetail())
+				.then(() => _this.currentCampaignTeam())
 		}
 		if (_this.data.options.src) {
 			this.setData({
@@ -192,6 +199,41 @@ Page({
 					shareName: res.data[0].nickname
 				})
 			}
+		})
+	},
+	// 判断小程序使用者是否在当前分享人所属的拼团中
+	currentCampaignTeam() {
+		return new Promise((resolve) => {
+			const params = {
+				id: wx.getStorageSync('teamId'),
+				campaignId: wx.getStorageSync('fromBannarActivity')
+			}
+			const userId = wx.getStorageSync('userId')
+			http
+				.wxRequest({
+					...this.data.api.getTeamDetail,
+					params
+				})
+				.then((res) => {
+					if (res.success) {
+						const flag = res.data[0].users.some((user) => {
+							return userId === String(user.id)
+						})
+						if (flag) {
+							wx.removeStorageSync('shareId')
+							this.setData({
+								shareId: null
+							})
+						}
+						if (res.data[0].isClustering) {
+							wx.removeStorageSync('shareId')
+							this.setData({
+								shareId: null
+							})
+						}
+						resolve()
+					}
+				})
 		})
 	},
 	// 获取当前用户的收货地址
@@ -309,18 +351,20 @@ Page({
 		} else {
 			wx.login({
 				success(res) {
+					console.log('登录获取的code', res)
 					const params = {
 						wechatCode: res.code,
 						userInfoEncryptedData: e.detail.encryptedData,
 						userInfoIv: e.detail.iv,
 						wechatAppId: env.env.appid
 					}
+					console.log('授权信息', params)
 					http
 						.wxRequest({ ..._this.data.api.updatePhone, params })
 						.then((res) => {
 							if (res.success) {
 								wx.showToast({
-									title: '购物金账号生成成功，请继续购物'
+									title: '授权成功'
 								})
 							}
 						})
@@ -397,6 +441,7 @@ Page({
 				})
 		})
 	},
+	// 获取当前正在拼团的数据
 	getAllTeams() {
 		return new Promise((resolve) => {
 			const params = {
@@ -421,7 +466,7 @@ Page({
 			})
 		})
 	},
-	// 团队统计
+	// 总团队统计
 	getTeamStatistics() {
 		return new Promise((resolve) => {
 			const params = {

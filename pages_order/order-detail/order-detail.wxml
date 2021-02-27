@@ -94,7 +94,7 @@
           </view>
           <van-image src="{{addPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-5"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
         </view>
-				<view class="text-align-cener m-l-20" wx:if="{{team.clusteringUserNum-team.nowUserNum>0}}">
+				<view class="text-align-cener m-l-20" wx:if="{{team.clusteringUserNum-team.nowUserNum>0&&orderInfo.orderStatus===200}}">
 					<button open-type="share" plain="true" class="shareBtn">
 						<van-icon name="wechat" class="fz-30" color="#1aad19"/>
 						<text>邀请好友</text>

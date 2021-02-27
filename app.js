@@ -24,11 +24,12 @@ App({
 						if (options.query) {
 							url += '?' + this.queryString(options.query)
 						}
-
 						if (options.query.shareId) {
 							let flag = options.query.shareId !== String(res.data.id)
 							if (flag) {
 								wx.setStorageSync('shareId', options.query.shareId)
+							} else {
+								wx.removeStorageSync('shareId')
 							}
 						}
 						if (options.query) {

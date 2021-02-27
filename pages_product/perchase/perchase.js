@@ -394,15 +394,15 @@ Page({
 			} else {
 				// 用户有购物金账户
 				if (_this.data.shoppingAccountId) {
-					if (_this.data.shoppingMoney > 0) {
-						const flag = _this.checkMoney()
-						if (flag) {
-							if (
-								this.data.shoppingMoney < this.data.shoppingMoneyData.amount
-							) {
+					const flag = _this.checkMoney()
+					if (flag) {
+						// 购物余额大于0
+						if (_this.data.shoppingMoneyData.amount > 0) {
+							// 购物金余额大于0但是用户没有使用时
+							if (!_this.data.shoppingMoney) {
 								wx.showModal({
 									title: '请确认',
-									content: '确认不使用全部购物金抵消订单金额？',
+									content: '确认不使用购物金？',
 									cancelText: '不使用',
 									confirmText: '使用',
 									success(res) {
@@ -411,40 +411,47 @@ Page({
 												selectMoney: true
 											})
 										} else {
-											_this.setData({
-												disabledBtn: true
-											})
 											_this.addOrder()
 										}
 									}
 								})
 							} else {
-								_this.setData({
-									disabledBtn: true
-								})
-								_this.addOrder()
-							}
-						}
-					} else {
-						wx.showModal({
-							title: '请确认',
-							content: '确认不使用购物金？',
-							cancelText: '不使用',
-							confirmText: '使用',
-							success(res) {
-								if (res.confirm) {
-									_this.setData({
-										selectMoney: true
-									})
-								} else {
-									_this.addOrder()
+								// 购物金余额大于0，用户使用，但是只使用一部分询问是否使用全部
+								if (this.data.actualPrice > 0) {
+									if (
+										this.data.shoppingMoneyData.amount -
+											this.data.shoppingMoney >
+										0
+									) {
+										wx.showModal({
+											title: '请确认',
+											content: '确认不使用全部购物金抵消订单金额？',
+											cancelText: '不使用',
+											confirmText: '使用',
+											success(res) {
+												if (res.confirm) {
+													_this.setData({
+														selectMoney: true
+													})
+												} else {
+													_this.setData({
+														disabledBtn: true
+													})
+													_this.addOrder()
+												}
+											}
+										})
+									} else {
+										_this.addOrder()
+									}
 								}
 							}
-						})
+						} else {
+							_this.addOrder()
+						}
 					}
 				} else {
 					// 用户没有购物金账户
-
 					_this.addOrder()
 				}
 			}
@@ -515,12 +522,13 @@ Page({
 			goodsPrice: this.data.totalPrice,
 			orderGoods
 		}
-		if (!teamId) {
-			params.campaignId = this.data.teamObj.campaignId
-			params.campaignTeamId = this.data.teamObj.id
-		} else {
+		if (activityId && teamId) {
 			params.campaignId = activityId
 			params.campaignTeamId = teamId
+		}
+		if (this.data.teamObj) {
+			params.campaignTeamId = this.data.teamObj.id
+			params.campaignId = this.data.teamObj.campaignId
 		}
 		if (this.data.selectMoney) {
 			params.shoppingAccountId = this.data.shoppingAccountId

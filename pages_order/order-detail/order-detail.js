@@ -212,29 +212,35 @@ Page({
 	},
 	getTeamDetail() {
 		return new Promise((resolve) => {
-			const params = {
-				id: this.data.orderInfo.campaignTeamId,
-				campaignId: this.data.orderInfo.campaignId
-			}
-			http
-				.wxRequest({
-					...this.data.api.getTeamDetail,
-					params
-				})
-				.then((res) => {
-					if (res.success) {
-						if (res.data.length > 0) {
-							this.setData({
-								team: res.data[0]
-							})
-						} else {
-							this.setData({
-								team: null
-							})
+			if (this.data.orderInfo.orderStatus !== 600) {
+				const params = {
+					id: this.data.orderInfo.campaignTeamId,
+					campaignId: this.data.orderInfo.campaignId
+				}
+				http
+					.wxRequest({
+						...this.data.api.getTeamDetail,
+						params
+					})
+					.then((res) => {
+						if (res.success) {
+							if (res.data.length > 0) {
+								this.setData({
+									team: res.data[0]
+								})
+							} else {
+								this.setData({
+									team: null
+								})
+							}
+							resolve()
 						}
-						resolve()
-					}
+					})
+			} else {
+				this.setData({
+					team: null
 				})
+			}
 		})
 	},
 	onTimeChange(e) {
@@ -416,12 +422,10 @@ Page({
 					.then((res) => {
 						if (res.success) {
 							wx.showToast({
-								title: '退团成功',
-								success() {
-									_this.getOrderDetail()
-								}
+								title: '退团成功'
 							})
 						}
+						_this.getOrderDetail()
 					})
 			})
 		} else {

@@ -150,7 +150,7 @@
     bind:close="onClose"
     bind:getphonenumber="getphonenumber"
   >
-    <view>金小点需要您授权手机号用于拼单返购物金</view>
+    <view class="p-20 text-align-center">金小点需要您授权手机号用于拼单返购物金</view>
   </van-dialog>
   <van-dialog
     use-slot
