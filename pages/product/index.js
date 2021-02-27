@@ -120,62 +120,6 @@ Page({
 				}
 			})
 	},
-	// 四个按钮点击事件 self购买 share分享案例
-	buttonClickEvent(e) {
-		const option = e.currentTarget.dataset.option
-		const event = e.currentTarget.dataset.event
-		const pathParams = {
-			productId: option.id
-		}
-		if (event === 'self') {
-			wx.navigateTo({
-				url: '../product-detail/product-detail',
-				success: function (res) {
-					// 通过eventChannel向被打开页面传送数据
-					res.eventChannel.emit('acceptDataFromOpenerPage', {
-						data: pathParams
-					})
-				}
-			})
-		}
-		if (event === 'other') {
-			const params = {
-				params:
-					env.env.VUE_APP_BASE_URL +
-					'/product/product-detail/product-detail?productId=' +
-					option.id,
-				wechatAppId: env.env.appid
-			}
-			const header = {
-				authorization: wx.getStorageSync('authorization')
-			}
-			wx.request({
-				url: env.env.VUE_APP_BASE_URL + this.data.api.getQRcode.url,
-				header,
-				responseType: 'arrayBuffer',
-				data: params,
-				success: (res) => {
-					let url = 'data:image/png;base64,' + wx.arrayBufferToBase64(res.data)
-					this.setData({
-						qrcodeContent: true,
-						codeUrl: url,
-						popProductName: option.name
-					})
-				}
-			})
-		}
-		if (event === 'share') {
-			wx.navigateTo({
-				url: '../share-list/share-list',
-				success: function (res) {
-					// 通过eventChannel向被打开页面传送数据
-					res.eventChannel.emit('acceptDataFromOpenerPage', {
-						data: pathParams
-					})
-				}
-			})
-		}
-	},
 	//  获取产品列表
 	getProductsList(params) {
 		let productDetailObj = {}

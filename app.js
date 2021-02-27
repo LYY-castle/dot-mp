@@ -20,33 +20,16 @@ App({
 					if (res.success) {
 						wx.setStorageSync('openId', res.data.weixinOpenid)
 						wx.setStorageSync('userId', res.data.id)
-						let url = '/' + options.path
-						if (options.query) {
-							url += '?' + this.queryString(options.query)
-						}
-						if (options.query.shareId) {
-							let flag = options.query.shareId !== String(res.data.id)
-							if (flag) {
-								wx.setStorageSync('shareId', options.query.shareId)
-							} else {
-								wx.removeStorageSync('shareId')
-							}
-						}
-						if (options.query) {
-							wx.setStorageSync('fromBannarActivity', options.query.campaignId)
-						}
-						if (options.query) {
-							wx.setStorageSync('teamId', options.query.campaignTeamId)
-						}
-						wx.reLaunch({
-							url
-						})
 					} else {
 						console.log('请求失败', res)
 					}
 				})
 			}
 		})
+	},
+	onShow(options) {
+		console.log('每次进入都显示的参数', options)
+		// 计算胶囊高度
 		let menuButtonObject = wx.getMenuButtonBoundingClientRect()
 		wx.getSystemInfo({
 			success: (res) => {
@@ -63,6 +46,28 @@ App({
 			fail(err) {
 				console.log(err)
 			}
+		})
+
+		let url = '/' + options.path
+		if (options.query) {
+			url += '?' + this.queryString(options.query)
+		}
+		if (options.query.shareId) {
+			let flag = options.query.shareId !== String(res.data.id)
+			if (flag) {
+				wx.setStorageSync('shareId', options.query.shareId)
+			} else {
+				wx.removeStorageSync('shareId')
+			}
+		}
+		if (options.query) {
+			wx.setStorageSync('fromBannarActivity', options.query.campaignId)
+		}
+		if (options.query) {
+			wx.setStorageSync('teamId', options.query.campaignTeamId)
+		}
+		wx.reLaunch({
+			url
 		})
 	},
 	queryString(json) {

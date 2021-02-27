@@ -12,6 +12,20 @@ Page({
 		userId: null,
 		addPerson: '/static/img/add-person.png',
 		defaultPerson: '/static/img/avatar.png',
+		payStatusMap: {
+			0: {
+				text: '支付失败'
+			},
+			1: {
+				text: '支付成功'
+			},
+			2: {
+				text: '退款中'
+			},
+			3: {
+				text: '已退款'
+			}
+		},
 		statusMap: {
 			100: {
 				text: '待付款'

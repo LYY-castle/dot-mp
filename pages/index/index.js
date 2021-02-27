@@ -45,25 +45,14 @@ Page({
 	},
 
 	onLoad() {
-		const { top, width, height, right } = this.data.menuButtonInfo
-		wx.getSystemInfo({
-			success: (res) => {
-				const { statusBarHeight } = res
-				const margin = top - statusBarHeight
-				this.setData({
-					navHeight: height + statusBarHeight + margin * 2,
-					searchMarginTop: statusBarHeight + margin, // 状态栏 + 胶囊按钮边距
-					searchHeight: height, // 与胶囊按钮同高
-					searchWidth: right - width // 胶囊按钮右边坐标 - 胶囊按钮宽度 = 按钮左边可使用宽度
-				})
-			}
-		})
+		console.log('onLoad刷新操作')
 		Promise.resolve()
 			.then(() => this.getBannarList())
 			.then(() => this.getProductSorts())
 			.then(() => this.getProductList())
 	},
 	onShow() {
+		console.log('onShow刷新操作')
 		const { top, width, height, right } = this.data.menuButtonInfo
 		wx.getSystemInfo({
 			success: (res) => {
@@ -77,6 +66,7 @@ Page({
 				})
 			}
 		})
+
 		wx.removeStorageSync('fromBannarActivity') // 活动Id
 		wx.removeStorageSync('shareId') // 分享人Id
 		wx.removeStorageSync('teamId') // 团队Id
@@ -240,17 +230,8 @@ Page({
 	},
 	gotoDetail(e) {
 		const option = e.currentTarget.dataset.option
-		const pathParams = {
-			productId: option.id
-		}
 		wx.navigateTo({
-			url: '/pages_product/product-detail/product-detail',
-			success: function (res) {
-				// 通过eventChannel向被打开页面传送数据
-				res.eventChannel.emit('acceptDataFromOpenerPage', {
-					data: pathParams
-				})
-			}
+			url: '/pages_product/product-detail/product-detail?src=' + option.id
 		})
 	},
 	goActivity(option) {

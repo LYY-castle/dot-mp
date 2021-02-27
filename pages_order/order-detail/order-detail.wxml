@@ -96,7 +96,7 @@
         </view>
 				<view class="text-align-cener m-l-20" wx:if="{{team.clusteringUserNum-team.nowUserNum>0&&orderInfo.orderStatus===200}}">
 					<button open-type="share" plain="true" class="shareBtn">
-						<van-icon name="wechat" class="fz-30" color="#1aad19"/>
+						<van-icon name="share-o" class="fz-30" color="#1aad19"/>
 						<text>邀请好友</text>
 					</button>
 				</view>

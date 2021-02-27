@@ -172,18 +172,9 @@ Page({
 		})
 	},
 	gotoDetail(e) {
-		const option = e.currentTarget.dataset.option,
-			pathParams = {
-				productId: option.id
-			}
+		const option = e.currentTarget.dataset.option
 		wx.navigateTo({
-			url: '/pages_product/product-detail/product-detail',
-			success: function (res) {
-				// 通过eventChannel向被打开页面传送数据
-				res.eventChannel.emit('acceptDataFromOpenerPage', {
-					data: pathParams
-				})
-			}
+			url: '/pages_product/product-detail/product-detail?src=' + option.id
 		})
 	},
 

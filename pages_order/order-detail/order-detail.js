@@ -318,17 +318,9 @@ Page({
 		})
 	},
 	gotoDetail(e) {
-		const pathParams = {
-			productId: e.currentTarget.dataset.goodsId
-		}
+		const productId = e.currentTarget.dataset.goodsId
 		wx.navigateTo({
-			url: '/pages_product/product-detail/product-detail',
-			success: function (res) {
-				// 通过eventChannel向被打开页面传送数据
-				res.eventChannel.emit('acceptDataFromOpenerPage', {
-					data: pathParams
-				})
-			}
+			url: '/pages_product/product-detail/product-detail?src=' + productId
 		})
 	},
 	copy(e) {

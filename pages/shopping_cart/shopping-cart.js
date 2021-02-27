@@ -503,17 +503,8 @@ Page({
 	},
 	gotoGoodDetail(e) {
 		const option = e.currentTarget.dataset.option
-		const pathParams = {
-			productId: option.goods.id
-		}
 		wx.navigateTo({
-			url: '/pages_product/product-detail/product-detail',
-			success: function (res) {
-				// 通过eventChannel向被打开页面传送数据
-				res.eventChannel.emit('acceptDataFromOpenerPage', {
-					data: pathParams
-				})
-			}
+			url: '/pages_product/product-detail/product-detail?src=' + option.goods.id
 		})
 	},
 	deleteItem(item, list) {

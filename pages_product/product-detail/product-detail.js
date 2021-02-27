@@ -151,18 +151,6 @@ Page({
 				.then(() => _this.getProductDetail())
 				.then(() => _this.getAllTeams())
 				.then(() => _this.getTeamStatistics())
-		} else {
-			const eventChannel = this.getOpenerEventChannel()
-			eventChannel.on('acceptDataFromOpenerPage', function (res) {
-				_this.setData({
-					pathParams: res.data,
-					productId: res.data.productId
-				})
-				Promise.resolve()
-					.then(() => _this.getProductDetail())
-					.then(() => _this.getAllTeams())
-					.then(() => _this.getTeamStatistics())
-			})
 		}
 	},
 	/**
@@ -366,6 +354,10 @@ Page({
 								wx.showToast({
 									title: '授权成功'
 								})
+							} else {
+								this.setData({
+									authorization: true
+								})
 							}
 						})
 				}
@@ -469,22 +461,24 @@ Page({
 	// 总团队统计
 	getTeamStatistics() {
 		return new Promise((resolve) => {
-			const params = {
-				campaignId: this.data.campaign.id,
-				goodsId: this.data.goods.id
+			if (this.data.campaign) {
+				const params = {
+					campaignId: this.data.campaign.id,
+					goodsId: this.data.goods.id
+				}
+				http
+					.wxRequest({
+						...this.data.api.getTeamStatistics,
+						params
+					})
+					.then((res) => {
+						if (res.success) {
+							this.setData({
+								teamStatistics: res.data
+							})
+						}
+					})
 			}
-			http
-				.wxRequest({
-					...this.data.api.getTeamStatistics,
-					params
-				})
-				.then((res) => {
-					if (res.success) {
-						this.setData({
-							teamStatistics: res.data
-						})
-					}
-				})
 		})
 	},
 	lookAllTeam() {
@@ -641,8 +635,8 @@ Page({
 	// 下拉
 	onPullDownRefresh() {
 		Promise.resolve()
-			.then(() => _this.getAllTeams())
-			.then(() => _this.getTeamStatistics())
+			.then(() => this.getAllTeams())
+			.then(() => this.getTeamStatistics())
 		wx.stopPullDownRefresh()
 	}
 })

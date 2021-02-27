@@ -7,7 +7,7 @@
 <view class="container">
   <view wx:if="{{order}}" class="b-color-yellow p-t-40 p-b-40">
     <!-- 团购 -->
-    <view wx:if="{{order.campaignTeamId&&order.campaignId}}">
+    <view wx:if="{{order.campaignTeamId&&order.campaignId&&order.payStatus===1}}">
         <!-- 头像部分 -->
         <view class="text-align-center m-b-20 c-color-white" wx:if="{{team.clusteringUserNum-team.nowUserNum>0}}">还差{{team.clusteringUserNum-team.nowUserNum}}人成团,赶快邀请好友</view>
         <view class="text-align-center m-b-20 c-color-white" wx:if="{{team.clusteringUserNum-team.nowUserNum===0}}">已成团</view>
@@ -26,7 +26,7 @@
     <view class="text-align-center" wx:else>
       <van-icon name="passed" size="50" color="#ffffff" wx:if="{{order.payStatus}}"/>
       <van-icon name="close" size="50" color="#ffffff" wx:if="{{!order.payStatus}}"/>
-      <view class="c-color-white m-t-10" >{{order.payStatus?'支付成功':'支付失败'}}</view>
+      <view class="c-color-white m-t-10" >{{payStatusMap[order.payStatus].text}}</view>
     </view>
   </view>
   <!-- 商品详情 -->
@@ -46,7 +46,6 @@
         </view>
         <van-cell title="订单编号" value="{{order.orderNo}}"></van-cell>
         <van-cell title="下单时间" value="{{order.createAt}}"></van-cell>
-        <van-cell title="支付状态" value="{{order.payStatus?'支付成功':'支付失败'}}" wx:if="{{order.campaignTeamId&&order.campaignId}}"></van-cell>
         <van-cell title="订单状态" value="{{statusMap[order.orderStatus].text}}"></van-cell>
   <view class="flex-between p-20">
     <van-button round="{{true}}" bindtap="goOrderDetail">订单详情</van-button>

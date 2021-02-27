@@ -37,9 +37,9 @@
 				</view>
 				<view class="flex-between p-r-10 m-t-20">
 					<view class="minPrice fz-12">
-						￥
-						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
-						<text class="originPrice" wx:if="{{item.isPromote? item.promotePrice<item.marketPrice : item.retailPrice<item.marketPrice}}">￥{{ item.marketPrice }}</text>
+						拼团价￥
+						<text class="fz-20 bold">{{item.clusteringPrice}}</text>
+						<text class="originPrice" wx:if="{{item.retailPrice}}">￥{{ item.retailPrice }}</text>
 					</view>
 					<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
 				</view>

@@ -48,15 +48,25 @@
           </view>
         </view>
       </view>
-      <view class="bg-color-white p-10 m-t-10" wx:if="{{teams.length>0}}">
-        <view wx:if="teamStatistics.clusteringNum>0" class="m-b-15">当前已成团人数:
-          <text class="bold fz-16">{{teamStatistics.clusteringNum}}</text>
+      <view class="bg-color-white p-10 m-t-10" >
+        <view class="flex-between">
+          <view wx:if="teamStatistics.clusteringNum>0">当前已成团人数:
+          <text class="bold fz-16">{{teamStatistics?teamStatistics.clusteringNum:0}}</text>
         </view>
-        <view class="flex-between fz-16">
+        <view class="c-gray flex-start" >剩余
+                      <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange">
+                        <text class="item" wx:if="{{timeData.days}}">{{ timeData.days }}天</text>
+                        <text class="item" wx:if="{{timeData.hours}}">{{ timeData.hours }}时</text>
+                        <text class="item" wx:if="{{timeData.minutes}}">{{ timeData.minutes }}分</text>
+                        <text class="item" >{{ timeData.seconds }}秒</text>
+                      </van-count-down>
+                    </view>
+        </view>
+        <view class="flex-between fz-16 m-t-15" wx:if="{{teams.length>0}}">
           <text class="c-color-gray">{{teamStatistics.noClusteringNum}}人正在拼团，可直接参与</text>
           <view bindtap="lookAllTeam" class="fz-14 c-gray" wx:if="{{teams.length>1}}">查看全部 <van-icon name="arrow" /></view>
         </view>
-        <view class="teamsStyle">
+        <view class="teamsStyle" wx:if="{{teams.length>0}}">
           <swiper indicator-dots="{{false}}" class="my-swipe" autoplay="{{true}}" interval="{{interval}}" duration="{{duration}}" vertical="{{true}}">
             <block wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="team">
               <swiper-item class="flex-between border-top">
@@ -67,23 +77,14 @@
                   </view>
                   <van-image src="{{addPerson}}" alt height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
                 </view>
-                <view class="flex-end">
+                <view class="flex-colum-between">
                   <view class="fz-12 text-align-right p-r-2">
-                    <view class="w-150">还差
+                    <view>还差
                       <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
                       拼成
                     </view>
-                    <view class="c-gray flex-end">剩余
-                      <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange">
-                        <text class="item" wx:if="{{timeData.days}}">{{ timeData.days }}天</text>
-                        <text class="item" wx:if="{{timeData.hours}}">{{ timeData.hours }}时</text>
-                        <text class="item" wx:if="{{timeData.minutes}}">{{ timeData.minutes }}分</text>
-                        <text class="item" >{{ timeData.seconds }}秒</text>
-                      </van-count-down>
-                    </view>
+                    <van-button type="danger" size="small" block round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
                   </view>
-
-                  <van-button type="danger" size="small" round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
                 </view>
               </swiper-item>
             </block>
@@ -161,30 +162,30 @@
   >
     <van-icon name="close" class="closeTeams fz-20" bindtap="closeTeams"/>
     <view class="teamsPop">
-        <view class="flex-between border-top p-t-10" wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="team">
-        <view class="flex-start">
-          <view wx:for="{{team.users}}" wx:key="userIndex" wx:for-item="user" >
-            <van-image src="{{user.avatar}}" height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-2" wx:if="{{user.avatar}}"></van-image>
-            <van-image src="{{defaultPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-2" wx:else />
-          </view>
-          <van-image src="{{addPerson}}" alt height="30px" width="30px" fit="cover" round="{{true}}" class="m-r-2"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
-        </view>
-        <view class="flex-end">
-          <view class="fz-12 text-align-right p-r-2">
-            <view class="w-150">还差
-              <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
-              拼成
-            </view>
-            <view class="c-gray flex-end">剩余
-              <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange" wx:if="{{activityTime}}">
+      <view class="c-gray flex-center">剩余
+        <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange" wx:if="{{activityTime}}">
                 <text class="item" wx:if="{{timeData.days}}">{{ timeData.days }}天</text>
                 <text class="item" wx:if="{{timeData.hours}}">{{ timeData.hours }}时</text>
                 <text class="item" wx:if="{{timeData.minutes}}">{{ timeData.minutes }}分</text>
                 <text class="item" >{{ timeData.seconds }}秒</text>
-              </van-count-down>
-            </view>
+        </van-count-down>
+        </view>
+        <view class="flex-between border-top p-t-10" wx:for="{{teams}}" wx:key="teamIndex" wx:for-item="team">
+        <view class="flex-start">
+          <view wx:for="{{team.users}}" wx:key="userIndex" wx:for-item="user" >
+            <van-image src="{{user.avatar}}" height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2" wx:if="{{user.avatar}}"></van-image>
+            <van-image src="{{defaultPerson}}" alt height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2" wx:else />
           </view>
-          <van-button type="danger" size="small" round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
+          <van-image src="{{addPerson}}" alt height="40px" width="40px" fit="cover" round="{{true}}" class="m-r-2"  wx:for="{{team.clusteringUserNum-team.nowUserNum}}" wx:key="imgIdx"/>
+        </view>
+        <view class="flex-colum-between">
+          <view class="fz-12 text-align-right p-r-2">
+            <view>还差
+              <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
+              拼成
+            </view>
+            <van-button type="danger" size="small" round block bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
+          </view>
         </view>
       </view>
     </view>

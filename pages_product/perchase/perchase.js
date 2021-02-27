@@ -278,13 +278,29 @@ Page({
 			http.wxRequest({ ...this.data.api.getMyAddress, params }).then((res) => {
 				if (res.success) {
 					if (wx.getStorageSync('activeAddressId')) {
-						res.data.forEach((item) => {
-							if (item.id === wx.getStorageSync('activeAddressId')) {
+						const flag = res.data.some((add) => {
+							return String(add.id) === wx.getStorageSync('activeAddressId')
+						})
+						if (flag) {
+							res.data.forEach((item) => {
+								if (String(item.id) === wx.getStorageSync('activeAddressId')) {
+									this.setData({
+										order: item
+									})
+								}
+							})
+						} else {
+							wx.removeStorageSync('activeAddressId')
+							if (res.data.length > 0) {
 								this.setData({
-									order: item
+									order: res.data[0]
+								})
+							} else {
+								this.setData({
+									order: null
 								})
 							}
-						})
+						}
 					} else {
 						if (res.data.length > 0) {
 							this.setData({
@@ -442,15 +458,29 @@ Page({
 											}
 										})
 									} else {
+										_this.setData({
+											disabledBtn: true
+										})
 										_this.addOrder()
 									}
+								} else {
+									_this.setData({
+										disabledBtn: true
+									})
+									_this.addOrder()
 								}
 							}
 						} else {
+							_this.setData({
+								disabledBtn: true
+							})
 							_this.addOrder()
 						}
 					}
 				} else {
+					_this.setData({
+						disabledBtn: true
+					})
 					// 用户没有购物金账户
 					_this.addOrder()
 				}
