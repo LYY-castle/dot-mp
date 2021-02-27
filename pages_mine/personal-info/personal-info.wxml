@@ -22,9 +22,10 @@
           placeholder="请输入姓名"
         />
         <van-field
+          type="number"
+          maxlength="11"
           model:value="{{userInfo.mobile}}"
           name="mobile"
-          type="tel"
           label="手机号"
           placeholder="请输入手机号"
         />

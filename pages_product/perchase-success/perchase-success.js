@@ -10,6 +10,7 @@ Page({
 		order: null,
 		team: null,
 		userId: null,
+		loadingShow: true,
 		addPerson: '/static/img/add-person.png',
 		defaultPerson: '/static/img/avatar.png',
 		payStatusMap: {
@@ -57,11 +58,12 @@ Page({
 			}
 		}
 	},
-
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		wx.removeStorageSync('teamId')
+		wx.removeStorageSync('shareId')
 		this.setData({
 			userId: wx.getStorageSync('userId')
 		})
@@ -81,24 +83,30 @@ Page({
 	onReady: function () {},
 	getOrderDetail() {
 		return new Promise((resolve) => {
-			http
-				.wxRequest({
-					...this.data.api.getOrderById,
-					urlReplacements: [
-						{
-							substr: '{id}',
-							replacement: this.data.orderId
-						}
-					]
-				})
-				.then((res) => {
-					if (res.success) {
+			setTimeout(() => {
+				http
+					.wxRequest({
+						...this.data.api.getOrderById,
+						urlReplacements: [
+							{
+								substr: '{id}',
+								replacement: this.data.orderId
+							}
+						]
+					})
+					.then((res) => {
 						this.setData({
-							order: res.data
+							loadingShow: false
 						})
-						resolve()
-					}
-				})
+						if (res.success) {
+							this.setData({
+								order: res.data
+							})
+
+							resolve()
+						}
+					})
+			}, 3000)
 		})
 	},
 	getTeamDetail() {
@@ -163,7 +171,11 @@ Page({
 	onReachBottom: function () {},
 	// 分享
 	onShareAppMessage() {
-		if (this.data.order.campaignId && this.data.order.campaignTeamId) {
+		if (
+			this.data.order.campaignId &&
+			this.data.order.campaignTeamId &&
+			!this.data.team.isClustering
+		) {
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ['shareAppMessage', 'shareTimeline']

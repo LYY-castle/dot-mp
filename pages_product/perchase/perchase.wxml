@@ -119,24 +119,22 @@
 	</van-dialog>
 	<van-dialog id="van-dialog" />
 	<van-popup
-  show="{{ remarkShow }}"
-	round
-  position="bottom"
-	bind:click-overlay="closeRemark"
-	auto-focus="{{true}}"
->
-<view class="popStyle">
-	<view class="m-b-20">
+		show="{{ remarkShow }}"
+		round
+		position="bottom"
+		bind:click-overlay="closeRemark"
+	>
+	<view class="contentField">
 		<van-field
-				label="备注"
-        type="textarea"
-				autosize="{{true}}"
-				model:value="{{ remark }}"
-		/>
+					label="备注"
+					type="textarea"
+					autosize="{{textareaHeight}}"
+					model:value="{{ remark }}"
+					class="inputClass"
+					show-confirm-bar="{{false}}"
+					focus="{{remarkShow}}"
+			/>
+			<van-button round color="#f9ae08" block bind:click="remarkSure">确定</van-button>
 	</view>
-		<van-button round color="#f9ae08" block bind:click="remarkSure">确定</van-button>
-</view>
-
 </van-popup>
-
 </view>

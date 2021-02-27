@@ -184,7 +184,7 @@ Page({
 		http.wxRequest({ ...this.data.api.getShareDetail, params }).then((res) => {
 			if (res.success) {
 				this.setData({
-					shareName: res.data[0].nickname
+					shareName: res.data[0].nickname ? res.data[0].nickname : '好友'
 				})
 			}
 		})
@@ -339,14 +339,12 @@ Page({
 		} else {
 			wx.login({
 				success(res) {
-					console.log('登录获取的code', res)
 					const params = {
 						wechatCode: res.code,
 						userInfoEncryptedData: e.detail.encryptedData,
 						userInfoIv: e.detail.iv,
 						wechatAppId: env.env.appid
 					}
-					console.log('授权信息', params)
 					http
 						.wxRequest({ ..._this.data.api.updatePhone, params })
 						.then((res) => {
@@ -355,7 +353,7 @@ Page({
 									title: '授权成功'
 								})
 							} else {
-								this.setData({
+								_this.setData({
 									authorization: true
 								})
 							}

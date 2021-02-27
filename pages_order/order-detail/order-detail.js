@@ -408,7 +408,8 @@ Page({
 						..._this.data.api.cancelOrder,
 						params: {
 							id: _this.data.orderInfo.id,
-							orderStatus: '600'
+							orderStatus: '600',
+							refundDesc: '退出团购，系统退款'
 						}
 					})
 					.then((res) => {
@@ -455,7 +456,6 @@ Page({
 		this.setData({
 			packageDesc: obj
 		})
-		console.log(obj)
 	},
 	// 京东平台收到货之后申请售后
 	applyByJd(val) {
@@ -539,7 +539,11 @@ Page({
 	},
 	// 分享
 	onShareAppMessage() {
-		if (this.data.orderInfo.campaignId && this.data.orderInfo.campaignTeamId) {
+		if (
+			this.data.orderInfo.campaignId &&
+			this.data.orderInfo.campaignTeamId &&
+			!this.data.team.isClustering
+		) {
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ['shareAppMessage', 'shareTimeline']

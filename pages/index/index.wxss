@@ -46,18 +46,19 @@
 .titleContent {
 	text-align: center;
 	margin: 0 auto;
-	position:relative;
+	position: relative;
 }
-.hotProductTitle{
+.hotProductTitle {
 	position: absolute;
-	left:50%;
-	top:45%;
-	transform: translate(-50%,-50%);
+	left: 50%;
+	top: 45%;
+	transform: translate(-50%, -50%);
 }
 .activity {
+	border-radius: 10px;
+	background: #ffffff;
 	height: 134px;
 	margin: 0 12px;
-	background: #fff;
-	border-radius: 10px;
 	overflow: hidden;
+	transform: translateY(0);
 }

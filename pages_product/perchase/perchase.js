@@ -22,7 +22,7 @@ Page({
 		payment: null,
 		totalPrice: null, // 商品总价
 		order: null,
-		textareaHeight: { minHeight: 20 },
+		textareaHeight: { minHeight: 30 },
 		pathParams: {},
 		totalCount: null,
 		remark: null,
@@ -278,28 +278,27 @@ Page({
 			http.wxRequest({ ...this.data.api.getMyAddress, params }).then((res) => {
 				if (res.success) {
 					if (wx.getStorageSync('activeAddressId')) {
-						const flag = res.data.some((add) => {
-							return String(add.id) === wx.getStorageSync('activeAddressId')
-						})
-						if (flag) {
-							res.data.forEach((item) => {
-								if (String(item.id) === wx.getStorageSync('activeAddressId')) {
-									this.setData({
-										order: item
-									})
-								}
+						if (res.data.length > 0) {
+							const flag = res.data.some((add) => {
+								return add.id === Number(wx.getStorageSync('activeAddressId'))
 							})
-						} else {
-							wx.removeStorageSync('activeAddressId')
-							if (res.data.length > 0) {
-								this.setData({
-									order: res.data[0]
+							if (flag) {
+								res.data.forEach((add) => {
+									if (add.id === Number(wx.getStorageSync('activeAddressId'))) {
+										this.setData({
+											order: add
+										})
+									}
 								})
 							} else {
 								this.setData({
-									order: null
+									order: res.data[0]
 								})
 							}
+						} else {
+							this.setData({
+								order: null
+							})
 						}
 					} else {
 						if (res.data.length > 0) {
@@ -598,7 +597,7 @@ Page({
 						}
 					})
 					if (this.data.payment.totalFee === 0) {
-						wx.navigateTo({
+						wx.reLaunch({
 							url:
 								'/pages_product/perchase-success/perchase-success?src=' +
 								this.data.orderId
@@ -655,14 +654,14 @@ Page({
 					wx.requestPayment({
 						...wechatParams,
 						success(res) {
-							wx.navigateTo({
+							wx.reLaunch({
 								url:
 									'/pages_product/perchase-success/perchase-success?src=' +
 									_this.data.orderId
 							})
 						},
 						fail(res) {
-							wx.navigateTo({
+							wx.reLaunch({
 								url:
 									'/pages_product/perchase-success/perchase-success?src=' +
 									_this.data.orderId

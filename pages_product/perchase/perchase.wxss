@@ -77,18 +77,23 @@
 	font-size: 14px;
 }
 
-.van-field__label {
-	text-align: right;
-	color: #000 !important;
-}
-
-.popStyle {
-	padding: 30px;
-}
-
 .remarkText {
 	width: 69%;
 	text-align: left;
 	margin-left: 10px;
 	color: rgba(0, 0, 0, 0.6);
+}
+
+.contentField {
+	padding: 16px;
+	margin: 10px 0;
+	background-color: #fff;
+}
+
+.contentField .inputClass {
+	margin: 10px 0;
+	display: block;
+}
+.contentField .inputClass .van-cell {
+	background: transparent;
 }

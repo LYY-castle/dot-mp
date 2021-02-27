@@ -13,8 +13,9 @@
     placeholder="收货人姓名"
   />
   <van-field
+    type="number"
+    maxlength="11"
     label="电话"
-    type="tel"
     name="mobile"
     value="{{ mobile }}"
     placeholder="收货人手机号"

@@ -28,7 +28,7 @@
         </view>
         <view class="originPrice" wx:if="{{goods.isPromote? goods.promotePrice < goods.marketPrice : goods.retailPrice < goods.marketPrice}}">￥{{goods.marketPrice}}</view>
       </view>
-      <text class="fz-16 m-b-5" user-select="{{true}}" class="flex-start">{{goods.name}}</text>
+      <text class="fz-16 m-b-5" user-select="{{true}}" class="text-align-left flex-start">{{goods.name}}</text>
       <!-- <view class="flex-start fz-14" wx:if="{{goods.isRebate&&shoppingMoneyData}}">
       <van-icon name="{{rebateIcon}}" class="m-r-10"/>
       <text class="c-gray">自买或分享赚佣金</text>
@@ -53,7 +53,7 @@
           <view wx:if="teamStatistics.clusteringNum>0">当前已成团人数:
           <text class="bold fz-16">{{teamStatistics?teamStatistics.clusteringNum:0}}</text>
         </view>
-        <view class="c-gray flex-start" >剩余
+        <view class="c-gray flex-start">剩余
                       <van-count-down use-slot time="{{ activityTime }}" bind:change="timeChange">
                         <text class="item" wx:if="{{timeData.days}}">{{ timeData.days }}天</text>
                         <text class="item" wx:if="{{timeData.hours}}">{{ timeData.hours }}时</text>

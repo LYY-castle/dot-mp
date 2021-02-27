@@ -44,15 +44,14 @@ Page({
 		}
 	},
 
-	onLoad() {
-		console.log('onLoad刷新操作')
-		Promise.resolve()
-			.then(() => this.getBannarList())
-			.then(() => this.getProductSorts())
-			.then(() => this.getProductList())
-	},
+	onLoad() {},
 	onShow() {
-		console.log('onShow刷新操作')
+		if (this.data.pageNo === 1) {
+			Promise.resolve()
+				.then(() => this.getBannarList())
+				.then(() => this.getProductSorts())
+				.then(() => this.getProductList())
+		}
 		const { top, width, height, right } = this.data.menuButtonInfo
 		wx.getSystemInfo({
 			success: (res) => {
@@ -66,7 +65,6 @@ Page({
 				})
 			}
 		})
-
 		wx.removeStorageSync('fromBannarActivity') // 活动Id
 		wx.removeStorageSync('shareId') // 分享人Id
 		wx.removeStorageSync('teamId') // 团队Id
