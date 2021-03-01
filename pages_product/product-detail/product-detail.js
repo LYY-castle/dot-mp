@@ -167,6 +167,9 @@ Page({
 	onShareAppMessage: function () {
 		let path =
 			'/pages_product/product-detail/product-detail?src=' + this.data.productId
+		if (this.data.campaign) {
+			path += '&campaignId=' + this.data.campaign.id
+		}
 		wx.showShareMenu({
 			withShareTicket: true,
 			menus: ['shareAppMessage', 'shareTimeline']
@@ -377,6 +380,7 @@ Page({
 							this.setData({
 								campaign: res.data.campaign
 							})
+							wx.setStorageSync('fromBannarActivity', res.data.campaign.id)
 							this.getActivityDetail(res.data.campaign)
 						}
 						if (res.data.isGroupPurchase) {

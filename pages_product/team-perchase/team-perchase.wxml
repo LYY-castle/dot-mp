@@ -35,11 +35,11 @@
 						{{item.name}}
 					</view>
 				</view>
-				<view class="flex-between p-r-10 m-t-20">
-					<view class="minPrice fz-12">
-						拼团价￥
-						<text class="fz-20 bold">{{item.clusteringPrice}}</text>
-						<text class="originPrice" wx:if="{{item.retailPrice}}">￥{{ item.retailPrice }}</text>
+				<view class="flex-between p-r-10 m-t-10">
+					<view class="minPrice fz-12 flex-colum-start">
+						<view>拼团价￥
+						<text class="fz-20 bold">{{item.clusteringPrice}}</text></view>
+						<view class="originPrice m-l-0" wx:if="{{item.retailPrice}}">￥{{ item.retailPrice }}</view>
 					</view>
 					<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
 				</view>

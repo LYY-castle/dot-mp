@@ -233,12 +233,11 @@ Page({
 		})
 	},
 	goActivity(option) {
-		console.log(option)
 		const obj = option.currentTarget.dataset.item
 		wx.setStorageSync('fromBannarActivity', obj.id)
 		if (obj.type === 1) {
 			wx.navigateTo({
-				url: '/pages_product/team-perchase/team-perchase'
+				url: '/pages_product/team-perchase/team-perchase?campaignId=' + obj.id
 			})
 		}
 	},

@@ -22,9 +22,19 @@ App({
 						wx.setStorageSync('userId', res.data.id)
 						let url = '/' + options.path
 						if (!options.query.shareId) {
+							if (wx.getStorageSync('shareId')) {
+								wx.removeStorageSync('shareId')
+							}
 							if (options.query) {
 								url += '?' + this.queryString(options.query)
 							}
+							if (options.query.campaignId) {
+								wx.setStorageSync(
+									'fromBannarActivity',
+									options.query.campaignId
+								)
+							}
+							console.log('分享页面参数', url)
 							wx.reLaunch({
 								url
 							})

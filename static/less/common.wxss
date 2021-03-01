@@ -474,3 +474,16 @@ swiper {
 .text-align-left {
 	text-align: left;
 }
+.flex-colum-start{
+	display:flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+/* 弹框内容滚动时候会触发蒙层穿透，解决方案，给底层元素动态加固定 */
+.bottom-fixed {
+	position: fixed;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+
+}

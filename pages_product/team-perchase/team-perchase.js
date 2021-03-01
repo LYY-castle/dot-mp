@@ -36,7 +36,11 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
-	onLoad: function (options) {},
+	onLoad: function (options) {
+		if (options) {
+			wx.setStorageSync('fromBannarActivity', options.campaignId)
+		}
+	},
 
 	/**
 	 * 生命周期函数--监听页面初次渲染完成
@@ -47,9 +51,14 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-		Promise.resolve()
-			.then(() => this.getActivityDetail())
-			.then(() => this.getProductList())
+		const _this = this
+		wx.checkSession({
+			success() {
+				Promise.resolve()
+					.then(() => _this.getActivityDetail())
+					.then(() => _this.getProductList())
+			}
+		})
 	},
 	// 获取特惠产品的列表
 	getProductList() {
@@ -189,9 +198,17 @@ Page({
 			this.getProductList()
 		}
 	},
-
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {}
+	onShareAppMessage: function () {
+		const campaignId = wx.getStorageSync('fromBannarActivity')
+		let path =
+			'/pages_product/team-perchase/team-perchase?campaignId=' + campaignId
+		wx.showShareMenu({
+			withShareTicket: true,
+			menus: ['shareAppMessage', 'shareTimeline']
+		})
+		return {
+			withShareTicket: true,
+			path: path
+		}
+	}
 })
