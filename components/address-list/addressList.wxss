@@ -33,14 +33,11 @@
 }
 
 .popContent .buttonGroup {
-	position: absolute;
-	bottom: 0;
-	left: 50%;
 	width: 90%;
-	transform: translate(-50%, 0);
+	margin: 20px auto;
 }
 .addressContent {
-	height: 90%;
+	height: 450px;
 	padding-bottom: 70px;
 	overflow: scroll;
 }

@@ -111,9 +111,9 @@
 			<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm" >
 			</van-dialog>
 			<van-dialog id="van-dialog" />
-			<van-popup show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
-				<!-- 已发货 -->
-			<view wx:if="{{logisticsInfo}}" class="p-l-15">
+			<van-popup catchtouchmove="true" show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
+				<scroll-view scroll-y="true" height="100%">
+				<view wx:if="{{logisticsInfo}}" class="p-l-15">
 				<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.shipperName}}">
 					<text class="left-width c-gray">快递公司</text>
 					<view class="black">{{logisticsInfo.shipperName}}</view>
@@ -123,7 +123,9 @@
 					<view class="black">{{logisticsInfo.logisticCode}} <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{logisticsInfo.logisticCode}}">复制</text></view>
 				</view>
 			</view>
-				<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160"/>
+			<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160"/>
+		</scroll-view>
+			<!-- 已发货 -->
 			</van-popup>
 			<van-popup show="{{ jdAfsShow }}" bind:close="closejdAfs" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
 				<!-- 退货信息填写 -->

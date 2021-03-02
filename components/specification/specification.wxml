@@ -5,104 +5,106 @@
 	round
 	position="bottom"
 	closeable
+	catchtouchmove="true"
 >
-	<!-- 商品规格 -->
-	<view class="popContent">
-		<view class="goods flex-start">
-			<van-image
-				src="{{ activePic }}"
-				width="80px"
-				height="80px"
-				fit="cover"
-			></van-image>
-			<view class="m-l-10 fz-12">
-				<view class="minPrice"
-					>￥<text class="fz-20 bold">{{ activePrice }}</text></view
-				>
-				<view class="c-gray">库存{{ activeProductNumber }}件</view>
-				<view>
-					<view wx:if="{{ goodsSpecificationNameValue }}"
-						>已选:{{ goodsSpecificationNameValue }}</view
-					>
-					<view wx:else>
-						<view wx:if="{{ selectOption.length > 0 }}" class="flex-start"
-							>已选:
-							<view
-								wx:if="{{ selectOption.length > 0 }}"
-								wx:for="{{ selectOption }}"
-								wx:key="selectIndex"
-								wx:for-index="selectIndex"
-								wx:for-item="selectItem"
-							>
-								<text wx:if="{{ selectIndex > 0 }}">,</text>
-								{{ selectItem.goodsSpecificationValue }}
-							</view>
-						</view>
-						<view wx:else class="flex-start" wx:else
-							>请选择:
-							<view
-								wx:for="{{ specificationResults }}"
-								wx:key="index"
-								wx:for-item="name"
-								class="flex-start"
-							>
-								<view
-									wx:if="{{ index > 0 && index < specificationResults.length }}"
-									>,</view
-								>
-								{{ name.specificationName }}
-							</view>
-						</view>
+	<scroll-view scroll-y="true">
+		<!-- 商品规格 -->
+		<view class="popContent">
+			<view class="goods flex-start">
+				<van-image
+					src="{{ activePic }}"
+					width="80px"
+					height="80px"
+					fit="cover"
+				/>
+				<view class="m-l-10 fz-12">
+					<view class="minPrice">￥
+						<text class="fz-20 bold">{{ activePrice }}</text>
 					</view>
-				</view>
-			</view>
-		</view>
-		<view class="content">
-			<view
-				wx:for="{{ specificationResults }}"
-				wx:key="index"
-				wx:for-item="item"
-			>
-				<view class="m-t-10 m-b-10">{{ item.specificationName }}</view>
-				<view class="tagContent">
-					<view
-						wx:for="{{ item.goodsSpecificationResults }}"
-						wx:key="goodIndex"
-						wx:for-index="index2"
-						wx:for-item="specificationItem"
-					>
-						<view
-							bindtap="selectSpecification"
-							data-option="{{ specificationItem }}"
-							data-parent="{{ index }}"
-							data-child="{{ index2 }}"
-							class="{{ specificationItem.active ? 'active' : 'normal' }}"
+					<view class="c-gray">库存{{ activeProductNumber }}件</view>
+					<view>
+						<view wx:if="{{ goodsSpecificationNameValue }}"
+							>已选:{{ goodsSpecificationNameValue }}</view
 						>
-							<van-image
-								src="{{ specificationItem.goodsSpecificationPicUrl }}"
-								width="18px"
-								height="18px"
-								fit="cover"
-								wx:if="{{ specificationItem.goodsSpecificationPicUrl !== '' }}"
-								class="imgstyle"
-							></van-image>
-							<view class="h-24">{{
-								specificationItem.goodsSpecificationValue
-							}}</view>
+						<view wx:else>
+							<view wx:if="{{ selectOption.length > 0 }}" class="flex-start"
+								>已选:
+								<view
+									wx:if="{{ selectOption.length > 0 }}"
+									wx:for="{{ selectOption }}"
+									wx:key="selectIndex"
+									wx:for-index="selectIndex"
+									wx:for-item="selectItem"
+								>
+									<text wx:if="{{ selectIndex > 0 }}">,</text>
+									{{ selectItem.goodsSpecificationValue }}
+								</view>
+							</view>
+							<view wx:else class="flex-start" wx:else
+								>请选择:
+								<view
+									wx:for="{{ specificationResults }}"
+									wx:key="index"
+									wx:for-item="name"
+									class="flex-start"
+								>
+					<view wx:if="{{index > 0 && index < specificationResults.length}}">
+										,
+					</view>
+									{{ name.specificationName }}
+								</view>
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
+			<view class="content">
+				<view
+					wx:for="{{ specificationResults }}"
+					wx:key="index"
+					wx:for-item="item"
+				>
+					<view class="m-t-10 m-b-10">{{ item.specificationName }}</view>
+					<view class="tagContent">
+						<view
+							wx:for="{{ item.goodsSpecificationResults }}"
+							wx:key="goodIndex"
+							wx:for-index="index2"
+							wx:for-item="specificationItem"
+						>
+							<view
+								bindtap="selectSpecification"
+								data-option="{{ specificationItem }}"
+								data-parent="{{ index }}"
+								data-child="{{ index2 }}"
+								class="{{ specificationItem.active ? 'active' : 'normal' }}"
+							>
+								<van-image
+									src="{{ specificationItem.goodsSpecificationPicUrl }}"
+									width="18px"
+									height="18px"
+									fit="cover"
+					wx:if="{{specificationItem.goodsSpecificationPicUrl !== ''}}"
+									class="imgstyle"
+								></van-image>
+								<view class="h-24">{{
+									specificationItem.goodsSpecificationValue
+								}}</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="buttonGroup">
+				<van-button
+					round
+					block="{{ true }}"
+					class="buttonItem"
+					color="#f9ae08"
+					bind:click="_operate"
+					>{{ activeProductNumber > 0 ? '确定' : '暂时无货' }}</van-button
+				>
+			</view>
 		</view>
-		<view class="buttonGroup">
-			<van-button
-				round
-				block="{{ true }}"
-				class="buttonItem"
-				color="#f9ae08"
-				bind:click="_operate"
-				>{{ activeProductNumber > 0 ? '确定' : '暂时无货' }}</van-button
-			>
-		</view>
-	</view>
+	</scroll-view>
 </van-popup>

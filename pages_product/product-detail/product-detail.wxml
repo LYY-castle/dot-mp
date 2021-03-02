@@ -139,7 +139,7 @@
         <text>{{item.minNum}}人团价</text>
         <text class="bold">￥{{item.price}}</text>
       </view>
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="{{shareId?'加入'+shareName+'的团':'去开团'}}" bind:click="onClickButton" data-option="perchase" class="m-r-15"/>
+    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="{{teamPurchaseBtnText}}" bindtap="onClickButton" data-option="perchase" class="m-r-15"/>
     <van-goods-action-button wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" class="m-r-15"/>
   </van-goods-action>
     <van-dialog

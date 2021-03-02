@@ -56,6 +56,7 @@ Page({
 		shareName: null,
 		teamStatistics: null,
 		currentShareCampaignTeam: null,
+		teamPurchaseBtnText: '去开团',
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -116,8 +117,7 @@ Page({
 	onLoad: function (options) {
 		const _this = this
 		_this.setData({
-			userId: wx.getStorageSync('userId'),
-			shareId: wx.getStorageSync('shareId')
+			userId: wx.getStorageSync('userId')
 		})
 		if (options) {
 			_this.setData({
@@ -128,8 +128,7 @@ Page({
 	onShow: function () {
 		const _this = this
 		_this.setData({
-			userId: wx.getStorageSync('userId'),
-			shareId: wx.getStorageSync('shareId')
+			userId: wx.getStorageSync('userId')
 		})
 		wx.removeStorageSync('perchaseByCart')
 		wx.removeStorageSync('addAddress')
@@ -137,20 +136,20 @@ Page({
 		wx.removeStorageSync('remark')
 		_this.getMyAddressList()
 		_this.getCartDotsNum()
-		if (_this.data.shareId) {
-			// 获取分享人的详情
-			Promise.resolve()
-				.then(() => _this.getShareDetail())
-				.then(() => _this.currentCampaignTeam())
-		}
+
 		if (_this.data.options.src) {
 			this.setData({
 				productId: _this.data.options.src
 			})
 			Promise.resolve()
+				.then(() => _this.currentCampaignTeam())
 				.then(() => _this.getProductDetail())
 				.then(() => _this.getAllTeams())
 				.then(() => _this.getTeamStatistics())
+			if (wx.getStorageSync('shareId')) {
+				// 获取分享人的详情
+				_this.getShareDetail()
+			}
 		}
 	},
 	/**
@@ -186,8 +185,9 @@ Page({
 		}
 		http.wxRequest({ ...this.data.api.getShareDetail, params }).then((res) => {
 			if (res.success) {
+				const shareName = res.data[0].nickname ? res.data[0].nickname : '好友'
 				this.setData({
-					shareName: res.data[0].nickname ? res.data[0].nickname : '好友'
+					teamPurchaseBtnText: '加入' + shareName + '的团'
 				})
 			}
 		})
@@ -207,20 +207,17 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
-						const flag = res.data[0].users.some((user) => {
-							return userId === String(user.id)
-						})
-						if (flag) {
-							wx.removeStorageSync('shareId')
-							this.setData({
-								shareId: null
+						if (res.data.length > 0) {
+							let flag = false
+							flag = res.data[0].users.some((user) => {
+								return userId === String(user.id)
 							})
-						}
-						if (res.data[0].isClustering) {
-							wx.removeStorageSync('shareId')
-							this.setData({
-								shareId: null
-							})
+							if (res.data[0].isClustering) {
+								wx.removeStorageSync('shareId')
+							}
+							if (flag) {
+								wx.removeStorageSync('shareId')
+							}
 						}
 						resolve()
 					}
@@ -527,6 +524,7 @@ Page({
 	},
 	// 弹框外按钮操作
 	onClickButton(e) {
+		console.log('点击加团呀')
 		if (e) {
 			const option = e.currentTarget.dataset.option
 			this.setData({
@@ -546,6 +544,7 @@ Page({
 		}
 	},
 	addCartOrPerchase(event, data) {
+		console.log(event)
 		const _this = this
 		const params = {
 			checked: 1,
@@ -604,7 +603,7 @@ Page({
 						})
 					}
 				})
-		} else if (event === 'perchase' || event === 'group_perchase') {
+		} else if (event === 'perchase') {
 			wx.setStorageSync('activeProductId', params.productId)
 			wx.navigateTo({
 				url: '/pages_product/perchase/perchase'
