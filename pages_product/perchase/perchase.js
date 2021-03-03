@@ -98,10 +98,7 @@ Page({
 			remark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : null,
 			newRemark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : ''
 		})
-		const activityId = wx.getStorageSync('fromBannarActivity')
-		if (!activityId) {
-			this.getShoppingMoney()
-		}
+		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
 				cartPerchase: true

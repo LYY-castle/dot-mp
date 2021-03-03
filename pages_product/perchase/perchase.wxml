@@ -92,7 +92,7 @@
 				<text class="minPrice">￥{{ (totalPrice * 100  + shippingFee * 100)/ 100}}</text>
 			</view>
 			</view>
-			<view class="border m-t-10 p-10 fz-12" wx:if="{{list.length>0?shoppingMoneyData&&!shoppingMoneyData.status:shoppingMoneyData&&!shoppingMoneyData.status&&!isGroupPurchase}}">
+			<view class="border m-t-10 p-10 fz-12" wx:if="{{list.length>0?shoppingMoneyData&&!shoppingMoneyData.status:shoppingMoneyData&&!shoppingMoneyData.status}}">
 			<van-cell title="使用购物金抵扣">
 				<van-checkbox slot="right-icon" value="{{ selectMoney }}" bind:change="selectMoneyChange"></van-checkbox>
 			</van-cell>
