@@ -178,23 +178,10 @@ Page({
 			path: path
 		}
 	},
-	getShareDetail() {
-		const params = {
-			id: wx.getStorageSync('shareId')
-		}
-		http.wxRequest({ ...this.data.api.getShareDetail, params }).then((res) => {
-			if (res.success) {
-				const shareName = res.data[0].nickname ? res.data[0].nickname : '好友'
-				this.setData({
-					teamPurchaseBtnText: '加入' + shareName + '的团'
-				})
-			}
-		})
-	},
 	// 判断小程序使用者是否在当前分享人所属的拼团中
 	currentCampaignTeam() {
 		return new Promise((resolve) => {
-			if (wx.getStorageSync('shareId') && wx.getStorageSync('teamId')) {
+			if (wx.getStorageSync('shareId')) {
 				const params = {
 					id: wx.getStorageSync('teamId'),
 					campaignId: wx.getStorageSync('fromBannarActivity')
@@ -210,16 +197,13 @@ Page({
 							if (res.data.length > 0) {
 								let flag = false
 								flag = res.data[0].users.some((user) => {
-									console.log(userId, user.id)
 									return Number(userId) === Number(user.id)
 								})
 								if (res.data[0].isClustering) {
-									console.log('已经成团')
 									wx.removeStorageSync('shareId')
 									wx.removeStorageSync('teamId')
 								}
 								if (flag) {
-									console.log('当前用户已经参团')
 									wx.removeStorageSync('shareId')
 									wx.removeStorageSync('teamId')
 								}
@@ -234,6 +218,20 @@ Page({
 			}
 		})
 	},
+	getShareDetail() {
+		const params = {
+			id: wx.getStorageSync('shareId')
+		}
+		http.wxRequest({ ...this.data.api.getShareDetail, params }).then((res) => {
+			if (res.success) {
+				const shareName = res.data[0].nickname ? res.data[0].nickname : '好友'
+				this.setData({
+					teamPurchaseBtnText: '加入' + shareName + '的团'
+				})
+			}
+		})
+	},
+
 	// 获取当前用户的收货地址
 	getMyAddressList() {
 		const params = {

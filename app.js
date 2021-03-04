@@ -71,13 +71,7 @@ App({
 		let url = '/' + options.path
 		if (options.query.shareId) {
 			url += '?' + this.queryString(options.query)
-			let flag =
-				Number(options.query.shareId) !== Number(wx.getStorageSync('userId'))
-			if (flag) {
-				wx.setStorageSync('shareId', options.query.shareId)
-			} else {
-				wx.removeStorageSync('shareId')
-			}
+			wx.setStorageSync('shareId', options.query.shareId)
 			wx.setStorageSync('fromBannarActivity', options.query.campaignId)
 			wx.setStorageSync('teamId', options.query.campaignTeamId)
 			wx.reLaunch({

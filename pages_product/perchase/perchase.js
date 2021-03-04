@@ -81,6 +81,10 @@ Page({
 			joinTeam: {
 				url: '/campaign-team-details/join',
 				method: 'post'
+			},
+			hasProduct: {
+				url: '/jd-goods/inventory',
+				method: 'post'
 			}
 		}
 	},
@@ -242,7 +246,14 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
+						let jdGoods = []
 						res.data.forEach((item) => {
+							if (item.goods.platformType === 2) {
+								jdGoods.push({
+									num: item.number,
+									skuId: item.goods.platformGoodsId
+								})
+							}
 							if (
 								item.goods.isPromote &&
 								tool.isInDurationTime(
@@ -266,14 +277,42 @@ Page({
 							})
 						}
 						this.setData({
-							dataList: res.data
+							dataList: res.data,
+							jdGoods: jdGoods
 						})
 						this.calculation()
+						resolve()
+					} else {
 						resolve()
 					}
 				})
 		})
 	},
+	// isHasProduct() {
+	// 	return new Promise((resovle) => {
+	// 		// 查询京东商品是否有货
+	// 		if (this.data.jdGoods.length > 0 && this.data.order) {
+	// 			const params = {
+	// 				provinceName: this.data.order.provinceName,
+	// 				cityName: this.data.order.cityName,
+	// 				districtName: this.data.order.districtName,
+	// 				address: this.data.order.address,
+	// 				goodsInventoryNumModels: jdGoods
+	// 			}
+	// 			http
+	// 				.wxRequest({ ...this.data.api.hasProduct, params })
+	// 				.then((res) => {
+	// 					if(res.success){
+	// 						this.setData({
+
+	// 						})
+	// 					}else{
+	// 						resovle()
+	// 					}
+	// 				})
+	// 		}
+	// 	})
+	// },
 	getMyaddress() {
 		return new Promise((resolve) => {
 			const params = {
@@ -384,7 +423,7 @@ Page({
 			}
 		})
 	},
-	// 选择添加地址
+	// 选择添加/切换地址
 	selectAddress(e) {
 		const option = e.currentTarget.dataset.option
 		if (option) {
