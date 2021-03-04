@@ -219,8 +219,15 @@ Page({
 			})
 		} else {
 			wx.setStorageSync('activeProductNumber', num)
+			this.setData({
+				totalCount: num
+			})
 		}
-		this.calculation()
+		if (this.data.goods.platformType !== 2) {
+			this.calculation()
+		} else {
+			this.getGoodsFee()
+		}
 	},
 	getListDataByCartIds() {
 		return new Promise((resolve) => {
@@ -334,28 +341,44 @@ Page({
 						}
 						params.goodsFreightModels.push(obj)
 					})
+					http
+						.wxRequest({
+							...this.data.api.getFee,
+							params
+						})
+						.then((res) => {
+							if (res.success) {
+								this.setData({
+									shippingFee: res.data
+								})
+								this.calculation()
+								resolve()
+							}
+						})
 				} else {
 					params.goodsFreightModels[0] = {
 						platformGoodsId: this.data.goods.platformGoodsId,
 						platformType: this.data.goods.platformType,
 						goodsId: this.data.goods.id,
-						goodsNum: 1
+						goodsNum: this.data.totalCount ? this.data.totalCount : 1
+					}
+					if (this.data.goods.platformType === 2) {
+						http
+							.wxRequest({
+								...this.data.api.getFee,
+								params
+							})
+							.then((res) => {
+								if (res.success) {
+									this.setData({
+										shippingFee: res.data
+									})
+									this.calculation()
+									resolve()
+								}
+							})
 					}
 				}
-				http
-					.wxRequest({
-						...this.data.api.getFee,
-						params
-					})
-					.then((res) => {
-						if (res.success) {
-							this.setData({
-								shippingFee: res.data
-							})
-							this.calculation()
-							resolve()
-						}
-					})
 			} else {
 				resolve()
 			}
@@ -377,109 +400,92 @@ Page({
 	onSubmit() {
 		const _this = this
 		if (_this.data.order) {
-			// 团购
-			if (_this.data.isGroupPurchase) {
-				const activityId = wx.getStorageSync('fromBannarActivity')
-				const teamId = wx.getStorageSync('teamId')
-				// 如果是开团
-				if (!teamId) {
-					let params = {
-						goodsId: _this.data.goods.id,
-						productId: _this.data.product.id,
-						campaignId: activityId,
-						clusteringUserNum: 3
-					}
-					http
-						.wxRequest({ ..._this.data.api.createTeam, params })
-						.then((res) => {
-							if (res.success) {
-								this.setData({
-									teamObj: res.data
-								})
-								_this.addOrder()
-							}
-						})
-				} else {
-					// 参与别人的团
-					_this.addOrder()
-				}
-			} else {
-				// 用户有购物金账户
-				if (_this.data.shoppingAccountId) {
-					const flag = _this.checkMoney()
-					if (flag) {
-						// 购物余额大于0
-						if (_this.data.shoppingMoneyData.amount > 0) {
-							// 购物金余额大于0但是用户没有使用时
-							if (!_this.data.shoppingMoney) {
-								wx.showModal({
-									title: '请确认',
-									content: '确认不使用购物金？',
-									cancelText: '不使用',
-									confirmText: '使用',
-									success(res) {
-										if (res.confirm) {
-											_this.setData({
-												selectMoney: true
-											})
-										} else {
-											_this.addOrder()
-										}
-									}
-								})
-							} else {
-								// 购物金余额大于0，用户使用，但是只使用一部分询问是否使用全部
-								if (this.data.actualPrice > 0) {
-									if (
-										this.data.shoppingMoneyData.amount -
-											this.data.shoppingMoney >
-										0
-									) {
-										wx.showModal({
-											title: '请确认',
-											content: '确认不使用全部购物金抵消订单金额？',
-											cancelText: '不使用',
-											confirmText: '使用',
-											success(res) {
-												if (res.confirm) {
-													_this.setData({
-														selectMoney: true
-													})
-												} else {
-													_this.setData({
-														disabledBtn: true
-													})
-													_this.addOrder()
-												}
-											}
+			// 用户有购物金账户
+			if (_this.data.shoppingAccountId) {
+				const flag = _this.checkMoney()
+				if (flag) {
+					// 购物余额大于0
+					if (_this.data.shoppingMoneyData.amount > 0) {
+						// 购物金余额大于0但是用户没有使用时
+						if (!_this.data.shoppingMoney) {
+							wx.showModal({
+								title: '请确认',
+								content: '确认不使用购物金？',
+								cancelText: '不使用',
+								confirmText: '使用',
+								success(res) {
+									if (res.confirm) {
+										_this.setData({
+											selectMoney: true
 										})
 									} else {
-										_this.setData({
-											disabledBtn: true
-										})
-										_this.addOrder()
+										Promise.resolve()
+											.then(() => _this.createTeam())
+											.then(() => _this.addOrder())
 									}
+								}
+							})
+						} else {
+							// 购物金余额大于0，用户使用，但是只使用一部分询问是否使用全部
+							if (this.data.actualPrice > 0) {
+								if (
+									this.data.shoppingMoneyData.amount - this.data.shoppingMoney >
+									0
+								) {
+									wx.showModal({
+										title: '请确认',
+										content: '确认不使用全部购物金抵消订单金额？',
+										cancelText: '不使用',
+										confirmText: '使用',
+										success(res) {
+											if (res.confirm) {
+												_this.setData({
+													selectMoney: true
+												})
+											} else {
+												_this.setData({
+													disabledBtn: true
+												})
+												Promise.resolve()
+													.then(() => _this.createTeam())
+													.then(() => _this.addOrder())
+											}
+										}
+									})
 								} else {
 									_this.setData({
 										disabledBtn: true
 									})
-									_this.addOrder()
+									Promise.resolve()
+										.then(() => _this.createTeam())
+										.then(() => _this.addOrder())
 								}
+							} else {
+								_this.setData({
+									disabledBtn: true
+								})
+								Promise.resolve()
+									.then(() => _this.createTeam())
+									.then(() => _this.addOrder())
 							}
-						} else {
-							_this.setData({
-								disabledBtn: true
-							})
-							_this.addOrder()
 						}
+					} else {
+						_this.setData({
+							disabledBtn: true
+						})
+						Promise.resolve()
+							.then(() => _this.createTeam())
+							.then(() => _this.addOrder())
 					}
-				} else {
-					_this.setData({
-						disabledBtn: true
-					})
-					// 用户没有购物金账户
-					_this.addOrder()
 				}
+			} else {
+				_this.setData({
+					disabledBtn: true
+				})
+				// 用户没有购物金账户
+				Promise.resolve()
+					.then(() => _this.createTeam())
+					.then(() => _this.addOrder())
 			}
 		} else {
 			wx.showToast({
@@ -488,126 +494,163 @@ Page({
 			})
 		}
 	},
+	// 开团
+	createTeam() {
+		return new Promise((resolve) => {
+			const activityId = wx.getStorageSync('fromBannarActivity')
+			const teamId = wx.getStorageSync('teamId')
+			if (this.data.isGroupPurchase) {
+				// 如果是开团
+				if (!teamId) {
+					let params = {
+						goodsId: this.data.goods.id,
+						productId: this.data.product.id,
+						campaignId: activityId,
+						clusteringUserNum: 3
+					}
+					http
+						.wxRequest({ ...this.data.api.createTeam, params })
+						.then((res) => {
+							if (res.success) {
+								this.setData({
+									teamObj: res.data
+								})
+								resolve()
+							}
+						})
+				} else {
+					resolve()
+				}
+			} else {
+				resolve()
+			}
+		})
+	},
 	// 封装生成订单函数
 	addOrder() {
-		const activityId = wx.getStorageSync('fromBannarActivity')
-		const teamId = wx.getStorageSync('teamId')
-		let orderGoods = []
-		// 封装入参
-		if (this.data.cartPerchase) {
-			this.data.dataList.forEach((list) => {
-				const obj = {
-					platformGoodsId: list.goods.platformGoodsId,
-					platformType: list.goods.platformType,
-					goodsId: list.goods.id,
-					goodsName: list.goods.name,
-					goodsSpecificationIds: list.goodsSpecificationIds,
-					goodsSpecificationNameValue: list.goodsSpecificationNameValue,
-					listPicUrl: list.listPicUrl,
-					productId: list.product.id,
-					number: list.number,
-					retailPrice: list.goods.isPromote
-						? list.product.promotePrice
-						: list.product.retailPrice
-				}
-				orderGoods.push(obj)
-			})
-		} else {
-			orderGoods = [
-				{
-					platformGoodsId: this.data.goods.platformGoodsId,
-					platformType: this.data.goods.platformType,
-					goodsId: this.data.goods.id,
-					goodsName: this.data.goods.name,
-					goodsSpecificationIds: this.data.product.goodsSpecificationIds,
-					goodsSpecificationNameValue: this.data.product
-						.goodsSpecificationNameValue,
-					listPicUrl: this.data.product.pictureUrl
-						? this.data.product.pictureUrl
-						: this.data.goods.listPicUrl,
-					productId: this.data.product.id,
-					number: this.data.totalCount,
-					retailPrice: this.data.isGroupPurchase
-						? this.data.priceRules.price
-						: this.data.goods.isPromote
-						? this.data.product.promotePrice
-						: this.data.product.retailPrice
-				}
-			]
-		}
-		let params = {
-			isFromShopCat: this.data.cartPerchase ? 1 : 0,
-			address: this.data.order.address,
-			province: this.data.order.province,
-			city: this.data.order.city,
-			district: this.data.order.district,
-			mobile: this.data.order.mobile,
-			name: this.data.order.name,
-			remark: this.data.remark,
-			createBy: wx.getStorageSync('userId'),
-			goodsPrice: this.data.totalPrice,
-			orderGoods
-		}
-		if (activityId && teamId) {
-			params.campaignId = activityId
-			params.campaignTeamId = teamId
-		}
-		if (this.data.teamObj) {
-			params.campaignTeamId = this.data.teamObj.id
-			params.campaignId = this.data.teamObj.campaignId
-		}
-		if (this.data.selectMoney) {
-			params.shoppingAccountId = this.data.shoppingAccountId
-			params.shoppingMoney = Number(this.data.shoppingMoney)
-		}
-		http
-			.wxRequest({
-				...this.data.api.addOrder,
-				params
-			})
-			.then((res) => {
-				if (res.success) {
-					let body = ''
-					let actualPrice = 0
-					if (this.data.cartPerchase) {
-						this.data.dataList.forEach((list) => {
-							body += list.goods.name
-						})
-						res.data.forEach((pri) => {
-							actualPrice += pri.actualPrice * 100
-						})
-						actualPrice = actualPrice / 100
-					} else {
-						body = this.data.goods.name
-						actualPrice = res.data[0].actualPrice
+		return new Promise((resolve) => {
+			const activityId = wx.getStorageSync('fromBannarActivity')
+			const teamId = wx.getStorageSync('teamId')
+			// 封装入参
+			if (this.data.cartPerchase) {
+				this.data.dataList.forEach((list) => {
+					const obj = {
+						platformGoodsId: list.goods.platformGoodsId,
+						platformType: list.goods.platformType,
+						goodsId: list.goods.id,
+						goodsName: list.goods.name,
+						goodsSpecificationIds: list.goodsSpecificationIds,
+						goodsSpecificationNameValue: list.goodsSpecificationNameValue,
+						listPicUrl: list.listPicUrl,
+						productId: list.product.id,
+						number: list.number,
+						retailPrice: list.goods.isPromote
+							? list.product.promotePrice
+							: list.product.retailPrice
 					}
-					body = util.ellipsis(body, 29)
-					this.setData({
-						actualPrice: actualPrice,
-						orderId: res.data[0].id,
-						payment: {
-							openid: wx.getStorageSync('openId'),
-							outTradeNo: res.data[0].mainOrderNo,
-							totalFee: actualPrice * 100, // 微信支付单位为分.
-							body,
-							tradeType: 'JSAPI'
+					orderGoods.push(obj)
+				})
+			} else {
+				orderGoods = [
+					{
+						platformGoodsId: this.data.goods.platformGoodsId,
+						platformType: this.data.goods.platformType,
+						goodsId: this.data.goods.id,
+						goodsName: this.data.goods.name,
+						goodsSpecificationIds: this.data.product.goodsSpecificationIds,
+						goodsSpecificationNameValue: this.data.product
+							.goodsSpecificationNameValue,
+						listPicUrl: this.data.product.pictureUrl
+							? this.data.product.pictureUrl
+							: this.data.goods.listPicUrl,
+						productId: this.data.product.id,
+						number: this.data.totalCount,
+						retailPrice: this.data.isGroupPurchase
+							? this.data.priceRules.price
+							: this.data.goods.isPromote
+							? this.data.product.promotePrice
+							: this.data.product.retailPrice
+					}
+				]
+			}
+			let params = {
+				isFromShopCat: this.data.cartPerchase ? 1 : 0,
+				address: this.data.order.address,
+				province: this.data.order.province,
+				city: this.data.order.city,
+				district: this.data.order.district,
+				mobile: this.data.order.mobile,
+				name: this.data.order.name,
+				remark: this.data.remark,
+				createBy: wx.getStorageSync('userId'),
+				goodsPrice: this.data.totalPrice,
+				orderGoods
+			}
+			if (activityId && teamId) {
+				params.campaignId = activityId
+				params.campaignTeamId = teamId
+			}
+			if (this.data.teamObj) {
+				params.campaignTeamId = this.data.teamObj.id
+				params.campaignId = this.data.teamObj.campaignId
+			}
+			let orderGoods = []
+
+			if (this.data.selectMoney) {
+				params.shoppingAccountId = this.data.shoppingAccountId
+				params.shoppingMoney = Number(this.data.shoppingMoney)
+			}
+			http
+				.wxRequest({
+					...this.data.api.addOrder,
+					params
+				})
+				.then((res) => {
+					if (res.success) {
+						let body = ''
+						let actualPrice = 0
+						if (this.data.cartPerchase) {
+							this.data.dataList.forEach((list) => {
+								body += list.goods.name
+							})
+							res.data.forEach((pri) => {
+								actualPrice += pri.actualPrice * 100
+							})
+							actualPrice = actualPrice / 100
+						} else {
+							body = this.data.goods.name
+							actualPrice = res.data[0].actualPrice
 						}
-					})
-					if (this.data.payment.totalFee === 0) {
-						wx.reLaunch({
-							url:
-								'/pages_product/perchase-success/perchase-success?src=' +
-								this.data.orderId
-						})
-					} else {
+						body = util.ellipsis(body, 29)
 						this.setData({
-							dialogShow: true
+							actualPrice: actualPrice,
+							orderId: res.data[0].id,
+							payment: {
+								openid: wx.getStorageSync('openId'),
+								outTradeNo: res.data[0].mainOrderNo,
+								totalFee: actualPrice * 100, // 微信支付单位为分.
+								body,
+								tradeType: 'JSAPI'
+							}
 						})
+						if (this.data.payment.totalFee === 0) {
+							wx.reLaunch({
+								url:
+									'/pages_product/perchase-success/perchase-success?src=' +
+									this.data.orderId
+							})
+						} else {
+							this.setData({
+								dialogShow: true
+							})
+						}
+						resolve()
+					} else {
+						resolve()
+						this.pageInit()
 					}
-				} else {
-					this.pageInit()
-				}
-			})
+				})
+		})
 	},
 	// 取消支付
 	cancle() {

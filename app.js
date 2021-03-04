@@ -25,6 +25,9 @@ App({
 							if (wx.getStorageSync('shareId')) {
 								wx.removeStorageSync('shareId')
 							}
+							if (wx.getStorageSync('teamId')) {
+								wx.removeStorageSync('teamId')
+							}
 							if (options.query) {
 								url += '?' + this.queryString(options.query)
 							}

@@ -319,6 +319,12 @@ Page({
 	},
 	gotoDetail(e) {
 		const productId = e.currentTarget.dataset.goodsId
+		if (wx.getStorageSync('shareId')) {
+			wx.removeStorageSync('shareId')
+		}
+		if (wx.getStorageSync('teamId')) {
+			wx.removeStorageSync('teamId')
+		}
 		wx.navigateTo({
 			url: '/pages_product/product-detail/product-detail?src=' + productId
 		})

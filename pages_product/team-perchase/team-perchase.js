@@ -14,7 +14,7 @@ Page({
 		loadingShow: false,
 		pageNo: 1,
 		activity: null,
-		teamBannar: '/static/img/teamBannar.png',
+		teamBannar: '',
 		teamRule: '/static/img/teamRule.png',
 		teamGood: '/static/img/teamGood.png',
 		api: {

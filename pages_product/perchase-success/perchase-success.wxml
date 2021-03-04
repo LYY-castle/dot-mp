@@ -43,7 +43,7 @@
             <view class="m-t-5 fz-12 flex-between p-r-10">
               <text class="c-gray">数量：{{ item.number }}</text>
               <text class="c-gray">单价：￥{{ item.retailPrice }}</text>
-              <text>总价：￥{{ order.actualPrice }}</text>
+              <text>总价：￥{{ order.orderPrice }}</text>
             </view>
           </view>
         </view>

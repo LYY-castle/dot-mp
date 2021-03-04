@@ -136,7 +136,6 @@ Page({
 		wx.removeStorageSync('remark')
 		_this.getMyAddressList()
 		_this.getCartDotsNum()
-
 		if (_this.data.options.src) {
 			this.setData({
 				productId: _this.data.options.src
@@ -195,33 +194,44 @@ Page({
 	// 判断小程序使用者是否在当前分享人所属的拼团中
 	currentCampaignTeam() {
 		return new Promise((resolve) => {
-			const params = {
-				id: wx.getStorageSync('teamId'),
-				campaignId: wx.getStorageSync('fromBannarActivity')
-			}
-			const userId = wx.getStorageSync('userId')
-			http
-				.wxRequest({
-					...this.data.api.getTeamDetail,
-					params
-				})
-				.then((res) => {
-					if (res.success) {
-						if (res.data.length > 0) {
-							let flag = false
-							flag = res.data[0].users.some((user) => {
-								return userId === String(user.id)
-							})
-							if (res.data[0].isClustering) {
-								wx.removeStorageSync('shareId')
+			if (wx.getStorageSync('shareId') && wx.getStorageSync('teamId')) {
+				const params = {
+					id: wx.getStorageSync('teamId'),
+					campaignId: wx.getStorageSync('fromBannarActivity')
+				}
+				const userId = wx.getStorageSync('userId')
+				http
+					.wxRequest({
+						...this.data.api.getTeamDetail,
+						params
+					})
+					.then((res) => {
+						if (res.success) {
+							if (res.data.length > 0) {
+								let flag = false
+								flag = res.data[0].users.some((user) => {
+									console.log(userId, user.id)
+									return Number(userId) === Number(user.id)
+								})
+								if (res.data[0].isClustering) {
+									console.log('已经成团')
+									wx.removeStorageSync('shareId')
+									wx.removeStorageSync('teamId')
+								}
+								if (flag) {
+									console.log('当前用户已经参团')
+									wx.removeStorageSync('shareId')
+									wx.removeStorageSync('teamId')
+								}
 							}
-							if (flag) {
-								wx.removeStorageSync('shareId')
-							}
+							resolve()
+						} else {
+							resolve()
 						}
-						resolve()
-					}
-				})
+					})
+			} else {
+				resolve()
+			}
 		})
 	},
 	// 获取当前用户的收货地址

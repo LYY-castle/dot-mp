@@ -1,9 +1,9 @@
 <!--pages_product/team-perchase/team-perchase.wxml-->
 <view class="container">
 	<view>
-		<van-image width="100%" src="{{teamBannar}}" fit="widthFix" class="richImage"/>
+		<van-image width="100%" src="{{activity.detailImageUrl}}" fit="widthFix" class="richImage"/>
 	</view>
-	<view class="team-perchase_product" wx:if="{{activity}}">
+	<view class="team-perchase_product" style="background-color: {{activity.bgColor?'activity.bgColor':'#eeeeee'}}" wx:if="{{activity}}">
 		<view class="titleImage">
 			<van-image width="100%" src="{{teamRule}}" fit="widthFix" />
 		</view>
