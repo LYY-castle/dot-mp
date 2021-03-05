@@ -1,7 +1,7 @@
 <!--pages/mine/order/order-list/order-list.wxml-->
 <view class="container">
 	<van-sticky>
-		<van-tabs bind:change="getOrderListByType" active="{{activeProductType}}" fixed="{{true}}" title-active-color="rgba(249, 173, 8, 1)" color="rgba(249, 173, 8, 1)" animated="{{true}}">
+		<van-tabs bind:change="getOrderListByType" active="{{activeProductType}}" fixed="{{true}}" title-active-color="rgba(249, 173, 8, 1)" color="rgba(249, 173, 8, 1)" animated="{{false}}">
 			<van-tab wx:for="{{productTypes}}" wx:for-item="type" wx:key="idx" title="{{type.name}}" name="{{type.code}}">
       </van-tab>
 	  </van-tabs>

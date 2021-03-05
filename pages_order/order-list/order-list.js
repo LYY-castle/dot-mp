@@ -94,18 +94,35 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onShow: function (options) {
+		const activeStatus = wx.getStorageSync('activeOrderType')
+			? wx.getStorageSync('activeOrderType')
+			: 0
 		this.setData({
-			activeProductType: 0,
-			orderStatus: 0,
-			params: {
-				pageNo: this.data.pageNo,
-				pageSize: this.data.pageSize,
-				userId: wx.getStorageSync('userId')
-			}
+			activeProductType: activeStatus,
+			orderStatus: activeStatus
 		})
+		if (!activeStatus) {
+			this.setData({
+				params: {
+					pageNo: this.data.pageNo,
+					pageSize: this.data.pageSize,
+					userId: wx.getStorageSync('userId')
+				}
+			})
+		} else {
+			this.setData({
+				params: {
+					pageNo: this.data.pageNo,
+					pageSize: this.data.pageSize,
+					userId: wx.getStorageSync('userId'),
+					orderStatus: activeStatus
+				}
+			})
+		}
 		Promise.resolve().then(() => this.getOrderList())
 	},
 	onUnload: function () {
+		wx.removeStorageSync('activeOrderType')
 		wx.switchTab({
 			url: '/pages/mine/mine'
 		})
@@ -144,6 +161,7 @@ Page({
 		this.getOrderList()
 	},
 	getOrderListByType(e) {
+		wx.setStorageSync('activeOrderType', e.detail.name)
 		this.setData({
 			activeProductType: e.detail.name,
 			orderStatus: e.detail.name,

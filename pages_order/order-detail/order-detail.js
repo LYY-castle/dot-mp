@@ -445,7 +445,6 @@ Page({
 			}
 		}
 	},
-
 	// 京东平台收到货之后申请售后
 	jdAfs() {
 		this.setData({

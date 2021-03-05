@@ -21,7 +21,7 @@
     ]
   },
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": true,
     "enhance": false,
     "postcss": true,
@@ -112,7 +112,7 @@
         {
           "name": "pages_product/product-detail/product-detail",
           "pathName": "pages_product/product-detail/product-detail",
-          "query": "src=1005&shareId=1&campaignId=1&campaignTeamId=93",
+          "query": "src=1005&shareId=1&campaignId=1&campaignTeamId=109",
           "scene": null
         }
       ]

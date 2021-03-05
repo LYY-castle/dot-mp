@@ -145,10 +145,6 @@ Page({
 				.then(() => _this.getProductDetail())
 				.then(() => _this.getAllTeams())
 				.then(() => _this.getTeamStatistics())
-			if (wx.getStorageSync('shareId')) {
-				// 获取分享人的详情
-				_this.getShareDetail()
-			}
 		}
 	},
 	/**
@@ -197,9 +193,13 @@ Page({
 							if (res.data.length > 0) {
 								let flag = false
 								flag = res.data[0].users.some((user) => {
+									console.log('分享者是本人?')
+									console.log(Number(userId === Number(user.id)))
 									return Number(userId) === Number(user.id)
 								})
+								console.log('flag', flag)
 								if (res.data[0].isClustering) {
+									console.log('已经成团')
 									wx.removeStorageSync('shareId')
 									wx.removeStorageSync('teamId')
 								}
@@ -207,8 +207,11 @@ Page({
 									wx.removeStorageSync('shareId')
 									wx.removeStorageSync('teamId')
 								}
+								this.getShareDetail()
+								resolve()
+							} else {
+								resolve()
 							}
-							resolve()
 						} else {
 							resolve()
 						}
@@ -219,19 +222,32 @@ Page({
 		})
 	},
 	getShareDetail() {
-		const params = {
-			id: wx.getStorageSync('shareId')
-		}
-		http.wxRequest({ ...this.data.api.getShareDetail, params }).then((res) => {
-			if (res.success) {
-				const shareName = res.data[0].nickname ? res.data[0].nickname : '好友'
-				this.setData({
-					teamPurchaseBtnText: '加入' + shareName + '的团'
-				})
+		return new Promise((resolve) => {
+			console.log('查看当前分享人信息')
+			if (wx.getStorageSync('shareId')) {
+				const params = {
+					id: wx.getStorageSync('shareId')
+				}
+				http
+					.wxRequest({ ...this.data.api.getShareDetail, params })
+					.then((res) => {
+						if (res.success) {
+							const shareName = res.data[0].nickname
+								? res.data[0].nickname
+								: '好友'
+							this.setData({
+								teamPurchaseBtnText: '加入' + shareName + '的团'
+							})
+							resolve()
+						} else {
+							resolve()
+						}
+					})
+			} else {
+				resolve()
 			}
 		})
 	},
-
 	// 获取当前用户的收货地址
 	getMyAddressList() {
 		const params = {

@@ -11,7 +11,7 @@ Page({
 		remarkShow: false,
 		money: null, // 购物金
 		shoppingMoneyData: null,
-		shoppingMoney: null, // 使用购物金的金额
+		shoppingMoney: 0, // 使用购物金的金额
 		shoppingAccountId: null, // 购物金账户id
 		selectMoney: false, //是否使用购物金
 		actualPrice: null, // 实际商品总价加上运费减去使用优惠后实际需要支付的金额
@@ -98,11 +98,10 @@ Page({
 		this.setData({
 			disabledBtn: false,
 			selectMoney: false,
-			shoppingMoney: null,
+			shoppingMoney: 0,
 			remark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : null,
 			newRemark: wx.getStorageSync('remark') ? wx.getStorageSync('remark') : ''
 		})
-		this.getShoppingMoney()
 		if (wx.getStorageSync('perchaseByCart')) {
 			this.setData({
 				cartPerchase: true
@@ -170,48 +169,75 @@ Page({
 							isGroupPurchase: res.data.isGroupPurchase,
 							priceRules: res.data.campaignProductPriceRules
 						})
+						console.log('设置')
+						Promise.resolve()
+							.then(() => this.getShoppingMoney())
+							.then(() => this.calculation())
+						resolve()
+					} else {
 						resolve()
 					}
 				})
 		})
 	},
 	calculation() {
-		let totalCount = 0
-		let totalPrice = 0
-		if (this.data.cartPerchase) {
-			for (let i = 0; i < this.data.dataList.length; i++) {
-				totalCount += this.data.dataList[i].number
-				if (this.data.dataList[i].goods.isPromote) {
-					totalPrice +=
-						(Math.round(this.data.dataList[i].product.promotePrice * 100) *
-							this.data.dataList[i].number) /
-						100
+		return new Promise((resolve) => {
+			let totalCount = 0
+			let totalPrice = 0
+			if (this.data.cartPerchase) {
+				for (let i = 0; i < this.data.dataList.length; i++) {
+					totalCount += this.data.dataList[i].number
+					if (this.data.dataList[i].goods.isPromote) {
+						totalPrice +=
+							(Math.round(this.data.dataList[i].product.promotePrice * 100) *
+								this.data.dataList[i].number) /
+							100
+					} else {
+						totalPrice +=
+							(Math.round(this.data.dataList[i].product.retailPrice * 100) *
+								this.data.dataList[i].number) /
+							100
+					}
+				}
+			} else {
+				totalCount = wx.getStorageSync('activeProductNumber')
+					? wx.getStorageSync('activeProductNumber')
+					: 1
+				if (this.data.isGroupPurchase) {
+					totalPrice =
+						(Math.round(this.data.priceRules.price * 100) * totalCount) / 100
 				} else {
-					totalPrice +=
-						(Math.round(this.data.dataList[i].product.retailPrice * 100) *
-							this.data.dataList[i].number) /
-						100
+					totalPrice = this.data.goods.isPromote
+						? (Math.round(this.data.product.promotePrice * 100) * totalCount) /
+						  100
+						: (Math.round(this.data.product.retailPrice * 100) * totalCount) /
+						  100
 				}
 			}
-		} else {
-			totalCount = wx.getStorageSync('activeProductNumber')
-				? wx.getStorageSync('activeProductNumber')
-				: 1
-			if (this.data.isGroupPurchase) {
-				totalPrice =
-					(Math.round(this.data.priceRules.price * 100) * totalCount) / 100
-			} else {
-				totalPrice = this.data.goods.isPromote
-					? (Math.round(this.data.product.promotePrice * 100) * totalCount) /
-					  100
-					: (Math.round(this.data.product.retailPrice * 100) * totalCount) / 100
+			totalPrice = Math.round(totalPrice * 100) / 100
+			let actualPrice =
+				(Math.round(totalPrice * 100) +
+					Math.round(this.data.shippingFee * 100)) /
+				100
+			if (this.data.shoppingMoneyData) {
+				const minMoney = Math.min(
+					this.data.shoppingMoneyData.amount,
+					actualPrice
+				)
+				this.setData({
+					shoppingMoney: minMoney
+				})
+				actualPrice =
+					(Math.round(actualPrice * 100) -
+						Math.round(this.data.shoppingMoney * 100)) /
+					100
 			}
-		}
-		totalPrice = Math.round(totalPrice * 100) / 100
-		this.setData({
-			totalCount,
-			totalPrice: totalPrice,
-			actualPrice: (totalPrice * 100 + this.data.shippingFee * 100) / 100
+			this.setData({
+				totalCount,
+				actualPrice,
+				totalPrice: totalPrice
+			})
+			resolve()
 		})
 	},
 	numberChange(option) {
@@ -280,7 +306,9 @@ Page({
 							dataList: res.data,
 							jdGoods: jdGoods
 						})
-						this.calculation()
+						Promise.resolve()
+							.then(() => this.getShoppingMoney())
+							.then(() => this.calculation())
 						resolve()
 					} else {
 						resolve()
@@ -412,7 +440,9 @@ Page({
 									this.setData({
 										shippingFee: res.data
 									})
-									this.calculation()
+									Promise.resolve()
+										.then(() => this.getShoppingMoney())
+										.then(() => this.calculation())
 									resolve()
 								}
 							})
@@ -752,25 +782,47 @@ Page({
 	},
 	// 获取购物金
 	getShoppingMoney() {
-		http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
-			if (res.success) {
-				if (res.data) {
-					this.setData({
-						shoppingAccountId: res.data.id,
-						shoppingMoneyData: res.data
-					})
+		return new Promise((resolve) => {
+			http.wxRequest({ ...this.data.api.getShoppingMoney }).then((res) => {
+				if (res.success) {
+					if (res.data) {
+						const minMoney = Math.min(res.data.amount, this.data.actualPrice)
+						this.setData({
+							shoppingAccountId: res.data.id,
+							shoppingMoneyData: res.data,
+							selectMoney: true,
+							shoppingMoney: minMoney
+						})
+					} else {
+						this.setData({
+							shoppingMoneyData: null
+						})
+					}
+					resolve()
 				} else {
-					this.setData({
-						shoppingMoneyData: null
-					})
+					resolve()
 				}
-			}
+			})
 		})
 	},
 	selectMoneyChange() {
 		this.setData({
 			selectMoney: !this.data.selectMoney
 		})
+		if (!this.data.selectMoney) {
+			this.setData({
+				shoppingMoney: 0
+			})
+		} else {
+			const minMoney = Math.min(
+				this.data.shoppingMoneyData.amount,
+				this.data.actualPrice
+			)
+			this.setData({
+				shoppingMoney: minMoney
+			})
+		}
+		this.calculation()
 	},
 	checkMoney() {
 		// 判断购物金是否小于等于商品总价且小于等于可用余额

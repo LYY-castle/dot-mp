@@ -83,7 +83,7 @@
                       <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
                       拼成
                     </view>
-                    <van-button type="danger" size="small" block round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
+                    <van-button type="danger" size="small" block round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}" disabled="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}">去参团</van-button>
                   </view>
                 </view>
               </swiper-item>
@@ -184,7 +184,7 @@
               <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
               拼成
             </view>
-            <van-button type="danger" size="small" round block bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}">去参团</van-button>
+            <van-button type="danger" size="small" round block bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}" disabled="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}">去参团</van-button>
           </view>
         </view>
       </view>

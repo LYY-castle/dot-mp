@@ -8,45 +8,51 @@ App({
 		}
 	},
 	onLaunch: function (options) {
-		// 静默登录
-		wx.login({
-			success: (res) => {
-				this.globalData.wechatCode = res.code
-				const params = {
-					wechatAppId: env.env.appid,
-					wechatCode: res.code
+		this.selfLogin().then((result) => {
+			let url = '/' + options.path
+			if (!options.query.shareId) {
+				if (wx.getStorageSync('shareId')) {
+					wx.removeStorageSync('shareId')
 				}
-				http.wxRequest({ ...this.data.login, params }).then((res) => {
-					if (res.success) {
-						wx.setStorageSync('openId', res.data.weixinOpenid)
-						wx.setStorageSync('userId', res.data.id)
-						let url = '/' + options.path
-						if (!options.query.shareId) {
-							if (wx.getStorageSync('shareId')) {
-								wx.removeStorageSync('shareId')
-							}
-							if (wx.getStorageSync('teamId')) {
-								wx.removeStorageSync('teamId')
-							}
-							if (options.query) {
-								url += '?' + this.queryString(options.query)
-							}
-							if (options.query.campaignId) {
-								wx.setStorageSync(
-									'fromBannarActivity',
-									options.query.campaignId
-								)
-							}
-							console.log('分享页面参数', url)
-							wx.reLaunch({
-								url
-							})
-						}
-					} else {
-						console.log('请求失败', res)
-					}
-				})
+				if (wx.getStorageSync('teamId')) {
+					wx.removeStorageSync('teamId')
+				}
+				if (options.query) {
+					url += '?' + this.queryString(options.query)
+				}
+				if (options.query.campaignId) {
+					wx.setStorageSync('fromBannarActivity', options.query.campaignId)
+				}
+				if (wx.getStorageSync('userId')) {
+					wx.reLaunch({
+						url
+					})
+				}
 			}
+		})
+	},
+	selfLogin() {
+		return new Promise((resolve) => {
+			// 静默登录
+			wx.login({
+				success: (res) => {
+					this.globalData.wechatCode = res.code
+					const params = {
+						wechatAppId: env.env.appid,
+						wechatCode: res.code
+					}
+					http.wxRequest({ ...this.data.login, params }).then((res) => {
+						if (res.success) {
+							wx.setStorageSync('openId', res.data.weixinOpenid)
+							wx.setStorageSync('userId', res.data.id)
+							resolve()
+						} else {
+							resolve()
+							console.log('请求失败', res)
+						}
+					})
+				}
+			})
 		})
 	},
 	onShow(options) {
@@ -68,16 +74,20 @@ App({
 				console.log(err)
 			}
 		})
-		let url = '/' + options.path
-		if (options.query.shareId) {
-			url += '?' + this.queryString(options.query)
-			wx.setStorageSync('shareId', options.query.shareId)
-			wx.setStorageSync('fromBannarActivity', options.query.campaignId)
-			wx.setStorageSync('teamId', options.query.campaignTeamId)
-			wx.reLaunch({
-				url
-			})
-		}
+		this.selfLogin().then((result) => {
+			let url = '/' + options.path
+			if (options.query.shareId) {
+				url += '?' + this.queryString(options.query)
+				wx.setStorageSync('shareId', options.query.shareId)
+				wx.setStorageSync('fromBannarActivity', options.query.campaignId)
+				wx.setStorageSync('teamId', options.query.campaignTeamId)
+				if (wx.getStorageSync('userId')) {
+					wx.reLaunch({
+						url
+					})
+				}
+			}
+		})
 	},
 	queryString(json) {
 		if (!json) return ''
