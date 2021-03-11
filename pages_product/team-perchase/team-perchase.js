@@ -148,6 +148,7 @@ Page({
 				})
 				.then((res) => {
 					if (res.success) {
+						res.data.bgColor = res.data.bgColor ? res.data.bgColor : '#eeeeee'
 						this.setData({
 							activity: res.data
 						})

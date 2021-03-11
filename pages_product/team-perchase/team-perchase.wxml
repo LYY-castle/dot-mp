@@ -3,7 +3,7 @@
 	<view>
 		<van-image width="100%" src="{{activity.detailImageUrl}}" fit="widthFix" class="richImage"/>
 	</view>
-	<view class="team-perchase_product" style="background-color: {{activity.bgColor?'activity.bgColor':'#eeeeee'}}" wx:if="{{activity}}">
+	<view class="team-perchase_product" style="background-color: {{activity.bgColor}}" wx:if="{{activity}}">
 		<view class="titleImage">
 			<van-image width="100%" src="{{teamRule}}" fit="widthFix" />
 		</view>
@@ -24,14 +24,14 @@
 						{{activity.canClusteringUserNum}}人团
 					</view>
 					<view>
-						<text
+						<view
 						wx:if="{{item.label.length>0}}"
 						class="guige guige-label m-r-3 m-b-5"
 						wx:for="{{item.label}}"
 						wx:for-item="labelItem"
 						wx:key="labelIndex">
 						{{labelItem}}
-					</text>
+					</view>
 						{{item.name}}
 					</view>
 				</view>
