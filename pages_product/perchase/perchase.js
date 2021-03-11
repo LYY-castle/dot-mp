@@ -219,7 +219,7 @@ Page({
 				(Math.round(totalPrice * 100) +
 					Math.round(this.data.shippingFee * 100)) /
 				100
-			if (this.data.shoppingMoneyData) {
+			if (this.data.selectMoney) {
 				const minMoney = Math.min(
 					this.data.shoppingMoneyData.amount,
 					actualPrice
@@ -487,6 +487,7 @@ Page({
 										_this.setData({
 											selectMoney: true
 										})
+										_this.calculation()
 									} else {
 										Promise.resolve()
 											.then(() => _this.createTeam())
@@ -511,6 +512,7 @@ Page({
 												_this.setData({
 													selectMoney: true
 												})
+												_this.calculation()
 											} else {
 												_this.setData({
 													disabledBtn: true
@@ -600,6 +602,7 @@ Page({
 		return new Promise((resolve) => {
 			const activityId = wx.getStorageSync('fromBannarActivity')
 			const teamId = wx.getStorageSync('teamId')
+			let orderGoods = []
 			// 封装入参
 			if (this.data.cartPerchase) {
 				this.data.dataList.forEach((list) => {
@@ -663,7 +666,6 @@ Page({
 				params.campaignTeamId = this.data.teamObj.id
 				params.campaignId = this.data.teamObj.campaignId
 			}
-			let orderGoods = []
 
 			if (this.data.selectMoney) {
 				params.shoppingAccountId = this.data.shoppingAccountId
@@ -806,20 +808,13 @@ Page({
 		})
 	},
 	selectMoneyChange() {
+		const selectMoney = !this.data.selectMoney
 		this.setData({
 			selectMoney: !this.data.selectMoney
 		})
-		if (!this.data.selectMoney) {
+		if (!selectMoney) {
 			this.setData({
 				shoppingMoney: 0
-			})
-		} else {
-			const minMoney = Math.min(
-				this.data.shoppingMoneyData.amount,
-				this.data.actualPrice
-			)
-			this.setData({
-				shoppingMoney: minMoney
 			})
 		}
 		this.calculation()
