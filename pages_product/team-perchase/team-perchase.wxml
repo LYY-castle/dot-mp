@@ -1,9 +1,9 @@
 <!--pages_product/team-perchase/team-perchase.wxml-->
 <view class="container">
-	<view>
+	<view class="team-perchase_product" style="background-color: {{activity.bgColor}}" wx:if="{{activity.status===2}}">
+		<view>
 		<van-image width="100%" src="{{activity.detailImageUrl}}" fit="widthFix" class="richImage"/>
 	</view>
-	<view class="team-perchase_product" style="background-color: {{activity.bgColor}}" wx:if="{{activity}}">
 		<view class="titleImage">
 			<van-image width="100%" src="{{teamRule}}" fit="widthFix" />
 		</view>
@@ -18,7 +18,7 @@
         <van-image width="150px" height="150px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
         <van-image alt width="150px" height="150px" fit="cover" wx:else use-loading-slot />
       </view>
-      <view class="fz-16 m-l-5 m-t-10 flex-colum-between">
+      <view class="fz-16 m-l-5 m-t-10 block-content">
 				<view>
 					<view class="tag border">
 						{{activity.canClusteringUserNum}}人团
@@ -47,5 +47,11 @@
     </view>
 		<van-divider contentPosition="center" wx:if="{{bottomLineShow}}">更多商品，敬请期待</van-divider>
 		<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
+	</view>
+	<view wx:if="{{activity.status===1}}">
+		<van-empty description="活动未开始"  />
+	</view>
+	<view wx:if="{{activity.status===3}}">
+		<van-empty description="活动已结束"/>
 	</view>
 </view>

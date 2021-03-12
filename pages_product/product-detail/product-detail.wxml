@@ -35,8 +35,8 @@
       <text class="c-color-yellow bold">￥{{goods.rebateAmount}}</text>
     </view> -->
     </view>
-    <view wx:if="{{isGroupPurchase}}">
-      <view class="bg-color-white p-10 m-t-10 flex-start-start fz-15">
+    <view >
+      <view class="bg-color-white p-10 m-t-10 flex-start-start fz-15" wx:if="{{campaignProductPriceRules}}">
         <view class="m-r-15">活动</view>
         <view>
           <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex>0}}" class="m-b-10 c-color-gray flex-start">
@@ -48,7 +48,7 @@
           </view>
         </view>
       </view>
-      <view class="bg-color-white p-10 m-t-10" >
+      <view class="bg-color-white p-10 m-t-10" wx:if="{{teamStatistics}}">
         <view class="flex-between">
           <view wx:if="teamStatistics.clusteringNum>0">当前已成团人数:
           <text class="bold fz-16">{{teamStatistics?teamStatistics.clusteringNum:0}}</text>

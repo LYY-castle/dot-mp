@@ -20,9 +20,6 @@ App({
 				if (options.query) {
 					url += '?' + this.queryString(options.query)
 				}
-				if (options.query.campaignId) {
-					wx.setStorageSync('fromBannarActivity', options.query.campaignId)
-				}
 				if (wx.getStorageSync('userId')) {
 					wx.reLaunch({
 						url
@@ -79,7 +76,6 @@ App({
 			if (options.query.shareId) {
 				url += '?' + this.queryString(options.query)
 				wx.setStorageSync('shareId', options.query.shareId)
-				wx.setStorageSync('fromBannarActivity', options.query.campaignId)
 				wx.setStorageSync('teamId', options.query.campaignTeamId)
 				if (wx.getStorageSync('userId')) {
 					wx.reLaunch({

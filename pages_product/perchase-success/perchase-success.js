@@ -111,23 +111,27 @@ Page({
 	},
 	getTeamDetail() {
 		return new Promise((resolve) => {
-			const params = {
-				id: this.data.order.campaignTeamId,
-				campaignId: this.data.order.campaignId
+			if (this.data.order.campaignTeamId && this.data.order.campaignId) {
+				const params = {
+					id: this.data.order.campaignTeamId,
+					campaignId: this.data.order.campaignId
+				}
+				http
+					.wxRequest({
+						...this.data.api.getTeamDetail,
+						params
+					})
+					.then((res) => {
+						if (res.success) {
+							this.setData({
+								team: res.data[0]
+							})
+							resolve()
+						}
+					})
+			} else {
+				resolve()
 			}
-			http
-				.wxRequest({
-					...this.data.api.getTeamDetail,
-					params
-				})
-				.then((res) => {
-					if (res.success) {
-						this.setData({
-							team: res.data[0]
-						})
-						resolve()
-					}
-				})
 		})
 	},
 	goOrderDetail() {

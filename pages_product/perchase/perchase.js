@@ -32,9 +32,10 @@ Page({
 		disabledShow: false,
 		shippingFee: 0,
 		orderId: null,
-		isGroupPurchase: null,
+		isGroupPurchase: 0,
 		priceRules: null,
 		teamObj: null, // 开团团队详情
+		campaignId: null,
 		api: {
 			addOrder: {
 				url: '/orders',
@@ -91,6 +92,14 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
+	onLoad(options) {
+		if (options.campaignId) {
+			this.setData({
+				isGroupPurchase: 1,
+				campaignId: options.campaignId
+			})
+		}
+	},
 	onShow: function () {
 		this.pageInit()
 	},
@@ -119,6 +128,10 @@ Page({
 	},
 	getProduct() {
 		return new Promise((resolve) => {
+			let params = {}
+			if (this.data.campaignId) {
+				params.campaignId = this.data.campaignId
+			}
 			http
 				.wxRequest({
 					...this.data.api.getProductById,
@@ -127,7 +140,8 @@ Page({
 							substr: '{id}',
 							replacement: wx.getStorageSync('activeProductId')
 						}
-					]
+					],
+					params
 				})
 				.then((res) => {
 					if (res.success) {
@@ -146,7 +160,7 @@ Page({
 							? wx.getStorageSync('activeProductNumber')
 							: 1
 						let totalPrice = 0
-						if (res.data.isGroupPurchase) {
+						if (this.data.isGroupPurchase) {
 							totalPrice =
 								(Math.round(res.data.campaignProductPriceRules.price * 100) *
 									totalCount) /
@@ -166,7 +180,6 @@ Page({
 							actualPrice: totalPrice,
 							product: res.data.product,
 							goods: res.data.goods,
-							isGroupPurchase: res.data.isGroupPurchase,
 							priceRules: res.data.campaignProductPriceRules
 						})
 						console.log('设置')
@@ -316,31 +329,6 @@ Page({
 				})
 		})
 	},
-	// isHasProduct() {
-	// 	return new Promise((resovle) => {
-	// 		// 查询京东商品是否有货
-	// 		if (this.data.jdGoods.length > 0 && this.data.order) {
-	// 			const params = {
-	// 				provinceName: this.data.order.provinceName,
-	// 				cityName: this.data.order.cityName,
-	// 				districtName: this.data.order.districtName,
-	// 				address: this.data.order.address,
-	// 				goodsInventoryNumModels: jdGoods
-	// 			}
-	// 			http
-	// 				.wxRequest({ ...this.data.api.hasProduct, params })
-	// 				.then((res) => {
-	// 					if(res.success){
-	// 						this.setData({
-
-	// 						})
-	// 					}else{
-	// 						resovle()
-	// 					}
-	// 				})
-	// 		}
-	// 	})
-	// },
 	getMyaddress() {
 		return new Promise((resolve) => {
 			const params = {
@@ -568,7 +556,7 @@ Page({
 	// 开团
 	createTeam() {
 		return new Promise((resolve) => {
-			const activityId = wx.getStorageSync('fromBannarActivity')
+			const activityId = this.data.campaignId
 			const teamId = wx.getStorageSync('teamId')
 			if (this.data.isGroupPurchase) {
 				// 如果是开团
@@ -600,7 +588,7 @@ Page({
 	// 封装生成订单函数
 	addOrder() {
 		return new Promise((resolve) => {
-			const activityId = wx.getStorageSync('fromBannarActivity')
+			const activityId = this.data.campaignId
 			const teamId = wx.getStorageSync('teamId')
 			let orderGoods = []
 			// 封装入参

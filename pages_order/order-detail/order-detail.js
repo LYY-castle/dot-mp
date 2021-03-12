@@ -212,34 +212,42 @@ Page({
 	},
 	getTeamDetail() {
 		return new Promise((resolve) => {
-			if (this.data.orderInfo.orderStatus !== 600) {
-				const params = {
-					id: this.data.orderInfo.campaignTeamId,
-					campaignId: this.data.orderInfo.campaignId
-				}
-				http
-					.wxRequest({
-						...this.data.api.getTeamDetail,
-						params
-					})
-					.then((res) => {
-						if (res.success) {
-							if (res.data.length > 0) {
-								this.setData({
-									team: res.data[0]
-								})
-							} else {
-								this.setData({
-									team: null
-								})
+			if (
+				this.data.orderInfo.campaignTeamId &&
+				this.data.orderInfo.campaignId
+			) {
+				if (this.data.orderInfo.orderStatus !== 600) {
+					const params = {
+						id: this.data.orderInfo.campaignTeamId,
+						campaignId: this.data.orderInfo.campaignId
+					}
+					http
+						.wxRequest({
+							...this.data.api.getTeamDetail,
+							params
+						})
+						.then((res) => {
+							if (res.success) {
+								if (res.data.length > 0) {
+									this.setData({
+										team: res.data[0]
+									})
+								} else {
+									this.setData({
+										team: null
+									})
+								}
+								resolve()
 							}
-							resolve()
-						}
+						})
+				} else {
+					this.setData({
+						team: null
 					})
+					resolve()
+				}
 			} else {
-				this.setData({
-					team: null
-				})
+				resolve()
 			}
 		})
 	},

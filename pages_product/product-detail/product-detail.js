@@ -115,6 +115,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		console.log(options)
 		const _this = this
 		_this.setData({
 			userId: wx.getStorageSync('userId')
@@ -140,29 +141,34 @@ Page({
 			this.setData({
 				productId: _this.data.options.src
 			})
-			Promise.resolve()
-				.then(() => _this.currentCampaignTeam())
-				.then(() => _this.getProductDetail())
-				.then(() => _this.getAllTeams())
-				.then(() => _this.getTeamStatistics())
+			if (this.data.options.campaignId) {
+				this.setData({
+					isGroupPurchase: 1,
+					campaignId: this.data.options.campaignId
+				})
+				Promise.resolve()
+					.then(() => _this.currentCampaignTeam())
+					.then(() => _this.getProductDetail())
+					.then(() => _this.getActivityDetail())
+					.then(() => _this.getAllTeams())
+					.then(() => _this.getTeamStatistics())
+			} else {
+				_this.getProductDetail()
+			}
 		}
 	},
 	/**
 	 * 生命周期函数--监听页面初次渲染完成
 	 */
-	onReady: function () {
-		if (wx.getStorageSync('addressList')) {
-			wx.removeStorageSync('addressList')
-		}
-	},
+	onReady: function () {},
 	/**
 	 * 用户点击右上角分享
 	 */
 	onShareAppMessage: function () {
 		let path =
 			'/pages_product/product-detail/product-detail?src=' + this.data.productId
-		if (this.data.campaign) {
-			path += '&campaignId=' + this.data.campaign.id
+		if (this.data.campaignId) {
+			path += '&campaignId=' + this.data.campaignId
 		}
 		wx.showShareMenu({
 			withShareTicket: true,
@@ -180,7 +186,7 @@ Page({
 			if (wx.getStorageSync('shareId')) {
 				const params = {
 					id: wx.getStorageSync('teamId'),
-					campaignId: wx.getStorageSync('fromBannarActivity')
+					campaignId: this.data.campaignId
 				}
 				const userId = wx.getStorageSync('userId')
 				http
@@ -193,13 +199,10 @@ Page({
 							if (res.data.length > 0) {
 								let flag = false
 								flag = res.data[0].users.some((user) => {
-									console.log('分享者是本人?')
-									console.log(Number(userId === Number(user.id)))
 									return Number(userId) === Number(user.id)
 								})
 								console.log('flag', flag)
 								if (res.data[0].isClustering) {
-									console.log('已经成团')
 									wx.removeStorageSync('shareId')
 									wx.removeStorageSync('teamId')
 								}
@@ -223,7 +226,6 @@ Page({
 	},
 	getShareDetail() {
 		return new Promise((resolve) => {
-			console.log('查看当前分享人信息')
 			if (wx.getStorageSync('shareId')) {
 				const params = {
 					id: wx.getStorageSync('shareId')
@@ -388,23 +390,25 @@ Page({
 	},
 	getProductDetail() {
 		return new Promise((resolve) => {
+			let params = {}
+			if (this.data.campaignId) {
+				params.campaignId = this.data.campaignId
+			} else {
+				params = {}
+			}
 			http
 				.wxRequest({
 					...this.data.api.getProductById,
 					urlReplacements: [
 						{ substr: '{id}', replacement: this.data.productId }
-					]
+					],
+					params
 				})
 				.then((res) => {
 					if (res.success) {
 						if (res.data.campaign) {
-							this.setData({
-								campaign: res.data.campaign
-							})
-							wx.setStorageSync('fromBannarActivity', res.data.campaign.id)
-							this.getActivityDetail(res.data.campaign)
 						}
-						if (res.data.isGroupPurchase) {
+						if (this.data.isGroupPurchase) {
 							this.getShoppingMoney()
 						}
 						if (res.data.goods.platformType === 2) {
@@ -435,7 +439,6 @@ Page({
 						this.setData({
 							showContent: true,
 							campaignProductPriceRules: res.data.campaignProductPriceRules,
-							isGroupPurchase: res.data.isGroupPurchase,
 							goods: res.data.goods,
 							products: res.data.products,
 							goodsAttributeResults: res.data.goodsAttributeResults, // 属性
@@ -449,9 +452,15 @@ Page({
 						})
 						resolve()
 					} else {
-						this.setData({
-							showContent: false
-						})
+						if (this.data.campaignId) {
+							this.setData({
+								showContent: true
+							})
+						} else {
+							this.setData({
+								showContent: false
+							})
+						}
 					}
 				})
 		})
@@ -461,7 +470,8 @@ Page({
 		return new Promise((resolve) => {
 			const params = {
 				isClustering: 0,
-				goodsId: this.data.goods.id
+				goodsId: this.data.goods.id,
+				campaignId: this.data.campaignId
 			}
 			http.wxRequest({ ...this.data.api.getTeamDetail, params }).then((res) => {
 				if (res.success) {
@@ -484,9 +494,9 @@ Page({
 	// 总团队统计
 	getTeamStatistics() {
 		return new Promise((resolve) => {
-			if (this.data.campaign) {
+			if (this.data.campaignId) {
 				const params = {
-					campaignId: this.data.campaign.id,
+					campaignId: this.data.campaignId,
 					goodsId: this.data.goods.id
 				}
 				http
@@ -511,18 +521,32 @@ Page({
 	},
 	getActivityDetail(data) {
 		return new Promise((resolve) => {
-			const currentTime = moment()
-			const endTime = moment(data.endTime)
-			if (tool.isInDurationTime(data.startTime, data.endTime)) {
-				this.setData({
-					activityTime: endTime - currentTime
+			http
+				.wxRequest({
+					...this.data.api.activityDetail,
+					urlReplacements: [
+						{
+							substr: '{id}',
+							replacement: this.data.campaignId
+						}
+					]
 				})
-			} else {
-				this.setData({
-					activityTime: null
+				.then((res) => {
+					if (res.success) {
+						const currentTime = moment()
+						const endTime = moment(res.data.endTime)
+						if (tool.isInDurationTime(res.data.startTime, res.data.endTime)) {
+							this.setData({
+								activityTime: endTime - currentTime
+							})
+						} else {
+							this.setData({
+								activityTime: null
+							})
+						}
+						resolve()
+					}
 				})
-			}
-			resolve()
 		})
 	},
 	timeChange(e) {
@@ -629,9 +653,17 @@ Page({
 				})
 		} else if (event === 'perchase') {
 			wx.setStorageSync('activeProductId', params.productId)
-			wx.navigateTo({
-				url: '/pages_product/perchase/perchase'
-			})
+			if (this.data.campaignId) {
+				wx.navigateTo({
+					url:
+						'/pages_product/perchase/perchase?campaignId=' +
+						this.data.campaignId
+				})
+			} else {
+				wx.navigateTo({
+					url: '/pages_product/perchase/perchase'
+				})
+			}
 		}
 	},
 	onClose() {

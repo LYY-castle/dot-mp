@@ -37,8 +37,11 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		console.log(options)
 		if (options) {
-			wx.setStorageSync('fromBannarActivity', options.campaignId)
+			this.setData({
+				campaignId: options.campaignId
+			})
 		}
 	},
 
@@ -66,7 +69,7 @@ Page({
 			let params = {
 				pageNo: this.data.pageNo,
 				pageSize: 10,
-				campaignId: wx.getStorageSync('fromBannarActivity')
+				campaignId: this.data.campaignId
 			}
 			http
 				.wxRequest({ ...this.data.api.activityProduct, params })
@@ -140,11 +143,12 @@ Page({
 	},
 	getActivityDetail() {
 		return new Promise((resolve) => {
-			const id = wx.getStorageSync('fromBannarActivity')
 			http
 				.wxRequest({
 					...this.data.api.activityDetail,
-					urlReplacements: [{ substr: '{id}', replacement: id }]
+					urlReplacements: [
+						{ substr: '{id}', replacement: this.data.campaignId }
+					]
 				})
 				.then((res) => {
 					if (res.success) {
@@ -160,7 +164,11 @@ Page({
 	gotoDetail(e) {
 		const option = e.currentTarget.dataset.option
 		wx.navigateTo({
-			url: '/pages_product/product-detail/product-detail?src=' + option.id
+			url:
+				'/pages_product/product-detail/product-detail?src=' +
+				option.id +
+				'&campaignId=' +
+				this.data.campaignId
 		})
 	},
 	/**
@@ -200,9 +208,9 @@ Page({
 		}
 	},
 	onShareAppMessage: function () {
-		const campaignId = wx.getStorageSync('fromBannarActivity')
 		let path =
-			'/pages_product/team-perchase/team-perchase?campaignId=' + campaignId
+			'/pages_product/team-perchase/team-perchase?campaignId=' +
+			this.data.campaignId
 		wx.showShareMenu({
 			withShareTicket: true,
 			menus: ['shareAppMessage', 'shareTimeline']
