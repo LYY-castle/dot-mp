@@ -114,6 +114,12 @@
           "pathName": "pages_product/product-detail/product-detail",
           "query": "src=1005&shareId=1&campaignId=1&campaignTeamId=109",
           "scene": null
+        },
+        {
+          "name": "pages_shopping_money/shopping-money-detail/shopping-money-detail",
+          "pathName": "pages_shopping_money/shopping-money-detail/shopping-money-detail",
+          "query": "",
+          "scene": null
         }
       ]
     }

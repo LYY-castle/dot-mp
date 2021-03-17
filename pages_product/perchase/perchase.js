@@ -182,7 +182,6 @@ Page({
 							goods: res.data.goods,
 							priceRules: res.data.campaignProductPriceRules
 						})
-						console.log('设置')
 						Promise.resolve()
 							.then(() => this.getShoppingMoney())
 							.then(() => this.calculation())
@@ -457,95 +456,7 @@ Page({
 	onSubmit() {
 		const _this = this
 		if (_this.data.order) {
-			// 用户有购物金账户
-			if (_this.data.shoppingAccountId) {
-				const flag = _this.checkMoney()
-				if (flag) {
-					// 购物余额大于0
-					if (_this.data.shoppingMoneyData.amount > 0) {
-						// 购物金余额大于0但是用户没有使用时
-						if (!_this.data.shoppingMoney) {
-							wx.showModal({
-								title: '请确认',
-								content: '确认不使用购物金？',
-								cancelText: '不使用',
-								confirmText: '使用',
-								success(res) {
-									if (res.confirm) {
-										_this.setData({
-											selectMoney: true
-										})
-										_this.calculation()
-									} else {
-										Promise.resolve()
-											.then(() => _this.createTeam())
-											.then(() => _this.addOrder())
-									}
-								}
-							})
-						} else {
-							// 购物金余额大于0，用户使用，但是只使用一部分询问是否使用全部
-							if (this.data.actualPrice > 0) {
-								if (
-									this.data.shoppingMoneyData.amount - this.data.shoppingMoney >
-									0
-								) {
-									wx.showModal({
-										title: '请确认',
-										content: '确认不使用全部购物金抵消订单金额？',
-										cancelText: '不使用',
-										confirmText: '使用',
-										success(res) {
-											if (res.confirm) {
-												_this.setData({
-													selectMoney: true
-												})
-												_this.calculation()
-											} else {
-												_this.setData({
-													disabledBtn: true
-												})
-												Promise.resolve()
-													.then(() => _this.createTeam())
-													.then(() => _this.addOrder())
-											}
-										}
-									})
-								} else {
-									_this.setData({
-										disabledBtn: true
-									})
-									Promise.resolve()
-										.then(() => _this.createTeam())
-										.then(() => _this.addOrder())
-								}
-							} else {
-								_this.setData({
-									disabledBtn: true
-								})
-								Promise.resolve()
-									.then(() => _this.createTeam())
-									.then(() => _this.addOrder())
-							}
-						}
-					} else {
-						_this.setData({
-							disabledBtn: true
-						})
-						Promise.resolve()
-							.then(() => _this.createTeam())
-							.then(() => _this.addOrder())
-					}
-				}
-			} else {
-				_this.setData({
-					disabledBtn: true
-				})
-				// 用户没有购物金账户
-				Promise.resolve()
-					.then(() => _this.createTeam())
-					.then(() => _this.addOrder())
-			}
+			_this.isJingRong()
 		} else {
 			wx.showToast({
 				title: '请选择收货地址',
@@ -565,7 +476,7 @@ Page({
 						goodsId: this.data.goods.id,
 						productId: this.data.product.id,
 						campaignId: activityId,
-						clusteringUserNum: 3
+						clusteringUserNum: this.data.priceRules.minNum
 					}
 					http
 						.wxRequest({ ...this.data.api.createTeam, params })
@@ -584,6 +495,129 @@ Page({
 				resolve()
 			}
 		})
+	},
+	// 包含景彤商品时候，弹框提醒
+	isJingRong() {
+		return new Promise((resolve) => {
+			const _this = this
+			let flag = false
+			if (this.data.goods && this.data.goods.platformType === 1) {
+				flag = true
+			}
+			if (this.data.dataList && this.data.dataList) {
+				flag = this.data.dataList.some((d) => {
+					return d.goods.platformType === 1
+				})
+			}
+			if (flag) {
+				wx.showModal({
+					title: '尊敬的用户，友情提醒',
+					content:
+						'您的订单包含跨境商品，物流运输过程耗时较长，可能会出现物流延迟现象，为您带来的不便敬请谅解。',
+					confirmText: '知道了',
+					showCancel: false,
+					success: function (res) {
+						_this.beforeAddOrder()
+						resolve()
+					}
+				})
+			} else {
+				_this.beforeAddOrder()
+				resolve()
+			}
+		})
+	},
+	beforeAddOrder() {
+		const _this = this
+		// 用户有购物金账户
+		if (_this.data.shoppingAccountId) {
+			const flag = _this.checkMoney()
+			if (flag) {
+				// 购物余额大于0
+				if (_this.data.shoppingMoneyData.amount > 0) {
+					// 购物金余额大于0但是用户没有使用时
+					if (!_this.data.shoppingMoney) {
+						wx.showModal({
+							title: '请确认',
+							content: '确认不使用购物金？',
+							cancelText: '不使用',
+							confirmText: '使用',
+							success(res) {
+								if (res.confirm) {
+									_this.setData({
+										selectMoney: true
+									})
+									_this.calculation()
+								} else {
+									Promise.resolve()
+										.then(() => _this.createTeam())
+										.then(() => _this.addOrder())
+								}
+							}
+						})
+					} else {
+						// 购物金余额大于0，用户使用，但是只使用一部分询问是否使用全部
+						if (this.data.actualPrice > 0) {
+							if (
+								this.data.shoppingMoneyData.amount - this.data.shoppingMoney >
+								0
+							) {
+								wx.showModal({
+									title: '请确认',
+									content: '确认不使用全部购物金抵消订单金额？',
+									cancelText: '不使用',
+									confirmText: '使用',
+									success(res) {
+										if (res.confirm) {
+											_this.setData({
+												selectMoney: true
+											})
+											_this.calculation()
+										} else {
+											_this.setData({
+												disabledBtn: true
+											})
+											Promise.resolve()
+												.then(() => _this.createTeam())
+												.then(() => _this.addOrder())
+										}
+									}
+								})
+							} else {
+								_this.setData({
+									disabledBtn: true
+								})
+								Promise.resolve()
+									.then(() => _this.createTeam())
+									.then(() => _this.addOrder())
+							}
+						} else {
+							_this.setData({
+								disabledBtn: true
+							})
+							Promise.resolve()
+								.then(() => _this.createTeam())
+								.then(() => _this.addOrder())
+						}
+					}
+				} else {
+					_this.setData({
+						disabledBtn: true
+					})
+					Promise.resolve()
+						.then(() => _this.createTeam())
+						.then(() => _this.addOrder())
+				}
+			}
+		} else {
+			_this.setData({
+				disabledBtn: true
+			})
+			// 用户没有购物金账户
+			Promise.resolve()
+				.then(() => _this.createTeam())
+				.then(() => _this.addOrder())
+		}
 	},
 	// 封装生成订单函数
 	addOrder() {

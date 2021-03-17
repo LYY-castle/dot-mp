@@ -108,6 +108,10 @@ Page({
 			getTeamStatistics: {
 				url: '/campaign-products/team-statistics',
 				method: 'get'
+			},
+			getMessage: {
+				url: '/wx-message/templates',
+				method: 'get'
 			}
 		}
 	},
@@ -115,7 +119,6 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-		console.log(options)
 		const _this = this
 		_this.setData({
 			userId: wx.getStorageSync('userId')
@@ -124,6 +127,9 @@ Page({
 			_this.setData({
 				options: options
 			})
+			if (this.data.options.campaignId) {
+				_this.messagePop()
+			}
 		}
 	},
 	onShow: function () {
@@ -147,6 +153,7 @@ Page({
 					campaignId: this.data.options.campaignId
 				})
 				Promise.resolve()
+
 					.then(() => _this.currentCampaignTeam())
 					.then(() => _this.getProductDetail())
 					.then(() => _this.getActivityDetail())
@@ -509,6 +516,7 @@ Page({
 							this.setData({
 								teamStatistics: res.data
 							})
+							resolve()
 						}
 					})
 			}
@@ -695,5 +703,58 @@ Page({
 			.then(() => this.getAllTeams())
 			.then(() => this.getTeamStatistics())
 		wx.stopPullDownRefresh()
+	},
+	messagePop() {
+		console.log('pop')
+		return new Promise((resolve) => {
+			const _this = this
+			wx.getSetting({
+				withSubscriptions: true,
+				success(res) {
+					console.log(res)
+					let itemSettings =
+						res.subscriptionsSetting[
+							'5N4WaC8koz1kGaHnVxsrt15LZpXt7y_SQCwF1WFLc7s'
+						]
+					if (itemSettings === 'accept') {
+						resolve()
+					} else {
+						_this.getMessages()
+						resolve()
+					}
+				}
+			})
+		})
+	},
+	// 拉起小程序订阅消息
+	getMessages() {
+		return new Promise((resolve) => {
+			wx.showModal({
+				title: '成团提醒',
+				content: '为方便您及时获取拼团成功信息，请授权小程序提醒',
+				success: (res) => {
+					if (res.confirm) {
+						wx.requestSubscribeMessage({
+							tmplIds: ['5N4WaC8koz1kGaHnVxsrt15LZpXt7y_SQCwF1WFLc7s'],
+							complete(res) {
+								console.log(res)
+								resolve()
+							}
+						})
+						resolve()
+					} else if (res.cancel) {
+						wx.showModal({
+							title: '温馨提示',
+							content: '拒绝后您将无法获取实时成团提醒',
+							confirmText: '知道了',
+							showCancel: false,
+							success: function (res) {
+								resolve()
+							}
+						})
+					}
+				}
+			})
+		})
 	}
 })

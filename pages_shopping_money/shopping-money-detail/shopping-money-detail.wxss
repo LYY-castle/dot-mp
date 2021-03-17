@@ -90,3 +90,9 @@
 	color: rgba(249, 174, 8, 1);
 	background: rgba(253, 200, 101, 0.15);
 }
+.reward{
+	position: fixed;
+	right: 0px;
+	top:250px;
+	z-index: 999;
+}

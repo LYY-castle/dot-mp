@@ -6,6 +6,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		reward: '/static/img/reward.png',
 		shoppingMoneyData: {},
 		total: 399,
 		withdrawalMoney: 20,
@@ -120,6 +121,11 @@ Page({
 	goBack() {
 		wx.navigateBack({
 			delte: 1
+		})
+	},
+	goReward() {
+		wx.navigateTo({
+			url: '/pages_shopping_money/my-reward/my-reward'
 		})
 	},
 	getLogs() {

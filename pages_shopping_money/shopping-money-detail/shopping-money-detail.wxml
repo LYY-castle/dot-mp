@@ -7,6 +7,7 @@
 		</view>
 	</view>
 	<view class="top">
+		<!-- <van-image src="{{reward}}" width="35px" height="40px" class="reward" bindtap="goReward"></van-image> -->
 		<view class="totalMoney c-white">
 			<view>总购物金(元)</view>
 			<view class="m-t-10">
@@ -65,6 +66,7 @@
 				<van-empty description="暂无数据" />
 			</view>
 		</view>
+
 		<van-popup
 		show="{{ bottomShow }}"
 		bind:close="onClose"
