@@ -700,8 +700,8 @@ Page({
 	// 下拉
 	onPullDownRefresh() {
 		Promise.resolve()
-			.then(() => this.getAllTeams())
-			.then(() => this.getTeamStatistics())
+		// .then(() => this.getAllTeams())
+		// .then(() => this.getTeamStatistics())
 		wx.stopPullDownRefresh()
 	},
 	messagePop() {
