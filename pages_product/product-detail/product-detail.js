@@ -3,11 +3,13 @@ import util from '../../utils/util.js'
 import tool from '../../utils/mixin.js'
 const moment = require('../../utils/moment.min.js')
 import env from '../../config/env.config'
+import Dialog from '@vant/weapp/dialog/dialog'
 Page({
 	/**
 	 * 页面的初始数据
 	 */
 	data: {
+		authMsgShow: false,
 		indicatorDots: true,
 		perchaseShow: false,
 		addressShow: false,
@@ -127,9 +129,6 @@ Page({
 			_this.setData({
 				options: options
 			})
-			if (this.data.options.campaignId) {
-				_this.messagePop()
-			}
 		}
 	},
 	onShow: function () {
@@ -144,16 +143,16 @@ Page({
 		_this.getMyAddressList()
 		_this.getCartDotsNum()
 		if (_this.data.options.src) {
-			this.setData({
+			_this.setData({
 				productId: _this.data.options.src
 			})
-			if (this.data.options.campaignId) {
-				this.setData({
+			if (_this.data.options.campaignId) {
+				_this.setData({
 					isGroupPurchase: 1,
-					campaignId: this.data.options.campaignId
+					campaignId: _this.data.options.campaignId
 				})
 				Promise.resolve()
-
+					.then(() => _this.messagePop())
 					.then(() => _this.currentCampaignTeam())
 					.then(() => _this.getProductDetail())
 					.then(() => _this.getActivityDetail())
@@ -711,50 +710,81 @@ Page({
 			wx.getSetting({
 				withSubscriptions: true,
 				success(res) {
-					console.log(res)
-					let itemSettings =
-						res.subscriptionsSetting[
-							'5N4WaC8koz1kGaHnVxsrt15LZpXt7y_SQCwF1WFLc7s'
-						]
-					if (itemSettings === 'accept') {
-						resolve()
+					console.log('是否需要授权？', res)
+					if (!res.subscriptionsSetting.mainSwitch) {
+						Dialog.confirm({
+							message: '请打开消息通知'
+						})
+							.then(() => {
+								wx.openSetting({
+									success(res) {
+										Dialog.close()
+										resolve()
+									}
+								})
+							})
+							.catch(() => {
+								Dialog.alert({
+									title: '温馨提示',
+									message: '拒绝后无法接收所有小程序通知',
+									confirmButtonText: '知道了'
+								}).then(() => {
+									Dialog.close()
+									resolve()
+								})
+							})
 					} else {
-						_this.getMessages()
-						resolve()
+						let itemSettings =
+							res.subscriptionsSetting[
+								'5N4WaC8koz1kGaHnVxsrt7I9JXKI9m2ZPNkbvRKZH-Y'
+							]
+						if (itemSettings === 'accept') {
+							resolve()
+						} else {
+							// 需要拉起授权
+							_this.setData({
+								authMsgShow: true
+							})
+							resolve()
+						}
 					}
 				}
 			})
 		})
 	},
 	// 拉起小程序订阅消息
-	getMessages() {
-		return new Promise((resolve) => {
-			wx.showModal({
-				title: '成团提醒',
-				content: '为方便您及时获取拼团成功信息，请授权小程序提醒',
-				success: (res) => {
-					if (res.confirm) {
-						wx.requestSubscribeMessage({
-							tmplIds: ['5N4WaC8koz1kGaHnVxsrt15LZpXt7y_SQCwF1WFLc7s'],
-							complete(res) {
-								console.log(res)
-								resolve()
-							}
-						})
-						resolve()
-					} else if (res.cancel) {
-						wx.showModal({
-							title: '温馨提示',
-							content: '拒绝后您将无法获取实时成团提醒',
-							confirmText: '知道了',
-							showCancel: false,
-							success: function (res) {
-								resolve()
-							}
-						})
-					}
+	getMessagesEnsure() {
+		this.setData({
+			authMsgShow: false
+		})
+		let timer = null
+		if (!timer) {
+			timer = setTimeout(() => {
+				timer = null
+				if (wx.requestSubscribeMessage) {
+					wx.requestSubscribeMessage({
+						tmplIds: ['5N4WaC8koz1kGaHnVxsrt7I9JXKI9m2ZPNkbvRKZH-Y'],
+						complete(res) {
+							console.log('拉起授权', res)
+						}
+					})
+				} else {
+					console.log('请升级微信版本')
 				}
-			})
+			}, 1000)
+		}
+	},
+	getMessagesCancel() {
+		this.setData({
+			authMsgShow: false
+		})
+
+		Dialog.alert({
+			title: '温馨提示',
+			message: '拒绝后您将无法获取实时成团提醒',
+			confirmButtonText: '知道了'
+		}).then(() => {
+			Dialog.close()
 		})
 	}
 })

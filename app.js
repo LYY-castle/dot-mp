@@ -10,6 +10,7 @@ App({
 	onLaunch: function (options) {
 		this.selfLogin().then((result) => {
 			let url = '/' + options.path
+
 			if (!options.query.shareId) {
 				if (wx.getStorageSync('shareId')) {
 					wx.removeStorageSync('shareId')
@@ -20,6 +21,7 @@ App({
 				if (options.query) {
 					url += '?' + this.queryString(options.query)
 				}
+				wx.setStorageSync('homeUrl', url)
 				if (wx.getStorageSync('userId')) {
 					wx.reLaunch({
 						url
@@ -53,6 +55,7 @@ App({
 		})
 	},
 	onShow(options) {
+		console.log('appOnshow=========', 'appOnshow')
 		// 计算胶囊高度
 		let menuButtonObject = wx.getMenuButtonBoundingClientRect()
 		wx.getSystemInfo({
@@ -77,6 +80,7 @@ App({
 				url += '?' + this.queryString(options.query)
 				wx.setStorageSync('shareId', options.query.shareId)
 				wx.setStorageSync('teamId', options.query.campaignTeamId)
+				wx.setStorageSync('homeUrl', url)
 				if (wx.getStorageSync('userId')) {
 					wx.reLaunch({
 						url

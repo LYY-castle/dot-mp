@@ -190,4 +190,20 @@
       </view>
     </view>
   </van-dialog>
+  <van-dialog id="van-dialog" />
+  <!--  -->
+  <van-dialog
+    use-slot
+    title="成团提醒"
+    showConfirmButton="{{false}}"
+    show="{{ authMsgShow }}"
+  >
+  <view>
+    <view class="c-gray text-align-center p-10">为方便您及时获取拼团成功信息，请授权小程序提醒</view>
+    <view class="flex-between">
+      <van-button bindtap="getMessagesCancel" block disabled="{{!authMsgShow}}">取消</van-button>
+      <van-button bindtap="getMessagesEnsure" block disabled="{{!authMsgShow}}">确定</van-button>
+    </view>
+  </view>
+  </van-dialog>
 </view>

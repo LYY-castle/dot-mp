@@ -14,7 +14,7 @@
 			</view>
 		<view class="sort m-t-10" wx:if="{{productSortsArr.length>0}}">
 			<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
-					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
+					<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex" style="position: absolute; left: 0rpx; top: 2rpx">
 						<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
 							<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
 							<view>{{sort.name}}</view>

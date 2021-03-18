@@ -25,8 +25,8 @@ function getSuccess(res) {
 					if (res.success) {
 						wx.setStorageSync('openId', res.data.weixinOpenid)
 						wx.setStorageSync('userId', res.data.id)
-						wx.navigateBack({
-							delta: 1
+						wx.reLaunch({
+							url: wx.getStorageSync('homeUrl')
 						})
 					}
 				})
