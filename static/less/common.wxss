@@ -474,8 +474,8 @@ swiper {
 .text-align-left {
 	text-align: left;
 }
-.flex-colum-start{
-	display:flex;
+.flex-colum-start {
+	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 }
@@ -485,5 +485,7 @@ swiper {
 	left: 0;
 	top: 0;
 	overflow: hidden;
-
+}
+.block {
+	width: 100%;
 }

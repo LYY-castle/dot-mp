@@ -6,12 +6,45 @@
 </view>
 		<view style="padding-top: {{navHeight+10}}px" class="b-color-yellow topBox">
 			<view class="swiperContent" >
-				<view class="activityBox m-b-10" wx:if="{{activities.length>0}}">
-					<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
-						<swiper-item class="activityContent" wx:for="{{activities}}" wx:for-item="activity" wx:key="activityIndex" bindtap="goActivity" data-item="{{activity}}">
-								<van-image src="{{activity.imageUrl}}" alt width="100%" height="134px" fit="cover"/>
-						</swiper-item>
-					</swiper>
+				<view class="activityBox" wx:if="{{activities.length>0}}">
+					<view class="flex-between m-b-10">
+						疯狂团购城
+						<view class="lookMore">
+							<van-image src="{{lookMore}}" alt width="100px" height="20px" fit="cover"/>
+							<text class="lookMoreText c-color-gray" bingtap="goActivity" data-item="{{activities[0]}}">查看更多 > </text>
+						</view>
+					</view>
+					<view class="swiperBox">
+						<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
+							<swiper-item class="flex-start" bindtap="gotoDetail" data-option="{{activity}}" wx:for="{{activities[0].goodsList}}" wx:for-item="activity" wx:key="activityIndex">
+									<view class="fz-0">
+										<van-image width="120px" height="120px" src="{{activity.listPicUrl}}" fit="cover" wx:if="{{activity.listPicUrl}}" />
+										<van-image alt width="120px" height="120px" fit="cover" wx:else use-loading-slot />
+									</view>
+									<view class="text-align-left m-l-20 block">
+											<view>
+												<!-- <view
+												wx:if="{{activity.label.length>0}}"
+												class="guige guige-label m-r-3 m-b-5"
+												wx:for="{{activity.label}}"
+												wx:for-item="labelItem"
+												wx:key="labelIndex">
+												{{labelItem}}
+											</view> -->
+												{{activity.name}}
+											</view>
+											<view class="flex-between p-r-10 m-t-10">
+												<view class="minPrice fz-12 flex-colum-start">
+													<view>拼团价￥
+													<text class="fz-20 bold">{{activity.clusteringPrice}}</text></view>
+													<view class="originPrice m-l-0" wx:if="{{item.retailPrice}}">￥{{ activity.retailPrice }}</view>
+												</view>
+												<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
+										</view>
+									</view>
+							</swiper-item>
+						</swiper>
+					</view>
 				</view>
 				<view class="sort" wx:if="{{productSortsArr.length>0}}">
 					<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
@@ -23,9 +56,14 @@
 						</swiper-item>
 					</swiper>
 				</view>
-				<view class="titleContent m-t-15 m-b-15" wx:if="{{productList.length>0}}">
+				<view class="text-align-center m-t-10">
+					<van-image src="{{drinkBannar}}" alt width="100%" height="120px"/>
+				</view>
+				<view class="titleContent m-b-15" wx:if="{{productList.length>0}}">
 					<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>
 					<text class="hotProductTitle">热销爆品</text>
+				</view>
+				<view class="text-align-center">
 				</view>
 	<view class="goodContent m-0" wx:if="{{productList.length>0}}">
 		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">

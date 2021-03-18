@@ -55,20 +55,31 @@
 }
 .topBox {
 	position: relative;
-	height:150px;
-	padding:10px;
+	height: 150px;
+	padding: 10px;
 	box-sizing: border-box;
 }
 .swiperContent {
 	position: absolute;
 	width: 95%;
-
 }
-.activityBox{
-	height: 134px;
+.activityBox {
 	border-radius: 10px;
-	background: #ffffff;
-	overflow: hidden;
+	background: linear-gradient(180deg, #f8ecd2, #fcd78a);
+
+	padding: 10px;
 }
-
-
+.swiperBox {
+	height: 120px;
+	overflow: hidden;
+	background: #fff;
+	border-radius: 10px;
+}
+.lookMore {
+	position: relative;
+}
+.lookMoreText {
+	position: absolute;
+	right: 0;
+	top: 0;
+}

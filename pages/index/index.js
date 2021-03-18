@@ -11,6 +11,9 @@ Page({
 		nbBackgroundColor: '#FDC865',
 		bottomLineShow: false,
 		empty: '/static/img/empty.png',
+		advice: '/static/img/advice.png',
+		lookMore: '/static/img/lookMore.png',
+		drinkBannar: '/static/img/drinkBannar.png',
 		productList: null,
 		productSorts: null,
 		productSortsArr: [],
@@ -230,6 +233,16 @@ Page({
 		const option = e.currentTarget.dataset.option
 		wx.navigateTo({
 			url: '/pages_product/product-detail/product-detail?src=' + option.id
+		})
+	},
+	gotoDetailByGroup(e) {
+		const option = e.currentTarget.dataset.option
+		wx.navigateTo({
+			url:
+				'/pages_product/product-detail/product-detail?src=' +
+				option.id +
+				'&campaignId=' +
+				this.data.campaignId
 		})
 	},
 	goActivity(option) {
