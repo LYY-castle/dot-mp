@@ -10,7 +10,6 @@
 
 .container .sort {
 	height: 95px;
-	margin: 0 12px;
 	background: #fff;
 	border-radius: 7px;
 }
@@ -54,11 +53,22 @@
 	top: 45%;
 	transform: translate(-50%, -50%);
 }
-.activity {
+.topBox {
+	position: relative;
+	height:150px;
+	padding:10px;
+	box-sizing: border-box;
+}
+.swiperContent {
+	position: absolute;
+	width: 95%;
+
+}
+.activityBox{
+	height: 134px;
 	border-radius: 10px;
 	background: #ffffff;
-	height: 134px;
-	margin: 0 12px;
 	overflow: hidden;
-	transform: translateY(0);
 }
+
+
