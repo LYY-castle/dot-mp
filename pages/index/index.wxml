@@ -4,40 +4,30 @@
     <van-search bind:focus="focus" shape="round" background="#FDC865" placeholder="搜索商品" class="searchContent"/>
   </view>
 </view>
-		<view style="padding-top: {{navHeight+10}}px" class="b-color-yellow topBox">
+		<view style="margin-top: {{navHeight}}px" class="b-color-yellow topBox">
 			<view class="swiperContent" >
 				<view class="activityBox" wx:if="{{activities.length>0}}">
 					<view class="flex-between m-b-10">
 						疯狂团购城
-						<view class="lookMore">
-							<van-image src="{{lookMore}}" alt width="100px" height="20px" fit="cover"/>
-							<text class="lookMoreText c-color-gray" bingtap="goActivity" data-item="{{activities[0]}}">查看更多 > </text>
+						<view bindtap="goActivity" data-item="{{activities[0]}}">
+							<van-image src="{{lookMore}}" alt width="150px" height="50px" fit="cover" class="lookMore" />
+							<text class="c-color-gray" >查看更多 > </text>
 						</view>
 					</view>
 					<view class="swiperBox">
 						<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
-							<swiper-item class="flex-start" bindtap="gotoDetail" data-option="{{activity}}" wx:for="{{activities[0].goodsList}}" wx:for-item="activity" wx:key="activityIndex">
-									<view class="fz-0">
-										<van-image width="120px" height="120px" src="{{activity.listPicUrl}}" fit="cover" wx:if="{{activity.listPicUrl}}" />
-										<van-image alt width="120px" height="120px" fit="cover" wx:else use-loading-slot />
-									</view>
-									<view class="text-align-left m-l-20 block">
+							<swiper-item class="flex-start-start" bindtap="gotoDetailByGroup" wx:for="{{activities[0].goodsList}}" wx:for-item="activity" wx:key="activityIndex" data-option="{{activity}}" data-activity="{{activities[0]}}">
+									<van-image width="120px" height="120px" src="{{activity.listPicUrl}}" fit="cover" wx:if="{{activity.listPicUrl}}" />
+									<van-image alt width="120px" height="120px" fit="cover" wx:else use-loading-slot />
+									<view class="text-align-left p-10 block">
 											<view>
-												<!-- <view
-												wx:if="{{activity.label.length>0}}"
-												class="guige guige-label m-r-3 m-b-5"
-												wx:for="{{activity.label}}"
-												wx:for-item="labelItem"
-												wx:key="labelIndex">
-												{{labelItem}}
-											</view> -->
 												{{activity.name}}
 											</view>
-											<view class="flex-between p-r-10 m-t-10">
+											<view class="flex-between m-t-10">
 												<view class="minPrice fz-12 flex-colum-start">
 													<view>拼团价￥
 													<text class="fz-20 bold">{{activity.clusteringPrice}}</text></view>
-													<view class="originPrice m-l-0" wx:if="{{item.retailPrice}}">￥{{ activity.retailPrice }}</view>
+													<view class="originPrice m-l-0" wx:if="{{activity.retailPrice}}">￥{{ activity.retailPrice }}</view>
 												</view>
 												<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
 										</view>
@@ -46,7 +36,7 @@
 						</swiper>
 					</view>
 				</view>
-				<view class="sort" wx:if="{{productSortsArr.length>0}}">
+				<view class="sort m-t-10" wx:if="{{productSortsArr.length>0}}">
 					<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
 						<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 							<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
@@ -56,43 +46,55 @@
 						</swiper-item>
 					</swiper>
 				</view>
-				<view class="text-align-center m-t-10">
-					<van-image src="{{drinkBannar}}" alt width="100%" height="120px"/>
+				<view class="border">
+					<van-notice-bar
+					color="#333333"
+  				background="#ffffff"
+					left-icon="{{voice}}"
+					scrollable="{{ false }}"
+					text="团购商品即将更新，敬请期待！"
+				/>
 				</view>
-				<view class="titleContent m-b-15" wx:if="{{productList.length>0}}">
-					<van-image src="{{titleImg}}" alt width="60%" height="30px" fit="contain"/>
-					<text class="hotProductTitle">热销爆品</text>
+				<view class="bannar m-t-10 m-b-10">
+					<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+						<swiper-item class="bannarContent" wx:for="{{activities}}" wx:for-item="acti" wx:key="actiIndex">
+							<van-image src="{{drinkBannar}}" alt width="100%" height="120px" fit="cover"/>
+						</swiper-item>
+					</swiper>
+				</view>
+				<view class="titleContent" wx:if="{{productList.length>0}}">
+					<van-image src="{{titleImg}}" alt width="60%" height="20px" fit="contain"/>
+					<text class="hotProductTitle">精选推荐</text>
 				</view>
 				<view class="text-align-center">
 				</view>
-	<view class="goodContent m-0" wx:if="{{productList.length>0}}">
-		<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
-			<view class="imgContent">
-				<view class="hasNoGoodsOrSaleOut" wx:if="{{item.goodsNumber===0}}">已售空</view>
-				<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
-				<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
-			</view>
-			<view class="textHeight textContent">
-					<view class="fz-14 m-b-5">
-						<text
-					wx:if="{{item.label.length>0}}"
-					class="guige guige-label m-r-3 m-b-5"
-					wx:for="{{item.label}}"
-					wx:for-item="labelItem"
-					wx:key="labelIndex">{{labelItem}}</text>
-					{{item.name}}</view>
-					<view class="minPrice fz-12">
-						￥
-						<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
-						<text class="originPrice" wx:if="{{item.isPromote? item.promotePrice<item.marketPrice : item.retailPrice<item.marketPrice}}">￥{{ item.marketPrice }}</text>
+				<view class="goodContent m-0" wx:if="{{productList.length>0}}">
+					<view wx:for="{{productList}}" wx:key="goodIdx" class="goodItem" bindtap="gotoDetail" data-option="{{item}}">
+						<view class="imgContent">
+							<view class="hasNoGoodsOrSaleOut" wx:if="{{item.goodsNumber===0}}">已售空</view>
+							<van-image src="{{item.listPicUrl}}" alt width="100%" height="160px" fit="cover" wx:if="{{item.listPicUrl !== ''}}" />
+							<van-image alt width="100%" height="160px" fit="cover" wx:else use-loading-slot />
+						</view>
+						<view class="textHeight textContent">
+								<view class="fz-14 m-b-5">
+									<text
+								wx:if="{{item.label.length>0}}"
+								class="guige guige-label m-r-3 m-b-5"
+								wx:for="{{item.label}}"
+								wx:for-item="labelItem"
+								wx:key="labelIndex">{{labelItem}}</text>
+								{{item.name}}</view>
+								<view class="minPrice fz-12">
+									￥
+									<text class="fz-20 bold">{{ item.isPromote? item.promotePrice : item.retailPrice }}</text>
+									<text class="originPrice" wx:if="{{item.isPromote? item.promotePrice<item.marketPrice : item.retailPrice<item.marketPrice}}">￥{{ item.marketPrice }}</text>
+								</view>
+						</view>
 					</view>
-			</view>
-		</view>
-	</view>
-	<van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
-	<van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">更多商品，敬请期待</van-divider>
-	<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
+				</view>
+				<van-empty image="{{empty}}" description="暂无数据" wx:if="{{productList.length===0}}"></van-empty>
+				<van-divider contentPosition="center" wx:if="{{bottomLineShow}}" bindtap="scrollToTop">更多商品，敬请期待</van-divider>
+				<van-loading size="24px" wx:if="{{loadingShow}}" class="loadingItem">加载中...</van-loading>
 			</view>
   </view>
-
 </view>

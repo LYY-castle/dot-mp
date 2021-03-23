@@ -14,6 +14,7 @@ Page({
 		advice: '/static/img/advice.png',
 		lookMore: '/static/img/lookMore.png',
 		drinkBannar: '/static/img/drinkBannar.png',
+		voice: '/static/img/voice.png',
 		productList: null,
 		productSorts: null,
 		productSortsArr: [],
@@ -237,15 +238,18 @@ Page({
 	},
 	gotoDetailByGroup(e) {
 		const option = e.currentTarget.dataset.option
+		const activity = e.currentTarget.dataset.activity
+		console.log(option, activity)
 		wx.navigateTo({
 			url:
 				'/pages_product/product-detail/product-detail?src=' +
 				option.id +
 				'&campaignId=' +
-				this.data.campaignId
+				activity.id
 		})
 	},
 	goActivity(option) {
+		console.log(option)
 		const obj = option.currentTarget.dataset.item
 		if (obj.type === 1) {
 			wx.navigateTo({

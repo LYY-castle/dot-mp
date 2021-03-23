@@ -10,8 +10,14 @@
 
 .container .sort {
 	height: 95px;
-	background: #fff;
 	border-radius: 7px;
+}
+.bannar{
+	height:120px;
+	width: 100%;
+}
+.bannarContent{
+	width: 100%;
 }
 .sortContent {
 	box-sizing: border-box;
@@ -55,7 +61,7 @@
 }
 .topBox {
 	position: relative;
-	height: 150px;
+	height: 110px;
 	padding: 10px;
 	box-sizing: border-box;
 }
@@ -66,8 +72,8 @@
 .activityBox {
 	border-radius: 10px;
 	background: linear-gradient(180deg, #f8ecd2, #fcd78a);
-
 	padding: 10px;
+	position: relative;
 }
 .swiperBox {
 	height: 120px;
@@ -76,9 +82,6 @@
 	border-radius: 10px;
 }
 .lookMore {
-	position: relative;
-}
-.lookMoreText {
 	position: absolute;
 	right: 0;
 	top: 0;
