@@ -30,6 +30,7 @@ Page({
 		searchWidth: 0, // 搜索框宽度
 		searchHeight: 0, // 搜索框高度
 		menuButtonInfo: wx.getMenuButtonBoundingClientRect(),
+		groupActivity: null,
 		sortsImages: [
 			'/static/img/product-01.png',
 			'/static/img/product-02.png',
@@ -171,8 +172,15 @@ Page({
 			}
 			http.wxRequest({ ...this.data.api.getBannar, params }).then((res) => {
 				if (res.success) {
+					let groupActivity = null
+					res.data.forEach((activity) => {
+						if (activity.type === 1) {
+							groupActivity = activity
+						}
+					})
 					this.setData({
-						activities: res.data
+						activities: res.data,
+						groupActivity
 					})
 					resolve()
 				}
@@ -222,6 +230,7 @@ Page({
 	},
 	gotoProductList(event) {
 		const option = event.currentTarget.dataset.item
+		console.log(option)
 		wx.navigateTo({
 			url:
 				'/pages_product/product-list/product-list?firstPath=' +
@@ -283,5 +292,21 @@ Page({
 	/**
 	 * 用户点击右上角分享
 	 */
-	onShareAppMessage: function () {}
+	onShareAppMessage: function () {},
+	bannarProductList(option) {
+		console.log(option)
+		const options = option.currentTarget.dataset.option
+		const categoryIdPath = options.categoryIdPath.split('/')
+		if (categoryIdPath.length === 3) {
+			wx.navigateTo({
+				url:
+					'/pages_product/product-list/product-list?firstPath=' +
+					'/' +
+					categoryIdPath[0] +
+					'/' +
+					'&thirdId=' +
+					categoryIdPath[2]
+			})
+		}
+	}
 })
