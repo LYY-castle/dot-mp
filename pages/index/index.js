@@ -17,6 +17,7 @@ Page({
 		voice: '/static/img/voice.png',
 		productList: null,
 		productSorts: null,
+		bannarShow: false,
 		productSortsArr: [],
 		loadingShow: false,
 		indicatorDots: false,
@@ -177,11 +178,17 @@ Page({
 						if (activity.type === 1) {
 							groupActivity = activity
 						}
+						if (activity.type === 3) {
+							this.setData({
+								bannarShow: true
+							})
+						}
 					})
 					this.setData({
 						activities: res.data,
 						groupActivity
 					})
+					console.log(groupActivity)
 					resolve()
 				}
 			})

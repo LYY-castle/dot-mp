@@ -6,7 +6,7 @@
 </view>
 		<view style="margin-top: {{navHeight}}px" class="b-color-yellow topBox">
 			<view class="swiperContent" >
-				<view class="activityBox" wx:if="{{activities.length>0}}">
+				<view class="activityBox" wx:if="{{groupActivity}}">
 					<view class="flex-between m-b-10">
 						疯狂团购城
 						<view bindtap="goActivity" data-item="{{groupActivity}}">
@@ -37,7 +37,7 @@
 					</view>
 				</view>
 				<view class="sort m-t-10" wx:if="{{productSortsArr.length>0}}">
-					<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
+					<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
 						<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 							<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
 								<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>
@@ -55,7 +55,7 @@
 					text="团购商品即将更新，敬请期待！"
 				/>
 				</view>
-				<view class="bannar m-t-10 m-b-10">
+				<view class="bannar m-t-10 m-b-10" wx:if="{{bannarShow}}">
 					<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}">
 						<swiper-item class="bannarContent" wx:for="{{activities}}" wx:for-item="acti" wx:key="actiIndex" wx:if="{{acti.type===3}}" bindtap="bannarProductList" data-option="{{acti}}">
 							<van-image src="{{acti.imageUrl}}" alt width="100%" height="120px" fit="cover"/>
