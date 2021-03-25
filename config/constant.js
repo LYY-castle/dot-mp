@@ -52,5 +52,8 @@ module.exports = {
 		bucketName: 'dot',
 		publicBucketName: 'static',
 		maxSizeImag: 5 * 1024 * 1024
-	}
+	},
+	// 是否是需要特殊处理的平台 1自营 2 景彤 3 京东 4 顺丰
+	// 京东/顺丰需要运费
+	specialPlatform: [2, 3]
 }

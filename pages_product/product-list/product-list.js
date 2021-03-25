@@ -26,7 +26,7 @@ Page({
 	onLoad(options) {
 		this.setData({
 			firstPath: options.firstPath,
-			nbTitle: options.name
+			nbTitle: options.name || ''
 		})
 		if (options.thirdId) {
 			this.setData({

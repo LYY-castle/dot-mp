@@ -10,9 +10,14 @@
 
 .container .sort {
 	height: 95px;
-	margin: 0 12px;
-	background: #fff;
 	border-radius: 7px;
+}
+.bannar{
+	height:120px;
+	width: 100%;
+}
+.bannarContent{
+	width: 100%;
 }
 .sortContent {
 	box-sizing: border-box;
@@ -54,11 +59,30 @@
 	top: 45%;
 	transform: translate(-50%, -50%);
 }
-.activity {
+.topBox {
+	position: relative;
+	height: 110px;
+	padding: 10px;
+	box-sizing: border-box;
+}
+.swiperContent {
+	position: absolute;
+	width: 95%;
+}
+.activityBox {
 	border-radius: 10px;
-	background: #ffffff;
-	height: 134px;
-	margin: 0 12px;
+	background: linear-gradient(180deg, #f8ecd2, #fcd78a);
+	padding: 10px;
+	position: relative;
+}
+.swiperBox {
+	height: 120px;
 	overflow: hidden;
-	transform: translateY(0);
+	background: #fff;
+	border-radius: 10px;
+}
+.lookMore {
+	position: absolute;
+	right: 0;
+	top: 0;
 }
