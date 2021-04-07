@@ -1,6 +1,7 @@
 import http from '../../utils/request'
 import util from '../../utils/util'
 import tool from '../../utils/mixin'
+import constantCfg from '../../config/constant'
 Page({
 	/**
 	 * 页面的初始数据
@@ -79,7 +80,7 @@ Page({
 				method: 'get'
 			},
 			hasProduct: {
-				url: '/jd-goods/inventory',
+				url: '/goods/threed-inventory',
 				method: 'post'
 			}
 		}
@@ -145,7 +146,7 @@ Page({
 					}
 				})
 				shoppingCartListEffective.forEach((item) => {
-					if (item.goods.platformType === 2) {
+					if (constantCfg.specialPlatform.includes(item.goods.platformType)) {
 						searchIsHasProductArr.push(item)
 						this.setData({
 							searchIsHasProductArr
@@ -233,7 +234,8 @@ Page({
 		this.data.searchIsHasProductArr.forEach((arr) => {
 			goodsInventoryNumModels.push({
 				num: arr.number,
-				skuId: arr.goods.platformGoodsId
+				skuId: arr.goods.platformGoodsId,
+				platformType: arr.goods.platformType
 			})
 		})
 		const params = {
@@ -407,7 +409,9 @@ Page({
 						})
 					})
 					const flag = flagArr.some((item) => {
-						return item.goods.platformType !== 2
+						return !constantCfg.specialPlatform.includes(
+							item.goods.platformType
+						)
 							? item.product.productNumber === 0
 							: item.goods.isPlaceAnOrder === 0
 					})

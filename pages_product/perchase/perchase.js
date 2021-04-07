@@ -2,6 +2,7 @@ import http from '../../utils/request.js'
 import util from '../../utils/util.js'
 import tool from '../../utils/mixin.js'
 import Dialog from '@vant/weapp/dialog/dialog'
+import constantCfg from '../../config/constant'
 Page({
 	/**
 	 * 页面的初始数据
@@ -84,7 +85,7 @@ Page({
 				method: 'post'
 			},
 			hasProduct: {
-				url: '/jd-goods/inventory',
+				url: '/goods/threed-inventory',
 				method: 'post'
 			}
 		}
@@ -265,7 +266,7 @@ Page({
 				totalCount: num
 			})
 		}
-		if (this.data.goods.platformType !== 2) {
+		if (!constantCfg.specialPlatform.includes(this.data.goods.platformType)) {
 			this.calculation()
 		} else {
 			this.getGoodsFee()
@@ -286,7 +287,9 @@ Page({
 					if (res.success) {
 						let jdGoods = []
 						res.data.forEach((item) => {
-							if (item.goods.platformType === 2) {
+							if (
+								constantCfg.specialPlatform.includes(item.goods.platformType)
+							) {
 								jdGoods.push({
 									num: item.number,
 									skuId: item.goods.platformGoodsId
@@ -383,6 +386,8 @@ Page({
 					cityName: this.data.order.cityName,
 					districtName: this.data.order.districtName,
 					address: this.data.order.address,
+					province: this.data.order.province,
+					city: this.data.order.city,
 					goodsFreightModels: []
 				}
 				if (this.data.cartPerchase) {
@@ -416,7 +421,9 @@ Page({
 						goodsId: this.data.goods.id,
 						goodsNum: this.data.totalCount ? this.data.totalCount : 1
 					}
-					if (this.data.goods.platformType === 2) {
+					if (
+						constantCfg.specialPlatform.includes(this.data.goods.platformType)
+					) {
 						http
 							.wxRequest({
 								...this.data.api.getFee,

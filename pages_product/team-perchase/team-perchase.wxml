@@ -1,14 +1,16 @@
 <!--pages_product/team-perchase/team-perchase.wxml-->
 <view class="container">
 	<view class="team-perchase_product" style="background-color: {{activity.bgColor}}" wx:if="{{activity.status===2}}">
-		<view>
+	<view wx:if="{{activity.detailImageUrl}}">
 		<van-image width="100%" src="{{activity.detailImageUrl}}" fit="widthFix" class="richImage"/>
 	</view>
-		<view class="titleImage">
+		<view wx:if="{{activity.description}}">
+			<view class="titleImage">
 			<van-image width="100%" src="{{teamRule}}" fit="widthFix" />
 		</view>
 		<view class="border bg-pink fz-14" >
 			<rich-text nodes="{{activity.description}}"></rich-text>
+		</view>
 		</view>
 		<view class="titleImage">
 			<van-image width="100%" src="{{teamGood}}" fit="widthFix" />

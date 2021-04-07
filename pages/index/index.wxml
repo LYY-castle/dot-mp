@@ -11,7 +11,7 @@
 						疯狂团购城
 						<view bindtap="goActivity" data-item="{{groupActivity}}">
 							<van-image src="{{lookMore}}" alt width="150px" height="50px" fit="cover" class="lookMore" />
-							<text class="c-color-gray" >查看更多 > </text>
+							<text class="c-color-gray fz-13" >查看更多 > </text>
 						</view>
 					</view>
 					<view class="swiperBox">

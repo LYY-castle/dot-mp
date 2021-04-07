@@ -4,6 +4,7 @@ import tool from '../../utils/mixin.js'
 const moment = require('../../utils/moment.min.js')
 import env from '../../config/env.config'
 import Dialog from '@vant/weapp/dialog/dialog'
+import constantCfg from '../../config/constant'
 Page({
 	/**
 	 * 页面的初始数据
@@ -43,7 +44,7 @@ Page({
 		defaultPerson: '/static/img/avatar.png',
 		pageNo: 1,
 		activeAddressItem: null,
-		// 京东平台在指定地址下是否有库存
+		// 京东/顺丰平台在指定地址下是否有库存
 		jdSku: null,
 		authorization: false, // 授权获取用户手机号，生成购物金账号
 		isGroupPurchase: 0,
@@ -59,6 +60,7 @@ Page({
 		teamStatistics: null,
 		currentShareCampaignTeam: null,
 		teamPurchaseBtnText: '去开团',
+		addressSelectShow: false,
 		api: {
 			// 查询产品详情.
 			getProductById: {
@@ -87,7 +89,7 @@ Page({
 				method: 'get'
 			},
 			hasProduct: {
-				url: '/jd-goods/inventory',
+				url: '/goods/threed-inventory',
 				method: 'post'
 			},
 			// 获取活动商品下的正在拼团的列表
@@ -301,6 +303,9 @@ Page({
 	},
 	// 判断当前地址下是否有货
 	isHasProduct(val) {
+		this.setData({
+			addressSelectShow: true
+		})
 		const params = {
 			provinceName: this.data.activeAddressItem
 				? this.data.activeAddressItem.provinceName
@@ -314,7 +319,9 @@ Page({
 			address: this.data.activeAddressItem
 				? this.data.activeAddressItem.address
 				: 0,
-			goodsInventoryNumModels: [{ num: 1, skuId: val.goodsSn }]
+			goodsInventoryNumModels: [
+				{ num: 1, skuId: val.goodsSn, platformType: val.platformType }
+			]
 		}
 		http.wxRequest({ ...this.data.api.hasProduct, params }).then((res) => {
 			if (res.success) {
@@ -417,7 +424,14 @@ Page({
 						if (this.data.isGroupPurchase) {
 							this.getShoppingMoney()
 						}
-						if (res.data.goods.platformType === 2) {
+						console.log(
+							constantCfg.specialPlatform,
+							res.data.goods.platformType,
+							constantCfg.specialPlatform.includes(res.data.goods.platformType)
+						)
+						if (
+							constantCfg.specialPlatform.includes(res.data.goods.platformType)
+						) {
 							this.isHasProduct(res.data.goods)
 						}
 						if (res.data.goods.goodsDetail) {
@@ -757,21 +771,19 @@ Page({
 		this.setData({
 			authMsgShow: false
 		})
-		let timer = null
-		if (!timer) {
-			timer = setTimeout(() => {
-				timer = null
-				if (wx.requestSubscribeMessage) {
-					wx.requestSubscribeMessage({
-						tmplIds: ['5N4WaC8koz1kGaHnVxsrt7I9JXKI9m2ZPNkbvRKZH-Y'],
-						complete(res) {
-							console.log('拉起授权', res)
-						}
-					})
-				} else {
-					console.log('请升级微信版本')
+		if (wx.requestSubscribeMessage) {
+			const tmplIds = ['5N4WaC8koz1kGaHnVxsrt7I9JXKI9m2ZPNkbvRKZH-Y']
+			wx.requestSubscribeMessage({
+				tmplIds,
+				success(res) {
+					console.log('拉起授权', res, tmplIds)
+				},
+				fail(res) {
+					console.log('拉起失败', res, tmplIds)
 				}
-			}, 1000)
+			})
+		} else {
+			console.log('请升级微信版本')
 		}
 	},
 	getMessagesCancel() {

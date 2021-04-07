@@ -39,7 +39,7 @@
       <view class="bg-color-white p-10 m-t-10 flex-start-start fz-15" wx:if="{{campaignProductPriceRules}}">
         <view class="m-r-15">活动</view>
         <view>
-          <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" wx:if="{{ruleIndex>0}}" class="m-b-10 c-color-gray flex-start">
+          <view wx:for="{{campaignProductPriceRules}}" wx:key="ruleIndex" wx:for-index="ruleIndex" class="m-b-10 c-color-gray flex-start">
               <van-tag color="#ffe1e1" text-color="#ad0000">多拼优惠</van-tag>
               <text class="m-l-15">拼满</text>
               <text class="bold">{{item.minNum}}</text>
@@ -83,7 +83,7 @@
                       <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
                       拼成
                     </view>
-                    <van-button type="danger" size="small" block round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}" disabled="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}">去参团</van-button>
+                    <van-button type="danger" size="small" block round bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}" disabled="{{!addressSelectShow?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}">去参团</van-button>
                   </view>
                 </view>
               </swiper-item>
@@ -92,7 +92,7 @@
         </view>
       </view>
     </view>
-     <view class="bg-color-white p-10 m-t-10" wx:if="{{goods.platformType===2}}">
+     <view class="bg-color-white p-10 m-t-10" wx:if="{{addressSelectShow}}">
        <view class="flex-between" bindtap="openAddressPop">
         <view class="flex-start">
           <text class="fz-14 bold">送至</text>
@@ -128,9 +128,9 @@
   <van-goods-action wx:if="{{!isGroupPurchase}}">
     <van-goods-action-icon icon="wap-home-o" text="首页" url="/pages/index/index" link-type="switchTab" />
     <van-goods-action-icon icon="cart-o" text="购物车" info="{{cartDotsNum}}" url="/pages/shopping_cart/shopping-cart" link-type="switchTab" />
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" class="m-r-15"/>
-    <van-goods-action-button class="m-r-15" color="#aaa" text="已售空" wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}"/>
+    <van-goods-action-button wx:if="{{!addressSelectShow?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" text="加入购物车" color="#ee0a24" bind:click="onClickButton" data-option="cart" />
+    <van-goods-action-button wx:if="{{!addressSelectShow?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="立即购买" bind:click="onClickButton" data-option="perchase" class="m-r-15"/>
+    <van-goods-action-button class="m-r-15" color="#aaa" text="已售空" wx:if="{{!addressSelectShow?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}"/>
     <van-goods-action-button class="m-r-15" color="#aaa" text="已下架" wx:if="{{goods.isOnSale===0}}"/>
   </van-goods-action>
   <van-goods-action wx:if="{{isGroupPurchase}}">
@@ -139,8 +139,8 @@
         <text>{{item.minNum}}人团价</text>
         <text class="bold">￥{{item.price}}</text>
       </view>
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="{{teamPurchaseBtnText}}" bindtap="onClickButton" data-option="perchase" class="m-r-15"/>
-    <van-goods-action-button wx:if="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" class="m-r-15"/>
+    <van-goods-action-button wx:if="{{!addressSelectShow?goods.goodsNumber>0&&goods.isOnSale:jdSku.isPlaceAnOrder}}" color="#f9ae08" text="{{teamPurchaseBtnText}}" bindtap="onClickButton" data-option="perchase" class="m-r-15"/>
+    <van-goods-action-button wx:if="{{!addressSelectShow?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}" color="#aaa" text="已售空" class="m-r-15"/>
   </van-goods-action>
     <van-dialog
     use-slot
@@ -184,7 +184,7 @@
               <text class="c-red">{{team.clusteringUserNum-team.nowUserNum}}人</text>
               拼成
             </view>
-            <van-button type="danger" size="small" round block bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}" disabled="{{goods.platformType!==2?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}">去参团</van-button>
+            <van-button type="danger" size="small" round block bind:click="joinTeam" data-team="{{team}}" wx:if="{{shareId?false:team.buttonShow}}" disabled="{{!addressSelectShow?goods.isOnSale===1&&goods.goodsNumber===0:jdSku.isPlaceAnOrder===0}}">去参团</van-button>
           </view>
         </view>
       </view>
