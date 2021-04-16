@@ -38,12 +38,12 @@
             <van-image width="100px" height="100px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
             <van-image alt width="100px" height="100px" fit="cover" wx:else use-loading-slot />
           </view>
-          <view class="fz-16 m-l-5 m-t-20">
+          <view class="fz-16 m-l-5 m-t-20 block">
             {{item.goodsName}}
-            <view class="m-t-5 fz-12 flex-between p-r-10">
+            <view class="m-t-5 fz-12 flex-between p-r-10 ">
               <text class="c-gray">数量：{{ item.number }}</text>
               <text class="c-gray">单价：￥{{ item.retailPrice }}</text>
-              <text>总价：￥{{ order.orderPrice }}</text>
+              <text>总价：￥{{ item.retailPrice*100*item.number/100 }}</text>
             </view>
           </view>
         </view>

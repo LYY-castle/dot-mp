@@ -1,0 +1,65 @@
+{
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "scene": 1007
+        },
+        {
+          "name": "pages/mine/mine",
+          "pathName": "pages/mine/mine",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "shopping_money/withdrawal-detail/withdrawal-detail",
+          "pathName": "shopping_money/withdrawal-detail/withdrawal-detail",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages_product/perchase-success/perchase-success",
+          "pathName": "pages_product/perchase-success/perchase-success",
+          "query": "src=1006",
+          "scene": null
+        },
+        {
+          "name": "pages_product/product-detail/product-detail",
+          "pathName": "pages_product/product-detail/product-detail",
+          "query": "userId=1&src=1005",
+          "scene": null
+        },
+        {
+          "name": "pages_product/team-perchase/team-perchase",
+          "pathName": "pages_product/team-perchase/team-perchase",
+          "query": "campaignId=35",
+          "scene": null
+        },
+        {
+          "name": "pages_product/product-detail/product-detail",
+          "pathName": "pages_product/product-detail/product-detail",
+          "query": "src=1176&campaignId=40",
+          "scene": null
+        },
+        {
+          "name": "pages_shopping_money/shopping-money-detail/shopping-money-detail",
+          "pathName": "pages_shopping_money/shopping-money-detail/shopping-money-detail",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

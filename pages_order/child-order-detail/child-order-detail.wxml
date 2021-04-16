@@ -46,7 +46,10 @@
 						<view class="black">{{logisticsInfo.logisticCode}} <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{logisticsInfo.logisticCode}}">复制</text></view>
 					</view>
 				</view>
-				<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160"/>
+				<view>
+					<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160" wx:if="{{steps.length>0}}"/>
+					<view wx:else class="text-align-center">暂无物流信息</view>
+			</view>
 		</scroll-view>
 	</van-popup>
 </view>
