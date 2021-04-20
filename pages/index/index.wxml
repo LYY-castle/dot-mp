@@ -17,19 +17,23 @@
 					<view class="swiperBox">
 						<swiper indicator-dots="{{false}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
 							<swiper-item class="flex-start-start" bindtap="gotoDetailByGroup" wx:for="{{groupActivity.goodsList}}" wx:for-item="activity" wx:key="activityIndex" data-option="{{activity}}" data-activity="{{groupActivity}}">
-									<van-image width="120px" height="120px" src="{{activity.listPicUrl}}" fit="cover" wx:if="{{activity.listPicUrl}}" />
-									<van-image alt width="120px" height="120px" fit="cover" wx:else use-loading-slot />
-									<view class="text-align-left p-10 block">
-											<view>
-												{{activity.name}}
-											</view>
-											<view class="flex-between m-t-10">
-												<view class="minPrice fz-12 flex-colum-start">
-													<view>拼团价￥
-													<text class="fz-20 bold">{{activity.clusteringPrice}}</text></view>
-													<view class="originPrice m-l-0" wx:if="{{activity.retailPrice}}">￥{{ activity.retailPrice }}</view>
+									<view>
+										<van-image width="120px" height="120px" src="{{activity.listPicUrl}}" fit="cover" wx:if="{{activity.listPicUrl}}" />
+										<van-image alt width="120px" height="120px" fit="cover" wx:else use-loading-slot />
+									</view>
+									<view>
+										<view class="text-align-left fz-14 p-10 block flex-colum-between">
+												<view>
+													{{activity.name}}
 												</view>
-												<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
+												<view class="flex-between m-t-10">
+													<view class="minPrice fz-12 flex-colum-start">
+														<view>拼团价￥
+														<text class="fz-20 bold">{{activity.clusteringPrice}}</text></view>
+														<view class="originPrice m-l-0" wx:if="{{activity.retailPrice}}">￥{{ activity.retailPrice }}</view>
+													</view>
+													<van-button color="#EF1A0F" size="small" round >去拼团</van-button>
+											</view>
 										</view>
 									</view>
 							</swiper-item>
@@ -37,7 +41,7 @@
 					</view>
 				</view>
 				<view class="sort m-t-10" wx:if="{{productSortsArr.length>0}}">
-					<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{true}}">
+					<swiper indicator-dots="{{indicatorDots}}" class="my-swipe" interval="{{interval}}" duration="{{duration}}" autoplay="{{false}}">
 						<swiper-item class="sortContent" wx:for="{{productSortsArr}}" wx:for-index="sortIndex" wx:for-item="productSorts" wx:key="sortIndex">
 							<view wx:for="{{productSorts}}" wx:for-item="sort" wx:key="index" class="sortItem" bindtap="gotoProductList" data-item="{{sort}}">
 								<van-image src="{{sort.iconUrl}}" alt width="40px" height="40px" fit="cover"/>

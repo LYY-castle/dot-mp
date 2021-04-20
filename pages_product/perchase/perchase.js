@@ -461,7 +461,6 @@ Page({
 	},
 	// 生成订单
 	onSubmit() {
-		console.log('触发提交')
 		const _this = this
 		if (_this.data.order) {
 			_this.isJingRong()

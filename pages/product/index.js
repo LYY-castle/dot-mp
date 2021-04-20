@@ -163,7 +163,6 @@ Page({
 	// 根据三级分类跳转到商品列表页面
 	goToProductsListPageById(e) {
 		const option = e.currentTarget.dataset.option
-		console.log(option)
 		const activeFirstOption = this.data.firstTypes[this.data.activeKey]
 		wx.navigateTo({
 			url:

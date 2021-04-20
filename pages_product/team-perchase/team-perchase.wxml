@@ -15,12 +15,12 @@
 		<view class="titleImage">
 			<van-image width="100%" src="{{teamGood}}" fit="widthFix" />
 		</view>
-		<view wx:for="{{ productList }}" wx:key="productIndex" wx:for-item="item" class="border flex-start-start bg-color-white m-t-10" bindtap="gotoDetail" data-option="{{item}}">
+		<view wx:for="{{ productList }}" wx:key="productIndex" wx:for-item="item" class="border flex-start-start bg-color-white m-t-10 p-10" bindtap="gotoDetail" data-option="{{item}}">
       <view>
-        <van-image width="150px" height="150px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
-        <van-image alt width="150px" height="150px" fit="cover" wx:else use-loading-slot />
+        <van-image width="120px" height="120px" src="{{item.listPicUrl}}" fit="cover" wx:if="{{item.listPicUrl}}" />
+        <van-image alt width="120px" height="120px" fit="cover" wx:else use-loading-slot />
       </view>
-      <view class="fz-16 m-l-5 m-t-10 block-content">
+      <view class="fz-14 m-l-10 block-content flex-colum-between">
 				<view>
 					<view class="tag border">
 						{{activity.canClusteringUserNum}}人团
@@ -37,7 +37,7 @@
 						{{item.name}}
 					</view>
 				</view>
-				<view class="flex-between p-r-10 m-t-10">
+				<view class="flex-between p-r-10">
 					<view class="minPrice fz-12 flex-colum-start">
 						<view>拼团价￥
 						<text class="fz-20 bold">{{item.clusteringPrice}}</text></view>

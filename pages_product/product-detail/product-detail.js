@@ -209,7 +209,6 @@ Page({
 								flag = res.data[0].users.some((user) => {
 									return Number(userId) === Number(user.id)
 								})
-								console.log('flag', flag)
 								if (res.data[0].isClustering) {
 									wx.removeStorageSync('shareId')
 									wx.removeStorageSync('teamId')
@@ -424,11 +423,6 @@ Page({
 						if (this.data.isGroupPurchase) {
 							this.getShoppingMoney()
 						}
-						console.log(
-							constantCfg.specialPlatform,
-							res.data.goods.platformType,
-							constantCfg.specialPlatform.includes(res.data.goods.platformType)
-						)
 						if (
 							constantCfg.specialPlatform.includes(res.data.goods.platformType)
 						) {
@@ -593,7 +587,6 @@ Page({
 	},
 	// 弹框外按钮操作
 	onClickButton(e) {
-		console.log('点击加团呀')
 		if (e) {
 			const option = e.currentTarget.dataset.option
 			this.setData({
@@ -613,7 +606,6 @@ Page({
 		}
 	},
 	addCartOrPerchase(event, data) {
-		console.log(event)
 		const _this = this
 		const params = {
 			checked: 1,
@@ -718,13 +710,11 @@ Page({
 		wx.stopPullDownRefresh()
 	},
 	messagePop() {
-		console.log('pop')
 		return new Promise((resolve) => {
 			const _this = this
 			wx.getSetting({
 				withSubscriptions: true,
 				success(res) {
-					console.log('是否需要授权？', res)
 					if (!res.subscriptionsSetting.mainSwitch) {
 						Dialog.confirm({
 							message: '请打开消息通知'

@@ -37,7 +37,6 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-		console.log(options)
 		if (options) {
 			this.setData({
 				campaignId: options.campaignId
@@ -77,7 +76,7 @@ Page({
 					let productDetailObj = {}
 					let products = []
 					res.data.forEach((item) => {
-						item.name = util.ellipsis(item.name, 40)
+						item.name = util.ellipsis(item.name, 25)
 						if (
 							item.isPromote &&
 							tool.isInDurationTime(item.promoteStart, item.promoteEnd)

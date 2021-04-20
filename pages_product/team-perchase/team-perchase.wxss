@@ -18,7 +18,7 @@
 	background: #e8c496;
 	color: #8b0000;
 	padding: 1px 8px;
-	font-size: 14px;
+	font-size: 12px;
 	border-radius: 5px;
 }
 .block-content {

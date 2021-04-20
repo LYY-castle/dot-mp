@@ -176,6 +176,9 @@ Page({
 					let groupActivity = null
 					res.data.forEach((activity) => {
 						if (activity.type === 1) {
+							activity.goodsList.forEach((good) => {
+								good.name = util.ellipsis(good.name, 25)
+							})
 							groupActivity = activity
 						}
 						if (activity.type === 3) {
@@ -188,7 +191,6 @@ Page({
 						activities: res.data,
 						groupActivity
 					})
-					console.log(groupActivity)
 					resolve()
 				}
 			})
@@ -237,7 +239,6 @@ Page({
 	},
 	gotoProductList(event) {
 		const option = event.currentTarget.dataset.item
-		console.log(option)
 		wx.navigateTo({
 			url:
 				'/pages_product/product-list/product-list?firstPath=' +
@@ -255,7 +256,6 @@ Page({
 	gotoDetailByGroup(e) {
 		const option = e.currentTarget.dataset.option
 		const activity = e.currentTarget.dataset.activity
-		console.log(option, activity)
 		wx.navigateTo({
 			url:
 				'/pages_product/product-detail/product-detail?src=' +
@@ -265,7 +265,6 @@ Page({
 		})
 	},
 	goActivity(option) {
-		console.log(option)
 		const obj = option.currentTarget.dataset.item
 		if (obj.type === 1) {
 			wx.navigateTo({
@@ -301,7 +300,6 @@ Page({
 	 */
 	onShareAppMessage: function () {},
 	bannarProductList(option) {
-		console.log(option)
 		const options = option.currentTarget.dataset.option
 		const categoryIdPath = options.categoryIdPath.split('/')
 		if (categoryIdPath.length === 3) {
