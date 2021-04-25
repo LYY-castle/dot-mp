@@ -12,11 +12,11 @@
 	height: 95px;
 	border-radius: 7px;
 }
-.bannar{
-	height:120px;
+.bannar {
+	height: 120px;
 	width: 100%;
 }
-.bannarContent{
+.bannarContent {
 	width: 100%;
 }
 .sortContent {
@@ -72,8 +72,9 @@
 .activityBox {
 	border-radius: 10px;
 	background: linear-gradient(180deg, #f8ecd2, #fcd78a);
-	padding: 10px;
+	padding: 10px 10px 0 10px;
 	position: relative;
+	height: 190px;
 }
 .swiperBox {
 	height: 120px;

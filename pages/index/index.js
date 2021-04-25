@@ -31,7 +31,7 @@ Page({
 		searchWidth: 0, // 搜索框宽度
 		searchHeight: 0, // 搜索框高度
 		menuButtonInfo: wx.getMenuButtonBoundingClientRect(),
-		groupActivity: null,
+		groupActivity: [],
 		sortsImages: [
 			'/static/img/product-01.png',
 			'/static/img/product-02.png',
@@ -173,13 +173,13 @@ Page({
 			}
 			http.wxRequest({ ...this.data.api.getBannar, params }).then((res) => {
 				if (res.success) {
-					let groupActivity = null
+					let groupActivity = []
 					res.data.forEach((activity) => {
 						if (activity.type === 1) {
 							activity.goodsList.forEach((good) => {
 								good.name = util.ellipsis(good.name, 25)
 							})
-							groupActivity = activity
+							groupActivity.push(activity)
 						}
 						if (activity.type === 3) {
 							this.setData({
