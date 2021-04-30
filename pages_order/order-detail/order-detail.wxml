@@ -9,7 +9,7 @@
 	</view>
 		<view wx:if="{{orderInfo.orderStatus===100}}" class="flex-center m-t-10 fz-12">
 			需付款:<text class="m-r-10 fz-16 bold c-red">￥{{orderInfo.actualPrice}}</text>
-			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish" class="fz-16 bold m-l-5" bind:change="onTimeChange" use-slot format="mm">
+			剩余:<van-count-down time="{{ time }}" bind:finish="timeFinish" class="fz-16 bold m-l-5 control-count-down" bind:change="onTimeChange" use-slot format="mm">
 				<text class="item" wx:if="{{timeData.minutes >= 14}}">{{ timeData.minutes }}分钟</text>
 				<text class="item" wx:else>{{ timeData.minutes }}分{{ timeData.seconds }}秒</text>
 				</van-count-down>
@@ -53,7 +53,7 @@
 			{{orderInfo.orderStatus>=200?'实':orderInfo.orderStatus===100?'需':''}}付款<text class="bold fz-14">￥{{orderInfo.actualPrice}}</text>
 		</view>
 	</view>
-		<view class="border p-10 m-10 ">
+	<view class="border p-10 m-10 ">
 			<view class="flex-between">
 				<view>
 					配送信息
@@ -69,8 +69,8 @@
 				</view>
 			</view>
 
-		</view>
-		<view class="border p-10 m-10 ">
+	</view>
+	<view class="border p-10 m-10 ">
 			<view class="flex-between">
 				<view>订单信息</view>
 				<view wx:if="{{!orderInfo.campaignId}}">
@@ -106,56 +106,56 @@
 				</view>
 			</view>
 		</view>
-		</view>
-		<view >
-		</view>
-		<view class="m-10">
+	</view>
+	<view >
+	</view>
+	<view class="m-10">
 			<van-button plain block="{{true}}" round="{{true}}" color="rgba(0,0,0,.6)" bind:click="cancelPay" wx:if="{{orderInfo.orderStatus===100}}">取消订单</van-button>
-		</view>
-			<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm" >
-			</van-dialog>
-			<van-dialog id="van-dialog" />
-			<van-popup catchtouchmove="true" show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
-				<scroll-view scroll-y="true" height="100%">
-				<view wx:if="{{logisticsInfo}}" class="p-l-15">
-				<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.shipperName}}">
-					<text class="left-width c-gray">快递公司</text>
-					<view class="black">{{logisticsInfo.shipperName}}</view>
-				</view>
-				<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.logisticCode}}">
-					<text class="left-width c-gray">运单号</text>
-					<view class="black">{{logisticsInfo.logisticCode}} <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{logisticsInfo.logisticCode}}">复制</text></view>
-				</view>
-			</view>
-			<view>
-				<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160" wx:if="{{steps.length>0}}"/>
-				<view wx:else class="text-align-center">暂无物流信息</view>
-			</view>
-		</scroll-view>
-			<!-- 已发货 -->
-			</van-popup>
-			<van-popup show="{{ jdAfsShow }}" bind:close="closejdAfs" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
-				<!-- 退货信息填写 -->
-			<form catchsubmit="applyByJd">
-				 <van-cell title="包装" use-label-slot>
-					 	<van-radio-group value="{{ packageDesc }}" bind:change="onPackageChange" slot="label">
-						<view class="flex-start-center">
-							<van-radio  wx:for="{{packageList}}" wx:key="pageIndex" name="{{item.id}}" class="van-radio-self">{{item.text}}</van-radio>
+	</view>
+	<van-dialog show="{{dialogShow}}" title="确认离开？" use-slot="{{true}}" bind:confirm="confirm" >
+	</van-dialog>
+	<van-dialog id="van-dialog" />
+	<van-popup catchtouchmove="true" show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
+					<scroll-view scroll-y="true" height="100%">
+						<view wx:if="{{logisticsInfo}}" class="p-l-15">
+							<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.shipperName}}">
+								<text class="left-width c-gray">快递公司</text>
+								<view class="black">{{logisticsInfo.shipperName}}</view>
+							</view>
+							<view class="flex-start-start m-t-10 fz-12" wx:if="{{logisticsInfo.logisticCode}}">
+								<text class="left-width c-gray">运单号</text>
+								<view class="black">{{logisticsInfo.logisticCode}} <text class="fz-12 m-l-20 copyBtn" bindtap="copy" data-text="{{logisticsInfo.logisticCode}}">复制</text></view>
+							</view>
 						</view>
-					</van-radio-group>
-				 </van-cell>
+						<view>
+							<van-steps steps="{{ steps }}" active="{{ active }}" direction="vertical" active-color="#07c160" wx:if="{{steps.length>0}}"/>
+							<view wx:else class="text-align-center">暂无物流信息</view>
+						</view>
+					</scroll-view>
+	</van-popup>
+	<!-- 已发货 -->
+	<van-popup show="{{ jdAfsShow }}" bind:close="closejdAfs" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>
+					<!-- 退货信息填写 -->
+				<form catchsubmit="applyByJd">
+					<van-cell title="包装" use-label-slot>
+							<van-radio-group value="{{ packageDesc }}" bind:change="onPackageChange" slot="label">
+							<view class="flex-start-center">
+								<van-radio  wx:for="{{packageList}}" wx:key="pageIndex" name="{{item.id}}" class="van-radio-self">{{item.text}}</van-radio>
+							</view>
+						</van-radio-group>
+					</van-cell>
 
-				<van-field
-					label="备注"
-					name="questionDesc"
-					type="textarea"
-					autosize="{{textareaHeight}}"
-					show-confirm-bar="{{false}}"
-					model:value="{{ questionDesc }}"
-					placeholder="请输入备注"
-					border="{{ false }}"
-				/>
-				<van-button block="{{true}}" color="#f9ae08" form-type="submit" class="blockButton">提交</van-button>
-			</form>
-			</van-popup>
+					<van-field
+						label="备注"
+						name="questionDesc"
+						type="textarea"
+						autosize="{{textareaHeight}}"
+						show-confirm-bar="{{false}}"
+						model:value="{{ questionDesc }}"
+						placeholder="请输入备注"
+						border="{{ false }}"
+					/>
+					<van-button block="{{true}}" color="#f9ae08" form-type="submit" class="blockButton">提交</van-button>
+				</form>
+	</van-popup>
 </view>

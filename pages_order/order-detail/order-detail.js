@@ -162,7 +162,7 @@ Page({
 					if (res.data.orderStatus === 100) {
 						let time =
 							new Date(res.data.createAt.replace(/-/g, '/')).getTime() +
-							16 * 60 * 1000 -
+							15 * 60 * 1000 -
 							new Date().getTime()
 						this.setData({
 							time
@@ -252,9 +252,11 @@ Page({
 		})
 	},
 	onTimeChange(e) {
-		this.setData({
-			timeData: e.detail
-		})
+		if (e.detail.minutes > 0 || e.detail.seconds > 0) {
+			this.setData({
+				timeData: e.detail
+			})
+		}
 	},
 	timeFinish() {
 		this.getOrderDetail()
