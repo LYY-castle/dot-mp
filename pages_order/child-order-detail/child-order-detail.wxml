@@ -31,7 +31,7 @@
 				class="m-r-5"
 			></van-image>
 		</view>
-		<view class="fz-12 c-gray">共 {{ item.orderGoods.length }} 件</view>
+		<view class="fz-12 c-gray">共 {{ item.goodsNum }} 件</view>
 	</view>
 	<!-- 已发货 -->
 	<van-popup catchtouchmove="true" show="{{ popShow }}" bind:close="closePop" custom-style="width: 80%;height:70%;padding-top: 30px;" round="{{true}}" closeable>

@@ -76,6 +76,15 @@ Page({
 			})
 			.then((res) => {
 				if (res.success) {
+					for (let i = 0; i < res.data.length; i++) {
+						res.data[i].goodsNum = res.data[i].orderGoods
+							.map((good) => {
+								return good.number
+							})
+							.reduce((sum, number) => {
+								return sum + number
+							})
+					}
 					this.setData({
 						childData: res.data
 					})
